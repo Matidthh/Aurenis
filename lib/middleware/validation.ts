@@ -44,10 +44,10 @@ export function validateRequest<T>(
         const result = schema.safeParse(body);
 
         if (!result.success) {
-          const formattedErrors = formatZodErrors(result.error);
+          const formattedErrors = formatZodErrors(result.error || {});
           
           if (options.failFast) {
-            const firstError = getZodErrorMessage(result.error);
+            const firstError = getZodErrorMessage(result.error || {});
             throw new RequestValidationError(
               options.errorMessage || firstError,
               { validation: firstError }

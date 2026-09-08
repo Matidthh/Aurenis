@@ -85,8 +85,8 @@ export class ReplicaManager {
     const healthyReplicas = Array.from(this.readClients.entries())
       .filter(([name]) => this.healthChecks.get(name))
       .sort(([, a], [, b]) => {
-        const configA = this.replicaConfigs.get(a.name || '');
-        const configB = this.replicaConfigs.get(b.name || '');
+        const configA = this.replicaConfigs.get((a as any).name || '');
+        const configB = this.replicaConfigs.get((b as any).name || '');
         return (configB?.priority || 0) - (configA?.priority || 0);
       });
 

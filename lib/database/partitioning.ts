@@ -256,14 +256,14 @@ export class PartitioningService {
       ORDER BY tablename
     `;
 
-    const totalRows = partitions.reduce((sum, p) => sum + Number(p.rows), 0);
+    const totalRows = partitions.reduce((sum, p) => sum + Number(p.n_tup_ins || 0), 0);
 
     return {
       totalPartitions: partitions.length,
       totalRows,
       partitions: partitions.map(p => ({
         name: p.tablename,
-        rows: Number(p.rows),
+        rows: Number(p.n_tup_ins || 0),
         size: p.pg_size_pretty,
       })),
     };

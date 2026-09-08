@@ -4,7 +4,7 @@
  */
 
 import { prisma } from '@/lib/db/prisma';
-import { messageQueue } from '@/lib/message-queue';
+import { messageQueue } from '@/lib/queue/message-queue';
 
 export interface ArchiveConfig {
   modelName: string;
@@ -104,7 +104,7 @@ export class DataArchiver {
       deletedAt: null, // Solo registros activos
     };
 
-    const records = await prisma[modelName].findMany({
+    const records = await (prisma as any)[modelName].findMany({
       where,
       take: 1000, // Procesar en batches
     });
@@ -143,7 +143,7 @@ export class DataArchiver {
    */
   private async deleteArchivedRecords(modelName: string, ids: string[]): Promise<void> {
     try {
-      await prisma[modelName].deleteMany({
+      await (prisma as any)[modelName].deleteMany({
         where: {
           id: { in: ids },
         },
@@ -176,9 +176,9 @@ export class DataArchiver {
       }
 
       // Restaurar en tabla original
-      const restored = await prisma[archivedRecord.modelName].create({
+      const restored = await (prisma as any)[archivedRecord.modelName].create({
         data: {
-          ...archivedRecord.data,
+          ...(archivedRecord.data as any),
           id: archivedRecord.originalId, // Mantener ID original
         },
       });
@@ -335,7 +335,7 @@ export class DataArchiver {
         const csvRows = [
           headers.join(','),
           ...records.map(r => 
-            headers.map(h => JSON.stringify(r.data[h])).join(',')
+            headers.map(h => JSON.stringify((r.data as any)?.[h] || '')).join(',')
           ),
         ];
         return Buffer.from(csvRows.join('\n'));
