@@ -1,0 +1,617 @@
+{
+  "info": {
+    "name": "Aurenis API",
+    "description": "Colección completa de endpoints de la API de Aurenis para integración frontend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autenticación",
+      "item": [
+        {
+          "name": "POST /auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@aurenis.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Inicia sesión con email y contraseña. Rate limit: 5 solicitudes/minuto. Establece cookie de sesión."
+          },
+          "response": [
+            {
+              "name": "Login Exitoso - System Admin",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@aurenis.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "aurenis_session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"redirectUrl\": \"/system/dashboard\",\n  \"user\": {\n    \"id\": \"clxxxxxxx\",\n    \"email\": \"admin@aurenis.com\",\n    \"name\": \"Juan Pérez\",\n    \"isSystemAdmin\": true\n  }\n}"
+            },
+            {
+              "name": "Login Exitoso - Usuario Institucional",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"director@sanjose.cl\",\n  \"password\": \"SecurePassword123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"redirectUrl\": \"/colegio-san-jose/dashboard\",\n  \"user\": {\n    \"id\": \"clxxxxxxx\",\n    \"email\": \"director@sanjose.cl\",\n    \"name\": \"Juan Pérez\",\n    \"activeSchool\": {\n      \"id\": \"clxxxxxxx\",\n      \"slug\": \"colegio-san-jose\",\n      \"name\": \"Colegio San José\"\n    }\n  }\n}"
+            },
+            {
+              "name": "Credenciales Inválidas",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"invalid@email.com\",\n  \"password\": \"wrongpassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"error\": \"Credenciales inválidas\",\n  \"code\": \"UNAUTHORIZED\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Cierra la sesión del usuario y elimina la cookie."
+          },
+          "response": [
+            {
+              "name": "Logout Exitoso",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/logout",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "logout"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"redirectUrl\": \"/login\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /auth/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Retorna el perfil completo del usuario autenticado y su sesión actual."
+          },
+          "response": [
+            {
+              "name": "Perfil de Usuario",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "me"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"user\": {\n    \"id\": \"clxxxxxxx\",\n    \"email\": \"director@sanjose.cl\",\n    \"firstName\": \"Juan\",\n    \"lastName\": \"Pérez\",\n    \"fullName\": \"Juan Pérez\",\n    \"isSystemAdmin\": false,\n    \"activeSchoolId\": \"clxxxxxxx\",\n    \"activeSchoolSlug\": \"colegio-san-jose\",\n    \"activeMembershipId\": \"memxxxxxx\",\n    \"roleName\": \"SCHOOL_ADMIN\",\n    \"permissions\": [\n      \"school:settings:view\",\n      \"school:settings:update\",\n      \"academic:courses:manage\",\n      \"grades:enter\",\n      \"grades:view\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "No Autenticado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/me",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "me"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"error\": \"No autenticado\",\n  \"code\": \"UNAUTHORIZED\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /auth/select-school",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schoolId\": \"clxxxxxxx\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/select-school",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "select-school"]
+            },
+            "description": "Selecciona colegio activo para usuarios con múltiples instituciones."
+          },
+          "response": [
+            {
+              "name": "Colegio Seleccionado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"schoolId\": \"clxxxxxxx\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/select-school",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["auth", "select-school"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"redirectUrl\": \"/colegio-san-jose/dashboard\",\n  \"school\": {\n    \"id\": \"clxxxxxxx\",\n    \"slug\": \"colegio-san-jose\",\n    \"name\": \"Colegio San José\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sistema (System Admin)",
+      "item": [
+        {
+          "name": "GET /system/schools",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/system/schools",
+              "host": ["{{baseUrl}}"],
+              "path": ["system", "schools"]
+            },
+            "description": "Lista todos los colegios del sistema. Requiere SYSTEM_ADMIN."
+          },
+          "response": [
+            {
+              "name": "Listado de Colegios",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/system/schools",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["system", "schools"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"schools\": [\n    {\n      \"id\": \"clxxxxxxx\",\n      \"name\": \"Colegio San José\",\n      \"slug\": \"colegio-san-jose\",\n      \"institutionalCode\": \"CSJ123\",\n      \"city\": \"Santiago\",\n      \"country\": \"Chile\",\n      \"status\": \"ACTIVE\",\n      \"_count\": {\n        \"memberships\": 150,\n        \"courses\": 24\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /system/schools",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Liceo Lastarria\",\n  \"slug\": \"liceo-lastarria\",\n  \"institutionalCode\": \"LL123\",\n  \"city\": \"Santiago\",\n  \"country\": \"Chile\",\n  \"timezone\": \"America/Santiago\",\n  \"termType\": \"SEMESTER\",\n  \"adminEmail\": \"director@lastarria.cl\",\n  \"adminFirstName\": \"María\",\n  \"adminLastName\": \"González\",\n  \"adminPassword\": \"SecurePass123!\",\n  \"adminRut\": \"12345678-9\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/system/schools",
+              "host": ["{{baseUrl}}"],
+              "path": ["system", "schools"]
+            },
+            "description": "Crea un nuevo colegio con configuración inicial y usuario administrador. Requiere permiso system:schools:manage."
+          },
+          "response": [
+            {
+              "name": "Colegio Creado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Liceo Lastarria\",\n  \"slug\": \"liceo-lastarria\",\n  \"adminEmail\": \"director@lastarria.cl\",\n  \"adminFirstName\": \"María\",\n  \"adminLastName\": \"González\",\n  \"adminPassword\": \"SecurePass123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/system/schools",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["system", "schools"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Institución creada e inicializada exitosamente.\",\n  \"school\": {\n    \"id\": \"clxxxxxxx\",\n    \"name\": \"Liceo Lastarria\",\n    \"slug\": \"liceo-lastarria\"\n  },\n  \"admin\": {\n    \"id\": \"usrxxxxxx\",\n    \"email\": \"director@lastarria.cl\"\n  }\n}"
+            },
+            {
+              "name": "Slug en Uso",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Colegio Duplicado\",\n  \"slug\": \"colegio-san-jose\",\n  \"adminEmail\": \"director@duplicado.cl\",\n  \"adminFirstName\": \"Test\",\n  \"adminLastName\": \"User\",\n  \"adminPassword\": \"SecurePass123!\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/system/schools",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["system", "schools"]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"error\": \"El identificador de URL (slug) 'colegio-san-jose' ya está registrado.\",\n  \"code\": \"SCHOOL_SERVICE_ERROR\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Colegios",
+      "item": [
+        {
+          "name": "PATCH /schools/{schoolId}/settings",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"termType\": \"TRIMESTER\",\n  \"minPassingGrade\": 4.0,\n  \"primaryColor\": \"#0284c7\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/schools/:schoolId/settings",
+              "host": ["{{baseUrl}}"],
+              "path": ["schools", ":schoolId", "settings"],
+              "variable": [
+                {
+                  "key": "schoolId",
+                  "value": "clxxxxxxx",
+                  "description": "ID del colegio"
+                }
+              ]
+            },
+            "description": "Actualiza la configuración de un colegio. Requiere permiso school:settings:update."
+          },
+          "response": [
+            {
+              "name": "Configuración Actualizada",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"termType\": \"TRIMESTER\",\n  \"minPassingGrade\": 4.0,\n  \"primaryColor\": \"#0284c7\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/schools/clxxxxxxx/settings",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["schools", "clxxxxxxx", "settings"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"message\": \"Configuración actualizada con éxito\",\n  \"settings\": {\n    \"id\": \"setxxxxxx\",\n    \"schoolId\": \"clxxxxxxx\",\n    \"termType\": \"TRIMESTER\",\n    \"minPassingGrade\": 4.0,\n    \"minGrade\": 1.0,\n    \"maxGrade\": 7.0,\n    \"gradeScalePrecision\": 1,\n    \"primaryColor\": \"#0284c7\",\n    \"requireAttendanceNote\": false\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Académico",
+      "item": [
+        {
+          "name": "GET /{schoolSlug}/courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/:schoolSlug/courses?year=2026&educationLevelId=levelId",
+              "host": ["{{baseUrl}}"],
+              "path": [":schoolSlug", "courses"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2026",
+                  "description": "Año académico"
+                },
+                {
+                  "key": "educationLevelId",
+                  "value": "levelId",
+                  "description": "Filtrar por nivel educativo"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "schoolSlug",
+                  "value": "colegio-san-jose",
+                  "description": "Slug del colegio"
+                }
+              ]
+            },
+            "description": "Lista los cursos de un colegio. Requiere permiso academic:courses:manage."
+          },
+          "response": [
+            {
+              "name": "Listado de Cursos",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/colegio-san-jose/courses?year=2026",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["colegio-san-jose", "courses"],
+                  "query": [
+                    {
+                      "key": "year",
+                      "value": "2026"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"courses\": [\n    {\n      \"id\": \"crsxxxxxx\",\n      \"schoolId\": \"clxxxxxxx\",\n      \"educationLevelId\": \"elvxxxxxx\",\n      \"name\": \"1° Medio A\",\n      \"letter\": \"A\",\n      \"gradeNumber\": 1,\n      \"year\": 2026,\n      \"educationLevel\": {\n        \"id\": \"elvxxxxxx\",\n        \"name\": \"Enseñanza Media\",\n        \"shortCode\": \"EM\"\n      },\n      \"_count\": {\n        \"enrollments\": 30\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /{schoolSlug}/courses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"educationLevelId\": \"elvxxxxxx\",\n  \"name\": \"2° Medio B\",\n  \"letter\": \"B\",\n  \"gradeNumber\": 2,\n  \"year\": 2026\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/:schoolSlug/courses",
+              "host": ["{{baseUrl}}"],
+              "path": [":schoolSlug", "courses"],
+              "variable": [
+                {
+                  "key": "schoolSlug",
+                  "value": "colegio-san-jose",
+                  "description": "Slug del colegio"
+                }
+              ]
+            },
+            "description": "Crea un nuevo curso. Requiere permiso academic:courses:manage."
+          },
+          "response": [
+            {
+              "name": "Curso Creado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"educationLevelId\": \"elvxxxxxx\",\n  \"name\": \"2° Medio B\",\n  \"letter\": \"B\",\n  \"gradeNumber\": 2,\n  \"year\": 2026\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/colegio-san-jose/courses",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["colegio-san-jose", "courses"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"course\": {\n    \"id\": \"crsxxxxxx\",\n    \"schoolId\": \"clxxxxxxx\",\n    \"educationLevelId\": \"elvxxxxxx\",\n    \"name\": \"2° Medio B\",\n    \"letter\": \"B\",\n    \"gradeNumber\": 2,\n    \"year\": 2026,\n    \"educationLevel\": {\n      \"id\": \"elvxxxxxx\",\n      \"name\": \"Enseñanza Media\",\n      \"shortCode\": \"EM\"\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Calificaciones",
+      "item": [
+        {
+          "name": "GET /{schoolSlug}/grades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/:schoolSlug/grades?courseId=courseId&studentProfileId=studentId",
+              "host": ["{{baseUrl}}"],
+              "path": [":schoolSlug", "grades"],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "courseId",
+                  "description": "Filtrar por curso"
+                },
+                {
+                  "key": "studentProfileId",
+                  "value": "studentId",
+                  "description": "Filtrar por estudiante"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "schoolSlug",
+                  "value": "colegio-san-jose",
+                  "description": "Slug del colegio"
+                }
+              ]
+            },
+            "description": "Lista las calificaciones. Requiere permiso grades:view."
+          },
+          "response": [
+            {
+              "name": "Listado de Calificaciones",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/colegio-san-jose/grades?courseId=crsxxxxxx",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["colegio-san-jose", "grades"],
+                  "query": [
+                    {
+                      "key": "courseId",
+                      "value": "crsxxxxxx"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"grades\": [\n    {\n      \"id\": \"grdxxxxxx\",\n      \"schoolId\": \"clxxxxxxx\",\n      \"assessmentId\": \"asmxxxxxx\",\n      \"enrollmentId\": \"enrxxxxxx\",\n      \"value\": 6.5,\n      \"feedback\": \"Buen trabajo\",\n      \"assessment\": {\n        \"id\": \"asmxxxxxx\",\n        \"title\": \"Prueba 1\",\n        \"subject\": {\n          \"name\": \"Matemáticas\"\n        },\n        \"academicPeriod\": {\n          \"name\": \"Primer Semestre 2026\"\n        }\n      },\n      \"enrollment\": {\n        \"student\": {\n          \"membership\": {\n            \"user\": {\n              \"firstName\": \"Juan\",\n              \"lastName\": \"Pérez\"\n            }\n          }\n        },\n        \"course\": {\n          \"name\": \"1° Medio A\"\n        }\n      }\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /{schoolSlug}/grades",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assessmentId\": \"asmxxxxxx\",\n  \"enrollmentId\": \"enrxxxxxx\",\n  \"value\": 6.5,\n  \"feedback\": \"Buen desempeño\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/:schoolSlug/grades",
+              "host": ["{{baseUrl}}"],
+              "path": [":schoolSlug", "grades"],
+              "variable": [
+                {
+                  "key": "schoolSlug",
+                  "value": "colegio-san-jose",
+                  "description": "Slug del colegio"
+                }
+              ]
+            },
+            "description": "Crea una nueva calificación. Requiere permiso grades:enter."
+          },
+          "response": [
+            {
+              "name": "Calificación Creada",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"assessmentId\": \"asmxxxxxx\",\n  \"enrollmentId\": \"enrxxxxxx\",\n  \"value\": 6.5,\n  \"feedback\": \"Buen desempeño\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/colegio-san-jose/grades",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["colegio-san-jose", "grades"]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"success\": true,\n  \"grade\": {\n    \"id\": \"grdxxxxxx\",\n    \"schoolId\": \"clxxxxxxx\",\n    \"assessmentId\": \"asmxxxxxx\",\n    \"enrollmentId\": \"enrxxxxxx\",\n    \"value\": 6.5,\n    \"feedback\": \"Buen desempeño\",\n    \"assessment\": {\n      \"id\": \"asmxxxxxx\",\n      \"title\": \"Prueba 1\",\n      \"subject\": {\n        \"name\": \"Matemáticas\"\n      }\n    },\n    \"enrollment\": {\n      \"student\": {\n        \"membership\": {\n          \"user\": {\n            \"firstName\": \"Juan\",\n            \"lastName\": \"Pérez\"\n          }\n        }\n      }\n    }\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    }
+  ]
+}

@@ -4,17 +4,32 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-prometheus": "^0.52.1",
+    "@opentelemetry/exporter-trace-jaeger": "^1.25.1",
+    "@opentelemetry/instrumentation": "^0.52.1",
+    "@opentelemetry/resources": "^1.25.1",
+    "@opentelemetry/sdk-metrics": "^1.25.1",
+    "@opentelemetry/sdk-trace-base": "^1.25.1",
+    "@opentelemetry/sdk-trace-node": "^1.25.1",
+    "@opentelemetry/semantic-conventions": "^1.25.1",
     "@prisma/client": "^6.4.1",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
+    "ioredis": "^5.4.1",
     "jose": "^6.0.8",
     "lucide-react": "^1.16.0",
     "next": "^15.2.1",
@@ -25,6 +40,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/ioredis": "^4.28.10",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
@@ -34,6 +50,7 @@
     "postcss": "^8.5.3",
     "prisma": "^6.4.1",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.13",
     "typescript": "^5.8.2"
   }
 }

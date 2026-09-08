@@ -14,7 +14,11 @@ export default async function StudentsPage({
   const tenantCtx = await requireTenantContext(schoolSlug);
   const tenantDb = createTenantPrisma(tenantCtx.schoolId);
 
-  const enrollments = await listStudentsBySchool(tenantDb, tenantCtx.schoolId);
+  const enrollments = await listStudentsBySchool({
+    page: 1,
+    limit: 50,
+    schoolId: tenantCtx.schoolId,
+  }, tenantCtx.schoolId);
 
   return (
     <div className="space-y-6 max-w-6xl">
@@ -24,7 +28,7 @@ export default async function StudentsPage({
         badge={
           <Badge variant="brand">
             <Users className="w-3.5 h-3.5" />
-            {enrollments.length} Estudiantes Matriculados
+            {enrollments.students.length} Estudiantes Matriculados
           </Badge>
         }
       />
@@ -41,9 +45,9 @@ export default async function StudentsPage({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {enrollments.map((enrollment) => {
+            {enrollments.students.map((enrollment) => {
               const studentUser = enrollment.student.membership.user;
-              const guardianContact = enrollment.student.guardians[0]?.guardian.membership.user;
+              const guardianContact = enrollment.student.guardians?.[0]?.guardian?.membership?.user;
 
               return (
                 <tr key={enrollment.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
@@ -83,7 +87,7 @@ export default async function StudentsPage({
               );
             })}
 
-            {enrollments.length === 0 && (
+            {enrollments.students.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
                   Aún no hay estudiantes matriculados en este periodo escolar.
