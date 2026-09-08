@@ -6,6 +6,8 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 export const dynamic = "force-dynamic";
 
+export const dynamic = "force-dynamic";
+
 export default async function SystemDashboardPage() {
   let totalSchools = 0;
   let totalUsers = 0;
