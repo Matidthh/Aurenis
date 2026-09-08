@@ -31,9 +31,9 @@ export const CreateAssessmentSchema = z.object({
     .transform(sanitizeString),
 
   description: z.string()
-    .optional()
     .max(1000, 'La descripción excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   date: z.string()
     .min(1, 'La fecha de la evaluación es obligatoria')
@@ -60,18 +60,17 @@ export const CreateAssessmentSchema = z.object({
  */
 export const UpdateAssessmentSchema = z.object({
   title: z.string()
-    .optional()
     .min(3, 'El título debe tener al menos 3 caracteres')
     .max(200, 'El título excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   description: z.string()
-    .optional()
     .max(1000, 'La descripción excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   date: z.string()
-    .optional()
     .refine(date => {
       if (!date) return true;
       const evalDate = new Date(date);
@@ -79,13 +78,14 @@ export const UpdateAssessmentSchema = z.object({
     }, {
       message: 'La fecha de la evaluación no tiene un formato válido',
     })
-    .transform(date => date ? new Date(date) : undefined),
+    .transform(date => date ? new Date(date) : undefined)
+    .optional(),
 
   weightPercentage: z.number()
-    .optional()
     .refine(weight => validateNumberRange(weight, 0, 100), {
       message: 'El porcentaje de peso debe estar entre 0 y 100',
-    }),
+    })
+    .optional(),
 
   isPublished: z.boolean()
     .optional(),
@@ -120,9 +120,9 @@ export const CreateGradeSchema = z.object({
     }),
 
   feedback: z.string()
-    .optional()
     .max(500, 'El feedback excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 });
 
 /**
@@ -150,9 +150,9 @@ export const CreateGradeWithSchoolConfigSchema = z.object({
     }),
 
   feedback: z.string()
-    .optional()
     .max(500, 'El feedback excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   // Configuración del colegio para validación
   schoolConfig: z.object({
@@ -187,22 +187,21 @@ export const CreateGradeWithSchoolConfigSchema = z.object({
  */
 export const UpdateGradeSchema = z.object({
   value: z.number()
-    .optional()
-    .refine(grade => grade === undefined || validateNumberRange(grade, 1.0, 7.0), {
+    .refine(grade => validateNumberRange(grade, 1.0, 7.0), {
       message: 'La calificación debe estar entre 1.0 y 7.0',
     })
     .refine(grade => {
-      if (grade === undefined) return true;
       const decimalPart = grade % 1;
       return decimalPart === 0 || (decimalPart >= 0.1 && decimalPart <= 0.9);
     }, {
       message: 'La calificación puede tener máximo 1 decimal',
-    }),
+    })
+    .optional(),
 
   feedback: z.string()
-    .optional()
     .max(500, 'El feedback excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 });
 
 /**
@@ -227,9 +226,9 @@ export const CreateBulkGradesSchema = z.object({
       }),
 
     feedback: z.string()
-      .optional()
       .max(500, 'El feedback excede el límite de caracteres')
-      .transform(val => val ? sanitizeString(val) : undefined),
+      .transform(val => val ? sanitizeString(val) : undefined)
+      .optional(),
   }))
   .min(1, 'Debe haber al menos una calificación')
   .max(50, 'No se pueden crear más de 50 calificaciones a la vez'),
@@ -257,52 +256,50 @@ export const SearchGradesSchema = z.object({
     .uuid('El ID del colegio no tiene un formato válido'),
 
   studentId: z.string()
-    .optional()
-    .uuid('El ID del estudiante no tiene un formato válido'),
+    .uuid('El ID del estudiante no tiene un formato válido')
+    .optional(),
 
   subjectId: z.string()
-    .optional()
-    .uuid('El ID de la asignatura no tiene un formato válido'),
+    .uuid('El ID de la asignatura no tiene un formato válido')
+    .optional(),
 
   assessmentId: z.string()
-    .optional()
-    .uuid('El ID de la evaluación no tiene un formato válido'),
+    .uuid('El ID de la evaluación no tiene un formato válido')
+    .optional(),
 
   academicPeriodId: z.string()
-    .optional()
-    .uuid('El ID del periodo académico no tiene un formato válido'),
+    .uuid('El ID del periodo académico no tiene un formato válido')
+    .optional(),
 
   courseId: z.string()
-    .optional()
-    .uuid('El ID del curso no tiene un formato válido'),
+    .uuid('El ID del curso no tiene un formato válido')
+    .optional(),
 
   year: z.number()
-    .optional()
     .int('El año debe ser un número entero')
     .min(2020, 'El año debe ser 2020 o posterior')
-    .max(2100, 'El año no puede ser posterior a 2100'),
+    .max(2100, 'El año no puede ser posterior a 2100')
+    .optional(),
 
   minGrade: z.number()
-    .optional()
-    .refine(grade => grade === undefined || validateNumberRange(grade, 1.0, 7.0), {
+    .refine(grade => validateNumberRange(grade, 1.0, 7.0), {
       message: 'La calificación mínima debe estar entre 1.0 y 7.0',
-    }),
+    })
+    .optional(),
 
   maxGrade: z.number()
-    .optional()
-    .refine(grade => grade === undefined || validateNumberRange(grade, 1.0, 7.0), {
+    .refine(grade => validateNumberRange(grade, 1.0, 7.0), {
       message: 'La calificación máxima debe estar entre 1.0 y 7.0',
-    }),
+    })
+    .optional(),
 
   limit: z.number()
-    .optional()
     .int('El límite debe ser un número entero')
     .min(1, 'El límite debe ser al menos 1')
     .max(100, 'El límite no puede exceder 100')
     .default(20),
 
   offset: z.number()
-    .optional()
     .int('El offset debe ser un número entero')
     .min(0, 'El offset no puede ser negativo')
     .default(0),
@@ -321,12 +318,12 @@ export const CalculateGradeAverageSchema = z.object({
     .uuid('El ID de la matrícula no tiene un formato válido'),
 
   subjectId: z.string()
-    .optional()
-    .uuid('El ID de la asignatura no tiene un formato válido'),
+    .uuid('El ID de la asignatura no tiene un formato válido')
+    .optional(),
 
   academicPeriodId: z.string()
-    .optional()
-    .uuid('El ID del periodo académico no tiene un formato válido'),
+    .uuid('El ID del periodo académico no tiene un formato válido')
+    .optional(),
 });
 
 /**

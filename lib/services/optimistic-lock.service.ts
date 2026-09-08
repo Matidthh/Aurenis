@@ -22,6 +22,12 @@ export interface VersionedEntity {
  * Servicio de Optimistic Locking
  */
 export class OptimisticLockService {
+  private getModel(model: any, client: any = prisma): any {
+    const name = typeof model === 'string' ? model : (model?.name || String(model));
+    const camel = name.charAt(0).toLowerCase() + name.slice(1);
+    return client[camel] || client[name];
+  }
+
   /**
    * Actualiza un registro con verificación de versión
    */
@@ -33,7 +39,7 @@ export class OptimisticLockService {
     include?: Prisma.Args<any, 'update'>['include']
   ): Promise<T> {
     try {
-      const result = await prisma[model.name].update({
+      const result = await this.getModel(model).update({
         where: {
           id,
           version: expectedVersion,
@@ -51,7 +57,7 @@ export class OptimisticLockService {
     } catch (error: any) {
       if (error.code === 'P2025') {
         // Record not found or version mismatch
-        const current = await prisma[model.name].findUnique({
+        const current = await this.getModel(model).findUnique({
           where: { id },
           select: { version: true },
         });
@@ -100,7 +106,7 @@ export class OptimisticLockService {
     id: string,
     include?: Prisma.Args<any, 'findUnique'>['include']
   ): Promise<T | null> {
-    return prisma[model.name].findUnique({
+    return this.getModel(model).findUnique({
       where: { id },
       include,
     }) as Promise<T | null>;
@@ -110,7 +116,7 @@ export class OptimisticLockService {
    * Verifica si un registro existe y tiene la versión esperada
    */
   async checkVersion(model: any, id: string, expectedVersion: number): Promise<boolean> {
-    const record = await prisma[model.name].findUnique({
+    const record = await this.getModel(model).findUnique({
       where: { id },
       select: { version: true },
     });
@@ -122,7 +128,7 @@ export class OptimisticLockService {
    * Obtiene la versión actual de un registro
    */
   async getCurrentVersion(model: any, id: string): Promise<number | null> {
-    const record = await prisma[model.name].findUnique({
+    const record = await this.getModel(model).findUnique({
       where: { id },
       select: { version: true },
     });
@@ -145,14 +151,14 @@ export class OptimisticLockService {
     return prisma.$transaction(async (tx) => {
       // Verificar todas las versiones primero
       for (const op of operations) {
-        const current = await tx[op.model.name].findUnique({
+        const current = await this.getModel(op.model, tx).findUnique({
           where: { id: op.id },
           select: { version: true },
         });
 
         if (!current || current.version !== op.expectedVersion) {
           throw new OptimisticLockError(
-            `Conflicto de versión en ${op.model.name} ${op.id}`,
+            `Conflicto de versión en ${op.model.name || op.model} ${op.id}`,
             current?.version || op.expectedVersion
           );
         }
@@ -160,7 +166,7 @@ export class OptimisticLockService {
 
       // Ejecutar todas las actualizaciones
       for (const op of operations) {
-        await tx[op.model.name].update({
+        await this.getModel(op.model, tx).update({
           where: {
             id: op.id,
             version: op.expectedVersion,
@@ -192,11 +198,11 @@ export class OptimisticLockService {
     mergeStrategy: 'local' | 'remote' | 'merge' = 'remote',
     mergeFn?: (local: any, remote: any) => any
   ): Promise<T> {
-    const localData = await prisma[model.name].findUnique({
+    const localData = await this.getModel(model).findUnique({
       where: { id },
     });
 
-    const remoteData = await prisma[model.name].findUnique({
+    const remoteData = await this.getModel(model).findUnique({
       where: { id },
     });
 

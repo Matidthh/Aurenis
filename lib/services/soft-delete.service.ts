@@ -34,10 +34,16 @@ export interface RestoreOptions {
  * Servicio de Soft Delete genérico
  */
 export class SoftDeleteService {
+  private getModel(model: any): any {
+    const name = typeof model === 'string' ? model : (model?.name || String(model));
+    const camel = name.charAt(0).toLowerCase() + name.slice(1);
+    return (prisma as any)[camel] || (prisma as any)[name];
+  }
+
   /**
    * Soft delete de un registro
    */
-  async softDelete<T extends { id: string; deletedAt?: DateTime | null }>(
+  async softDelete<T extends { id: string; deletedAt?: Date | null }>(
     model: any,
     id: string,
     options: SoftDeleteOptions = {}
@@ -48,30 +54,32 @@ export class SoftDeleteService {
       };
 
       // Si el modelo tiene version para optimistic locking, incrementarlo
-      if (model.fields.find((f: any) => f.name === 'version')) {
+      if (model?.fields?.find((f: any) => f.name === 'version')) {
         data.version = {
           increment: 1,
         };
       }
 
-      const result = await prisma[model.name].update({
+      const result = await this.getModel(model).update({
         where: { id },
         data,
       });
 
       // Registrar en auditoría
-      await this.logAuditEvent(model.name, id, 'SOFT_DELETE', options);
+      const modelName = typeof model === 'string' ? model : (model?.name || 'Unknown');
+      await this.logAuditEvent(modelName, id, 'SOFT_DELETE', options);
 
       return result as T;
     } catch (error) {
-      throw new SoftDeleteError(`Error al soft delete ${model.name}: ${error}`);
+      const modelName = typeof model === 'string' ? model : (model?.name || 'Unknown');
+      throw new SoftDeleteError(`Error al soft delete ${modelName}: ${error}`);
     }
   }
 
   /**
    * Restaurar un registro soft deleted
    */
-  async restore<T extends { id: string; deletedAt?: DateTime | null }>(
+  async restore<T extends { id: string; deletedAt?: Date | null }>(
     model: any,
     id: string,
     options: RestoreOptions = {}
@@ -82,23 +90,25 @@ export class SoftDeleteService {
       };
 
       // Si el modelo tiene version para optimistic locking, incrementarlo
-      if (model.fields.find((f: any) => f.name === 'version')) {
+      if (model?.fields?.find((f: any) => f.name === 'version')) {
         data.version = {
           increment: 1,
         };
       }
 
-      const result = await prisma[model.name].update({
+      const result = await this.getModel(model).update({
         where: { id },
         data,
       });
 
       // Registrar en auditoría
-      await this.logAuditEvent(model.name, id, 'RESTORE', options);
+      const modelName = typeof model === 'string' ? model : (model?.name || 'Unknown');
+      await this.logAuditEvent(modelName, id, 'RESTORE', options);
 
       return result as T;
     } catch (error) {
-      throw new SoftDeleteError(`Error al restaurar ${model.name}: ${error}`);
+      const modelName = typeof model === 'string' ? model : (model?.name || 'Unknown');
+      throw new SoftDeleteError(`Error al restaurar ${modelName}: ${error}`);
     }
   }
 
@@ -111,16 +121,18 @@ export class SoftDeleteService {
     options: SoftDeleteOptions = {}
   ): Promise<T> {
     try {
-      const result = await prisma[model.name].delete({
+      const result = await this.getModel(model).delete({
         where: { id },
       });
 
       // Registrar en auditoría
-      await this.logAuditEvent(model.name, id, 'HARD_DELETE', options);
+      const modelName = typeof model === 'string' ? model : (model?.name || 'Unknown');
+      await this.logAuditEvent(modelName, id, 'HARD_DELETE', options);
 
       return result as T;
     } catch (error) {
-      throw new SoftDeleteError(`Error al hard delete ${model.name}: ${error}`);
+      const modelName = typeof model === 'string' ? model : (model?.name || 'Unknown');
+      throw new SoftDeleteError(`Error al hard delete ${modelName}: ${error}`);
     }
   }
 
@@ -132,7 +144,7 @@ export class SoftDeleteService {
     where: Prisma.Args<any, 'findMany'>['where'] = {},
     include?: Prisma.Args<any, 'findMany'>['include']
   ): Promise<T[]> {
-    return prisma[model.name].findMany({
+    return this.getModel(model).findMany({
       where: {
         ...where,
         deletedAt: null,
@@ -149,7 +161,7 @@ export class SoftDeleteService {
     where: Prisma.Args<any, 'findMany'>['where'] = {},
     include?: Prisma.Args<any, 'findMany'>['include']
   ): Promise<T[]> {
-    return prisma[model.name].findMany({
+    return this.getModel(model).findMany({
       where: {
         ...where,
         deletedAt: { not: null },
@@ -166,7 +178,7 @@ export class SoftDeleteService {
     where: Prisma.Args<any, 'findMany'>['where'] = {},
     include?: Prisma.Args<any, 'findMany'>['include']
   ): Promise<T[]> {
-    return prisma[model.name].findMany({
+    return this.getModel(model).findMany({
       where,
       include,
     }) as Promise<T[]>;
@@ -176,7 +188,7 @@ export class SoftDeleteService {
    * Contar registros activos
    */
   async countActive(model: any, where: Prisma.Args<any, 'findMany'>['where'] = {}): Promise<number> {
-    return prisma[model.name].count({
+    return this.getModel(model).count({
       where: {
         ...where,
         deletedAt: null,
@@ -188,7 +200,7 @@ export class SoftDeleteService {
    * Contar registros eliminados
    */
   async countDeleted(model: any, where: Prisma.Args<any, 'findMany'>['where'] = {}): Promise<number> {
-    return prisma[model.name].count({
+    return this.getModel(model).count({
       where: {
         ...where,
         deletedAt: { not: null },
@@ -211,7 +223,7 @@ export class SoftDeleteService {
     let hasMore = true;
 
     while (hasMore) {
-      const recordsToDelete = await prisma[model.name].findMany({
+      const recordsToDelete = await this.getModel(model).findMany({
         where: {
           deletedAt: {
             lte: cutoffDate,
@@ -226,9 +238,9 @@ export class SoftDeleteService {
         break;
       }
 
-      const ids = recordsToDelete.map(r => r.id);
+      const ids = recordsToDelete.map((r: any) => r.id);
       
-      await prisma[model.name].deleteMany({
+      await this.getModel(model).deleteMany({
         where: {
           id: { in: ids },
           deletedAt: { lte: cutoffDate },

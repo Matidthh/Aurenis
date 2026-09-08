@@ -30,6 +30,12 @@ export class FullTextSearchError extends Error {
  * Servicio de Full-Text Search
  */
 export class FullTextSearchService {
+  private getModel(model: any): any {
+    const name = typeof model === 'string' ? model : (model?.name || String(model));
+    const camel = name.charAt(0).toLowerCase() + name.slice(1);
+    return (prisma as any)[camel] || (prisma as any)[name];
+  }
+
   /**
    * Búsqueda simple de texto en columnas específicas
    */
@@ -58,12 +64,12 @@ export class FullTextSearchService {
       };
 
       const [items, total] = await Promise.all([
-        prisma[model.name].findMany({
+        this.getModel(model).findMany({
           where,
           take: limit,
           skip: offset,
         }),
-        prisma[model.name].count({ where }),
+        this.getModel(model).count({ where }),
       ]);
 
       return {
@@ -194,7 +200,7 @@ export class FullTextSearchService {
     try {
       const limit = options.limit || 10;
 
-      const items = await prisma[model.name].findMany({
+      const items = await this.getModel(model).findMany({
         where: {
           [column]: {
             startsWith: prefix,
@@ -274,7 +280,7 @@ export class FullTextSearchService {
     columns: string[]
   ): Promise<void> {
     try {
-      const record = await prisma[model.name].findUnique({
+      const record = await this.getModel(model).findUnique({
         where: { id },
         select: columns.reduce((acc, col) => ({ ...acc, [col]: true }), {}),
       });
@@ -287,7 +293,7 @@ export class FullTextSearchService {
         .filter(val => val !== null && val !== undefined)
         .join(' ');
 
-      await prisma[model.name].update({
+      await this.getModel(model).update({
         where: { id },
         data: {
           searchableText: searchText,
@@ -311,7 +317,7 @@ export class FullTextSearchService {
     let offset = 0;
 
     while (hasMore) {
-      const records = await prisma[model.name].findMany({
+      const records = await this.getModel(model).findMany({
         where: { deletedAt: null },
         take: batchSize,
         skip: offset,
@@ -332,7 +338,7 @@ export class FullTextSearchService {
           .filter(val => val !== null && val !== undefined)
           .join(' ');
 
-        await prisma[model.name].update({
+        await this.getModel(model).update({
           where: { id: record.id },
           data: { searchableText: searchText },
         });
@@ -393,12 +399,12 @@ export class FullTextSearchService {
       };
 
       const [items, total] = await Promise.all([
-        prisma[model.name].findMany({
+        this.getModel(model).findMany({
           where,
           take: limit,
           skip: offset,
         }),
-        prisma[model.name].count({ where }),
+        this.getModel(model).count({ where }),
       ]);
 
       return {

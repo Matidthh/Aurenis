@@ -81,44 +81,44 @@ export const CreateTeacherSchema = z.object({
  */
 export const UpdateTeacherSchema = z.object({
   email: z.string()
-    .optional()
     .max(255, 'El correo electrónico excede el límite de caracteres')
     .refine(email => !email || validateEmail(sanitizeEmail(email)), {
       message: 'Por favor ingresa un correo electrónico válido',
     })
-    .transform(email => email ? sanitizeEmail(email) : undefined),
+    .transform(email => email ? sanitizeEmail(email) : undefined)
+    .optional(),
 
   firstName: z.string()
-    .optional()
     .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(100, 'El nombre excede el límite de caracteres')
-    .transform(name => name ? sanitizeName(name) : undefined),
+    .transform(name => name ? sanitizeName(name) : undefined)
+    .optional(),
 
   lastName: z.string()
-    .optional()
     .min(2, 'El apellido debe tener al menos 2 caracteres')
     .max(100, 'El apellido excede el límite de caracteres')
-    .transform(name => name ? sanitizeName(name) : undefined),
+    .transform(name => name ? sanitizeName(name) : undefined)
+    .optional(),
 
   rutOrNationalId: z.string()
-    .optional()
     .refine(rut => !rut || validateRUT(rut), {
       message: 'El RUT no tiene un formato válido',
     })
-    .transform(rut => rut ? rut.toUpperCase() : undefined),
+    .transform(rut => rut ? rut.toUpperCase() : undefined)
+    .optional(),
 
   phone: z.string()
-    .optional()
     .refine(phone => !phone || validatePhone(phone), {
       message: 'El número telefónico no tiene un formato válido',
     })
-    .transform(phone => phone ? sanitizePhone(phone) : undefined),
+    .transform(phone => phone ? sanitizePhone(phone) : undefined)
+    .optional(),
 
   specialty: z.string()
-    .optional()
     .min(2, 'La especialidad debe tener al menos 2 caracteres')
     .max(200, 'La especialidad excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 });
 
 /**
@@ -156,9 +156,9 @@ export const CreateSubjectWithTeacherSchema = z.object({
     .transform(sanitizeString),
 
   code: z.string()
-    .optional()
     .max(20, 'El código excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   hoursPerWeek: z.number()
     .int('Las horas semanales deben ser un número entero')
@@ -167,8 +167,8 @@ export const CreateSubjectWithTeacherSchema = z.object({
     .default(4),
 
   teacherId: z.string()
-    .optional()
-    .uuid('El ID del profesor no tiene un formato válido'),
+    .uuid('El ID del profesor no tiene un formato válido')
+    .optional(),
 });
 
 /**
@@ -180,28 +180,26 @@ export const SearchTeachersSchema = z.object({
     .uuid('El ID del colegio no tiene un formato válido'),
 
   specialty: z.string()
-    .optional()
     .max(100, 'La especialidad excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   courseId: z.string()
-    .optional()
-    .uuid('El ID del curso no tiene un formato válido'),
+    .uuid('El ID del curso no tiene un formato válido')
+    .optional(),
 
   search: z.string()
-    .optional()
     .max(100, 'El término de búsqueda excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   limit: z.number()
-    .optional()
     .int('El límite debe ser un número entero')
     .min(1, 'El límite debe ser al menos 1')
     .max(100, 'El límite no puede exceder 100')
     .default(20),
 
   offset: z.number()
-    .optional()
     .int('El offset debe ser un número entero')
     .min(0, 'El offset no puede ser negativo')
     .default(0),
@@ -212,10 +210,10 @@ export const SearchTeachersSchema = z.object({
  */
 export const UpdateTeacherProfileSchema = z.object({
   specialty: z.string()
-    .optional()
     .min(2, 'La especialidad debe tener al menos 2 caracteres')
     .max(200, 'La especialidad excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 });
 
 /**
@@ -256,5 +254,5 @@ export type AssignTeacherToSubjectInput = z.infer<typeof AssignTeacherToSubjectS
 export type CreateSubjectWithTeacherInput = z.infer<typeof CreateSubjectWithTeacherSchema>;
 export type SearchTeachersInput = z.infer<typeof SearchTeachersSchema>;
 export type UpdateTeacherProfileInput = z.infer<typeof UpdateTeacherProfileSchema>;
-export type AssignMultipleSubjectsInput = z.infer<typeof AssignMultipleSubjectsInput>;
+export type AssignMultipleSubjectsInput = z.infer<typeof AssignMultipleSubjectsSchema>;
 export type UpdateTeacherSpecialtyInput = z.infer<typeof UpdateTeacherSpecialtySchema>;

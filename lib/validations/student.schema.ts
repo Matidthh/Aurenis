@@ -62,12 +62,11 @@ export const CreateStudentSchema = z.object({
 
   // Información del perfil de estudiante
   enrollmentNumber: z.string()
-    .optional()
     .max(50, 'El número de matrícula excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : null),
+    .transform(val => val ? sanitizeString(val) : null)
+    .optional(),
 
   birthDate: z.string()
-    .optional()
     .refine(date => {
       if (!date) return true;
       const birthDate = new Date(date);
@@ -75,12 +74,13 @@ export const CreateStudentSchema = z.object({
     }, {
       message: 'La edad del estudiante debe estar entre 5 y 25 años',
     })
-    .transform(date => date ? new Date(date) : null),
+    .transform(date => date ? new Date(date) : null)
+    .optional(),
 
   medicalNotes: z.string()
-    .optional()
     .max(2000, 'Las notas médicas exceden el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : null),
+    .transform(val => val ? sanitizeString(val) : null)
+    .optional(),
 
   // Información de membresía
   schoolId: z.string()
@@ -102,46 +102,45 @@ export const CreateStudentSchema = z.object({
  */
 export const UpdateStudentSchema = z.object({
   email: z.string()
-    .optional()
     .max(255, 'El correo electrónico excede el límite de caracteres')
     .refine(email => !email || validateEmail(sanitizeEmail(email)), {
       message: 'Por favor ingresa un correo electrónico válido',
     })
-    .transform(email => email ? sanitizeEmail(email) : undefined),
+    .transform(email => email ? sanitizeEmail(email) : undefined)
+    .optional(),
 
   firstName: z.string()
-    .optional()
     .min(2, 'El nombre debe tener al menos 2 caracteres')
     .max(100, 'El nombre excede el límite de caracteres')
-    .transform(name => name ? sanitizeName(name) : undefined),
+    .transform(name => name ? sanitizeName(name) : undefined)
+    .optional(),
 
   lastName: z.string()
-    .optional()
     .min(2, 'El apellido debe tener al menos 2 caracteres')
     .max(100, 'El apellido excede el límite de caracteres')
-    .transform(name => name ? sanitizeName(name) : undefined),
+    .transform(name => name ? sanitizeName(name) : undefined)
+    .optional(),
 
   rutOrNationalId: z.string()
-    .optional()
     .refine(rut => !rut || validateRUT(rut), {
       message: 'El RUT no tiene un formato válido',
     })
-    .transform(rut => rut ? rut.toUpperCase() : undefined),
+    .transform(rut => rut ? rut.toUpperCase() : undefined)
+    .optional(),
 
   phone: z.string()
-    .optional()
     .refine(phone => !phone || validatePhone(phone), {
       message: 'El número telefónico no tiene un formato válido',
     })
-    .transform(phone => phone ? sanitizePhone(phone) : undefined),
+    .transform(phone => phone ? sanitizePhone(phone) : undefined)
+    .optional(),
 
   enrollmentNumber: z.string()
-    .optional()
     .max(50, 'El número de matrícula excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   birthDate: z.string()
-    .optional()
     .refine(date => {
       if (!date) return true;
       const birthDate = new Date(date);
@@ -149,12 +148,13 @@ export const UpdateStudentSchema = z.object({
     }, {
       message: 'La edad del estudiante debe estar entre 5 y 25 años',
     })
-    .transform(date => date ? new Date(date) : undefined),
+    .transform(date => date ? new Date(date) : undefined)
+    .optional(),
 
   medicalNotes: z.string()
-    .optional()
     .max(2000, 'Las notas médicas exceden el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 });
 
 /**
@@ -226,27 +226,25 @@ export const SearchStudentsSchema = z.object({
     .uuid('El ID del colegio no tiene un formato válido'),
 
   courseId: z.string()
-    .optional()
-    .uuid('El ID del curso no tiene un formato válido'),
+    .uuid('El ID del curso no tiene un formato válido')
+    .optional(),
 
   year: z.number()
-    .optional()
-    .int('El año debe ser un número entero'),
+    .int('El año debe ser un número entero')
+    .optional(),
 
   search: z.string()
-    .optional()
     .max(100, 'El término de búsqueda excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   limit: z.number()
-    .optional()
     .int('El límite debe ser un número entero')
     .min(1, 'El límite debe ser al menos 1')
     .max(100, 'El límite no puede exceder 100')
     .default(20),
 
   offset: z.number()
-    .optional()
     .int('El offset debe ser un número entero')
     .min(0, 'El offset no puede ser negativo')
     .default(0),
@@ -257,12 +255,11 @@ export const SearchStudentsSchema = z.object({
  */
 export const UpdateStudentProfileSchema = z.object({
   enrollmentNumber: z.string()
-    .optional()
     .max(50, 'El número de matrícula excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
 
   birthDate: z.string()
-    .optional()
     .refine(date => {
       if (!date) return true;
       const birthDate = new Date(date);
@@ -270,12 +267,22 @@ export const UpdateStudentProfileSchema = z.object({
     }, {
       message: 'La edad del estudiante debe estar entre 5 y 25 años',
     })
-    .transform(date => date ? new Date(date) : undefined),
+    .transform(date => date ? new Date(date) : undefined)
+    .optional(),
 
   medicalNotes: z.string()
-    .optional()
     .max(2000, 'Las notas médicas excede el límite de caracteres')
-    .transform(val => val ? sanitizeString(val) : undefined),
+    .transform(val => val ? sanitizeString(val) : undefined)
+    .optional(),
+});
+
+export const StudentFiltersSchema = z.object({
+  page: z.number().int().min(1).default(1),
+  limit: z.number().int().min(1).max(100).default(20),
+  search: z.string().optional(),
+  courseId: z.string().uuid().optional(),
+  year: z.number().int().optional(),
+  schoolId: z.string().uuid().optional(),
 });
 
 // Tipos TypeScript exportados
@@ -285,3 +292,4 @@ export type EnrollStudentInput = z.infer<typeof EnrollStudentSchema>;
 export type AddGuardianInput = z.infer<typeof AddGuardianSchema>;
 export type SearchStudentsInput = z.infer<typeof SearchStudentsSchema>;
 export type UpdateStudentProfileInput = z.infer<typeof UpdateStudentProfileSchema>;
+export type StudentFilters = z.infer<typeof StudentFiltersSchema>;

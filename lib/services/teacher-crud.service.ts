@@ -281,6 +281,11 @@ export async function updateTeacher(
               role: true,
             },
           },
+          subjects: {
+            include: {
+              course: true,
+            },
+          },
         },
       });
     }

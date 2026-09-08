@@ -5,7 +5,7 @@
 
 import { prisma } from '@/lib/db/prisma';
 import { eventBus } from '@/lib/events/event-bus';
-import { messageQueue } from '@/lib/message-queue';
+import { messageQueue } from '@/lib/queue/message-queue';
 
 export interface WebhookConfig {
   tenantId: string;
@@ -183,7 +183,7 @@ export class WebhookService {
         'X-Webhook-Id': payload.eventId,
         'X-Webhook-Timestamp': payload.timestamp.toISOString(),
         'X-Webhook-Signature': this.generateSignature(payload, webhook.secret),
-        ...webhook.headers,
+        ...((typeof webhook.headers === 'object' && webhook.headers !== null && !Array.isArray(webhook.headers)) ? (webhook.headers as Record<string, string>) : {}),
       };
 
       // Enviar request

@@ -175,12 +175,12 @@ export async function calculateStudentPeriodAverage(
   grades.forEach(grade => {
     const subjectId = grade.assessment.subjectId;
     const subjectName = grade.assessment.subject.name;
-    const weight = grade.assessment.weight || 1;
+    const weight = Number(grade.assessment.weightPercentage) || 1;
 
     if (!bySubject[subjectId]) {
       bySubject[subjectId] = [];
     }
-    bySubject[subjectId].push({ value: grade.value, weight });
+    bySubject[subjectId].push({ value: Number(grade.value), weight });
   });
 
   // Calcular promedio por asignatura
@@ -194,8 +194,8 @@ export async function calculateStudentPeriodAverage(
 
   // Calcular promedio general
   const allGrades = grades.map(grade => ({
-    value: grade.value,
-    weight: grade.assessment.weight || 1,
+    value: Number(grade.value),
+    weight: Number(grade.assessment.weightPercentage) || 1,
   }));
   const generalAverage = calculateWeightedAverage(allGrades);
 
@@ -204,7 +204,7 @@ export async function calculateStudentPeriodAverage(
     details: {
       grades: grades.map(grade => ({
         id: grade.id,
-        value: grade.value,
+        value: Number(grade.value),
         assessment: {
           name: grade.assessment.title,
           weight: grade.assessment.weightPercentage,
@@ -244,7 +244,7 @@ export async function createGradeWithValidation(
     // Obtener evaluación
     const assessment = await prisma.assessment.findUnique({
       where: { id: data.assessmentId },
-      include: { subject: true },
+      include: { subject: true, academicPeriod: true },
     });
 
     if (!assessment || assessment.schoolId !== data.schoolId) {
@@ -534,7 +534,7 @@ export async function getGradesByCourseAndSubject(
       studentAverages[studentId] = 0;
       studentGradeCounts[studentId] = 0;
     }
-    studentAverages[studentId] += grade.value;
+    studentAverages[studentId] += Number(grade.value);
     studentGradeCounts[studentId]++;
   });
 
