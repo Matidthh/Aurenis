@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-
-const SECRET_KEY = new TextEncoder().encode(
-  process.env.JWT_SECRET || "aurenis-default-super-secret-key-at-least-32-characters"
-);
+import { getJwtSecretKey, JwtSecretError } from "@/lib/auth/jwt-secret";
 
 const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
 
@@ -32,9 +29,12 @@ export async function middleware(request: NextRequest) {
 
   if (token) {
     try {
-      const { payload } = await jwtVerify(token, SECRET_KEY);
+      const { payload } = await jwtVerify(token, getJwtSecretKey());
       sessionPayload = payload;
-    } catch {
+    } catch (error) {
+      if (error instanceof JwtSecretError || (error as Error)?.name === "JwtSecretError") {
+        throw error;
+      }
       // Token inválido o expirado
       sessionPayload = null;
     }

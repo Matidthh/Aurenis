@@ -1,19 +1,26 @@
 import { listAllSchools } from "@/lib/services/school.service";
 import Link from "next/link";
 import { Plus, ExternalLink } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
 export default async function SchoolsListPage() {
   const schools = await listAllSchools();
 
   return (
     <div className="space-y-6 max-w-6xl">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Colegios e Instituciones</h1>
-          <p className="text-sm text-slate-500">
-            Administra todas las instituciones educativas activas en Aurenis.
-          </p>
-        </div>
+      <PageHeader
+        title="Colegios e Instituciones"
+        description="Administra todas las instituciones educativas activas en Aurenis."
+        breadcrumbs={
+          <Breadcrumbs
+            items={[
+              { label: "Panel", href: "/system/dashboard" },
+              { label: "Colegios e Instituciones" },
+            ]}
+          />
+        }
+      >
         <Link
           href="/system/schools/new"
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 shadow-sm transition"
@@ -21,7 +28,7 @@ export default async function SchoolsListPage() {
           <Plus className="w-4 h-4" />
           Nuevo Colegio
         </Link>
-      </div>
+      </PageHeader>
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         <table className="w-full text-left text-sm">
