@@ -16,9 +16,6 @@ export const TENANT_SCOPED_MODELS = [
   "ScheduleBlock",
   "AuditLog",
   "FileRecord",
-  "StudentObservation",
-  "InstitutionAnnouncement",
-  "InvitationToken",
 ] as const;
 
 export type TenantScopedModel = (typeof TENANT_SCOPED_MODELS)[number];
@@ -39,7 +36,11 @@ export function createTenantPrisma(schoolId: string) {
           const operationArgs = (args || {}) as Record<string, any>;
 
           // Si el modelo es institucional, forzamos el aislamiento
-          if (TENANT_SCOPED_MODELS.includes(model as TenantScopedModel)) {
+          const isTenantScoped = TENANT_SCOPED_MODELS.some(
+            (m) => m.toLowerCase() === (model || "").toLowerCase()
+          );
+
+          if (isTenantScoped) {
             // Inyección en filtros where para búsquedas y conteos
             if (
               [

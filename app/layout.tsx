@@ -2,12 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aurenis",
-  description: "Plataforma de gestión académica y escolar multi-institución con control de notas, asistencia y roles.",
-  openGraph: {
-    title: "Aurenis",
-    description: "Plataforma de gestión académica y escolar multi-institución con control de notas, asistencia y roles.",
-  },
+  title: "Aurenis — Plataforma de Gestión Académica",
+  description: "Plataforma multi-institucional moderna para colegios y liceos.",
 };
 
 export default function RootLayout({

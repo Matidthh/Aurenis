@@ -1,9 +1,6 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { getSchoolAcademicOverview, listCoursesByYear } from "@/lib/services/academic.service";
-import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-import { getRoleDisplayName } from "@/lib/constants/roles";
 import {
   BookOpen,
   Users,
@@ -27,28 +24,24 @@ export default async function TenantDashboardPage({
 
   const overview = await getSchoolAcademicOverview(tenantDb, tenantCtx.schoolId);
   const courses = await listCoursesByYear(tenantDb, tenantCtx.schoolId, overview.currentYear);
-  const roleDisplayName = getRoleDisplayName(tenantCtx.roleName);
 
   return (
     <div className="space-y-8 max-w-6xl">
-      <PageHeader
-        title={tenantCtx.schoolName}
-        description={`Sesión activa como ${roleDisplayName} • Aislamiento verificado`}
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard" },
-              { label: "Resumen Académico" },
-            ]}
-          />
-        }
-        badge={
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-900">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 border border-brand-200 dark:border-brand-900 mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             Año Lectivo {overview.currentYear}
           </div>
-        }
-      >
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            {tenantCtx.schoolName}
+          </h1>
+          <p className="text-sm text-slate-500">
+            Sesión activa como <span className="font-semibold">{tenantCtx.roleName}</span> • Aislamiento verificado
+          </p>
+        </div>
+
         {overview.activePeriod ? (
           <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
             <CheckCircle2 className="w-4 h-4" />
@@ -60,7 +53,7 @@ export default async function TenantDashboardPage({
             Sin periodo académico activo
           </div>
         )}
-      </PageHeader>
+      </div>
 
       {/* Métricas del Colegio */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">

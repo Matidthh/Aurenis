@@ -1,54 +1,29 @@
 import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
 import { Building2, Users, Layers, ArrowUpRight } from "lucide-react";
-import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-
-export const dynamic = "force-dynamic";
-
-export const dynamic = "force-dynamic";
 
 export default async function SystemDashboardPage() {
-  let totalSchools = 0;
-  let totalUsers = 0;
-  let totalMemberships = 0;
-  let recentSchools: any[] = [];
-
-  try {
-    const results = await Promise.all([
-      prisma.school.count(),
-      prisma.user.count(),
-      prisma.membership.count(),
-      prisma.school.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        include: {
-          _count: { select: { memberships: true } },
-        },
-      }),
-    ]);
-    totalSchools = results[0];
-    totalUsers = results[1];
-    totalMemberships = results[2];
-    recentSchools = results[3];
-  } catch (error) {
-    console.error("Error cargando métricas en dashboard global:", error);
-  }
+  const [totalSchools, totalUsers, totalMemberships, recentSchools] = await Promise.all([
+    prisma.school.count(),
+    prisma.user.count(),
+    prisma.membership.count(),
+    prisma.school.findMany({
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: { select: { memberships: true } },
+      },
+    }),
+  ]);
 
   return (
     <div className="space-y-8 max-w-6xl">
-      <PageHeader
-        title="Panel Global de Administración"
-        description="Supervisión técnica y operativa de la plataforma Aurenis Multi-Tenant."
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Sistema" },
-              { label: "Panel General" },
-            ]}
-          />
-        }
-      />
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Panel Global de Administración</h1>
+        <p className="text-sm text-slate-500">
+          Supervisión técnica y operativa de la plataforma Aurenis Multi-Tenant.
+        </p>
+      </div>
 
       {/* Métricas Principales */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -109,6 +109,42 @@ export default function LoginPage() {
           </button>
         </form>
 
+        <div className="pt-3 pb-1 border-t border-slate-100 dark:border-slate-800 space-y-2">
+          <p className="text-xs font-medium text-slate-500 text-center">Acceso rápido para demostración:</p>
+          <div className="grid grid-cols-3 gap-2 text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("admin@aurenis.com");
+                setPassword("AurenisSuperAdmin2026!");
+              }}
+              className="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 font-medium transition text-center"
+            >
+              SuperAdmin
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("director@sanjose.cl");
+                setPassword("AdminCSJ2026!");
+              }}
+              className="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 font-medium transition text-center"
+            >
+              Director
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("profesor.matematica@sanjose.cl");
+                setPassword("Profesor2026!");
+              }}
+              className="px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 font-medium transition text-center"
+            >
+              Profesor
+            </button>
+          </div>
+        </div>
+
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
           <p className="text-xs text-slate-400">
             Aurenis v1.0 • Acceso multi-institución seguro

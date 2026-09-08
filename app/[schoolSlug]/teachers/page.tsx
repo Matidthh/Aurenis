@@ -2,7 +2,6 @@ import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listTeachersBySchool } from "@/lib/services/teacher.service";
 import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, Mail, BookOpen } from "lucide-react";
 
@@ -22,14 +21,6 @@ export default async function TeachersPage({
       <PageHeader
         title="Plantel Docente"
         description="Profesores de la institución, especialidades y asignación de cursos."
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard", href: `/${schoolSlug}/dashboard` },
-              { label: "Profesores" },
-            ]}
-          />
-        }
         badge={
           <Badge variant="brand">
             <GraduationCap className="w-3.5 h-3.5" />

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { getJwtSecretKey, JwtSecretError } from "@/lib/auth/jwt-secret";
+
+const SECRET_KEY = new TextEncoder().encode(
+  process.env.JWT_SECRET || "aurenis-default-super-secret-key-at-least-32-characters"
+);
 
 const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
 
@@ -29,19 +32,22 @@ export async function middleware(request: NextRequest) {
 
   if (token) {
     try {
-      const { payload } = await jwtVerify(token, getJwtSecretKey());
+      const { payload } = await jwtVerify(token, SECRET_KEY);
       sessionPayload = payload;
-    } catch (error) {
-      if (error instanceof JwtSecretError || (error as Error)?.name === "JwtSecretError") {
-        throw error;
-      }
+    } catch {
       // Token inválido o expirado
       sessionPayload = null;
     }
   }
 
-  // Si no hay sesión y la ruta no es pública, redirigir al login
+  // Si no hay sesión y la ruta no es pública
   if (!sessionPayload && !isPublic) {
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "No autenticado. Inicie sesión para continuar." },
+        { status: 401 }
+      );
+    }
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("returnUrl", pathname);
     return NextResponse.redirect(loginUrl);
@@ -58,10 +64,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/select-school", request.url));
   }
 
-  // Protección de rutas del Panel Global (/system/*)
-  if (pathname.startsWith("/system")) {
+  // Protección de rutas del Panel Global (/system/* y /api/system/*)
+  if (pathname.startsWith("/system") || pathname.startsWith("/api/system")) {
     if (!sessionPayload?.isSystemAdmin) {
-      // Redirigir a una página de acceso denegado o al selector
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json(
+          { error: "Acceso denegado. Se requieren privilegios de SuperAdmin." },
+          { status: 403 }
+        );
+      }
       return NextResponse.redirect(new URL("/select-school", request.url));
     }
   }
