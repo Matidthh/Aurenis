@@ -481,70 +481,102 @@ async function runAllTests() {
   // ---------------------------------------------------------------------------
   console.log("\n--- MÓDULO 6: Smoke Tests de Endpoints HTTP & Seguridad ---");
 
+  // Helper para fetch resiliente con reintentos y parseo seguro contra HTML de compilación
+  async function safeFetchJson(url: string, init?: RequestInit, maxRetries = 4): Promise<{ status: number; data: any; ok: boolean }> {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const res = await fetch(url, init);
+        const text = await res.text();
+        let data: any = {};
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = { raw: text };
+        }
+
+        // Si el servidor está temporalmente compilando en Next.js dev (HTML de calentamiento o 502/503), reintentamos
+        const isTemporaryWarmup =
+          (res.status === 502 || res.status === 503 || (res.status >= 500 && text.startsWith("<!DOCTYPE"))) &&
+          attempt < maxRetries - 1;
+
+        if (isTemporaryWarmup) {
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+          continue;
+        }
+
+        return { status: res.status, data, ok: res.ok };
+      } catch (err: any) {
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+          continue;
+        }
+        throw err;
+      }
+    }
+    throw new Error(`Incapaz de conectar a ${url} tras ${maxRetries} intentos.`);
+  }
+
   try {
     // 6.1 POST /api/auth/login con credenciales erróneas (formato válido de email y pass)
-    const wrongCredsRes = await fetch("http://localhost:3000/api/auth/login", {
+    const wrongCreds = await safeFetchJson("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "director@sanjose.cl", password: "PasswordIncorrecta123!" }),
     });
-    const wrongCredsData = await wrongCredsRes.json();
-    const wrongCredsRejected = wrongCredsRes.status === 401 && !wrongCredsData.success;
+    const wrongCredsRejected = wrongCreds.status === 401 && !wrongCreds.data.success;
 
     // 6.2 POST /api/auth/login con credenciales válidas de Director
-    const directorLoginRes = await fetch("http://localhost:3000/api/auth/login", {
+    const directorLogin = await safeFetchJson("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "director@sanjose.cl", password: "AdminCSJ2026!" }),
     });
-    const directorLoginData = await directorLoginRes.json();
     const directorAccepted =
-      directorLoginRes.status === 200 &&
-      directorLoginData.success === true &&
-      directorLoginData.redirectUrl === "/colegio-san-jose/dashboard";
+      directorLogin.status === 200 &&
+      directorLogin.data.success === true &&
+      directorLogin.data.redirectUrl === "/colegio-san-jose/dashboard";
 
     // 6.3 PATCH /api/schools/school-csj-001/settings sin sesión (debe dar 401 Unauthorized)
-    const unauthPatchRes = await fetch("http://localhost:3000/api/schools/school-csj-001/settings", {
+    const unauthPatch = await safeFetchJson("http://localhost:3000/api/schools/school-csj-001/settings", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ primaryColor: "#123456" }),
     });
-    const unauthPatchRejected = unauthPatchRes.status === 401;
+    const unauthPatchRejected = unauthPatch.status === 401;
 
     if (wrongCredsRejected && directorAccepted && unauthPatchRejected) {
       recordTest(
         "API",
         "Seguridad de Endpoints: Rechazo 401 a credenciales erróneas, 200 OK con sesión a credenciales legítimas, y 401 a mutaciones no autenticadas",
         true,
-        `Login inválido -> HTTP 401. Login legítimo -> HTTP 200 (redirect '${directorLoginData.redirectUrl}'). Mutación sin sesión -> HTTP 401 bloqueado.`
+        `Login inválido -> HTTP 401. Login legítimo -> HTTP 200 (redirect '${directorLogin.data.redirectUrl}'). Mutación sin sesión -> HTTP 401 bloqueado.`
       );
     } else {
       recordTest(
         "API",
         "Seguridad de Endpoints HTTP",
         false,
-        `Status wrong: ${wrongCredsRes.status}, valid: ${directorLoginRes.status}, unauthPatch: ${unauthPatchRes.status}`
+        `Status wrong: ${wrongCreds.status}, valid: ${directorLogin.status}, unauthPatch: ${unauthPatch.status}`
       );
     }
 
     // 6.4 Protección de Endpoints de Sistema (/api/system/schools)
-    const unauthSystemSchoolsRes = await fetch("http://localhost:3000/api/system/schools");
-    const systemSchoolsBlocked = unauthSystemSchoolsRes.status === 401;
+    const unauthSystemSchools = await safeFetchJson("http://localhost:3000/api/system/schools");
+    const systemSchoolsBlocked = unauthSystemSchools.status === 401;
 
     // 6.5 Protección de Endpoint de Selección de Colegio (/api/auth/select-school)
-    const unauthSelectSchoolRes = await fetch("http://localhost:3000/api/auth/select-school", {
+    const unauthSelectSchool = await safeFetchJson("http://localhost:3000/api/auth/select-school", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ schoolId: "school-csj-001" }),
     });
-    const selectSchoolBlocked = unauthSelectSchoolRes.status === 401;
+    const selectSchoolBlocked = unauthSelectSchool.status === 401;
 
     // 6.6 Verificación de Endpoint de Logout (/api/auth/logout)
-    const logoutRes = await fetch("http://localhost:3000/api/auth/logout", {
+    const logout = await safeFetchJson("http://localhost:3000/api/auth/logout", {
       method: "POST",
     });
-    const logoutData = await logoutRes.json();
-    const logoutOk = logoutRes.status === 200 && logoutData.success === true;
+    const logoutOk = logout.status === 200 && logout.data.success === true;
 
     if (systemSchoolsBlocked && selectSchoolBlocked && logoutOk) {
       recordTest(
@@ -558,7 +590,7 @@ async function runAllTests() {
         "API",
         "Protección de Rutas del Sistema y Flujo de Sesión",
         false,
-        `System: ${unauthSystemSchoolsRes.status}, SelectSchool: ${unauthSelectSchoolRes.status}, Logout: ${logoutRes.status}`
+        `System: ${unauthSystemSchools.status}, SelectSchool: ${unauthSelectSchool.status}, Logout: ${logout.status}`
       );
     }
   } catch (err: any) {
