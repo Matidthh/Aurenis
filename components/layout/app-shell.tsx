@@ -1,43 +1,110 @@
-import * as React from "react";
-import { cn } from "@/lib/utils/cn";
-import { Sidebar, type SidebarProps } from "./sidebar";
-import { MobileNav } from "./mobile-nav";
+"use client";
 
-export interface AppShellProps {
-  /** Props para el Sidebar reutilizable. */
-  sidebar: SidebarProps;
+import React, { useState, useEffect } from "react";
+import { Sidebar } from "./sidebar";
+import { Header } from "./header";
+import { CommandPalette } from "./command-palette";
+import { NavItem, UserSessionInfo, SchoolContextInfo } from "./types";
+
+interface AppShellProps {
   children: React.ReactNode;
-  className?: string;
+  navItems: NavItem[];
+  user: UserSessionInfo;
+  schoolContext?: SchoolContextInfo;
+  isSystemAdmin?: boolean;
 }
 
-/**
- * Shell de aplicación Aurenis (Desktop, Tablet, Mobile).
- *
- * Estructura:
- * - Mobile / Tablet (< lg): MobileHeader fijo superior con hamburger + MobileDrawer.
- * - Desktop (>= lg): Sidebar permanente de 256px.
- * - Main: scroll independiente, min-w-0 para evitar overflow y padding responsive.
- *
- * Reutilizable para contexto institucional (/{schoolSlug}) y sistema (/system).
- */
-export function AppShell({ sidebar, children, className }: AppShellProps) {
+export function AppShell({
+  children,
+  navItems,
+  user,
+  schoolContext,
+  isSystemAdmin,
+}: AppShellProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Cargar estado de colapsado desde localStorage al iniciar
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("aurenis_sidebar_collapsed");
+      if (saved !== null) {
+        setIsCollapsed(saved === "true");
+      }
+    } catch {
+      // Ignorar en caso de restricciones de storage
+    }
+  }, []);
+
+  function toggleCollapse() {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("aurenis_sidebar_collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  }
+
+  // Atajos de teclado: Ctrl+B (colapsar sidebar), Ctrl+K (abrir búsqueda)
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        toggleCollapse();
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
-    <div
-      className={cn(
-        "h-screen h-dvh overflow-hidden flex flex-col lg:flex-row bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100",
-        className
-      )}
-    >
-      {/* Navegación móvil y tablet (< lg) */}
-      <MobileNav sidebar={sidebar} />
+    <div id="app-shell" className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+      {/* 1. Sidebar Retráctil / Mobile Drawer */}
+      <Sidebar
+        isCollapsed={isCollapsed}
+        onToggleCollapse={toggleCollapse}
+        isMobileOpen={isMobileOpen}
+        onCloseMobile={() => setIsMobileOpen(false)}
+        navItems={navItems}
+        schoolContext={schoolContext}
+        isSystemAdmin={isSystemAdmin}
+        userRole={user?.roleName}
+      />
 
-      {/* Sidebar permanente desktop (>= lg) */}
-      <Sidebar {...sidebar} className="hidden lg:flex" />
+      {/* 2. Columna Principal: Header + Contenedor Central */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden min-h-screen">
+        {/* Header Superior */}
+        <Header
+          isCollapsed={isCollapsed}
+          onToggleCollapse={toggleCollapse}
+          onOpenMobile={() => setIsMobileOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          user={user}
+          schoolContext={schoolContext}
+        />
 
-      {/* Contenido principal con scroll vertical independiente */}
-      <main className="flex-1 min-w-0 overflow-y-auto p-4 sm:p-6 lg:p-8">
-        {children}
-      </main>
+        {/* Contenedor Central Responsivo */}
+        <main
+          id="main-content-container"
+          className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-200"
+        >
+          {children}
+        </main>
+      </div>
+
+      {/* 3. Paleta de Comandos / Búsqueda SPA */}
+      <CommandPalette
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        navItems={navItems}
+        schoolName={schoolContext?.schoolName}
+      />
     </div>
   );
 }

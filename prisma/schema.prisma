@@ -1,7 +1,6 @@
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -48,19 +47,6 @@ enum AuditAction {
   SECURITY_EVENT
 }
 
-enum ObservationType {
-  POSITIVE
-  NEGATIVE_MILD
-  NEGATIVE_GRAVE
-  INTERVIEW_CITATION
-}
-
-enum AnnouncementAudience {
-  ALL
-  TEACHERS_ONLY
-  GUARDIANS_AND_STUDENTS
-}
-
 // -------------------------------------------------------------
 // 1. CORE & IDENTIDAD
 // -------------------------------------------------------------
@@ -76,21 +62,14 @@ model User {
   phone           String?
   status          UserStatus   @default(ACTIVE)
   isSystemAdmin   Boolean      @default(false)
-  deletedAt       DateTime?    // Soft delete support
-  version         Int          @default(1) // Optimistic locking
-  searchableText  String?      // Full-text search support (generated field)
 
   memberships     Membership[]
   auditLogs       AuditLog[]
-  authoredAnnouncements InstitutionAnnouncement[]
 
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
   @@index([email])
-  @@index([status])
-  @@index([isSystemAdmin])
-  @@index([deletedAt])
 }
 
 model School {
@@ -104,8 +83,6 @@ model School {
   country           String             @default("Chile")
   timezone          String             @default("America/Santiago")
   status            SchoolStatus       @default(ACTIVE)
-  deletedAt         DateTime?          // Soft delete support
-  version           Int                @default(1) // Optimistic locking
 
   settings          SchoolSettings?
   memberships       Membership[]
@@ -121,16 +98,12 @@ model School {
   schedules         ScheduleBlock[]
   auditLogs         AuditLog[]
   files             FileRecord[]
-  observations      StudentObservation[]
-  announcements     InstitutionAnnouncement[]
-  invitationTokens  InvitationToken[]
 
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
   @@index([slug])
   @@index([status])
-  @@index([deletedAt])
 }
 
 model Membership {
@@ -147,7 +120,6 @@ model Membership {
   teacherProfile  TeacherProfile?
   studentProfile  StudentProfile?
   guardianProfile GuardianProfile?
-  authoredObservations StudentObservation[]
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -168,7 +140,6 @@ model Role {
   school      School?          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   memberships Membership[]
   permissions RolePermission[]
-  invitationTokens InvitationToken[]
 
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -281,8 +252,6 @@ model Course {
 
   @@unique([schoolId, year, name])
   @@index([schoolId, year])
-  @@index([schoolId, educationLevelId])
-  @@index([gradeNumber, year])
 }
 
 model Subject {
@@ -306,7 +275,6 @@ model Subject {
 
   @@index([schoolId, courseId])
   @@index([teacherProfileId])
-  @@index([schoolId, code])
 }
 
 // -------------------------------------------------------------
@@ -336,7 +304,6 @@ model StudentProfile {
   enrollments      Enrollment[]
   guardians        StudentGuardian[]
   attendances      AttendanceRecord[]
-  observations     StudentObservation[]
 
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
@@ -380,8 +347,6 @@ model Enrollment {
   studentProfileId String
   year             Int
   status           String         @default("ACTIVE")
-  deletedAt        DateTime?      // Soft delete support
-  version          Int            @default(1) // Optimistic locking
 
   school           School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   course           Course         @relation(fields: [courseId], references: [id], onDelete: Restrict)
@@ -395,9 +360,6 @@ model Enrollment {
   @@unique([schoolId, courseId, studentProfileId, year])
   @@index([schoolId, year])
   @@index([studentProfileId])
-  @@index([courseId, year])
-  @@index([schoolId, status])
-  @@index([deletedAt])
 }
 
 model Assessment {
@@ -442,7 +404,6 @@ model Grade {
   @@unique([assessmentId, enrollmentId])
   @@index([schoolId, assessmentId])
   @@index([enrollmentId])
-  @@index([schoolId, enrollmentId])
 }
 
 model AttendanceRecord {
@@ -463,8 +424,6 @@ model AttendanceRecord {
 
   @@unique([schoolId, courseId, studentProfileId, date])
   @@index([schoolId, courseId, date])
-  @@index([studentProfileId, date])
-  @@index([schoolId, date])
 }
 
 model ScheduleBlock {
@@ -509,8 +468,6 @@ model AuditLog {
   @@index([schoolId, timestamp])
   @@index([schoolId, entityType])
   @@index([userId])
-  @@index([action])
-  @@index([timestamp])
 }
 
 model FileRecord {
@@ -527,133 +484,4 @@ model FileRecord {
   createdAt DateTime @default(now())
 
   @@index([schoolId, purpose])
-}
-
-// -------------------------------------------------------------
-// 6. OBSERVACIONES, COMUNICADOS & INVITACIONES
-// -------------------------------------------------------------
-
-model StudentObservation {
-  id                     String            @id @default(cuid())
-  schoolId               String
-  studentProfileId       String
-  authorMembershipId     String
-  type                   ObservationType
-  title                  String
-  content                String
-  date                   DateTime          @default(now())
-  requiresGuardianSignature Boolean        @default(false)
-
-  school                 School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  studentProfile         StudentProfile    @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
-  authorMembership       Membership        @relation(fields: [authorMembershipId], references: [id], onDelete: Cascade)
-
-  createdAt              DateTime          @default(now())
-  updatedAt              DateTime          @updatedAt
-
-  @@index([schoolId, studentProfileId])
-  @@index([schoolId, type])
-  @@index([authorMembershipId])
-}
-
-model InstitutionAnnouncement {
-  id              String               @id @default(cuid())
-  schoolId        String
-  authorUserId    String
-  title           String
-  content         String
-  targetAudience  AnnouncementAudience @default(ALL)
-  isPinned        Boolean              @default(false)
-  publishDate     DateTime             @default(now())
-  expiryDate      DateTime?
-
-  school          School               @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  author          User                 @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
-
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-
-  @@index([schoolId, publishDate])
-  @@index([schoolId, targetAudience])
-  @@index([authorUserId])
-}
-
-model InvitationToken {
-  id        String    @id @default(cuid())
-  schoolId  String
-  email     String
-  token     String    @unique
-  roleId    String
-  expiresAt DateTime
-  usedAt    DateTime?
-
-  school    School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  role      Role      @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime  @default(now())
-
-  @@index([schoolId, email])
-  @@index([token])
-  @@index([roleId])
-}
-
-// -------------------------------------------------------------
-// 7. WEBHOOKS & INTEGRACIONES
-// -------------------------------------------------------------
-
-model Webhook {
-  id        String   @id @default(cuid())
-  tenantId  String
-  url       String
-  events    String[]
-  secret    String
-  headers   Json?
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  deliveries WebhookDelivery[]
-
-  @@index([tenantId])
-  @@index([active])
-}
-
-model WebhookDelivery {
-  id         String   @id @default(cuid())
-  webhookId  String
-  eventId    String
-  eventType String?
-  payload    Json?
-  success    Boolean
-  statusCode Int?
-  error      String?
-  deliveredAt DateTime @default(now())
-
-  webhook    Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
-
-  @@index([webhookId])
-  @@index([eventId])
-  @@index([success])
-}
-
-// -------------------------------------------------------------
-// 8. ARCHIVADO & RETENCIÓN DE DATOS
-// -------------------------------------------------------------
-
-model ArchivedRecord {
-  id             String   @id @default(cuid())
-  modelName      String
-  originalId     String
-  data           Json
-  archivedAt     DateTime @default(now())
-  retentionUntil DateTime
-  compressed     Boolean  @default(false)
-  dataSize       Int      @default(0)
-
-  createdAt      DateTime @default(now())
-
-  @@index([modelName])
-  @@index([originalId])
-  @@index([retentionUntil])
-  @@index([archivedAt])
 }

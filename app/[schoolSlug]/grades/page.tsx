@@ -3,7 +3,6 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listAssessmentsWithGrades, getSchoolGradingConfig } from "@/lib/services/grade.service";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Award } from "lucide-react";
 
@@ -26,14 +25,6 @@ export default async function GradesPage({
       <PageHeader
         title="Libro de Calificaciones & Evaluaciones"
         description={`Registro oficial de evaluaciones. Escala configurada: ${gradeConfig.minGrade.toFixed(1)} a ${gradeConfig.maxGrade.toFixed(1)} (Aprobación: ${gradeConfig.minPassingGrade.toFixed(1)}).`}
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard", href: `/${schoolSlug}/dashboard` },
-              { label: "Calificaciones" },
-            ]}
-          />
-        }
         badge={
           <Badge variant="brand">
             <Award className="w-3.5 h-3.5" />

@@ -2,7 +2,6 @@ import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Layers, Clock, GraduationCap } from "lucide-react";
 
@@ -42,14 +41,6 @@ export default async function SubjectsPage({
       <PageHeader
         title="Malla de Asignaturas"
         description="Plan de estudios, cargas horarias y docentes asignados por curso."
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard", href: `/${schoolSlug}/dashboard` },
-              { label: "Asignaturas" },
-            ]}
-          />
-        }
         badge={
           <Badge variant="brand">
             <Layers className="w-3.5 h-3.5" />

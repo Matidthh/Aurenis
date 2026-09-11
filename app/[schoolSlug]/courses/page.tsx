@@ -3,7 +3,6 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listCoursesByYear } from "@/lib/services/academic.service";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Users, Layers } from "lucide-react";
 
@@ -24,14 +23,6 @@ export default async function CoursesPage({
       <PageHeader
         title="Catálogo de Cursos"
         description={`Estructura de niveles y divisiones de cursos para el año escolar ${currentYear}.`}
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard", href: `/${schoolSlug}/dashboard` },
-              { label: "Cursos" },
-            ]}
-          />
-        }
         badge={
           <Badge variant="brand">
             <BookOpen className="w-3.5 h-3.5" />

@@ -1,13 +1,12 @@
 import React from "react";
-import { cn } from "@/lib/utils/cn";
 
-export interface PageHeaderProps {
+interface PageHeaderProps {
   title: string;
   description?: string;
   badge?: React.ReactNode;
-  breadcrumbs?: React.ReactNode;
+  action?: React.ReactNode;
   children?: React.ReactNode;
-  className?: string;
+  breadcrumbs?: React.ReactNode;
 }
 
 /**
@@ -24,9 +23,12 @@ export function PageHeader({
   description,
   badge,
   breadcrumbs,
+  action,
   children,
   className,
 }: PageHeaderProps) {
+  const actions = action || children;
+
   return (
     <header className={cn("space-y-3", className)}>
       {breadcrumbs}
@@ -44,12 +46,14 @@ export function PageHeader({
           {badge && <div className="pt-0.5">{badge}</div>}
         </div>
 
-        {children && (
+        {actions && (
           <div className="flex flex-col items-stretch gap-3 w-full sm:flex-row sm:flex-wrap sm:items-center md:w-auto md:shrink-0 md:justify-end [&>*]:w-full sm:[&>*]:w-auto">
-            {children}
+            {actions}
           </div>
         )}
       </div>
     </header>
+  );
+}
   );
 }

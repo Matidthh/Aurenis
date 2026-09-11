@@ -2,7 +2,6 @@ import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { SchoolSettingsForm } from "@/components/school/settings-form";
 import { Settings, ShieldCheck } from "lucide-react";
@@ -38,14 +37,6 @@ export default async function SettingsPage({
       <PageHeader
         title="Configuración Institucional"
         description="Personaliza el régimen académico, la escala de notas y la identidad visual del colegio."
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard", href: `/${schoolSlug}/dashboard` },
-              { label: "Configuración" },
-            ]}
-          />
-        }
         badge={
           <Badge variant="brand">
             <Settings className="w-3.5 h-3.5" />

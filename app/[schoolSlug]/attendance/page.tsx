@@ -3,7 +3,6 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listAttendanceRecords, getAttendanceOverview } from "@/lib/services/attendance.service";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
-import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { StatCard } from "@/components/ui/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarCheck, CheckCircle, XCircle, Clock, AlertTriangle } from "lucide-react";
@@ -27,14 +26,6 @@ export default async function AttendancePage({
       <PageHeader
         title="Control de Asistencia"
         description="Monitoreo diario de asistencia escolar, justificaciones y tasas de cumplimiento."
-        breadcrumbs={
-          <Breadcrumbs
-            items={[
-              { label: "Dashboard", href: `/${schoolSlug}/dashboard` },
-              { label: "Asistencia" },
-            ]}
-          />
-        }
         badge={
           <Badge variant="brand">
             <CalendarCheck className="w-3.5 h-3.5" />

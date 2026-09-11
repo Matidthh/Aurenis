@@ -75,14 +75,3 @@ export const ROLE_PRESETS: Record<string, RolePreset> = {
     ],
   },
 };
-
-/**
- * Retorna la etiqueta legible del rol (p. ej. "SCHOOL_ADMIN" -> "Administrador del Colegio").
- * Si es SYSTEM_ADMIN retorna "Administrador del Sistema".
- * Si no se encuentra en presets, devuelve el nombre tal cual o fallback seguro.
- */
-export function getRoleDisplayName(roleName?: string): string {
-  if (!roleName) return "Usuario";
-  if (roleName === SYSTEM_ROLE_NAME) return "Administrador del Sistema";
-  return ROLE_PRESETS[roleName]?.displayName || roleName;
-}
