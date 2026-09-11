@@ -7,6 +7,7 @@ export interface NavItem {
   badge?: string | number;
   badgeVariant?: "brand" | "success" | "warning" | "neutral";
   section?: string;
+  roles?: string[]; // Allowed roles (e.g. ["SCHOOL_ADMIN", "TEACHER", "STUDENT", "SYSTEM_ADMIN"])
 }
 
 export interface UserSessionInfo {

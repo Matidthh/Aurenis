@@ -74,6 +74,7 @@ export function AppShell({
         navItems={navItems}
         schoolContext={schoolContext}
         isSystemAdmin={isSystemAdmin}
+        userRole={user?.roleName}
       />
 
       {/* 2. Columna Principal: Header + Contenedor Central */}

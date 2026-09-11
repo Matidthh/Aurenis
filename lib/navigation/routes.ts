@@ -145,6 +145,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Dashboard",
     section: "Principal",
     iconName: "LayoutDashboard",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
   },
   students: {
     subPath: "students",
@@ -152,6 +153,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Estudiantes",
     section: "Comunidad Escolar",
     iconName: "Users",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN"],
   },
   teachers: {
     subPath: "teachers",
@@ -159,6 +161,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Profesores",
     section: "Comunidad Escolar",
     iconName: "GraduationCap",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN"],
   },
   courses: {
     subPath: "courses",
@@ -166,6 +169,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Cursos",
     section: "Académico",
     iconName: "BookOpen",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER"],
   },
   subjects: {
     subPath: "subjects",
@@ -173,6 +177,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Asignaturas",
     section: "Académico",
     iconName: "Layers",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT"],
   },
   grades: {
     subPath: "grades",
@@ -180,6 +185,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Calificaciones",
     section: "Académico",
     iconName: "Award",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
   },
   attendance: {
     subPath: "attendance",
@@ -187,6 +193,7 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Asistencia",
     section: "Académico",
     iconName: "CalendarCheck",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
   },
   settings: {
     subPath: "settings",
@@ -194,10 +201,35 @@ export const TENANT_SECTIONS = {
     breadcrumbLabel: "Configuración",
     section: "Administración",
     iconName: "Settings",
+    allowedRoles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN"],
   },
 } as const;
 
 export type TenantSectionKey = keyof typeof TENANT_SECTIONS;
+
+/**
+ * Verifica si una sección escolar está permitida para un rol específico
+ */
+export function isSectionAllowedForRole(sectionKey: TenantSectionKey, roleName?: string): boolean {
+  if (!roleName) return false;
+  if (roleName === "SYSTEM_ADMIN") return true;
+  const section = TENANT_SECTIONS[sectionKey];
+  if (!section) return false;
+  return (section.allowedRoles as readonly string[]).includes(roleName);
+}
+
+/**
+ * Filtra elementos de navegación según el rol del usuario conectado
+ */
+export function filterNavItemsByRole<T extends { roles?: string[] }>(items: T[], userRole?: string): T[] {
+  if (!userRole) return items;
+  if (userRole === "SYSTEM_ADMIN") return items;
+
+  return items.filter((item) => {
+    if (!item.roles || item.roles.length === 0) return true;
+    return item.roles.includes(userRole);
+  });
+}
 
 /**
  * Verifica si una ruta es pública y no requiere sesión

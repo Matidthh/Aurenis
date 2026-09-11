@@ -15,30 +15,34 @@ export default async function SystemLayout({ children }: { children: React.React
     {
       title: "Panel General",
       href: "/system/dashboard",
-      icon: <Shield className="w-5 h-5" />,
+      icon: <Shield className="w-5 h-5 shrink-0" strokeWidth={2} />,
       section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
     },
     {
       title: "Colegios e Instituciones",
       href: "/system/schools",
-      icon: <Building2 className="w-5 h-5" />,
+      icon: <Building2 className="w-5 h-5 shrink-0" strokeWidth={2} />,
       section: "Ecosistema Escolar",
+      roles: ["SYSTEM_ADMIN"],
     },
     {
       title: "Nuevo Colegio",
       href: "/system/schools/new",
-      icon: <PlusCircle className="w-5 h-5" />,
+      icon: <PlusCircle className="w-5 h-5 shrink-0" strokeWidth={2} />,
       badge: "Onboarding",
       badgeVariant: "brand",
       section: "Ecosistema Escolar",
+      roles: ["SYSTEM_ADMIN"],
     },
     {
       title: "Design System (Lucas)",
       href: "/system/design-system",
-      icon: <Palette className="w-5 h-5" />,
+      icon: <Palette className="w-5 h-5 shrink-0" strokeWidth={2} />,
       badge: "Tokens & UI",
       badgeVariant: "success",
       section: "Ecosistema Escolar",
+      roles: ["SYSTEM_ADMIN"],
     },
   ];
 

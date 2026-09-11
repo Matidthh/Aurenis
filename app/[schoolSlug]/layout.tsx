@@ -28,94 +28,130 @@ export default async function TenantLayout({
     getSession(),
   ]);
 
+  const role = tenantCtx.roleName;
+
   const canManageSettings =
-    tenantCtx.roleName === "SYSTEM_ADMIN" ||
+    role === "SYSTEM_ADMIN" ||
+    role === "SCHOOL_ADMIN" ||
     hasPermission(tenantCtx, PERMISSIONS.SCHOOL_SETTINGS_VIEW);
 
-  const canManageAcademic =
-    tenantCtx.roleName === "SYSTEM_ADMIN" ||
-    hasPermission(tenantCtx, PERMISSIONS.ACADEMIC_COURSES_MANAGE);
-
   const canManagePeople =
-    tenantCtx.roleName === "SYSTEM_ADMIN" ||
+    role === "SYSTEM_ADMIN" ||
+    role === "SCHOOL_ADMIN" ||
     hasPermission(tenantCtx, PERMISSIONS.PEOPLE_STUDENTS_MANAGE);
 
+  const canViewCourses =
+    role === "SYSTEM_ADMIN" ||
+    role === "SCHOOL_ADMIN" ||
+    role === "TEACHER" ||
+    hasPermission(tenantCtx, PERMISSIONS.ACADEMIC_COURSES_MANAGE);
+
+  const canViewSubjects =
+    role === "SYSTEM_ADMIN" ||
+    role === "SCHOOL_ADMIN" ||
+    role === "TEACHER" ||
+    role === "STUDENT" ||
+    hasPermission(tenantCtx, PERMISSIONS.ACADEMIC_SUBJECTS_MANAGE);
+
   const canViewGrades =
-    tenantCtx.roleName === "SYSTEM_ADMIN" ||
+    role === "SYSTEM_ADMIN" ||
+    role === "SCHOOL_ADMIN" ||
+    role === "TEACHER" ||
+    role === "STUDENT" ||
+    role === "GUARDIAN" ||
     hasPermission(tenantCtx, PERMISSIONS.GRADES_VIEW);
 
   const canViewAttendance =
-    tenantCtx.roleName === "SYSTEM_ADMIN" ||
+    role === "SYSTEM_ADMIN" ||
+    role === "SCHOOL_ADMIN" ||
+    role === "TEACHER" ||
+    role === "STUDENT" ||
+    role === "GUARDIAN" ||
     hasPermission(tenantCtx, PERMISSIONS.ATTENDANCE_VIEW);
 
-  // Armar lista de navegación modular para el colegio
+  // Armar lista de navegación modular para el colegio según rol
   const navItems: NavItem[] = [
     {
       title: "Dashboard",
       href: `/${tenantCtx.schoolSlug}/dashboard`,
-      icon: <LayoutDashboard className="w-5 h-5" />,
+      icon: <LayoutDashboard className="w-5 h-5 shrink-0" />,
       section: "Principal",
+      roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
     },
   ];
 
+  // Menú para Administración / Comunidad Escolar
   if (canManagePeople) {
     navItems.push(
       {
         title: "Estudiantes",
         href: `/${tenantCtx.schoolSlug}/students`,
-        icon: <Users className="w-5 h-5" />,
+        icon: <Users className="w-5 h-5 shrink-0" />,
         section: "Comunidad Escolar",
+        roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN"],
       },
       {
         title: "Profesores",
         href: `/${tenantCtx.schoolSlug}/teachers`,
-        icon: <GraduationCap className="w-5 h-5" />,
+        icon: <GraduationCap className="w-5 h-5 shrink-0" />,
         section: "Comunidad Escolar",
+        roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN"],
       }
     );
   }
 
-  if (canManageAcademic) {
-    navItems.push(
-      {
-        title: "Cursos",
-        href: `/${tenantCtx.schoolSlug}/courses`,
-        icon: <BookOpen className="w-5 h-5" />,
-        section: "Académico",
-      },
-      {
-        title: "Asignaturas",
-        href: `/${tenantCtx.schoolSlug}/subjects`,
-        icon: <Layers className="w-5 h-5" />,
-        section: "Académico",
-      }
-    );
+  // Menú Académico: Cursos (Admin + Docente)
+  if (canViewCourses) {
+    navItems.push({
+      title: role === "TEACHER" ? "Mis Cursos" : "Cursos",
+      href: `/${tenantCtx.schoolSlug}/courses`,
+      icon: <BookOpen className="w-5 h-5 shrink-0" />,
+      section: "Académico",
+      roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER"],
+    });
   }
 
+  // Menú Académico: Asignaturas (Admin + Docente + Alumno)
+  if (canViewSubjects) {
+    navItems.push({
+      title: role === "STUDENT" ? "Mis Asignaturas" : "Asignaturas",
+      href: `/${tenantCtx.schoolSlug}/subjects`,
+      icon: <Layers className="w-5 h-5 shrink-0" />,
+      section: "Académico",
+      roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT"],
+    });
+  }
+
+  // Calificaciones (Admin + Docente + Alumno + Apoderado)
   if (canViewGrades) {
     navItems.push({
-      title: "Calificaciones",
+      title: role === "STUDENT" ? "Mis Calificaciones" : "Calificaciones",
       href: `/${tenantCtx.schoolSlug}/grades`,
-      icon: <Award className="w-5 h-5" />,
+      icon: <Award className="w-5 h-5 shrink-0" />,
       section: "Académico",
+      roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
     });
   }
 
+  // Asistencia (Admin + Docente + Alumno + Apoderado)
   if (canViewAttendance) {
     navItems.push({
-      title: "Asistencia",
+      title: role === "STUDENT" ? "Mi Asistencia" : "Asistencia",
       href: `/${tenantCtx.schoolSlug}/attendance`,
-      icon: <CalendarCheck className="w-5 h-5" />,
+      icon: <CalendarCheck className="w-5 h-5 shrink-0" />,
       section: "Académico",
+      roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
     });
   }
 
+  // Configuración institucional (Solo Administradores)
   if (canManageSettings) {
     navItems.push({
       title: "Configuración",
       href: `/${tenantCtx.schoolSlug}/settings`,
-      icon: <Settings className="w-5 h-5" />,
+      icon: <Settings className="w-5 h-5 shrink-0" />,
       section: "Administración",
+      roles: ["SYSTEM_ADMIN", "SCHOOL_ADMIN"],
     });
   }
 
