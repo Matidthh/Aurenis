@@ -1,6 +1,7 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listTeachersBySchool } from "@/lib/services/teacher.service";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -18,7 +19,7 @@ export default async function TeachersPage({
   const teachers = await listTeachersBySchool(tenantDb, tenantCtx.schoolId);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Plantel Docente"
         description="Profesores de la institución, especialidades y asignación de cursos."
@@ -97,6 +98,6 @@ export default async function TeachersPage({
           </div>
         )}
       </div>
-    </div>
+    </Page>
   );
 }

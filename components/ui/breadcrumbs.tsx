@@ -14,15 +14,11 @@ export interface BreadcrumbsProps extends React.ComponentPropsWithoutRef<"nav"> 
 }
 
 /**
- * Componente accesible de Breadcrumbs según especificaciones WAI-ARIA.
+ * Breadcrumbs accesibles (WAI-ARIA).
  *
- * Características:
- * - <nav aria-label="Breadcrumb"> semántico.
- * - <ol> para jerarquía ordenada de niveles.
- * - aria-current="page" en el último elemento (página activa actual).
- * - El último elemento no es interactivo (no es enlace).
- * - Separador visual decorativo con aria-hidden="true".
- * - Soporte responsive con flex-wrap para evitar overflow horizontal en móvil.
+ * Representan la jerarquía visual de la interfaz, no necesariamente la URL.
+ * El último ítem es siempre la página actual: no es enlace, incluso si trae `href`.
+ * Los separadores son decorativos (`aria-hidden`).
  */
 export function Breadcrumbs({
   items,
@@ -33,40 +29,45 @@ export function Breadcrumbs({
   if (!items || items.length === 0) return null;
 
   return (
-    <nav aria-label="Breadcrumb" className={cn("flex items-center text-xs", className)} {...props}>
-      <ol className="flex items-center gap-1.5 flex-wrap text-slate-500 dark:text-slate-400">
+    <nav aria-label="Breadcrumb" className={cn("min-w-0", className)} {...props}>
+      <ol className="flex items-center gap-1.5 flex-wrap text-xs text-slate-500 dark:text-slate-400">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
+          const isCurrent = isLast;
+          const showLink = Boolean(item.href) && !isCurrent;
 
           return (
-            <li key={index} className="inline-flex items-center gap-1.5">
+            <li
+              key={`${item.label}-${index}`}
+              className="inline-flex items-center gap-1.5 min-w-0"
+            >
               {index > 0 && (
                 <span
                   className="text-slate-300 dark:text-slate-600 select-none shrink-0"
                   aria-hidden="true"
                 >
-                  {separator || <ChevronRight className="w-3.5 h-3.5" />}
+                  {separator ?? <ChevronRight className="w-3.5 h-3.5" />}
                 </span>
               )}
-              {isLast || !item.href ? (
+              {showLink ? (
+                <Link
+                  href={item.href!}
+                  className="truncate max-w-[12rem] sm:max-w-none rounded-sm hover:text-slate-900 dark:hover:text-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+                >
+                  {item.label}
+                </Link>
+              ) : (
                 <span
-                  aria-current={isLast ? "page" : undefined}
+                  aria-current={isCurrent ? "page" : undefined}
                   className={cn(
-                    "font-medium truncate max-w-[200px] sm:max-w-none",
-                    isLast
-                      ? "text-slate-800 dark:text-slate-200"
+                    "truncate max-w-[12rem] sm:max-w-none",
+                    isCurrent
+                      ? "font-medium text-slate-800 dark:text-slate-200"
                       : "text-slate-500 dark:text-slate-400"
                   )}
                 >
                   {item.label}
                 </span>
-              ) : (
-                <Link
-                  href={item.href}
-                  className="hover:text-slate-900 dark:hover:text-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-500 rounded"
-                >
-                  {item.label}
-                </Link>
               )}
             </li>
           );

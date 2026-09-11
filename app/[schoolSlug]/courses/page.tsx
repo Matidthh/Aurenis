@@ -1,6 +1,7 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listCoursesByYear } from "@/lib/services/academic.service";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +20,7 @@ export default async function CoursesPage({
   const courses = await listCoursesByYear(tenantDb, tenantCtx.schoolId, currentYear);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Catálogo de Cursos"
         description={`Estructura de niveles y divisiones de cursos para el año escolar ${currentYear}.`}
@@ -89,6 +90,6 @@ export default async function CoursesPage({
           </div>
         )}
       </div>
-    </div>
+    </Page>
   );
 }

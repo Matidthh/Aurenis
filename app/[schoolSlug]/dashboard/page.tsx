@@ -1,6 +1,7 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { getSchoolAcademicOverview, listCoursesByYear } from "@/lib/services/academic.service";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { getRoleDisplayName } from "@/lib/constants/roles";
@@ -30,7 +31,7 @@ export default async function TenantDashboardPage({
   const roleDisplayName = getRoleDisplayName(tenantCtx.roleName);
 
   return (
-    <div className="space-y-8 max-w-6xl">
+    <Page>
       <PageHeader
         title={tenantCtx.schoolName}
         description={`Sesión activa como ${roleDisplayName} • Aislamiento verificado`}
@@ -38,7 +39,6 @@ export default async function TenantDashboardPage({
           <Breadcrumbs
             items={[
               { label: "Dashboard" },
-              { label: "Resumen Académico" },
             ]}
           />
         }
@@ -134,6 +134,6 @@ export default async function TenantDashboardPage({
           )}
         </div>
       </div>
-    </div>
+    </Page>
   );
 }

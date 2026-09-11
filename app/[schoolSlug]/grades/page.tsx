@@ -1,10 +1,11 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listAssessmentsWithGrades, getSchoolGradingConfig } from "@/lib/services/grade.service";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
-import { Award, Calendar, BookOpen, Percent } from "lucide-react";
+import { Award } from "lucide-react";
 
 export default async function GradesPage({
   params,
@@ -21,7 +22,7 @@ export default async function GradesPage({
   ]);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Libro de Calificaciones & Evaluaciones"
         description={`Registro oficial de evaluaciones. Escala configurada: ${gradeConfig.minGrade.toFixed(1)} a ${gradeConfig.maxGrade.toFixed(1)} (Aprobación: ${gradeConfig.minPassingGrade.toFixed(1)}).`}
@@ -140,6 +141,6 @@ export default async function GradesPage({
           </div>
         )}
       </div>
-    </div>
+    </Page>
   );
 }

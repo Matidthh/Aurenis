@@ -1,5 +1,6 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +38,7 @@ export default async function SubjectsPage({
   });
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Malla de Asignaturas"
         description="Plan de estudios, cargas horarias y docentes asignados por curso."
@@ -126,6 +127,6 @@ export default async function SubjectsPage({
           </tbody>
         </table>
       </div>
-    </div>
+    </Page>
   );
 }

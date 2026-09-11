@@ -1,6 +1,7 @@
 import { listAllSchools } from "@/lib/services/school.service";
 import Link from "next/link";
 import { Plus, ExternalLink } from "lucide-react";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 
@@ -8,14 +9,14 @@ export default async function SchoolsListPage() {
   const schools = await listAllSchools();
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Colegios e Instituciones"
         description="Administra todas las instituciones educativas activas en Aurenis."
         breadcrumbs={
           <Breadcrumbs
             items={[
-              { label: "Panel", href: "/system/dashboard" },
+              { label: "Panel General", href: "/system/dashboard" },
               { label: "Colegios e Instituciones" },
             ]}
           />
@@ -85,6 +86,6 @@ export default async function SchoolsListPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </Page>
   );
 }

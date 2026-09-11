@@ -1,10 +1,9 @@
 import { prisma } from "@/lib/db/prisma";
 import Link from "next/link";
 import { Building2, Users, Layers, ArrowUpRight } from "lucide-react";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
-
-export const dynamic = "force-dynamic";
 
 export const dynamic = "force-dynamic";
 
@@ -36,14 +35,13 @@ export default async function SystemDashboardPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-6xl">
+    <Page>
       <PageHeader
         title="Panel Global de Administración"
         description="Supervisión técnica y operativa de la plataforma Aurenis Multi-Tenant."
         breadcrumbs={
           <Breadcrumbs
             items={[
-              { label: "Sistema" },
               { label: "Panel General" },
             ]}
           />
@@ -123,6 +121,6 @@ export default async function SystemDashboardPage() {
           )}
         </div>
       </div>
-    </div>
+    </Page>
   );
 }

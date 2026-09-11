@@ -1,6 +1,7 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listAttendanceRecords, getAttendanceOverview } from "@/lib/services/attendance.service";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { StatCard } from "@/components/ui/stat-card";
@@ -22,7 +23,7 @@ export default async function AttendancePage({
   ]);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Control de Asistencia"
         description="Monitoreo diario de asistencia escolar, justificaciones y tasas de cumplimiento."
@@ -135,6 +136,6 @@ export default async function AttendancePage({
           </tbody>
         </table>
       </div>
-    </div>
+    </Page>
   );
 }

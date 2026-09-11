@@ -1,10 +1,11 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { listStudentsBySchool } from "@/lib/services/student.service";
+import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Badge } from "@/components/ui/badge";
-import { Users, Search, UserPlus } from "lucide-react";
+import { Users } from "lucide-react";
 
 export default async function StudentsPage({
   params,
@@ -22,7 +23,7 @@ export default async function StudentsPage({
   }, tenantCtx.schoolId);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <Page>
       <PageHeader
         title="Directorio de Estudiantes"
         description="Gestión de alumnos, matrículas activas y datos de apoderados."
@@ -106,6 +107,6 @@ export default async function StudentsPage({
           </tbody>
         </table>
       </div>
-    </div>
+    </Page>
   );
 }
