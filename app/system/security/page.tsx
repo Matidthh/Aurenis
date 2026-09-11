@@ -18,7 +18,9 @@ import {
   Users,
   Terminal,
   Zap,
+  CheckSquare,
 } from "lucide-react";
+import { OwaspChecklistDashboard } from "@/components/security/owasp-checklist";
 
 interface Risk5x5Item {
   id: string;
@@ -303,7 +305,7 @@ const OWASP_TOP_10 = [
 ];
 
 export default function SecurityStridePage() {
-  const [selectedTab, setSelectedTab] = useState<"matrix5x5" | "owasp" | "actionplan" | "stride" | "minors">("matrix5x5");
+  const [selectedTab, setSelectedTab] = useState<"matrix5x5" | "owasp" | "owasp_checklist" | "actionplan" | "stride" | "minors">("owasp_checklist");
   const [selectedRiskId, setSelectedRiskId] = useState<string | null>("RSK-01");
 
   // Matriz 5x5 heatmap calculations
@@ -337,6 +339,16 @@ export default function SecurityStridePage() {
               Evaluación de Riesgos 5x5 + Mapeo OWASP Top 10 Certificado
             </div>
             <div className="flex items-center gap-2">
+              <a
+                href="/docs/OWASP_SECURITY_CHECKLIST.md"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-medium bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700 transition"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                Checklist OWASP (32)
+                <ExternalLink className="w-3 h-3" />
+              </a>
               <a
                 href="/docs/RISK_ASSESSMENT_MATRIX_5X5.md"
                 target="_blank"
@@ -392,6 +404,17 @@ export default function SecurityStridePage() {
 
       {/* Tabs Navigation */}
       <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2 overflow-x-auto pb-1">
+        <button
+          onClick={() => setSelectedTab("owasp_checklist")}
+          className={`pb-3 px-4 text-sm font-semibold flex items-center gap-2 border-b-2 transition whitespace-nowrap ${
+            selectedTab === "owasp_checklist"
+              ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+              : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+          }`}
+        >
+          <CheckSquare className="w-4 h-4 text-emerald-500" />
+          Checklist Técnico OWASP (32 Controles)
+        </button>
         <button
           onClick={() => setSelectedTab("matrix5x5")}
           className={`pb-3 px-4 text-sm font-semibold flex items-center gap-2 border-b-2 transition whitespace-nowrap ${
@@ -918,6 +941,11 @@ export default function SecurityStridePage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB: OWASP Checklist (32 Controls) */}
+      {selectedTab === "owasp_checklist" && (
+        <OwaspChecklistDashboard />
       )}
 
       {/* TAB 5: STRIDE Model Overview */}

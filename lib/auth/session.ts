@@ -6,8 +6,16 @@ const SECRET_KEY = new TextEncoder().encode(
   process.env.JWT_SECRET || "aurenis-default-super-secret-key-at-least-32-characters"
 );
 
-const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
-const SESSION_EXPIRY = "7d"; // 7 días de duración de sesión
+export const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
+export const SESSION_EXPIRY = "7d"; // 7 días de duración de sesión
+
+export const SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none" as const,
+  path: "/",
+  maxAge: 60 * 60 * 24 * 7, // 7 días en segundos
+};
 
 export async function signSessionToken(payload: Omit<AuthCookiePayload, "iat" | "exp">): Promise<string> {
   return new SignJWT({ ...payload })

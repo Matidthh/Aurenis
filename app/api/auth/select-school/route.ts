@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, setSessionCookie, signSessionToken } from "@/lib/auth/session";
+import { getSession, setSessionCookie, signSessionToken, SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { SelectSchoolSchema } from "@/lib/validations/auth.schema";
 

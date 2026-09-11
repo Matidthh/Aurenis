@@ -75,3 +75,8 @@ export const ROLE_PRESETS: Record<string, RolePreset> = {
     ],
   },
 };
+
+export function getRoleDisplayName(roleName: string): string {
+  return ROLE_PRESETS[roleName]?.displayName || roleName;
+}
+
