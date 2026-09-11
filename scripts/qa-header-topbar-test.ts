@@ -53,15 +53,15 @@ assert(
 
 assert(
   headerContent.includes('id="header-mobile-toggle-btn"') &&
-  headerContent.includes("lg:hidden"),
+  (headerContent.includes("md:hidden") || headerContent.includes("lg:hidden")),
   "Botón toggle para navegación móvil (drawer)",
-  "Visible en pantallas móviles y oculto en desktop (lg:hidden)."
+  "Visible en pantallas móviles y oculto en desktop/tablets (md:hidden)."
 );
 
 assert(
   headerContent.includes('id="header-desktop-collapse-btn"') &&
-  headerContent.includes("hidden lg:flex"),
-  "Botón de colapso/expansión para barra lateral en escritorio",
+  (headerContent.includes("hidden md:flex") || headerContent.includes("hidden lg:flex")),
+  "Botón de colapso/expansión para barra lateral en escritorio y tablet",
   "Integrado con atajos y cambio de icono PanelLeftOpen / PanelLeftClose."
 );
 

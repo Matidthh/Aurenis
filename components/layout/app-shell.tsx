@@ -24,20 +24,59 @@ export function AppShell({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [hasUserToggled, setHasUserToggled] = useState(false);
 
-  // Cargar estado de colapsado desde localStorage al iniciar
+  // Inicializar y sincronizar según breakpoints (sm, md, lg, xl) y localStorage
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("aurenis_sidebar_collapsed");
-      if (saved !== null) {
-        setIsCollapsed(saved === "true");
+    function handleInitialAndResize() {
+      const width = window.innerWidth;
+
+      // Cerrar drawer móvil si pasamos a escritorio/tablet
+      if (width >= 768 && isMobileOpen) {
+        setIsMobileOpen(false);
       }
-    } catch {
-      // Ignorar en caso de restricciones de storage
+
+      // Si el usuario no ha forzado un cambio manual en esta sesión:
+      // - En pantallas medianas (md: 768px a 1023px) colapsar automáticamente a íconos
+      // - En pantallas grandes (lg/xl: >= 1024px) expandir o respetar localStorage
+      try {
+        const saved = localStorage.getItem("aurenis_sidebar_collapsed");
+        if (saved !== null) {
+          setIsCollapsed(saved === "true");
+          setHasUserToggled(true);
+          return;
+        }
+      } catch {
+        // Ignorar restricciones de storage
+      }
+
+      if (width >= 768 && width < 1024) {
+        // Pantalla mediana (md): colapso automático a iconos
+        setIsCollapsed(true);
+      } else if (width >= 1024) {
+        // Pantalla grande (lg/xl): expandido por defecto
+        setIsCollapsed(false);
+      }
     }
-  }, []);
+
+    handleInitialAndResize();
+    window.addEventListener("resize", handleInitialAndResize);
+    return () => window.removeEventListener("resize", handleInitialAndResize);
+  }, [isMobileOpen]);
+
+  // Bloquear scroll de fondo cuando el drawer móvil está abierto
+  useEffect(() => {
+    if (isMobileOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isMobileOpen]);
 
   function toggleCollapse() {
+    setHasUserToggled(true);
     setIsCollapsed((prev) => {
       const next = !prev;
       try {
@@ -47,7 +86,7 @@ export function AppShell({
     });
   }
 
-  // Atajos de teclado: Ctrl+B (colapsar sidebar), Ctrl+K (abrir búsqueda)
+  // Atajos de teclado: Ctrl+B (colapsar sidebar), Ctrl+K (abrir búsqueda), Escape (cerrar drawer)
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
@@ -56,12 +95,14 @@ export function AppShell({
       } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setIsSearchOpen((prev) => !prev);
+      } else if (e.key === "Escape" && isMobileOpen) {
+        setIsMobileOpen(false);
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [isMobileOpen]);
 
   return (
     <div id="app-shell" className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-brand-500 selection:text-white">

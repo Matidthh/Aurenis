@@ -188,18 +188,18 @@ export function Header({
             id="header-mobile-toggle-btn"
             type="button"
             onClick={onOpenMobile}
-            className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             aria-label="Abrir navegación lateral"
           >
             <Menu className="w-5 h-5" />
           </button>
 
-          {/* Botón Colapsar Desktop */}
+          {/* Botón Colapsar Desktop y Tablet */}
           <button
             id="header-desktop-collapse-btn"
             type="button"
             onClick={onToggleCollapse}
-            className="hidden lg:flex p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="hidden md:flex p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             aria-label="Colapsar o expandir barra lateral"
             title={isCollapsed ? "Expandir menú (Ctrl+B)" : "Colapsar menú (Ctrl+B)"}
           >

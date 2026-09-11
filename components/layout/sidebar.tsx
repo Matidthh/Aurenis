@@ -105,7 +105,7 @@ export function Sidebar({
           id="sidebar-close-mobile-btn"
           type="button"
           onClick={onCloseMobile}
-          className="lg:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          className="md:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           aria-label="Cerrar menú lateral"
         >
           <X className="w-5 h-5 shrink-0" strokeWidth={2} />
@@ -231,7 +231,7 @@ export function Sidebar({
                       </AnimatePresence>
                     </Link>
 
-                    {/* Tooltip flotante animado en modo colapsado para desktop */}
+                    {/* Tooltip flotante animado en modo colapsado para desktop y tablet */}
                     <AnimatePresence>
                       {isCollapsed && hoveredItem === item.href && (
                         <motion.div
@@ -240,7 +240,7 @@ export function Sidebar({
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           exit={{ opacity: 0, x: 6, scale: 0.95 }}
                           transition={{ duration: 0.12 }}
-                          className="hidden lg:flex fixed left-20 ml-2 z-50 items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-800 text-white text-xs font-medium shadow-xl whitespace-nowrap border border-slate-700 pointer-events-none"
+                          className="hidden md:flex fixed left-20 ml-2 z-50 items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-800 text-white text-xs font-medium shadow-xl whitespace-nowrap border border-slate-700 pointer-events-none"
                         >
                           <span>{item.title}</span>
                           {item.badge && (
@@ -317,13 +317,13 @@ export function Sidebar({
           </Link>
         )}
 
-        {/* Botón retráctil para Desktop con rotación animada */}
+        {/* Botón retráctil para Desktop / Tablet con rotación animada */}
         <button
           id="sidebar-collapse-desktop-btn"
           type="button"
           onClick={onToggleCollapse}
           className={cn(
-            "hidden lg:flex w-full items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors",
+            "hidden md:flex w-full items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors",
             isCollapsed && "justify-center px-2"
           )}
           title={isCollapsed ? "Expandir barra lateral" : "Colapsar barra lateral"}
@@ -381,13 +381,13 @@ export function Sidebar({
 
   return (
     <>
-      {/* 1. Desktop Sidebar con transición Framer Motion de ancho suave */}
+      {/* 1. Desktop & Tablet Sidebar con transición Framer Motion de ancho suave */}
       <motion.aside
         id="desktop-sidebar"
         initial={false}
         animate={{ width: isCollapsed ? 80 : 256 }}
         transition={{ type: "spring", stiffness: 320, damping: 32 }}
-        className="hidden lg:flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 h-screen sticky top-0 z-40 overflow-hidden"
+        className="hidden md:flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 h-screen sticky top-0 z-40 overflow-hidden"
       >
         {sidebarContent}
       </motion.aside>
@@ -395,15 +395,21 @@ export function Sidebar({
       {/* 2. Mobile Drawer con AnimatePresence para backdrop y panel */}
       <AnimatePresence>
         {isMobileOpen && (
-          <div id="mobile-sidebar-drawer" className="fixed inset-0 z-50 lg:hidden">
-            {/* Backdrop con desvanecimiento animado */}
+          <div
+            id="mobile-sidebar-drawer"
+            className="fixed inset-0 z-50 md:hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación lateral"
+          >
+            {/* Backdrop con desvanecimiento animado oscuro */}
             <motion.div
               id="mobile-sidebar-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-slate-950/70 dark:bg-black/80 backdrop-blur-xs"
               onClick={onCloseMobile}
             />
 
