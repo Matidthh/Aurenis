@@ -58,9 +58,7 @@ export async function POST(req: NextRequest) {
       permissions,
     });
 
-    await setSessionCookie(token);
-
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       redirectUrl: `/${membership.school.slug}/dashboard`,
       school: {
@@ -69,6 +67,9 @@ export async function POST(req: NextRequest) {
         name: membership.school.name,
       },
     });
+
+    response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
+    return response;
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Error al seleccionar institución" },

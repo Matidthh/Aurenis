@@ -103,6 +103,36 @@ function initStore(): MockStore {
   };
   store.schoolSettings.set(settings.id, settings);
 
+  // 3b. School: Colegio Santa María (Tenant de Aislamiento y Control Multi-Tenant)
+  const school2 = {
+    id: "school-csm-999",
+    slug: "colegio-santa-maria",
+    name: "Colegio Santa María",
+    institutionalCode: "CSM-999",
+    city: "Valparaíso",
+    country: "Chile",
+    timezone: "America/Santiago",
+    status: "ACTIVE",
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+  };
+  store.schools.set(school2.id, school2);
+
+  const settings2 = {
+    id: "settings-csm-999",
+    schoolId: school2.id,
+    termType: "SEMESTER",
+    minPassingGrade: 4.0,
+    minGrade: 1.0,
+    maxGrade: 7.0,
+    gradeScalePrecision: 1,
+    primaryColor: "#059669",
+    requireAttendanceNote: false,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+  };
+  store.schoolSettings.set(settings2.id, settings2);
+
   // 4. Roles for Colegio San José
   const roleMap: Record<string, any> = {};
   for (const preset of Object.values(ROLE_PRESETS)) {
@@ -827,6 +857,21 @@ export function createMockPrisma() {
     },
 
     course: {
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const c = store.courses.get(args.where.id);
+          return c ? hydrateCourse(c, args?.include) : null;
+        }
+        return this.findFirst(args);
+      },
+      async findFirst(args?: any) {
+        for (const c of store.courses.values()) {
+          if (matchWhere(c, args?.where)) {
+            return hydrateCourse(c, args?.include);
+          }
+        }
+        return null;
+      },
       async findMany(args?: any) {
         const result: any[] = [];
         for (const c of store.courses.values()) {
@@ -851,6 +896,19 @@ export function createMockPrisma() {
         const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
         store.courses.set(id, item);
         return hydrateCourse(item, args.include);
+      },
+      async update(args: any) {
+        const existing = store.courses.get(args.where.id);
+        if (!existing) throw new Error("Course not found");
+        const updated = { ...existing, ...args.data, updatedAt: new Date() };
+        store.courses.set(args.where.id, updated);
+        return hydrateCourse(updated, args.include);
+      },
+      async delete(args: any) {
+        const existing = store.courses.get(args.where.id);
+        if (!existing) throw new Error("Course not found");
+        store.courses.delete(args.where.id);
+        return hydrateCourse(existing, args.include);
       },
       async upsert(args: any) {
         const item = { ...args.create, id: args.create.id || `course-${Date.now()}` };
@@ -937,6 +995,21 @@ export function createMockPrisma() {
     },
 
     enrollment: {
+      async findFirst(args?: any) {
+        for (const e of store.enrollments.values()) {
+          if (matchWhere(e, args?.where)) {
+            return hydrateEnrollment(e, args?.include);
+          }
+        }
+        return null;
+      },
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const e = store.enrollments.get(args.where.id);
+          return e ? hydrateEnrollment(e, args?.include) : null;
+        }
+        return this.findFirst(args);
+      },
       async findMany(args?: any) {
         const result: any[] = [];
         for (const e of store.enrollments.values()) {
@@ -956,6 +1029,21 @@ export function createMockPrisma() {
     },
 
     assessment: {
+      async findFirst(args?: any) {
+        for (const a of store.assessments.values()) {
+          if (matchWhere(a, args?.where)) {
+            return hydrateAssessment(a, args?.include);
+          }
+        }
+        return null;
+      },
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const a = store.assessments.get(args.where.id);
+          return a ? hydrateAssessment(a, args?.include) : null;
+        }
+        return this.findFirst(args);
+      },
       async findMany(args?: any) {
         const result: any[] = [];
         for (const a of store.assessments.values()) {
@@ -970,6 +1058,59 @@ export function createMockPrisma() {
         const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
         store.assessments.set(id, item);
         return hydrateAssessment(item, args.include);
+      },
+    },
+
+    grade: {
+      async findFirst(args?: any) {
+        for (const g of store.grades.values()) {
+          if (matchWhere(g, args?.where)) {
+            return { ...g };
+          }
+        }
+        return null;
+      },
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const g = store.grades.get(args.where.id);
+          return g ? { ...g } : null;
+        }
+        return this.findFirst(args);
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const g of store.grades.values()) {
+          if (matchWhere(g, args?.where)) {
+            result.push({ ...g });
+          }
+        }
+        return result;
+      },
+      async create(args: any) {
+        const id = args.data.id || `grade-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
+        store.grades.set(id, item);
+        return { ...item };
+      },
+      async update(args: any) {
+        const existing = store.grades.get(args.where.id);
+        if (!existing) throw new Error("Grade not found");
+        const updated = { ...existing, ...args.data, updatedAt: new Date() };
+        store.grades.set(args.where.id, updated);
+        return { ...updated };
+      },
+      async delete(args: any) {
+        const existing = store.grades.get(args.where.id);
+        if (!existing) throw new Error("Grade not found");
+        store.grades.delete(args.where.id);
+        return { ...existing };
+      },
+      async count(args?: any) {
+        let cnt = 0;
+        for (const g of store.grades.values()) {
+          if (matchWhere(g, args?.where)) cnt++;
+        }
+        return cnt;
       },
     },
 
@@ -1000,17 +1141,21 @@ export function createMockPrisma() {
 
     auditLog: {
       async create(args: any) {
-        const item = { ...args.data, id: `audit-${Date.now()}`, timestamp: new Date() };
+        const item = { ...args.data, id: `audit-${Date.now()}`, timestamp: new Date(), createdAt: new Date() };
         store.auditLogs.push(item);
         return item;
+      },
+      async findFirst(args?: any) {
+        const list = await this.findMany(args);
+        return list[0] || null;
       },
       async findMany(args?: any) {
         let result = [...store.auditLogs];
         if (args?.where) {
           result = result.filter((a) => matchWhere(a, args.where));
         }
-        if (args?.orderBy?.timestamp === "desc") {
-          result.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        if (args?.orderBy?.timestamp === "desc" || args?.orderBy?.createdAt === "desc") {
+          result.sort((a, b) => new Date(b.timestamp || b.createdAt).getTime() - new Date(a.timestamp || a.createdAt).getTime());
         }
         if (args?.take) {
           result = result.slice(0, args.take);

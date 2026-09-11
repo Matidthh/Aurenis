@@ -57,3 +57,85 @@ export async function listAcademicPeriods(tenantDb: TenantPrismaClient, schoolId
     orderBy: { startDate: "desc" },
   });
 }
+
+export async function createCourse(
+  tenantDb: TenantPrismaClient,
+  schoolId: string,
+  input: {
+    name: string;
+    educationLevelId: string;
+    gradeNumber: number;
+    letter?: string;
+    year: number;
+  },
+  userId?: string
+) {
+  const course = await tenantDb.course.create({
+    data: {
+      schoolId,
+      name: input.name,
+      educationLevelId: input.educationLevelId,
+      gradeNumber: input.gradeNumber,
+      letter: input.letter || null,
+      year: input.year,
+    },
+  });
+
+  return course;
+}
+
+export async function updateCourse(
+  tenantDb: TenantPrismaClient,
+  schoolId: string,
+  courseId: string,
+  input: {
+    name?: string;
+    educationLevelId?: string;
+    gradeNumber?: number;
+    letter?: string;
+    year?: number;
+  },
+  userId?: string
+) {
+  const existing = await tenantDb.course.findFirst({
+    where: { id: courseId, schoolId },
+  });
+
+  if (!existing) {
+    throw new Error(`Curso '${courseId}' no encontrado en la institución.`);
+  }
+
+  const updated = await tenantDb.course.update({
+    where: { id: courseId },
+    data: {
+      ...(input.name !== undefined ? { name: input.name } : {}),
+      ...(input.educationLevelId !== undefined ? { educationLevelId: input.educationLevelId } : {}),
+      ...(input.gradeNumber !== undefined ? { gradeNumber: input.gradeNumber } : {}),
+      ...(input.letter !== undefined ? { letter: input.letter } : {}),
+      ...(input.year !== undefined ? { year: input.year } : {}),
+    },
+  });
+
+  return updated;
+}
+
+export async function deleteCourse(
+  tenantDb: TenantPrismaClient,
+  schoolId: string,
+  courseId: string,
+  userId?: string
+) {
+  const existing = await tenantDb.course.findFirst({
+    where: { id: courseId, schoolId },
+  });
+
+  if (!existing) {
+    throw new Error(`Curso '${courseId}' no encontrado en la institución.`);
+  }
+
+  await tenantDb.course.delete({
+    where: { id: courseId },
+  });
+
+  return { success: true };
+}

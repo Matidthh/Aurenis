@@ -6,8 +6,11 @@ import { createSchoolWithOnboarding, listAllSchools } from "@/lib/services/schoo
 export async function GET() {
   try {
     const session = await getSession();
-    if (!session || !session.isSystemAdmin) {
-      return NextResponse.json({ error: "No autorizado. Requiere privilegios de SYSTEM_ADMIN." }, { status: 403 });
+    if (!session) {
+      return NextResponse.json({ error: "No autenticado. Inicie sesión para continuar." }, { status: 401 });
+    }
+    if (!session.isSystemAdmin) {
+      return NextResponse.json({ error: "Acceso denegado. Se requieren privilegios de SuperAdmin." }, { status: 403 });
     }
 
     const schools = await listAllSchools();
@@ -20,8 +23,11 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const session = await getSession();
-    if (!session || !session.isSystemAdmin) {
-      return NextResponse.json({ error: "No autorizado. Requiere privilegios de SYSTEM_ADMIN." }, { status: 403 });
+    if (!session) {
+      return NextResponse.json({ error: "No autenticado. Inicie sesión para continuar." }, { status: 401 });
+    }
+    if (!session.isSystemAdmin) {
+      return NextResponse.json({ error: "Acceso denegado. Se requieren privilegios de SuperAdmin para crear instituciones." }, { status: 403 });
     }
 
     const body = await req.json();

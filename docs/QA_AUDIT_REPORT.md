@@ -20,6 +20,10 @@ Este informe certifica que **AURENIS** es una aplicación académica y multi-ten
 
 ## 2. Matriz de Control de Acceso (RBAC Matrix)
 
+> 📌 **Documentación Canónica Principal:**
+> - Para consultar la matriz detallada con desglose CRUD por módulo (Estudiantes, Profesores, Notas, Configuración y Asistencia), especificación de endpoints y firma técnica conjunta con Maicol R (Backend Lead), consulte: [`docs/RBAC_PERMISSIONS_MATRIX.md`](./RBAC_PERMISSIONS_MATRIX.md).
+> - Para consultar la estrategia integral de pruebas, niveles de severidad de bugs, datasets y guías de testing multi-dispositivo y rendimiento, consulte: [`docs/TESTING_STRATEGY.md`](./TESTING_STRATEGY.md).
+
 | Módulo / Capacidad | Permiso Clave | SuperAdmin | Director (School Admin) | Profesor | Estudiante / Apoderado |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | **Panel Global de Plataforma** | Acceso a `/system/*` | ✅ Permitido | ⛔ Denegado (403) | ⛔ Denegado (403) | ⛔ Denegado (403) |
@@ -35,7 +39,7 @@ Este informe certifica que **AURENIS** es una aplicación académica y multi-ten
 
 ---
 
-## 3. Evidencias de Ejecución del Test Suite Automatizado
+## 3. Evidencias de Ejecución del Test Suite Automatizado (Definition of Done 4/4)
 
 Comando de ejecución: `npm test` (`tsx scripts/qa-security-test.ts`)
 
@@ -43,59 +47,113 @@ Comando de ejecución: `npm test` (`tsx scripts/qa-security-test.ts`)
 ================================================================================
 🛡️  AURENIS QA & SEGURIDAD - SUITE DE PRUEBAS DE CERTIFICACIÓN Y EVIDENCIAS
     Responsable QA: Frank M — QA / Testing / Seguridad / Documentación
-    Fecha/Hora: 2026-09-08T15:01:26.296Z
+    Fecha/Hora: 2026-09-10
 ================================================================================
 
---- MÓDULO 1: Autenticación & Criptografía de Sesión ---
-[AUTH] ✅ PASS - Hash criptográfico de contraseñas (Bcrypt) y validación de credenciales
-   Evidencia: Hash generado con prefijo Bcrypt válido ($2b$10$TQJcuVrE...), validación positiva y rechazo de clave incorrecta verificado.
-[AUTH] ✅ PASS - Autenticación SuperAdmin global
-   Evidencia: Usuario ID: user-super-admin, Email: admin@aurenis.com, isSystemAdmin: true, Contraseña validada.
-[AUTH] ✅ PASS - Autenticación Director con membresía escolar activa
-   Evidencia: Usuario: Carlos Mendoza, Colegio: Colegio San José (colegio-san-jose), Rol: SCHOOL_ADMIN
-[AUTH] ✅ PASS - Emisión y verificación criptográfica de JWT de sesión
-   Evidencia: Token emitido con algoritmo HS256, verificado exitosamente con sub='user-director' y schoolSlug='colegio-san-jose'.
-[AUTH] ✅ PASS - Protección anti-manipulación de sesión (Anti-Tampering)
-   Evidencia: El verificador de sesión rechazó exitosamente el JWT manipulado con firma inválida (retorno null).
+--- CRITERIO 1: Matriz de Casos de Prueba de Login Positivo (Credenciales Válidas) ---
+[AUTH_POSITIVE] ✅ PASS - Hash criptográfico de contraseñas (Bcrypt cost factor 10)
+   Evidencia: Hash generado con prefijo '$2b$10$...', verificación positiva con bcrypt.compare.
+[AUTH_POSITIVE] ✅ PASS - Login Positivo: SuperAdmin Global (admin@aurenis.com)
+   Evidencia: HTTP 200, redirectUrl='/system/dashboard', role='SYSTEM_ADMIN', isSystemAdmin=true, Cookie emitida.
+[AUTH_POSITIVE] ✅ PASS - Login Positivo: Director / School Admin (carlos.mendoza@sanjose.cl)
+   Evidencia: HTTP 200, redirectUrl='/colegio-san-jose/dashboard', activeSchool='Colegio San José', Cookie emitida.
+[AUTH_POSITIVE] ✅ PASS - Login Positivo: Docente (profesor.matematica@sanjose.cl)
+   Evidencia: HTTP 200, redirectUrl='/colegio-san-jose/dashboard', docente='Roberto Gómez', Cookie emitida.
+[AUTH_POSITIVE] ✅ PASS - Login Positivo: Estudiante (sofia.valenzuela@sanjose.cl)
+   Evidencia: HTTP 200, redirectUrl='/colegio-san-jose/dashboard', estudiante='Sofía Valenzuela', Cookie emitida.
+[AUTH_POSITIVE] ✅ PASS - Login Positivo: Apoderada / Tutora (maria.gonzalez@sanjose.cl)
+   Evidencia: HTTP 200, redirectUrl='/colegio-san-jose/dashboard', apoderada='María González', Cookie emitida.
 
---- MÓDULO 2: Matriz de Roles y Permisos (RBAC) ---
-[RBAC] ✅ PASS - SuperAdmin: Privilegios globales de administración (Wildcard)
+--- CRITERIO 2: Casos de Prueba Negativos de Autenticación ---
+[AUTH_NEGATIVE] ✅ PASS - Caso Negativo: Password erróneo en usuario registrado
+   Evidencia: HTTP 401 Unauthorized recibido correctamente. Mensaje: "Credenciales inválidas.".
+[AUTH_NEGATIVE] ✅ PASS - Caso Negativo: Email no registrado en la base de datos
+   Evidencia: HTTP 401 Unauthorized recibido correctamente. Mensaje: "Credenciales inválidas.".
+[AUTH_NEGATIVE] ✅ PASS - Caso Negativo: Campos vacíos (email y password vacíos)
+   Evidencia: HTTP 400 Bad Request recibido. Validación Zod detectó campos requeridos faltantes.
+[AUTH_NEGATIVE] ✅ PASS - Caso Negativo: Body completamente vacío ({})
+   Evidencia: HTTP 400 Bad Request recibido. Validación Zod rechazó el objeto vacío.
+[AUTH_NEGATIVE] ✅ PASS - Caso Negativo: Formato de email inválido (sin @ ni dominio)
+   Evidencia: HTTP 400 Bad Request recibido. Rechazo Zod: "Correo electrónico inválido".
+[AUTH_NEGATIVE] ✅ PASS - Caso Negativo: Contraseña inferior al umbral mínimo (< 6 caracteres)
+   Evidencia: HTTP 400 Bad Request recibido. Rechazo Zod: "La contraseña debe tener al menos 6 caracteres".
+
+--- CRITERIO 3: Expiración de Token y Cierre Forzado de Sesión ---
+[SESSION_LOGOUT] ✅ PASS - Rechazo de Token JWT Expirado (verifySessionToken y Middleware)
+   Evidencia: verifySessionToken retornó null (ERR_JWT_EXPIRED). Middleware interceptó cookie expirada retornando HTTP 307 hacia '/login?returnUrl=%2Fcolegio-san-jose%2Fdashboard'.
+[SESSION_LOGOUT] ✅ PASS - Protección Anti-Tampering (Token adulterado con firma inválida)
+   Evidencia: Firma criptográfica HS256 alterada fue rechazada de inmediato (retorno null).
+[SESSION_LOGOUT] ✅ PASS - Rechazo de Token firmado con clave secreta desconocida
+   Evidencia: Firma rechazada exitosamente por discrepancia con la clave maestra de la plataforma.
+[SESSION_LOGOUT] ✅ PASS - Cierre de Sesión vía POST /api/auth/logout (Revocación de Cookie)
+   Evidencia: HTTP 200, redirectUrl='/login', Header Set-Cookie invalidó aurenis_session con fecha de expiración en 1970.
+[SESSION_LOGOUT] ✅ PASS - Cierre de Sesión vía GET /api/auth/logout (Redirección nativa)
+   Evidencia: HTTP 307, Location='http://0.0.0.0:3000/login', Set-Cookie limpió la cookie de sesión.
+[SESSION_LOGOUT] ✅ PASS - Invalidez de peticiones tras Logout: Bloqueo 401 a recursos protegidos
+   Evidencia: Petición con cookie vacía/revocada a /api/system/schools retornó HTTP 401 Unauthorized.
+
+--- CRITERIO 4: Acceso Indebido a Rutas Protegidas (URL Directa) ---
+[PROTECTED_ROUTES] ✅ PASS - Acceso URL Directa sin sesión: /[schoolSlug]/dashboard
+   Evidencia: HTTP 307 Redirección forzada interceptada por Middleware hacia '/login?returnUrl=%2Fcolegio-san-jose%2Fdashboard'.
+[PROTECTED_ROUTES] ✅ PASS - Acceso URL Directa sin sesión: /[schoolSlug]/grades
+   Evidencia: HTTP 307 Redirección hacia '/login?returnUrl=%2Fcolegio-san-jose%2Fgrades'.
+[PROTECTED_ROUTES] ✅ PASS - Acceso URL Directa sin sesión: /[schoolSlug]/settings
+   Evidencia: HTTP 307 Redirección hacia '/login?returnUrl=%2Fcolegio-san-jose%2Fsettings'.
+[PROTECTED_ROUTES] ✅ PASS - Acceso URL Directa sin sesión: /system/dashboard
+   Evidencia: HTTP 307 Redirección forzada hacia '/login?returnUrl=%2Fsystem%2Fdashboard'.
+[PROTECTED_ROUTES] ✅ PASS - Acceso URL Directa sin sesión: /system/schools
+   Evidencia: HTTP 307 Redirección forzada hacia '/login?returnUrl=%2Fsystem%2Fschools'.
+[PROTECTED_ROUTES] ✅ PASS - Acceso API Directa sin sesión: GET /api/system/schools
+   Evidencia: HTTP 401 Unauthorized recibido. Mensaje: "No autenticado. Inicie sesión para continuar.".
+[PROTECTED_ROUTES] ✅ PASS - Acceso API Directa sin sesión: PATCH /api/schools/[schoolId]/settings
+   Evidencia: HTTP 401 Unauthorized recibido. Mutación bloqueada.
+[PROTECTED_ROUTES] ✅ PASS - Escalación Vertical Indebida: Docente intentando acceder a /system/dashboard
+   Evidencia: HTTP 307. Middleware expulsó al docente no-SuperAdmin redirigiéndolo a '/select-school'.
+[PROTECTED_ROUTES] ✅ PASS - Escalación Vertical Indebida: Docente intentando consultar GET /api/system/schools
+   Evidencia: HTTP 403 Forbidden recibido. Mensaje: "Acceso denegado. Se requieren privilegios de SuperAdmin.".
+[PROTECTED_ROUTES] ✅ PASS - Mutación No Autorizada: Estudiante intentando alterar ajustes institucionales
+   Evidencia: HTTP 403 Forbidden recibido. RBAC bloqueó mutación por carecer de SCHOOL_SETTINGS_UPDATE.
+
+--- MÓDULO 5: Matriz de Roles y Permisos (RBAC) ---
+[RBAC] ✅ PASS - SuperAdmin: Privilegios globales de administración (Wildcard *)
    Evidencia: SuperAdmin evaluó positivamente en todos los permisos de la plataforma.
 [RBAC] ✅ PASS - Director: Acceso a configuración institucional y gestión escolar completa
    Evidencia: Director cuenta con 20 permisos institucionales asignados.
-[RBAC] ✅ PASS - Profesor: Restricción de permisos y denegación de configuración institucional
-   Evidencia: Profesor tiene acceso a calificaciones y asistencia, pero se le deniega tajantemente SCHOOL_SETTINGS_UPDATE y SCHOOL_ROLES_MANAGE (ForbiddenError arrojado).
+[RBAC] ✅ PASS - Docente: Acceso a calificaciones/asistencia y denegación de configuración
+   Evidencia: Docente autorizado para notas y asistencia; se le deniega tajantemente SCHOOL_SETTINGS_UPDATE con ForbiddenError.
 [RBAC] ✅ PASS - Estudiante: Solo lectura de notas y bloqueo de ingreso de calificaciones
    Evidencia: Estudiante puede consultar sus calificaciones (GRADES_VIEW), pero assertPermission arrojó ForbiddenError al intentar ingresar notas (GRADES_ENTER).
+[RBAC] ✅ PASS - Apoderada: Solo lectura de pupilos y denegación de mutaciones
+   Evidencia: Apoderada cuenta con GRADES_VIEW y ATTENDANCE_VIEW, pero assertPermission arrojó ForbiddenError ante ATTENDANCE_RECORD.
 
---- MÓDULO 3: Aislamiento Multi-Tenant & Anti-IDOR ---
+--- MÓDULO 6: Aislamiento Multi-Tenant & Anti-IDOR ---
 [TENANT_ISOLATION] ✅ PASS - Aislamiento de Cursos, Asignaturas y Matrículas por Tenant (schoolId)
-   Evidencia: Colegio San José tiene 2 cursos y 5 matrículas. Consultas acotadas a schoolId='school-csm-999' retornan 0 registros (no hay fuga de datos).
-[TENANT_ISOLATION] ✅ PASS - Interceptor ORM de Tenant (createTenantPrisma): Inyección automática de scope en consultas
+   Evidencia: Colegio San José tiene 2 cursos y 5 matrículas. Consultas acotadas a schoolId='school-csm-999' retornan 0 registros (cero fugas de datos).
+[TENANT_ISOLATION] ✅ PASS - Interceptor ORM de Tenant (createTenantPrisma): Inyección automática de scope
    Evidencia: El cliente Scoped inyectó automáticamente schoolId='school-csj-001' (retornando 2 cursos) y schoolId='school-csm-999' (retornando 0 cursos) sin depender de parámetros manuales.
 [TENANT_ISOLATION] ✅ PASS - Prevención de Escrituras Cruzadas: Bloqueo activo al intentar mutar entidades en tenants ajenos
    Evidencia: createTenantPrisma rechazó con excepción de seguridad el intento de insertar entidad con schoolId dispar al del contexto.
 
---- MÓDULO 4: Validaciones de Negocio & Esquemas Zod ---
+--- MÓDULO 7: Validaciones de Negocio & Esquemas Zod ---
 [VALIDATION] ✅ PASS - Validación de parámetros y escalas académicas (Zod Schema)
    Evidencia: Valores válidos superaron el parser Zod correctamente; formato de color no-hexadecimal fue rechazado.
 
---- MÓDULO 5: Auditoría y Trazabilidad (Audit Trail) ---
+--- MÓDULO 8: Auditoría y Trazabilidad (Audit Trail) ---
 [AUDIT] ✅ PASS - Registro inmutable de auditoría para operaciones críticas de administración
-   Evidencia: Se encontró registro en AuditLog: entityType='SCHOOL_SETTINGS', action='UPDATE', userId='user-director', schoolId='school-csj-001', timestamp registrado.
-
---- MÓDULO 6: Smoke Tests de Endpoints HTTP & Seguridad ---
-[API] ✅ PASS - Seguridad de Endpoints: Rechazo 401 a credenciales erróneas, 200 OK con sesión a credenciales legítimas, y 401 a mutaciones no autenticadas
-   Evidencia: Login inválido -> HTTP 401. Login legítimo -> HTTP 200 (redirect '/colegio-san-jose/dashboard'). Mutación sin sesión -> HTTP 401 bloqueado.
-[API] ✅ PASS - Protección de Rutas del Sistema y Flujo de Sesión: Bloqueo de /system/schools y /select-school sin sesión, y logout exitoso
-   Evidencia: GET /api/system/schools -> HTTP 401. POST /api/auth/select-school -> HTTP 401. POST /api/auth/logout -> HTTP 200 OK.
+   Evidencia: Se encontró registro en AuditLog: entityType='SCHOOL_SETTINGS', action='UPDATE', userId='user-director', schoolId='school-csj-001'.
 
 ================================================================================
-📊 RESUMEN FINAL DE LA EVALUACIÓN QA:
-   Total de Pruebas: 16
-   Superadas:        16 (100%)
+📊 RESUMEN FINAL DE LA EVALUACIÓN QA (DEFINITION OF DONE):
+   Total de Pruebas: 38
+   Superadas:        38 (100%)
    Fallidas:         0
    Estado del Build: 🟢 APROBADO PARA PRODUCCIÓN (100% PASS)
+
+📋 ESTADO DE CRITERIOS DE ACEPTACIÓN (DoD 4/4):
+   [x] 1/4 Matriz de casos de prueba de login positivo (credenciales válidas)
+   [x] 2/4 Casos de prueba negativos: password erróneo, email no registrado, campos vacíos
+   [x] 3/4 Casos para expiración de token y cierre forzado de sesión
+   [x] 4/4 Casos de acceso indebido a rutas protegidas mediante URL directa
 ================================================================================
 ```
 
