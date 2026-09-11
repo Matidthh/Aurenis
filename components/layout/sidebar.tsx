@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { NavItem, SchoolContextInfo } from "./types";
+import { isRouteActive } from "@/lib/navigation/routes";
 import { cn } from "@/lib/utils/cn";
 
 interface SidebarProps {
@@ -106,9 +107,7 @@ export function Sidebar({
               )}
 
               {sectionItems.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/" && pathname.startsWith(item.href) && item.href !== `/${schoolContext?.schoolSlug}`);
+                const isActive = isRouteActive(pathname, item.href);
 
                 return (
                   <div
@@ -121,11 +120,12 @@ export function Sidebar({
                       id={`sidebar-link-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
                       href={item.href}
                       onClick={() => onCloseMobile()}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-150 group",
                         isCollapsed ? "justify-center" : "justify-between",
                         isActive
-                          ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 font-semibold border-l-4 border-brand-600 shadow-sm"
+                          ? "bg-brand-50/90 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 font-semibold ring-1 ring-brand-200/60 dark:ring-brand-800/50 shadow-2xs"
                           : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white"
                       )}
                     >
@@ -146,17 +146,27 @@ export function Sidebar({
                         )}
                       </div>
 
-                      {!isCollapsed && item.badge && (
-                        <span
-                          className={cn(
-                            "px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0",
-                            item.badgeVariant === "brand" && "bg-brand-100 text-brand-700 dark:bg-brand-900 dark:text-brand-200",
-                            item.badgeVariant === "success" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300",
-                            (!item.badgeVariant || item.badgeVariant === "neutral") && "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                      {!isCollapsed && (
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {isActive && (
+                            <span
+                              className="w-1.5 h-1.5 rounded-full bg-brand-600 dark:bg-brand-400"
+                              aria-hidden="true"
+                            />
                           )}
-                        >
-                          {item.badge}
-                        </span>
+                          {item.badge && (
+                            <span
+                              className={cn(
+                                "px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0",
+                                item.badgeVariant === "brand" && "bg-brand-100 text-brand-700 dark:bg-brand-900 dark:text-brand-200",
+                                item.badgeVariant === "success" && "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300",
+                                (!item.badgeVariant || item.badgeVariant === "neutral") && "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
+                              )}
+                            >
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
                       )}
                     </Link>
 

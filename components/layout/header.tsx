@@ -19,6 +19,7 @@ import {
   Check,
 } from "lucide-react";
 import { UserSessionInfo, SchoolContextInfo } from "./types";
+import { Breadcrumbs } from "./breadcrumbs";
 import { cn } from "@/lib/utils/cn";
 
 interface HeaderProps {
@@ -57,50 +58,6 @@ export function Header({
     }
   }
 
-  // Generar migas de pan (breadcrumbs) dinámicas a partir de la URL
-  function getBreadcrumbs() {
-    const segments = pathname.split("/").filter(Boolean);
-    const crumbs: { label: string; href: string }[] = [];
-
-    if (schoolContext) {
-      crumbs.push({
-        label: schoolContext.schoolName,
-        href: `/${schoolContext.schoolSlug}/dashboard`,
-      });
-
-      if (segments.length > 1) {
-        const lastSegment = segments[segments.length - 1];
-        const sectionTranslations: Record<string, string> = {
-          dashboard: "Dashboard",
-          students: "Estudiantes",
-          teachers: "Profesores",
-          courses: "Cursos",
-          subjects: "Asignaturas",
-          grades: "Calificaciones",
-          attendance: "Asistencia",
-          settings: "Configuración",
-        };
-
-        const translated = sectionTranslations[lastSegment] || lastSegment;
-        crumbs.push({
-          label: translated,
-          href: pathname,
-        });
-      }
-    } else if (pathname.startsWith("/system")) {
-      crumbs.push({ label: "Panel General", href: "/system/dashboard" });
-      if (pathname.includes("/schools/new")) {
-        crumbs.push({ label: "Nuevo Colegio", href: "/system/schools/new" });
-      } else if (pathname.includes("/schools")) {
-        crumbs.push({ label: "Colegios e Instituciones", href: "/system/schools" });
-      }
-    }
-
-    return crumbs;
-  }
-
-  const breadcrumbs = getBreadcrumbs();
-
   return (
     <header
       id="app-header"
@@ -136,29 +93,11 @@ export function Header({
             )}
           </button>
 
-          {/* Breadcrumbs de Navegación */}
-          <nav aria-label="Migas de pan" className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 truncate">
-            {breadcrumbs.map((crumb, idx) => {
-              const isLast = idx === breadcrumbs.length - 1;
-              return (
-                <div key={crumb.href} className="flex items-center gap-1.5 truncate">
-                  {idx > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
-                  {isLast ? (
-                    <span className="font-semibold text-slate-900 dark:text-white truncate">
-                      {crumb.label}
-                    </span>
-                  ) : (
-                    <Link
-                      href={crumb.href}
-                      className="hover:text-slate-900 dark:hover:text-white transition truncate max-w-[150px]"
-                    >
-                      {crumb.label}
-                    </Link>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
+          {/* Migas de Pan (Breadcrumbs) Superiores */}
+          <Breadcrumbs
+            schoolContext={schoolContext}
+            className="hidden sm:flex"
+          />
         </div>
 
         {/* Centro: Barra de Búsqueda Rápida (Command Palette Trigger) */}

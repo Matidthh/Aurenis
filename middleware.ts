@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { isPublicRoute, isSystemRoute } from "@/lib/navigation/routes";
 
 const SECRET_KEY = new TextEncoder().encode(
   process.env.JWT_SECRET || "aurenis-default-super-secret-key-at-least-32-characters"
 );
 
 const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
-
-// Rutas públicas que no requieren autenticación
-const PUBLIC_PATHS = ["/", "/login", "/forgot-password", "/api/auth/login", "/api/auth/logout"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -23,8 +21,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Verificar si la ruta es pública
-  const isPublic = PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(path + "/"));
+  // Verificar si la ruta es pública según la definición centralizada
+  const isPublic = isPublicRoute(pathname);
 
   // Obtener cookie de sesión
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
@@ -65,7 +63,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protección de rutas del Panel Global (/system/* y /api/system/*)
-  if (pathname.startsWith("/system") || pathname.startsWith("/api/system")) {
+  if (isSystemRoute(pathname)) {
     if (!sessionPayload?.isSystemAdmin) {
       if (pathname.startsWith("/api/")) {
         return NextResponse.json(
