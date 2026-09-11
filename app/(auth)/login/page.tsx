@@ -15,6 +15,12 @@ import {
   Sun,
   Moon,
   Sparkles,
+  GraduationCap,
+  BookOpen,
+  UserCog,
+  Users,
+  Building2,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +32,82 @@ import {
   ModalBody,
   ModalFooter,
 } from "@/components/ui/modal";
+
+interface DemoAccount {
+  id: string;
+  roleKey: "director" | "profesor" | "alumno" | "superadmin" | "apoderado";
+  roleTitle: string;
+  badgeLabel: string;
+  name: string;
+  email: string;
+  pass: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badgeColor: string;
+}
+
+const DEMO_ACCOUNTS: DemoAccount[] = [
+  {
+    id: "demo-director",
+    roleKey: "director",
+    roleTitle: "Director",
+    badgeLabel: "Admin Escolar",
+    name: "Carlos Mendoza",
+    email: "director@sanjose.cl",
+    pass: "AdminCSJ2026!",
+    description: "Gestión directiva y académica",
+    icon: Building2,
+    badgeColor: "bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-800",
+  },
+  {
+    id: "demo-profesor",
+    roleKey: "profesor",
+    roleTitle: "Profesor",
+    badgeLabel: "Docente",
+    name: "Roberto Gómez",
+    email: "profesor.matematica@sanjose.cl",
+    pass: "Profesor2026!",
+    description: "Libro de clases y asistencia",
+    icon: BookOpen,
+    badgeColor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
+  },
+  {
+    id: "demo-alumno",
+    roleKey: "alumno",
+    roleTitle: "Alumno",
+    badgeLabel: "Estudiante",
+    name: "Sofía Valenzuela",
+    email: "sofia.valenzuela@sanjose.cl",
+    pass: "Estudiante2026!",
+    description: "Asignaturas, notas y horario",
+    icon: GraduationCap,
+    badgeColor: "bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200 dark:border-purple-800",
+  },
+  {
+    id: "demo-superadmin",
+    roleKey: "superadmin",
+    roleTitle: "SuperAdmin",
+    badgeLabel: "Global",
+    name: "SuperAdmin Aurenis",
+    email: "admin@aurenis.com",
+    pass: "AurenisSuperAdmin2026!",
+    description: "Configuración global del sistema",
+    icon: UserCog,
+    badgeColor: "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+  },
+  {
+    id: "demo-apoderado",
+    roleKey: "apoderado",
+    roleTitle: "Apoderado",
+    badgeLabel: "Familia",
+    name: "María González",
+    email: "maria.gonzalez@sanjose.cl",
+    pass: "Apoderado2026!",
+    description: "Seguimiento de pupilos",
+    icon: Users,
+    badgeColor: "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-800",
+  },
+];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -168,17 +250,58 @@ export default function LoginPage() {
       }
 
       if (data.redirectUrl) {
-        router.push(data.redirectUrl);
+        // Redirección directa nativa para garantizar transporte de cookies en contextos iframe
+        window.location.href = data.redirectUrl;
+      } else {
+        router.push("/select-school");
         router.refresh();
       }
     } catch (err: any) {
       setServerError(err.message || "Ocurrió un error inesperado al iniciar sesión.");
-    } finally {
       setIsLoading(false);
     }
   }
 
-  // Carga rápida de credenciales de prueba
+  // Estado para rastrear qué cuenta demo está ingresando actualmente
+  const [activeDemoId, setActiveDemoId] = useState<string | null>(null);
+
+  // Acceso rápido instantáneo de un solo clic para cuentas demo
+  async function handleQuickLogin(account: DemoAccount) {
+    setEmail(account.email);
+    setPassword(account.pass);
+    setServerError(null);
+    setErrors({});
+    setTouched({ email: true, password: true });
+    setIsLoading(true);
+    setActiveDemoId(account.id);
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: account.email.trim(), password: account.pass }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "No fue posible iniciar sesión con la cuenta demo.");
+      }
+
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        router.push("/select-school");
+        router.refresh();
+      }
+    } catch (err: any) {
+      setServerError(err.message || "Error al conectar con la cuenta demo seleccionada.");
+      setIsLoading(false);
+      setActiveDemoId(null);
+    }
+  }
+
+  // Carga rápida de credenciales de prueba sin enviar
   function fillDemoCredentials(demoEmail: string, demoPass: string) {
     setEmail(demoEmail);
     setPassword(demoPass);
@@ -423,37 +546,58 @@ export default function LoginPage() {
           </form>
 
           {/* Accesos Rápidos para Demostración y Pruebas de Evaluación */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-              <span className="font-semibold flex items-center gap-1">
+              <span className="font-semibold flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                Acceso rápido demo:
+                Acceso rápido demo (1 clic):
               </span>
-              <span className="text-[11px] text-slate-400">Autocompleta roles</span>
+              <span className="text-[11px] text-slate-400 dark:text-slate-500">
+                Redirección directa por rol
+              </span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials("admin@aurenis.com", "AurenisSuperAdmin2026!")}
-                className="px-2.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 hover:border-brand-200 dark:hover:bg-brand-950/40 text-slate-700 dark:text-slate-200 text-xs font-semibold transition text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-              >
-                SuperAdmin
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials("director@sanjose.cl", "AdminCSJ2026!")}
-                className="px-2.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 hover:border-brand-200 dark:hover:bg-brand-950/40 text-slate-700 dark:text-slate-200 text-xs font-semibold transition text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-              >
-                Director
-              </button>
-              <button
-                type="button"
-                onClick={() => fillDemoCredentials("profesor.matematica@sanjose.cl", "Profesor2026!")}
-                className="px-2.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 hover:border-brand-200 dark:hover:bg-brand-950/40 text-slate-700 dark:text-slate-200 text-xs font-semibold transition text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-              >
-                Profesor
-              </button>
+            {/* Grid interactivo de roles institucionales */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {DEMO_ACCOUNTS.map((acc) => {
+                const IconComponent = acc.icon;
+                const isThisLoading = isLoading && activeDemoId === acc.id;
+
+                return (
+                  <button
+                    key={acc.id}
+                    id={`demo-login-${acc.roleKey}-btn`}
+                    type="button"
+                    onClick={() => handleQuickLogin(acc)}
+                    disabled={isLoading}
+                    title={`Acceder directamente como ${acc.roleTitle} (${acc.name})`}
+                    className="flex flex-col text-left p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/60 hover:bg-brand-50/70 hover:border-brand-300 dark:hover:bg-brand-950/40 dark:hover:border-brand-800 transition-all shadow-2xs group disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+                  >
+                    <div className="flex items-center justify-between w-full mb-1">
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                        {isThisLoading ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-600 dark:text-brand-400" />
+                        ) : (
+                          <IconComponent className="w-3.5 h-3.5 text-slate-500 group-hover:text-brand-600 transition-colors" />
+                        )}
+                        <span>{acc.roleTitle}</span>
+                      </span>
+                      <span
+                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-wider ${acc.badgeColor}`}
+                      >
+                        {acc.badgeLabel}
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                      {acc.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between pt-1 text-[11px] text-slate-400 dark:text-slate-500">
+              <span>Haz clic en un rol para entrar directamente a su vista.</span>
             </div>
           </div>
 
