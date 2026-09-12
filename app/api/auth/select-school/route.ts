@@ -1,19 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSession, setSessionCookie, signSessionToken, SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS } from "@/lib/auth/session";
+import { NextRequest } from "next/server";
+import { getSession, setSessionCookie, signSessionToken } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { SelectSchoolSchema } from "@/lib/validations/auth.schema";
+import { apiSuccess, apiError } from "@/lib/api/response";
 
 export async function POST(req: NextRequest) {
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+      return apiError("No autenticado", "UNAUTHORIZED", { statusCode: 401 });
     }
 
     const body = await req.json();
     const validated = SelectSchoolSchema.safeParse(body);
     if (!validated.success) {
-      return NextResponse.json({ error: "ID de institución inválido" }, { status: 400 });
+      return apiError("ID de institución inválido", "VALIDATION_ERROR", {
+        statusCode: 400,
+        details: validated.error.flatten(),
+      });
     }
 
     // Buscar la membresía del usuario en la institución solicitada
@@ -37,10 +41,9 @@ export async function POST(req: NextRequest) {
     });
 
     if (!membership || !membership.isActive || membership.school.status !== "ACTIVE") {
-      return NextResponse.json(
-        { error: "No tienes permisos activos en esta institución." },
-        { status: 403 }
-      );
+      return apiError("No tienes permisos activos en esta institución.", "FORBIDDEN", {
+        statusCode: 403,
+      });
     }
 
     const permissions = membership.role.permissions.map((rp) => rp.permission.code);
@@ -58,22 +61,23 @@ export async function POST(req: NextRequest) {
       permissions,
     });
 
-    const response = NextResponse.json({
-      success: true,
-      redirectUrl: `/${membership.school.slug}/dashboard`,
-      school: {
-        id: membership.school.id,
-        slug: membership.school.slug,
-        name: membership.school.name,
-      },
-    });
+    await setSessionCookie(token);
 
-    response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
-    return response;
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || "Error al seleccionar institución" },
-      { status: 500 }
+    return apiSuccess(
+      {
+        redirectUrl: `/${membership.school.slug}/dashboard`,
+        school: {
+          id: membership.school.id,
+          slug: membership.school.slug,
+          name: membership.school.name,
+        },
+      },
+      { message: "Institución educativa seleccionada exitosamente" }
     );
+  } catch (error: unknown) {
+    return apiError(error instanceof Error ? error.message : "Error al seleccionar institución", "INTERNAL_ERROR", {
+      statusCode: 500,
+    });
   }
 }
+

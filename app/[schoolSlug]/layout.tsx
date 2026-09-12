@@ -1,5 +1,8 @@
 import { requireTenantContext } from "@/lib/tenant/context";
 import { getSession } from "@/lib/auth/session";
+
+export const dynamic = "force-dynamic";
+
 import { hasPermission } from "@/lib/permissions";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { AppShell } from "@/components/layout/app-shell";

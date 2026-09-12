@@ -27,7 +27,8 @@ export function SchoolSelectorList({ schools }: { schools: SchoolSummary[] }) {
         throw new Error(data.error || "No fue posible ingresar a la institución");
       }
 
-      router.push(data.redirectUrl);
+      const redirectUrl = data.data?.redirectUrl || data.redirectUrl;
+      router.push(redirectUrl || "/");
       router.refresh();
     } catch (err: any) {
       setError(err.message);

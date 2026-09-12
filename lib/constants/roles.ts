@@ -77,6 +77,7 @@ export const ROLE_PRESETS: Record<string, RolePreset> = {
 };
 
 export function getRoleDisplayName(roleName: string): string {
-  return ROLE_PRESETS[roleName]?.displayName || roleName;
+  if (roleName === SYSTEM_ROLE_NAME) return "Administrador del Sistema";
+  if (ROLE_PRESETS[roleName]) return ROLE_PRESETS[roleName].displayName;
+  return roleName;
 }
-

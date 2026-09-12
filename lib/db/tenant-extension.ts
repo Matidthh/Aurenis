@@ -3,8 +3,12 @@ import { prisma } from "./prisma";
 // Lista de modelos que pertenecen directamente a una institución y deben filtrar por schoolId
 export const TENANT_SCOPED_MODELS = [
   "SchoolSettings",
+  "Classroom",
   "Membership",
   "Role",
+  "TeacherProfile",
+  "StudentProfile",
+  "GuardianProfile",
   "AcademicPeriod",
   "EducationLevel",
   "Course",
@@ -14,6 +18,13 @@ export const TENANT_SCOPED_MODELS = [
   "Grade",
   "AttendanceRecord",
   "ScheduleBlock",
+  "Assignment",
+  "LearningMaterial",
+  "Conversation",
+  "Notification",
+  "ParentMeetingSlot",
+  "FeeStructure",
+  "StudentFeeAccount",
   "AuditLog",
   "FileRecord",
 ] as const;

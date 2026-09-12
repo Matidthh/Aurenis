@@ -84,7 +84,7 @@ export default async function AttendancePage({
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {records.map((rec) => {
+            {records.map((rec: any) => {
               const studentUser = rec.student.membership.user;
 
               const statusBadgeMap: Record<string, { label: string; variant: "success" | "warning" | "danger" | "neutral" }> = {

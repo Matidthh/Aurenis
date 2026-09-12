@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LoginSchema } from "@/lib/validations/auth.schema";
 import { authenticateUser } from "@/lib/services/user.service";
-import { SESSION_COOKIE_NAME, SESSION_COOKIE_OPTIONS, signSessionToken } from "@/lib/auth/session";
+import { setSessionCookie, signSessionToken } from "@/lib/auth/session";
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,7 +28,9 @@ export async function POST(req: NextRequest) {
         permissions: ["*"],
       });
 
-      const response = NextResponse.json({
+      await setSessionCookie(token);
+
+      return NextResponse.json({
         success: true,
         redirectUrl: "/system/dashboard",
         user: {
@@ -38,13 +40,10 @@ export async function POST(req: NextRequest) {
           isSystemAdmin: true,
         },
       });
-
-      response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
-      return response;
     }
 
     // Caso B: Usuario institucional
-    const activeMemberships = user.memberships;
+    const activeMemberships = user.memberships || [];
 
     if (activeMemberships.length === 0) {
       return NextResponse.json(
@@ -71,7 +70,9 @@ export async function POST(req: NextRequest) {
         permissions,
       });
 
-      const response = NextResponse.json({
+      await setSessionCookie(token);
+
+      return NextResponse.json({
         success: true,
         redirectUrl: `/${mem.school.slug}/dashboard`,
         user: {
@@ -85,9 +86,6 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-
-      response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
-      return response;
     }
 
     // Si tiene múltiples colegios, emitimos sesión parcial y lo enviamos al selector
@@ -100,7 +98,9 @@ export async function POST(req: NextRequest) {
       permissions: [],
     });
 
-    const response = NextResponse.json({
+    await setSessionCookie(token);
+
+    return NextResponse.json({
       success: true,
       redirectUrl: "/select-school",
       user: {
@@ -110,12 +110,9 @@ export async function POST(req: NextRequest) {
         multipleSchools: true,
       },
     });
-
-    response.cookies.set(SESSION_COOKIE_NAME, token, SESSION_COOKIE_OPTIONS);
-    return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error.message || "Error al iniciar sesión." },
+      { error: error instanceof Error ? error.message : "Error interno al iniciar sesión." },
       { status: 401 }
     );
   }

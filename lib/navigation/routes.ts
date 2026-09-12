@@ -239,6 +239,7 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/login" || pathname.startsWith("/login/")) return true;
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
   if (pathname === "/api/auth/login" || pathname === "/api/auth/logout") return true;
+  if (pathname === "/_not-found" || pathname === "/404" || pathname === "/500" || pathname === "/_error") return true;
   return false;
 }
 

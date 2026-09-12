@@ -21,16 +21,18 @@ export default async function SchoolsListPage() {
             ]}
           />
         }
-        actions={
+        action={
           <Link
             href="/system/schools/new"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-brand-600 text-white hover:bg-brand-700 shadow-sm transition"
           >
             <Plus className="w-4 h-4" />
-            Nuevo Colegio
+            Nuevo colegio
           </Link>
         }
       />
+
+      <div className="space-y-6 max-w-6xl">
 
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         <table className="w-full text-left text-sm">
@@ -87,6 +89,7 @@ export default async function SchoolsListPage() {
           </tbody>
         </table>
       </div>
-    </Page>
-  );
+    </div>
+  </Page>
+);
 }

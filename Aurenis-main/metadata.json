@@ -1,6 +1,0 @@
-{
-  "name": "Aurenis",
-  "description": "Multi-tenant academic management platform for schools, teachers, students, and administrators.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

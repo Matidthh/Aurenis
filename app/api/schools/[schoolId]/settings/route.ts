@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { UpdateSchoolSettingsSchema } from "@/lib/validations/school.schema";
 import { updateSchoolSettings } from "@/lib/services/school.service";
 import { prisma } from "@/lib/db/prisma";
 import { PERMISSIONS } from "@/lib/constants/permissions";
+import { apiSuccess, apiError } from "@/lib/api/response";
 
 export async function PATCH(
   req: NextRequest,
@@ -12,7 +13,7 @@ export async function PATCH(
   try {
     const session = await getSession();
     if (!session) {
-      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+      return apiError("No autenticado", "UNAUTHORIZED", { statusCode: 401 });
     }
 
     const { schoolId } = await params;
@@ -38,7 +39,7 @@ export async function PATCH(
       });
 
       if (!membership || !membership.isActive) {
-        return NextResponse.json({ error: "Acceso denegado a esta institución" }, { status: 403 });
+        return apiError("Acceso denegado a esta institución", "FORBIDDEN", { statusCode: 403 });
       }
 
       const hasUpdatePermission = membership.role.permissions.some(
@@ -46,10 +47,9 @@ export async function PATCH(
       );
 
       if (!hasUpdatePermission) {
-        return NextResponse.json(
-          { error: "No posees el permiso para modificar la configuración del colegio." },
-          { status: 403 }
-        );
+        return apiError("No posees el permiso para modificar la configuración del colegio.", "FORBIDDEN", {
+          statusCode: 403,
+        });
       }
     }
 
@@ -57,20 +57,20 @@ export async function PATCH(
     const validated = UpdateSchoolSettingsSchema.safeParse(body);
 
     if (!validated.success) {
-      return NextResponse.json(
-        { error: "Datos de formulario inválidos", details: validated.error.flatten() },
-        { status: 400 }
-      );
+      return apiError("Datos de formulario inválidos", "VALIDATION_ERROR", {
+        statusCode: 400,
+        details: validated.error.flatten(),
+      });
     }
 
     const updated = await updateSchoolSettings(schoolId, validated.data, session.userId);
 
-    return NextResponse.json({
-      success: true,
-      message: "Configuración actualizada con éxito",
-      settings: updated,
-    });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Error al actualizar" }, { status: 500 });
+    return apiSuccess(
+      { settings: updated },
+      { message: "Configuración actualizada con éxito" }
+    );
+  } catch (error: unknown) {
+    return apiError(error instanceof Error ? error.message : "Error al actualizar la configuración", "INTERNAL_ERROR", { statusCode: 500 });
   }
 }
+

@@ -48,7 +48,7 @@ export default async function TenantDashboardPage({
             Año Lectivo {overview.currentYear}
           </div>
         }
-        actions={
+        action={
           overview.activePeriod ? (
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
               <CheckCircle2 className="w-4 h-4" />
@@ -62,6 +62,8 @@ export default async function TenantDashboardPage({
           )
         }
       />
+
+      <div className="space-y-8 max-w-6xl">
 
       {/* Métricas del Colegio */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -135,6 +137,7 @@ export default async function TenantDashboardPage({
           )}
         </div>
       </div>
-    </Page>
-  );
+    </div>
+  </Page>
+);
 }

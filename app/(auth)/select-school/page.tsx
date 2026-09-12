@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth/session";
 import { getUserSchools } from "@/lib/services/user.service";
 import { SchoolSelectorList } from "./school-selector-list";

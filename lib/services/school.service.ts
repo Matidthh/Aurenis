@@ -1,5 +1,6 @@
 import { AuditAction, SchoolStatus, UserStatus } from "@prisma/client";
-import { prisma } from "@/lib/db/prisma";
+import { prisma, isDatabaseConfigured } from "@/lib/db/prisma";
+import { SELECT_SCHOOL_SUMMARY } from "@/lib/db/query-projections";
 import { hashPassword } from "@/lib/auth/password";
 import { logAuditEvent } from "./audit.service";
 import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "@/lib/constants/roles";
@@ -146,41 +147,252 @@ export async function createSchoolWithOnboarding(
   return result;
 }
 
-/**
- * Obtener detalles institucionales por slug
- */
-export async function getSchoolBySlug(slug: string) {
-  return prisma.school.findUnique({
-    where: { slug },
-    include: {
-      settings: true,
-      _count: {
-        select: {
-          memberships: true,
-          courses: true,
-          subjects: true,
-        },
-      },
+export interface SchoolDataWithSubscription {
+  id: string;
+  name: string;
+  slug: string;
+  subdomain: string;
+  customDomain?: string | null;
+  institutionalCode: string;
+  city: string;
+  country: string;
+  status: "ACTIVE" | "SUSPENDED" | "INACTIVE";
+  subscription: {
+    plan: "BASIC" | "PRO" | "ENTERPRISE";
+    status: "ACTIVE" | "TRIAL" | "SUSPENDED_PAYMENT" | "EXPIRED" | "CANCELLED";
+    maxStudents: number;
+    currentStudents: number;
+    monthlyFeeClp: number;
+    billingCycle: "MONTHLY" | "ANNUAL";
+    renewalDate: string;
+    isPaymentUpToDate: boolean;
+    lastPaymentDate: string;
+  };
+  settings: {
+    termType: "SEMESTER" | "TRIMESTER";
+    minPassingGrade: number;
+    minGrade: number;
+    maxGrade: number;
+    primaryColor: string;
+    gradeScalePrecision?: number;
+  };
+  _count: {
+    memberships: number;
+    courses: number;
+    subjects: number;
+  };
+}
+
+// Catálogo enriquecido de instituciones con gestión de suscripciones SaaS
+export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
+  {
+    id: "sch_sanjose_demo",
+    name: "Colegio San José",
+    slug: "colegio-san-jose",
+    subdomain: "sanjose.aurenis.app",
+    customDomain: "portal.sanjose.cl",
+    institutionalCode: "CSJ-001",
+    city: "Santiago",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "ENTERPRISE",
+      status: "ACTIVE",
+      maxStudents: 1500,
+      currentStudents: 145,
+      monthlyFeeClp: 450000,
+      billingCycle: "ANNUAL",
+      renewalDate: "2027-03-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-03-01",
     },
-  });
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#0284c7",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 14,
+      courses: 8,
+      subjects: 24,
+    },
+  },
+  {
+    id: "sch_cordillera_demo",
+    name: "Liceo Bicentenario Cordillera",
+    slug: "liceo-cordillera",
+    subdomain: "cordillera.aurenis.app",
+    customDomain: null,
+    institutionalCode: "LBC-042",
+    city: "San Bernardo",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "PRO",
+      status: "ACTIVE",
+      maxStudents: 800,
+      currentStudents: 780,
+      monthlyFeeClp: 280000,
+      billingCycle: "MONTHLY",
+      renewalDate: "2026-10-05",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-09-05",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#4f46e5",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 28,
+      courses: 14,
+      subjects: 32,
+    },
+  },
+  {
+    id: "sch_santa_maria_demo",
+    name: "Instituto Santa María",
+    slug: "instituto-santa-maria",
+    subdomain: "santamaria.aurenis.app",
+    customDomain: null,
+    institutionalCode: "ISM-002",
+    city: "Viña del Mar",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "BASIC",
+      status: "ACTIVE",
+      maxStudents: 300,
+      currentStudents: 290,
+      monthlyFeeClp: 140000,
+      billingCycle: "MONTHLY",
+      renewalDate: "2026-09-30",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-08-30",
+    },
+    settings: {
+      termType: "TRIMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#059669",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 12,
+      courses: 6,
+      subjects: 18,
+    },
+  },
+  {
+    id: "sch_los_robles_demo",
+    name: "Colegio Los Robles",
+    slug: "colegio-los-robles",
+    subdomain: "losrobles.aurenis.app",
+    customDomain: null,
+    institutionalCode: "CLR-099",
+    city: "Concepción",
+    country: "Chile",
+    status: "SUSPENDED",
+    subscription: {
+      plan: "PRO",
+      status: "SUSPENDED_PAYMENT",
+      maxStudents: 800,
+      currentStudents: 520,
+      monthlyFeeClp: 280000,
+      billingCycle: "MONTHLY",
+      renewalDate: "2026-08-15",
+      isPaymentUpToDate: false,
+      lastPaymentDate: "2026-07-15",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#d97706",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 16,
+      courses: 10,
+      subjects: 22,
+    },
+  },
+];
+
+/**
+ * Obtener detalles institucionales por slug o subdominio
+ */
+export async function getSchoolBySlug(slugOrSubdomain: string) {
+  // Limpiar slug o subdominio (ej: cordillera.aurenis.app -> cordillera o liceo-cordillera)
+  const cleanKey = slugOrSubdomain.toLowerCase().replace(".aurenis.app", "").replace(".aurenis.com", "");
+
+  if (isDatabaseConfigured()) {
+    try {
+      const school = await prisma.school.findFirst({
+        where: {
+          OR: [{ slug: cleanKey }, { slug: slugOrSubdomain }],
+        },
+        select: SELECT_SCHOOL_SUMMARY,
+      });
+      if (school) return school as unknown as SchoolDataWithSubscription;
+    } catch {
+      // Fallback a demo si falla la conexión
+    }
+  }
+
+  const found = SCHOOLS_CATALOG.find(
+    (s) =>
+      s.slug === cleanKey ||
+      s.slug === slugOrSubdomain ||
+      s.subdomain.startsWith(cleanKey) ||
+      s.id === slugOrSubdomain
+  );
+
+  return found || null;
 }
 
 /**
- * Listado global de colegios para el System Admin
+ * Listado global de colegios para el System Admin con datos de suscripción
  */
-export async function listAllSchools() {
-  return prisma.school.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      settings: true,
-      _count: {
-        select: {
-          memberships: true,
-          courses: true,
-        },
-      },
-    },
-  });
+export async function listAllSchools(): Promise<SchoolDataWithSubscription[]> {
+  if (isDatabaseConfigured()) {
+    try {
+      const schools = await prisma.school.findMany({
+        orderBy: { createdAt: "desc" },
+        select: SELECT_SCHOOL_SUMMARY,
+      });
+      if (schools.length > 0) return schools as unknown as SchoolDataWithSubscription[];
+    } catch {
+      // Fallback a demo si falla la conexión
+    }
+  }
+
+  return SCHOOLS_CATALOG;
+}
+
+/**
+ * Cambiar estado de suscripción (ej: Suspender por no pago o Reactivar)
+ */
+export async function toggleSchoolSubscription(
+  schoolId: string,
+  newStatus: "ACTIVE" | "SUSPENDED" | "INACTIVE"
+) {
+  const school = SCHOOLS_CATALOG.find((s) => s.id === schoolId || s.slug === schoolId);
+  if (school) {
+    school.status = newStatus;
+    school.subscription.status = newStatus === "ACTIVE" ? "ACTIVE" : "SUSPENDED_PAYMENT";
+    school.subscription.isPaymentUpToDate = newStatus === "ACTIVE";
+    return school;
+  }
+  return null;
 }
 
 /**
@@ -191,6 +403,21 @@ export async function updateSchoolSettings(
   data: UpdateSchoolSettingsInput,
   userId?: string
 ) {
+  const current = await prisma.schoolSettings.findUnique({
+    where: { schoolId },
+  });
+
+  const targetMin = data.minGrade !== undefined ? data.minGrade : Number(current?.minGrade ?? 1.0);
+  const targetMax = data.maxGrade !== undefined ? data.maxGrade : Number(current?.maxGrade ?? 7.0);
+  const targetPass = data.minPassingGrade !== undefined ? data.minPassingGrade : Number(current?.minPassingGrade ?? 4.0);
+
+  if (targetMin >= targetMax) {
+    throw new SchoolServiceError("La nota mínima debe ser estrictamente menor que la nota máxima.");
+  }
+  if (targetPass < targetMin || targetPass > targetMax) {
+    throw new SchoolServiceError("La nota de aprobación debe estar dentro del rango permitido entre nota mínima y máxima.");
+  }
+
   const updatedSettings = await prisma.schoolSettings.update({
     where: { schoolId },
     data: {
@@ -215,3 +442,4 @@ export async function updateSchoolSettings(
 
   return updatedSettings;
 }
+

@@ -23,14 +23,34 @@ export const CreateSchoolSchema = z.object({
 
 export type CreateSchoolInput = z.infer<typeof CreateSchoolSchema>;
 
-export const UpdateSchoolSettingsSchema = z.object({
-  termType: z.nativeEnum(AcademicTermType).optional(),
-  minPassingGrade: z.number().min(1).max(10).optional(),
-  minGrade: z.number().min(0).max(10).optional(),
-  maxGrade: z.number().min(1).max(100).optional(),
-  gradeScalePrecision: z.number().min(0).max(2).optional(),
-  primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Color hexadecimal inválido").optional(),
-  requireAttendanceNote: z.boolean().optional(),
-});
+export const UpdateSchoolSettingsSchema = z
+  .object({
+    termType: z.nativeEnum(AcademicTermType).optional(),
+    minPassingGrade: z.number().min(0, "La nota de aprobación no puede ser menor a 0").max(100, "La nota de aprobación no puede exceder 100").optional(),
+    minGrade: z.number().min(0, "La nota mínima no puede ser menor a 0").max(100, "La nota mínima no puede exceder 100").optional(),
+    maxGrade: z.number().min(1, "La nota máxima debe ser al menos 1").max(100, "La nota máxima no puede exceder 100").optional(),
+    gradeScalePrecision: z.number().min(0, "Mínimo 0 decimales").max(2, "Máximo 2 decimales").optional(),
+    primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Color hexadecimal inválido").optional(),
+    requireAttendanceNote: z.boolean().optional(),
+  })
+  .refine(
+    (data) => {
+      const { minGrade, maxGrade, minPassingGrade } = data;
+      if (minGrade !== undefined && maxGrade !== undefined && minGrade >= maxGrade) {
+        return false;
+      }
+      if (minPassingGrade !== undefined && minGrade !== undefined && minPassingGrade < minGrade) {
+        return false;
+      }
+      if (minPassingGrade !== undefined && maxGrade !== undefined && minPassingGrade > maxGrade) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "La escala de notas es inconsistente: debe cumplir minGrade < maxGrade y minGrade <= minPassingGrade <= maxGrade",
+      path: ["minPassingGrade"],
+    }
+  );
 
 export type UpdateSchoolSettingsInput = z.infer<typeof UpdateSchoolSettingsSchema>;

@@ -1,0 +1,233 @@
+openapi: 3.0.3
+info:
+  title: Aurenis API
+  description: API interactiva de Aurenis, Plataforma de Gestión Escolar Multi-Institución.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Servidor de Desarrollo Local
+  - url: https://ais-pre-4mfjtpundvddavjyfs2o6y-344169282725.us-east1.run.app
+    description: Entorno Staging / Producción
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: aurenis_session
+
+security:
+  - cookieAuth: []
+
+paths:
+  /api/auth/login:
+    post:
+      summary: Iniciar sesión en Aurenis
+      tags:
+        - Autenticación
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@aurenis.com
+                password:
+                  type: string
+                  format: password
+                  example: AurenisSuperAdmin2026!
+      responses:
+        '200':
+          description: Inicio de sesión exitoso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  redirectUrl:
+                    type: string
+                  user:
+                    type: object
+        '400':
+          description: Datos de entrada inválidos.
+        '401':
+          description: Credenciales incorrectas.
+        '403':
+          description: Usuario sin membresías activas.
+
+  /api/auth/logout:
+    post:
+      summary: Cerrar sesión (POST)
+      tags:
+        - Autenticación
+      responses:
+        '200':
+          description: Sesión cerrada exitosamente.
+    get:
+      summary: Cerrar sesión (GET) y redireccionar
+      tags:
+        - Autenticación
+      responses:
+        '302':
+          description: Redirección al inicio.
+
+  /api/auth/select-school:
+    post:
+      summary: Seleccionar contexto de colegio
+      description: Útil para usuarios con membresías en múltiples instituciones.
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - schoolId
+              properties:
+                schoolId:
+                  type: string
+                  example: "uuid-del-colegio"
+      responses:
+        '200':
+          description: Contexto escolar seleccionado exitosamente.
+        '400':
+          description: ID de institución inválido.
+        '401':
+          description: No autenticado.
+        '403':
+          description: Acceso denegado o institución inactiva.
+        '500':
+          description: Error interno del servidor.
+
+  /api/schools/{schoolId}/settings:
+    patch:
+      summary: Actualizar configuración del colegio
+      tags:
+        - Configuración Institucional
+      parameters:
+        - in: path
+          name: schoolId
+          required: true
+          schema:
+            type: string
+          description: UUID del colegio.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                minPassingGrade:
+                  type: number
+                  format: float
+                maxGrade:
+                  type: number
+                  format: float
+                academicTermType:
+                  type: string
+                  enum: [SEMESTER, TRIMESTER, ANNUAL]
+      responses:
+        '200':
+          description: Configuración actualizada exitosamente.
+        '400':
+          description: Error de validación Zod.
+        '401':
+          description: No autenticado.
+        '403':
+          description: Permisos insuficientes (SCHOOL_SETTINGS_UPDATE).
+        '500':
+          description: Error interno del servidor.
+
+  /api/system/schools:
+    get:
+      summary: Listar todos los colegios (System Admin)
+      tags:
+        - System Admin
+      responses:
+        '200':
+          description: Lista de colegios obtenida con éxito.
+        '403':
+          description: Requiere rol SYSTEM_ADMIN.
+        '500':
+          description: Error interno del servidor.
+    post:
+      summary: Crear nuevo colegio (System Admin)
+      tags:
+        - System Admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - slug
+              properties:
+                name:
+                  type: string
+                  example: "Colegio Nuevo Horizonte"
+                slug:
+                  type: string
+                  example: "nuevo-horizonte"
+                adminEmail:
+                  type: string
+                adminPassword:
+                  type: string
+      responses:
+        '201':
+          description: Institución creada e inicializada exitosamente.
+        '400':
+          description: Errores de validación o conflicto.
+        '403':
+          description: Requiere rol SYSTEM_ADMIN.
+        '500':
+          description: Error interno del servidor.
+
+  /api/system/schools/{schoolId}/status:
+    patch:
+      summary: Cambiar estado de un colegio (System Admin)
+      tags:
+        - System Admin
+      parameters:
+        - in: path
+          name: schoolId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [ACTIVE, INACTIVE, SUSPENDED]
+      responses:
+        '200':
+          description: Estado actualizado exitosamente.
+        '400':
+          description: Datos de entrada inválidos.
+        '401':
+          description: No autenticado.
+        '403':
+          description: Requiere rol SYSTEM_ADMIN.
+        '500':
+          description: Error interno del servidor.

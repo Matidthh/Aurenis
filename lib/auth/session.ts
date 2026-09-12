@@ -14,7 +14,6 @@ export const SESSION_COOKIE_OPTIONS = {
   secure: true,
   sameSite: "none" as const,
   path: "/",
-  maxAge: 60 * 60 * 24 * 7, // 7 días en segundos
 };
 
 export async function signSessionToken(payload: Omit<AuthCookiePayload, "iat" | "exp">): Promise<string> {
@@ -29,7 +28,7 @@ export async function verifySessionToken(token: string): Promise<AuthCookiePaylo
   try {
     const { payload } = await jwtVerify(token, SECRET_KEY);
     return payload as unknown as AuthCookiePayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -37,23 +36,32 @@ export async function verifySessionToken(token: string): Promise<AuthCookiePaylo
 export async function setSessionCookie(token: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    path: "/",
+    ...SESSION_COOKIE_OPTIONS,
     maxAge: 60 * 60 * 24 * 7, // 7 días en segundos
   });
 }
 
 export async function clearSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
+  // Borra la cookie tanto para SameSite=none como SameSite=lax para consistencia absoluta entre entornos
   cookieStore.set(SESSION_COOKIE_NAME, "", {
-    httpOnly: true,
-    secure: true,
+    ...SESSION_COOKIE_OPTIONS,
     sameSite: "none",
-    path: "/",
+    secure: true,
     maxAge: 0,
+    expires: new Date(0),
   });
+  cookieStore.set(SESSION_COOKIE_NAME, "", {
+    ...SESSION_COOKIE_OPTIONS,
+    sameSite: "lax",
+    maxAge: 0,
+    expires: new Date(0),
+  });
+  try {
+    cookieStore.delete(SESSION_COOKIE_NAME);
+  } catch {
+    // ignore
+  }
 }
 
 export async function getSession(): Promise<UserSession | null> {

@@ -65,7 +65,7 @@ export default async function TeachersPage({
                   Asignaturas a Cargo ({teacher.subjects.length})
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {teacher.subjects.map((s) => (
+                  {teacher.subjects.map((s: { id: string; name: string; course: { name: string } }) => (
                     <span
                       key={s.id}
                       className="px-2 py-0.5 rounded text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium"

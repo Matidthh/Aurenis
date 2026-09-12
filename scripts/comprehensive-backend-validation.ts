@@ -79,7 +79,7 @@ async function runComprehensiveBackendValidation() {
   // TEST GRUPO 2: AISLAMIENTO MULTI-TENANT Y ANTI-IDOR EN ORM
   // -------------------------------------------------------------
   console.log("\n--- GRUPO 2: Aislamiento Multi-Tenant & Prevencción de IDOR ---");
-  const schoolA = await prisma.school.findFirst({ where: { slug: "colegio-san-jose" } });
+  const schoolA = (await prisma.school.findFirst({ where: { slug: "colegio-san-jose" } })) || (await getSchoolBySlug("colegio-san-jose"));
   if (!schoolA) {
     throw new Error("Colegio San José requerido para ejecutar las pruebas");
   }

@@ -8,6 +8,7 @@ const globalForPrisma = globalThis as unknown as {
 
 // Check if running in an environment without a dedicated PostgreSQL instance (e.g. preview)
 const isLocalWithoutDb =
+  process.env.USE_MOCK_DB === "true" ||
   !process.env.DATABASE_URL ||
   process.env.DATABASE_URL.includes("localhost:5432") ||
   process.env.DATABASE_URL.includes("127.0.0.1:5432");
@@ -27,6 +28,8 @@ if (!isLocalWithoutDb) {
 }
 
 const mockPrisma = createMockPrisma();
+
+export const isDatabaseConfigured = () => !isLocalWithoutDb && realPrisma !== null;
 
 export const prisma = (
   isLocalWithoutDb || !realPrisma

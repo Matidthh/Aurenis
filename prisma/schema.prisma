@@ -70,6 +70,8 @@ model User {
   updatedAt       DateTime     @updatedAt
 
   @@index([email])
+  @@index([rutOrNationalId])
+  @@index([status])
 }
 
 model School {
@@ -359,6 +361,8 @@ model Enrollment {
 
   @@unique([schoolId, courseId, studentProfileId, year])
   @@index([schoolId, year])
+  @@index([schoolId, courseId])
+  @@index([courseId, studentProfileId])
   @@index([studentProfileId])
 }
 
@@ -383,6 +387,7 @@ model Assessment {
   updatedAt        DateTime       @updatedAt
 
   @@index([schoolId, subjectId])
+  @@index([schoolId, subjectId, date])
   @@index([academicPeriodId])
 }
 
@@ -403,6 +408,7 @@ model Grade {
 
   @@unique([assessmentId, enrollmentId])
   @@index([schoolId, assessmentId])
+  @@index([assessmentId, enrollmentId])
   @@index([enrollmentId])
 }
 

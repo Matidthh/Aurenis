@@ -15,8 +15,8 @@ export async function GET() {
 
     const schools = await listAllSchools();
     return NextResponse.json({ success: true, schools });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Error interno" }, { status: 500 });
   }
 }
 
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Error al crear institución" }, { status: 400 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Error al crear institución" }, { status: 400 });
   }
 }

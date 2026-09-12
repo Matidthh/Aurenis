@@ -39,7 +39,7 @@ export default async function GradesPage({
           const totalGrades = assessment.grades.length;
           const avgGrade =
             totalGrades > 0
-              ? assessment.grades.reduce((sum, g) => sum + Number(g.value), 0) / totalGrades
+              ? assessment.grades.reduce((sum: number, g: { value: number | string }) => sum + Number(g.value), 0) / totalGrades
               : 0;
 
           return (
@@ -90,7 +90,7 @@ export default async function GradesPage({
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
-                {assessment.grades.map((grade) => {
+                {assessment.grades.map((grade: any) => {
                   const studentUser = grade.enrollment.student.membership.user;
                   const val = Number(grade.value);
                   const isPassing = val >= gradeConfig.minPassingGrade;

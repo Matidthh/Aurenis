@@ -4,6 +4,8 @@ import { AppShell } from "@/components/layout/app-shell";
 import { NavItem, UserSessionInfo } from "@/components/layout/types";
 import { Shield, Building2, PlusCircle, Palette } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function SystemLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 

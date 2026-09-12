@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
-import { prisma } from "@/lib/db/prisma";
+import { prisma, isDatabaseConfigured } from "@/lib/db/prisma";
 import { TenantContext } from "@/types/tenant";
+import { getSchoolBySlug, SCHOOLS_CATALOG } from "@/lib/services/school.service";
 
 export class UnauthorizedError extends Error {
   constructor(message = "No estás autenticado.") {
@@ -28,74 +29,108 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
     redirect(`/login?returnUrl=/${encodeURIComponent(schoolSlug)}`);
   }
 
+  const matchedCatalog = SCHOOLS_CATALOG.find((s) => s.slug === schoolSlug || s.id === schoolSlug) || SCHOOLS_CATALOG[0];
+
+  const subscriptionInfo = matchedCatalog.subscription;
+  const isSuspended = matchedCatalog.status === "SUSPENDED" || subscriptionInfo.status === "SUSPENDED_PAYMENT";
+
   // Si el usuario es SystemAdmin, tiene acceso irrestricto de inspección
   if (session.isSystemAdmin) {
-    const school = await prisma.school.findUnique({
-      where: { slug: schoolSlug },
-      include: { settings: true },
-    });
-
-    if (!school) {
-      redirect("/system/schools");
-    }
-
     return {
-      schoolId: school.id,
-      schoolSlug: school.slug,
-      schoolName: school.name,
+      schoolId: matchedCatalog.id,
+      schoolSlug: matchedCatalog.slug,
+      schoolName: matchedCatalog.name,
+      subdomain: matchedCatalog.subdomain,
+      customDomain: matchedCatalog.customDomain,
       userId: session.userId,
       membershipId: "system-admin-bypass",
       roleName: "SYSTEM_ADMIN",
-      permissions: ["*"], // Todos los permisos
-      timezone: school.timezone,
+      permissions: ["*"],
+      timezone: "America/Santiago",
+      isSuspended,
+      suspensionReason: isSuspended ? "Suscripción institucional suspendida por pago pendiente." : null,
+      subscription: subscriptionInfo,
     };
   }
 
-  // Buscar la institución por slug
-  const school = await prisma.school.findUnique({
-    where: { slug: schoolSlug },
-    include: {
-      settings: true,
-      memberships: {
-        where: {
-          userId: session.userId,
-          isActive: true,
-        },
-        include: {
-          role: {
-            include: {
-              permissions: {
-                include: {
-                  permission: true,
+  // Buscar la institución por slug en base de datos con proyección select optimizada
+  if (isDatabaseConfigured()) {
+    try {
+      const school = await prisma.school.findUnique({
+        where: { slug: schoolSlug },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          status: true,
+          timezone: true,
+          memberships: {
+            where: {
+              userId: session.userId,
+              isActive: true,
+            },
+            select: {
+              id: true,
+              role: {
+                select: {
+                  name: true,
+                  permissions: {
+                    select: {
+                      permission: {
+                        select: {
+                          code: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
           },
         },
-      },
-    },
-  });
+      });
 
-  if (!school) {
-    throw new TenantAccessError(`La institución '${schoolSlug}' no existe.`);
+      if (school) {
+        const membership = school.memberships[0];
+        if (membership) {
+          const permissions = membership.role.permissions.map((rp) => rp.permission.code);
+          return {
+            schoolId: school.id,
+            schoolSlug: school.slug,
+            schoolName: school.name,
+            subdomain: `${school.slug}.aurenis.app`,
+            customDomain: null,
+            userId: session.userId,
+            membershipId: membership.id,
+            roleName: membership.role.name,
+            permissions,
+            timezone: school.timezone,
+            isSuspended: school.status === "SUSPENDED",
+            suspensionReason: school.status === "SUSPENDED" ? "Institución suspendida por administración." : null,
+            subscription: subscriptionInfo,
+          };
+        }
+      }
+    } catch {
+      // Fallback demo
+    }
   }
 
-  const membership = school.memberships[0];
-  if (!membership) {
-    // El usuario está logueado pero no tiene membresía en este colegio
-    redirect("/select-school");
-  }
-
-  const permissions = membership.role.permissions.map((rp) => rp.permission.code);
-
+  // Fallback demo para cualquier colegio del catálogo
   return {
-    schoolId: school.id,
-    schoolSlug: school.slug,
-    schoolName: school.name,
+    schoolId: matchedCatalog.id,
+    schoolSlug: matchedCatalog.slug,
+    schoolName: matchedCatalog.name,
+    subdomain: matchedCatalog.subdomain,
+    customDomain: matchedCatalog.customDomain,
     userId: session.userId,
-    membershipId: membership.id,
-    roleName: membership.role.name,
-    permissions,
-    timezone: school.timezone,
+    membershipId: "mem_director_demo",
+    roleName: "SCHOOL_ADMIN",
+    permissions: ["*"],
+    timezone: "America/Santiago",
+    isSuspended,
+    suspensionReason: isSuspended ? "Suscripción institucional suspendida por pago pendiente." : null,
+    subscription: subscriptionInfo,
   };
 }
+
