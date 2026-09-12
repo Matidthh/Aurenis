@@ -240,6 +240,7 @@ model Course {
   letter           String?
   gradeNumber      Int
   year             Int
+  deletedAt        DateTime?
 
   school           School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   educationLevel   EducationLevel     @relation(fields: [educationLevelId], references: [id], onDelete: Restrict)
@@ -254,6 +255,7 @@ model Course {
 
   @@unique([schoolId, year, name])
   @@index([schoolId, year])
+  @@index([schoolId, deletedAt])
 }
 
 model Subject {
@@ -349,6 +351,7 @@ model Enrollment {
   studentProfileId String
   year             Int
   status           String         @default("ACTIVE")
+  deletedAt        DateTime?
 
   school           School         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   course           Course         @relation(fields: [courseId], references: [id], onDelete: Restrict)
@@ -364,6 +367,7 @@ model Enrollment {
   @@index([schoolId, courseId])
   @@index([courseId, studentProfileId])
   @@index([studentProfileId])
+  @@index([schoolId, deletedAt])
 }
 
 model Assessment {
@@ -388,6 +392,7 @@ model Assessment {
 
   @@index([schoolId, subjectId])
   @@index([schoolId, subjectId, date])
+  @@index([schoolId, academicPeriodId, subjectId])
   @@index([academicPeriodId])
 }
 
@@ -410,6 +415,7 @@ model Grade {
   @@index([schoolId, assessmentId])
   @@index([assessmentId, enrollmentId])
   @@index([enrollmentId])
+  @@index([schoolId, enrollmentId])
 }
 
 model AttendanceRecord {

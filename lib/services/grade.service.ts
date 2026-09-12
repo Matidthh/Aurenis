@@ -213,7 +213,7 @@ export async function updateGrade(
   if (data.value !== undefined) {
     const val = Number(data.value);
     if (isNaN(val) || val < config.minGrade || val > config.maxGrade) {
-      throw new Error(
+      throw new GradeServiceError(
         `La calificación (${data.value}) está fuera del rango permitido por la institución (${config.minGrade} a ${config.maxGrade}).`
       );
     }
