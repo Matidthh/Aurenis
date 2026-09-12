@@ -57,7 +57,7 @@ export async function listCoursesByYear(tenantDb: TenantPrismaClient, schoolId: 
   if (isDatabaseConfigured()) {
     try {
       const courses = await tenantDb.course.findMany({
-        where: { schoolId, year },
+        where: { schoolId, year, deletedAt: null },
         include: {
           educationLevel: true,
           subjects: {
@@ -224,15 +224,17 @@ export async function deleteCourse(
   userId?: string
 ) {
   const existing = await tenantDb.course.findFirst({
-    where: { id: courseId, schoolId },
+    where: { id: courseId, schoolId, deletedAt: null },
   });
 
   if (!existing) {
     throw new Error(`Curso '${courseId}' no encontrado en la institución.`);
   }
 
-  await tenantDb.course.delete({
+  // Borrado lógico (soft delete) para proteger historial académico
+  await tenantDb.course.update({
     where: { id: courseId },
+    data: { deletedAt: new Date() },
   });
 
   return { success: true };

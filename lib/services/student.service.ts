@@ -14,6 +14,7 @@ export async function listStudentsBySchool(
         where: {
           schoolId,
           year: currentYear,
+          deletedAt: null,
           ...(options?.courseId ? { courseId: options.courseId } : {}),
         },
         include: {

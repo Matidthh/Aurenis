@@ -1,10 +1,69 @@
 import { NextRequest } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { UpdateSchoolSettingsSchema } from "@/lib/validations/school.schema";
-import { updateSchoolSettings } from "@/lib/services/school.service";
-import { prisma } from "@/lib/db/prisma";
+import { updateSchoolSettings, getSchoolBySlug } from "@/lib/services/school.service";
+import { prisma, isDatabaseConfigured } from "@/lib/db/prisma";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { apiSuccess, apiError } from "@/lib/api/response";
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ schoolId: string }> }
+) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return apiError("No autenticado", "UNAUTHORIZED", { statusCode: 401 });
+    }
+
+    const { schoolId } = await params;
+
+    // Verificar si tiene permisos o membresía
+    if (!session.isSystemAdmin) {
+      const membership = await prisma.membership.findUnique({
+        where: {
+          userId_schoolId: {
+            userId: session.userId,
+            schoolId,
+          },
+        },
+      });
+
+      if (!membership || !membership.isActive) {
+        return apiError("Acceso denegado a esta institución", "FORBIDDEN", { statusCode: 403 });
+      }
+    }
+
+    if (isDatabaseConfigured()) {
+      const settings = await prisma.schoolSettings.findUnique({
+        where: { schoolId },
+      });
+      if (settings) {
+        return apiSuccess({ settings });
+      }
+    }
+
+    // Fallback a configuración de demostración
+    const school = await getSchoolBySlug(schoolId);
+    return apiSuccess({
+      settings: school?.settings || {
+        minPassingGrade: 4.0,
+        minGrade: 1.0,
+        maxGrade: 7.0,
+        gradeScalePrecision: 1,
+        termType: "SEMESTER",
+        primaryColor: "#0284c7",
+        requireAttendanceNote: false,
+      },
+    });
+  } catch (error: unknown) {
+    return apiError(
+      error instanceof Error ? error.message : "Error al obtener la configuración",
+      "INTERNAL_ERROR",
+      { statusCode: 500 }
+    );
+  }
+}
 
 export async function PATCH(
   req: NextRequest,

@@ -525,7 +525,11 @@ export function createMockPrisma() {
           if (!matchWhere(item[key], val)) return false;
         }
       } else {
-        if (item[key] !== val) return false;
+        if (val === null) {
+          if (item[key] !== null && item[key] !== undefined) return false;
+        } else {
+          if (item[key] !== val) return false;
+        }
       }
     }
     return true;
