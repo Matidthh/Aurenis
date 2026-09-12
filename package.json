@@ -8,9 +8,16 @@
     "start": "next start -p 3000 -H 0.0.0.0",
     "lint": "next lint",
     "test": "tsx scripts/qa-security-test.ts",
+    "test:rbac": "tsx scripts/rbac-security-test.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "tsx scripts/migrate-deploy.ts",
+    "db:migrate:status": "tsx scripts/migrate-status.ts",
+    "db:migrate:rollback": "tsx scripts/migrate-rollback.ts",
+    "db:migrate:validate": "tsx scripts/migrate-validate.ts",
+    "db:verify:indexes": "tsx scripts/verify-indexes.ts",
+    "db:verify:performance": "tsx scripts/verify-query-performance.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",

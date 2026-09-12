@@ -4,6 +4,8 @@ import { verifyPassword, hashPassword } from "@/lib/auth/password";
 import { logAuditEvent } from "./audit.service";
 import { SchoolSummary } from "@/types/tenant";
 import { sessionStore } from "@/lib/auth/session-store";
+import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "@/lib/constants/roles";
+import { PERMISSIONS } from "@/lib/constants/permissions";
 
 export class UserServiceError extends Error {
   constructor(message: string) {
@@ -11,6 +13,30 @@ export class UserServiceError extends Error {
     this.name = "UserServiceError";
   }
 }
+
+// Helper para armar lista de permisos duales (con colon y dot)
+const createRolePermissions = (roleKey: string) => {
+  const preset = ROLE_PRESETS[roleKey];
+  if (!preset) return [];
+  return preset.permissions.flatMap((c) => [
+    { permission: { code: c } },
+    { permission: { code: c.replace(/:/g, ".") } },
+  ]);
+};
+
+const DEFAULT_DEMO_SCHOOL = {
+  id: "sch_sanjose_demo",
+  slug: "colegio-san-jose",
+  name: "Colegio San José",
+  status: "ACTIVE",
+  timezone: "America/Santiago",
+  settings: {
+    termType: "SEMESTER",
+    minPassingGrade: 4.0,
+    minGrade: 1.0,
+    maxGrade: 7.0,
+  },
+};
 
 // Fallback de usuarios demo cuando la base de datos no está disponible en previsualización
 type DemoUser = {
@@ -25,6 +51,98 @@ type DemoUser = {
   memberships?: any[];
 };
 
+const directorUser: DemoUser = {
+  id: "usr_director_demo",
+  email: "director@sanjose.cl",
+  firstName: "Carlos",
+  lastName: "Mendoza",
+  password: "AdminCSJ2026!",
+  isSystemAdmin: false,
+  status: UserStatus.ACTIVE,
+  memberships: [
+    {
+      id: "mem_director_demo",
+      isActive: true,
+      school: DEFAULT_DEMO_SCHOOL,
+      role: {
+        id: "role_admin_demo",
+        name: DEFAULT_SCHOOL_ROLES.SCHOOL_ADMIN,
+        displayName: "Administrador del Colegio",
+        permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.SCHOOL_ADMIN),
+      },
+    },
+  ],
+};
+
+const teacherUser: DemoUser = {
+  id: "usr_teacher_demo",
+  email: "profesor@sanjose.cl",
+  firstName: "Roberto",
+  lastName: "González",
+  password: "Profesor2026!",
+  isSystemAdmin: false,
+  status: UserStatus.ACTIVE,
+  memberships: [
+    {
+      id: "mem_teacher_demo",
+      isActive: true,
+      school: DEFAULT_DEMO_SCHOOL,
+      role: {
+        id: "role_teacher_demo",
+        name: DEFAULT_SCHOOL_ROLES.TEACHER,
+        displayName: "Profesor",
+        permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.TEACHER),
+      },
+    },
+  ],
+};
+
+const studentUser: DemoUser = {
+  id: "usr_student_demo",
+  email: "estudiante@sanjose.cl",
+  firstName: "Valentina",
+  lastName: "Silva",
+  password: "Estudiante2026!",
+  isSystemAdmin: false,
+  status: UserStatus.ACTIVE,
+  memberships: [
+    {
+      id: "mem_student_demo",
+      isActive: true,
+      school: DEFAULT_DEMO_SCHOOL,
+      role: {
+        id: "role_student_demo",
+        name: DEFAULT_SCHOOL_ROLES.STUDENT,
+        displayName: "Estudiante",
+        permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+      },
+    },
+  ],
+};
+
+const guardianUser: DemoUser = {
+  id: "usr_guardian_demo",
+  email: "apoderado@sanjose.cl",
+  firstName: "María",
+  lastName: "González",
+  password: "Apoderado2026!",
+  isSystemAdmin: false,
+  status: UserStatus.ACTIVE,
+  memberships: [
+    {
+      id: "mem_guardian_demo",
+      isActive: true,
+      school: DEFAULT_DEMO_SCHOOL,
+      role: {
+        id: "role_guardian_demo",
+        name: DEFAULT_SCHOOL_ROLES.GUARDIAN,
+        displayName: "Apoderado / Tutor",
+        permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.GUARDIAN),
+      },
+    },
+  ],
+};
+
 const DEMO_USERS: Record<string, DemoUser> = {
   "admin@aurenis.com": {
     id: "usr_system_admin_demo",
@@ -36,126 +154,13 @@ const DEMO_USERS: Record<string, DemoUser> = {
     status: UserStatus.ACTIVE,
     memberships: [],
   },
-  "director@sanjose.cl": {
-    id: "usr_director_demo",
-    email: "director@sanjose.cl",
-    firstName: "Carlos",
-    lastName: "Mendoza",
-    password: "AdminCSJ2026!",
-    isSystemAdmin: false,
-    status: UserStatus.ACTIVE,
-    memberships: [
-      {
-        id: "mem_director_demo",
-        isActive: true,
-        school: {
-          id: "sch_sanjose_demo",
-          slug: "colegio-san-jose",
-          name: "Colegio San José",
-          status: "ACTIVE",
-          timezone: "America/Santiago",
-          settings: {
-            termType: "SEMESTER",
-            minPassingGrade: 4.0,
-            minGrade: 1.0,
-            maxGrade: 7.0,
-          },
-        },
-        role: {
-          id: "role_admin_demo",
-          name: "SCHOOL_ADMIN",
-          displayName: "Administrador del Colegio",
-          permissions: [
-            { permission: { code: "school.settings.view" } },
-            { permission: { code: "school.settings.manage" } },
-            { permission: { code: "people.students.manage" } },
-            { permission: { code: "academic.courses.manage" } },
-            { permission: { code: "grades.view" } },
-            { permission: { code: "grades.manage" } },
-            { permission: { code: "attendance.view" } },
-            { permission: { code: "attendance.manage" } },
-          ],
-        },
-      },
-    ],
-  },
-  "profesor@sanjose.cl": {
-    id: "usr_teacher_demo",
-    email: "profesor@sanjose.cl",
-    firstName: "Roberto",
-    lastName: "González",
-    password: "Profesor2026!",
-    isSystemAdmin: false,
-    status: UserStatus.ACTIVE,
-    memberships: [
-      {
-        id: "mem_teacher_demo",
-        isActive: true,
-        school: {
-          id: "sch_sanjose_demo",
-          slug: "colegio-san-jose",
-          name: "Colegio San José",
-          status: "ACTIVE",
-          timezone: "America/Santiago",
-          settings: {
-            termType: "SEMESTER",
-            minPassingGrade: 4.0,
-            minGrade: 1.0,
-            maxGrade: 7.0,
-          },
-        },
-        role: {
-          id: "role_teacher_demo",
-          name: "TEACHER",
-          displayName: "Profesor de Asignatura",
-          permissions: [
-            { permission: { code: "academic.courses.view" } },
-            { permission: { code: "grades.view" } },
-            { permission: { code: "grades.manage" } },
-            { permission: { code: "attendance.view" } },
-            { permission: { code: "attendance.manage" } },
-          ],
-        },
-      },
-    ],
-  },
-  "estudiante@sanjose.cl": {
-    id: "usr_student_demo",
-    email: "estudiante@sanjose.cl",
-    firstName: "Valentina",
-    lastName: "Silva",
-    password: "Estudiante2026!",
-    isSystemAdmin: false,
-    status: UserStatus.ACTIVE,
-    memberships: [
-      {
-        id: "mem_student_demo",
-        isActive: true,
-        school: {
-          id: "sch_sanjose_demo",
-          slug: "colegio-san-jose",
-          name: "Colegio San José",
-          status: "ACTIVE",
-          timezone: "America/Santiago",
-          settings: {
-            termType: "SEMESTER",
-            minPassingGrade: 4.0,
-            minGrade: 1.0,
-            maxGrade: 7.0,
-          },
-        },
-        role: {
-          id: "role_student_demo",
-          name: "STUDENT",
-          displayName: "Estudiante",
-          permissions: [
-            { permission: { code: "grades.view" } },
-            { permission: { code: "attendance.view" } },
-          ],
-        },
-      },
-    ],
-  },
+  "director@sanjose.cl": directorUser,
+  "profesor@sanjose.cl": teacherUser,
+  "profesor.matematica@sanjose.cl": { ...teacherUser, email: "profesor.matematica@sanjose.cl" },
+  "estudiante@sanjose.cl": studentUser,
+  "sofia.valenzuela@sanjose.cl": { ...studentUser, email: "sofia.valenzuela@sanjose.cl" },
+  "apoderado@sanjose.cl": guardianUser,
+  "maria.gonzalez@sanjose.cl": { ...guardianUser, email: "maria.gonzalez@sanjose.cl" },
 };
 
 /**
@@ -196,7 +201,14 @@ export async function authenticateUser(email: string, plainPassword: string) {
   if (!user) {
     const demo = DEMO_USERS[normalizedEmail];
     if (demo) {
-      const validPasswords = [demo.password, "AurenisSuperAdmin2026!", "AdminCSJ2026!", "Profesor2026!", "Estudiante2026!"];
+      const validPasswords = [
+        demo.password,
+        "AurenisSuperAdmin2026!",
+        "AdminCSJ2026!",
+        "Profesor2026!",
+        "Estudiante2026!",
+        "Apoderado2026!",
+      ];
       if (validPasswords.includes(plainPassword)) {
         return demo;
       }

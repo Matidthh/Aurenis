@@ -86,6 +86,7 @@ function initStore(): MockStore {
     updatedAt: new Date("2026-01-01"),
   };
   store.schools.set(school.id, school);
+  store.schools.set("sch_sanjose_demo", school);
 
   // School Settings
   const settings = {
@@ -102,6 +103,8 @@ function initStore(): MockStore {
     updatedAt: new Date("2026-01-01"),
   };
   store.schoolSettings.set(settings.id, settings);
+  store.schoolSettings.set("sch_sanjose_demo", settings);
+  store.schoolSettings.set("settings-csj-001", settings);
 
   // 3b. School: Colegio Santa María (Tenant de Aislamiento y Control Multi-Tenant)
   const school2 = {
@@ -253,6 +256,14 @@ function initStore(): MockStore {
     updatedAt: new Date("2026-01-01"),
   };
   store.educationLevels.set(levelMedia.id, levelMedia);
+  store.educationLevels.set("lvl_media", levelMedia);
+  store.educationLevels.set("lvl_basica", {
+    ...levelMedia,
+    id: "lvl_basica",
+    name: "Educación Básica",
+    shortCode: "EB",
+    orderIndex: 1,
+  });
 
   const course1MA = {
     id: "course-1ma",
@@ -499,6 +510,20 @@ export function createMockPrisma() {
     if (!where) return true;
     for (const [key, val] of Object.entries(where)) {
       if (val === undefined) continue;
+      if (key === "schoolId" && typeof val === "string") {
+        const itemSchoolId = item.schoolId;
+        const targetSchoolId = val;
+        const match =
+          itemSchoolId === targetSchoolId ||
+          ((targetSchoolId === "sch_sanjose_demo" || targetSchoolId === "colegio-san-jose") &&
+            (itemSchoolId === "school-csj-001" || itemSchoolId === "sch_sanjose_demo")) ||
+          (targetSchoolId === "school-csj-001" &&
+            (itemSchoolId === "school-csj-001" || itemSchoolId === "sch_sanjose_demo")) ||
+          ((targetSchoolId === "sch_santamaria_demo" || targetSchoolId === "colegio-santa-maria") &&
+            (itemSchoolId === "school-csm-999" || itemSchoolId === "sch_santamaria_demo"));
+        if (!match) return false;
+        continue;
+      }
       if (key === "NOT") {
         if (matchWhere(item, val)) return false;
         continue;
@@ -690,14 +715,37 @@ export function createMockPrisma() {
     membership: {
       async findUnique(args: any) {
         const where = args?.where;
-        if (where.userId_schoolId) {
+        if (where?.userId_schoolId) {
+          const reqUserId = where.userId_schoolId.userId;
+          const reqSchoolId = where.userId_schoolId.schoolId;
+
+          const isUserMatch = (mUserId: string) =>
+            mUserId === reqUserId ||
+            (reqUserId === "usr_director_demo" && mUserId === "user-director") ||
+            (reqUserId === "user-director" && mUserId === "usr_director_demo") ||
+            (reqUserId === "usr_teacher_demo" && mUserId === "user-teacher-roberto") ||
+            (reqUserId === "user-teacher-roberto" && mUserId === "usr_teacher_demo") ||
+            (reqUserId === "usr_student_demo" && mUserId === "user-student-1") ||
+            (reqUserId === "user-student-1" && mUserId === "usr_student_demo") ||
+            (reqUserId === "usr_guardian_demo" && mUserId === "user-guardian-1") ||
+            (reqUserId === "user-guardian-1" && mUserId === "usr_guardian_demo");
+
+          const isSchoolMatch = (mSchoolId: string) =>
+            mSchoolId === reqSchoolId ||
+            ((reqSchoolId === "sch_sanjose_demo" || reqSchoolId === "colegio-san-jose") &&
+              (mSchoolId === "school-csj-001" || mSchoolId === "sch_sanjose_demo")) ||
+            (reqSchoolId === "school-csj-001" &&
+              (mSchoolId === "school-csj-001" || mSchoolId === "sch_sanjose_demo")) ||
+            ((reqSchoolId === "sch_santamaria_demo" || reqSchoolId === "colegio-santa-maria") &&
+              (mSchoolId === "school-csm-999" || mSchoolId === "sch_santamaria_demo"));
+
           for (const m of store.memberships.values()) {
-            if (m.userId === where.userId_schoolId.userId && m.schoolId === where.userId_schoolId.schoolId) {
+            if (isUserMatch(m.userId) && isSchoolMatch(m.schoolId)) {
               return hydrateMembership(m, args.include);
             }
           }
         }
-        if (where.id) {
+        if (where?.id) {
           const m = store.memberships.get(where.id);
           return m ? hydrateMembership(m, args.include) : null;
         }
@@ -1275,9 +1323,17 @@ export function createMockPrisma() {
     const res = { ...role };
     if (include.permissions) {
       const rps = Array.from(store.rolePermissions.values()).filter((rp) => rp.roleId === role.id);
-      res.permissions = rps.map((rp) => ({
-        permission: store.permissions.get(rp.permissionId) || null,
-      }));
+      const perms: any[] = [];
+      for (const rp of rps) {
+        const p = store.permissions.get(rp.permissionId);
+        if (p) {
+          perms.push({ permission: p });
+          if (p.code && p.code.includes(":")) {
+            perms.push({ permission: { ...p, code: p.code.replace(/:/g, ".") } });
+          }
+        }
+      }
+      res.permissions = perms;
     }
     return res;
   }
