@@ -13,6 +13,7 @@
     "test:unauth": "tsx scripts/unauthenticated-access-test.ts",
     "test:security-hardening": "tsx scripts/security-hardening-test.ts",
     "test:injection": "tsx scripts/injection-xss-sqli-test.ts",
+    "test:error-leak": "tsx scripts/error-information-leak-test.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",

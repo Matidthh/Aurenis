@@ -37,14 +37,36 @@ export const SECURITY_HEADERS: Record<string, string> = {
 
   // 7. Permissions-Policy - Restricción de APIs del navegador no requeridas
   "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+
+  // 8. Server - Identificador genérico sin revelación de versión ni stack tecnológico
+  "Server": "Aurenis-Gateway",
 };
 
 /**
- * Aplica todas las cabeceras de seguridad HTTP a un objeto NextResponse.
+ * Cabeceras informativas o de versión que deben ser eliminadas de las respuestas.
  */
-export function applySecurityHeaders(response: NextResponse): NextResponse {
+export const FORBIDDEN_VERSION_HEADERS = [
+  "x-powered-by",
+  "x-nextjs-version",
+  "x-aspnet-version",
+  "x-version",
+  "x-runtime",
+  "server-version",
+];
+
+/**
+ * Aplica todas las cabeceras de seguridad HTTP a un objeto NextResponse
+ * y elimina cabeceras que revelen tecnologías internas o versiones.
+ */
+export function applySecurityHeaders<T = any>(response: NextResponse<T>): NextResponse<T> {
   for (const [header, value] of Object.entries(SECURITY_HEADERS)) {
     response.headers.set(header, value);
   }
+
+  // Eliminar cabeceras que revelen versiones o stack tecnológico
+  for (const forbidden of FORBIDDEN_VERSION_HEADERS) {
+    response.headers.delete(forbidden);
+  }
+
   return response;
 }

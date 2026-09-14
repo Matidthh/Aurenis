@@ -3,6 +3,7 @@ import { jwtVerify } from "jose";
 import { isPublicRoute, isSystemRoute } from "@/lib/navigation/routes";
 import { getCorsHeaders, handleCorsPreflight } from "@/lib/security/cors";
 import { applySecurityHeaders } from "@/lib/security/headers";
+import { formatErrorResponse } from "@/lib/api/response";
 
 const SECRET_KEY = new TextEncoder().encode(
   process.env.JWT_SECRET || "aurenis-default-super-secret-key-at-least-32-characters"
@@ -65,7 +66,7 @@ export async function middleware(request: NextRequest) {
   if (!sessionPayload && !isPublic) {
     if (pathname.startsWith("/api/")) {
       response = NextResponse.json(
-        { error: "No autenticado. Inicie sesión para continuar." },
+        formatErrorResponse("No autenticado. Inicie sesión para continuar.", "UNAUTHORIZED"),
         { status: 401 }
       );
     } else {
@@ -85,7 +86,7 @@ export async function middleware(request: NextRequest) {
     if (!sessionPayload?.isSystemAdmin) {
       if (pathname.startsWith("/api/")) {
         response = NextResponse.json(
-          { error: "Acceso denegado. Se requieren privilegios de SuperAdmin." },
+          formatErrorResponse("Acceso denegado. Se requieren privilegios de SuperAdmin.", "FORBIDDEN"),
           { status: 403 }
         );
       } else {
