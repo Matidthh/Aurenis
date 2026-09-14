@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { AuthCookiePayload, UserSession } from "@/types/auth";
 
 const SECRET_KEY = new TextEncoder().encode(
@@ -65,8 +65,27 @@ export async function clearSessionCookie(): Promise<void> {
 }
 
 export async function getSession(): Promise<UserSession | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  let token: string | undefined;
+
+  try {
+    const cookieStore = await cookies();
+    token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  } catch {
+    // cookies() might not be available in some contexts
+  }
+
+  if (!token) {
+    try {
+      const headerStore = await headers();
+      const authHeader = headerStore.get("authorization");
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.substring(7).trim();
+      }
+    } catch {
+      // headers() might not be available in some contexts
+    }
+  }
+
   if (!token) return null;
 
   const payload = await verifySessionToken(token);

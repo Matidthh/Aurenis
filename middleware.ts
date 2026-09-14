@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { isPublicRoute, isSystemRoute } from "@/lib/navigation/routes";
+import { getCorsHeaders, handleCorsPreflight } from "@/lib/security/cors";
+import { applySecurityHeaders } from "@/lib/security/headers";
 
 const SECRET_KEY = new TextEncoder().encode(
   process.env.JWT_SECRET || "aurenis-default-super-secret-key-at-least-32-characters"
@@ -9,17 +11,13 @@ const SECRET_KEY = new TextEncoder().encode(
 const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
 
 export async function middleware(request: NextRequest) {
-  const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
-  const corsHeaders = {
-    "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT,OPTIONS",
-    "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Client-Version, X-Tenant-Id, Authorization",
-  };
+  const origin = request.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
 
   // Manejo de preflight CORS (OPTIONS)
   if (request.method === "OPTIONS") {
-    return NextResponse.json({}, { status: 200, headers: corsHeaders });
+    const preflightRes = handleCorsPreflight(request);
+    return applySecurityHeaders(preflightRes);
   }
 
   const { pathname } = request.nextUrl;
@@ -36,18 +34,20 @@ export async function middleware(request: NextRequest) {
     pathname === "/favicon.ico"
   ) {
     const response = NextResponse.next();
-    // Añadir headers CORS a archivos estáticos por si acaso
+    // Añadir headers CORS y de seguridad a assets estáticos
     Object.entries(corsHeaders).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
-    return response;
+    return applySecurityHeaders(response);
   }
 
   // Verificar si la ruta es pública según la definición centralizada
   const isPublic = isPublicRoute(pathname);
 
-  // Obtener cookie de sesión
-  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  // Obtener token de sesión: desde cookie de sesión o desde encabezado Authorization: Bearer <token>
+  const authHeader = request.headers.get("authorization");
+  const bearerToken = authHeader && authHeader.startsWith("Bearer ") ? authHeader.substring(7).trim() : null;
+  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value || bearerToken;
   let sessionPayload: any = null;
 
   if (token) {
@@ -94,12 +94,21 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Si es una ruta protegida o API privada, aplicar directivas estrictas anti-caché en el navegador
+  if (!isPublic || pathname.startsWith("/api/")) {
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+    response.headers.set("Surrogate-Control", "no-store");
+  }
+
   // Añadir Headers CORS a la respuesta final
   Object.entries(corsHeaders).forEach(([key, value]) => {
     response.headers.set(key, value);
   });
 
-  return response;
+  // Aplicar cabeceras de seguridad HTTP (HSTS, CSP, X-Content-Type-Options, Anti-Clickjacking)
+  return applySecurityHeaders(response);
 }
 
 export const config = {

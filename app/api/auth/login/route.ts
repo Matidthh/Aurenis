@@ -2,8 +2,35 @@ import { NextRequest, NextResponse } from "next/server";
 import { LoginSchema } from "@/lib/validations/auth.schema";
 import { authenticateUser } from "@/lib/services/user.service";
 import { setSessionCookie, signSessionToken } from "@/lib/auth/session";
+import {
+  checkRateLimit,
+  resetRateLimit,
+  getClientIdentifier,
+  getRateLimitHeaders,
+  RATE_LIMIT_CONFIGS,
+} from "@/lib/security/rate-limiter";
 
 export async function POST(req: NextRequest) {
+  const clientIp = getClientIdentifier(req);
+  const rateLimitKey = `login:${clientIp}`;
+
+  // Verificar límite de tasa para mitigar ataques de fuerza bruta (Rate Limiting)
+  const rateLimitResult = checkRateLimit(rateLimitKey, RATE_LIMIT_CONFIGS.LOGIN);
+
+  if (!rateLimitResult.allowed) {
+    return NextResponse.json(
+      {
+        error: rateLimitResult.message,
+        code: "TOO_MANY_REQUESTS",
+        retryAfter: rateLimitResult.retryAfter,
+      },
+      {
+        status: 429,
+        headers: getRateLimitHeaders(rateLimitResult),
+      }
+    );
+  }
+
   try {
     const body = await req.json();
     const validated = LoginSchema.safeParse(body);
@@ -11,11 +38,14 @@ export async function POST(req: NextRequest) {
     if (!validated.success) {
       return NextResponse.json(
         { error: "Datos de entrada inválidos", details: validated.error.flatten() },
-        { status: 400 }
+        { status: 400, headers: getRateLimitHeaders(rateLimitResult) }
       );
     }
 
     const user = await authenticateUser(validated.data.email, validated.data.password);
+
+    // Tras autenticación exitosa, restablecer el contador de intentos fallidos
+    resetRateLimit(rateLimitKey);
 
     // Caso A: SuperAdmin del Sistema
     if (user.isSystemAdmin) {
@@ -113,7 +143,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Error interno al iniciar sesión." },
-      { status: 401 }
+      { status: 401, headers: getRateLimitHeaders(rateLimitResult) }
     );
   }
 }
