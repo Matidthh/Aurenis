@@ -25,6 +25,18 @@ export type CreateSchoolInput = z.infer<typeof CreateSchoolSchema>;
 
 export const UpdateSchoolSettingsSchema = z
   .object({
+    // Datos Institucionales
+    name: z.string().min(2, "El nombre de la institución debe tener al menos 2 caracteres").optional(),
+    institutionalCode: z.string().optional(),
+    address: z.string().optional(),
+    city: z.string().min(2, "La ciudad es requerida").optional(),
+    country: z.string().optional(),
+    timezone: z.string().optional(),
+    contactEmail: z.string().email("Correo de contacto inválido").optional().or(z.literal("")),
+    contactPhone: z.string().optional(),
+    motto: z.string().optional(),
+
+    // Régimen y Calificaciones
     termType: z.nativeEnum(AcademicTermType).optional(),
     minPassingGrade: z.number().min(0, "La nota de aprobación no puede ser menor a 0").max(100, "La nota de aprobación no puede exceder 100").optional(),
     minGrade: z.number().min(0, "La nota mínima no puede ser menor a 0").max(100, "La nota mínima no puede exceder 100").optional(),
@@ -32,6 +44,8 @@ export const UpdateSchoolSettingsSchema = z
     gradeScalePrecision: z.number().min(0, "Mínimo 0 decimales").max(2, "Máximo 2 decimales").optional(),
     primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Color hexadecimal inválido").optional(),
     requireAttendanceNote: z.boolean().optional(),
+    minAttendancePercentage: z.number().min(0).max(100).optional(),
+    defaultAssessmentWeight: z.number().min(0).max(100).optional(),
   })
   .refine(
     (data) => {
@@ -54,3 +68,49 @@ export const UpdateSchoolSettingsSchema = z
   );
 
 export type UpdateSchoolSettingsInput = z.infer<typeof UpdateSchoolSettingsSchema>;
+
+// Validaciones de Periodos Académicos
+export const CreateAcademicPeriodSchema = z
+  .object({
+    name: z.string().min(2, "El nombre del periodo debe tener al menos 2 caracteres"),
+    year: z.number().int().min(2000).max(2100),
+    startDate: z.string().min(1, "La fecha de inicio es requerida"),
+    endDate: z.string().min(1, "La fecha de término es requerida"),
+    weightPercentage: z.number().min(0).max(100).default(50),
+    isCurrent: z.boolean().default(false),
+    isClosed: z.boolean().default(false),
+  })
+  .refine(
+    (data) => new Date(data.endDate) >= new Date(data.startDate),
+    {
+      message: "La fecha de término debe ser posterior o igual a la fecha de inicio",
+      path: ["endDate"],
+    }
+  );
+
+export type CreateAcademicPeriodInput = z.infer<typeof CreateAcademicPeriodSchema>;
+
+export const UpdateAcademicPeriodSchema = z
+  .object({
+    name: z.string().min(2, "El nombre del periodo debe tener al menos 2 caracteres").optional(),
+    year: z.number().int().min(2000).max(2100).optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    weightPercentage: z.number().min(0).max(100).optional(),
+    isCurrent: z.boolean().optional(),
+    isClosed: z.boolean().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.startDate && data.endDate) {
+        return new Date(data.endDate) >= new Date(data.startDate);
+      }
+      return true;
+    },
+    {
+      message: "La fecha de término debe ser posterior o igual a la fecha de inicio",
+      path: ["endDate"],
+    }
+  );
+
+export type UpdateAcademicPeriodInput = z.infer<typeof UpdateAcademicPeriodSchema>;

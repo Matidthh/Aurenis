@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getSession } from "@/lib/auth/session";
-import { UpdateSchoolSettingsSchema } from "@/lib/validations/school.schema";
-import { updateSchoolSettings, getSchoolFullDetails } from "@/lib/services/school.service";
+import { CreateAcademicPeriodSchema } from "@/lib/validations/school.schema";
+import { listAcademicPeriods, createAcademicPeriod } from "@/lib/services/school.service";
 import { prisma } from "@/lib/db/prisma";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { apiSuccess, apiError } from "@/lib/api/response";
@@ -17,41 +17,19 @@ export async function GET(
     }
 
     const { schoolId } = await params;
+    const periods = await listAcademicPeriods(schoolId);
 
-    // Verificar si tiene permisos o membresía
-    if (!session.isSystemAdmin) {
-      const school = await prisma.school.findFirst({
-        where: { OR: [{ id: schoolId }, { slug: schoolId }] },
-      });
-
-      if (school) {
-        const membership = await prisma.membership.findUnique({
-          where: {
-            userId_schoolId: {
-              userId: session.userId,
-              schoolId: school.id,
-            },
-          },
-        });
-
-        if (!membership || !membership.isActive) {
-          return apiError("Acceso denegado a esta institución", "FORBIDDEN", { statusCode: 403 });
-        }
-      }
-    }
-
-    const details = await getSchoolFullDetails(schoolId);
-    return apiSuccess(details);
+    return apiSuccess({ periods });
   } catch (error: unknown) {
     return apiError(
-      error instanceof Error ? error.message : "Error al obtener la configuración",
+      error instanceof Error ? error.message : "Error al obtener periodos académicos",
       "INTERNAL_ERROR",
       { statusCode: 500 }
     );
   }
 }
 
-export async function PATCH(
+export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ schoolId: string }> }
 ) {
@@ -63,16 +41,14 @@ export async function PATCH(
 
     const { schoolId } = await params;
     const school = await prisma.school.findFirst({
-      where: {
-        OR: [{ id: schoolId }, { slug: schoolId }],
-      },
+      where: { OR: [{ id: schoolId }, { slug: schoolId }] },
     });
 
     if (!school) {
       return apiError("Institución no encontrada", "NOT_FOUND", { statusCode: 404 });
     }
 
-    // Verificar si tiene permisos para modificar la configuración
+    // Verificar permisos
     if (!session.isSystemAdmin) {
       const membership = await prisma.membership.findUnique({
         where: {
@@ -96,35 +72,40 @@ export async function PATCH(
         return apiError("Acceso denegado a esta institución", "FORBIDDEN", { statusCode: 403 });
       }
 
-      const hasUpdatePermission = membership.role.permissions.some(
-        (rp) => rp.permission.code === PERMISSIONS.SCHOOL_SETTINGS_UPDATE
+      const hasPermission = membership.role.permissions.some(
+        (rp) =>
+          rp.permission.code === PERMISSIONS.SCHOOL_SETTINGS_UPDATE ||
+          rp.permission.code === "academic:periods:manage"
       );
 
-      if (!hasUpdatePermission) {
-        return apiError("No posees el permiso para modificar la configuración del colegio.", "FORBIDDEN", {
+      if (!hasPermission) {
+        return apiError("No tienes permisos para crear periodos académicos", "FORBIDDEN", {
           statusCode: 403,
         });
       }
     }
 
     const body = await req.json();
-    const validated = UpdateSchoolSettingsSchema.safeParse(body);
+    const validated = CreateAcademicPeriodSchema.safeParse(body);
 
     if (!validated.success) {
-      return apiError("Datos de formulario inválidos", "VALIDATION_ERROR", {
+      return apiError("Datos inválidos para el periodo académico", "VALIDATION_ERROR", {
         statusCode: 400,
         details: validated.error.flatten(),
       });
     }
 
-    const updated = await updateSchoolSettings(school.id, validated.data, session.userId);
+    const period = await createAcademicPeriod(school.id, validated.data, session.userId);
 
     return apiSuccess(
-      { settings: updated },
-      { message: "Configuración actualizada con éxito" }
+      { period },
+      { message: "Periodo académico creado exitosamente" }
     );
   } catch (error: unknown) {
-    return apiError(error instanceof Error ? error.message : "Error al actualizar la configuración", "INTERNAL_ERROR", { statusCode: 500 });
+    return apiError(
+      error instanceof Error ? error.message : "Error al crear periodo académico",
+      "INTERNAL_ERROR",
+      { statusCode: 500 }
+    );
   }
 }
-
