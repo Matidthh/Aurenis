@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
+import { validateRut, validateEmail, formatRut } from "@/lib/utils/rut";
 
 interface CourseOption {
   id: string;
@@ -43,9 +44,22 @@ export function CreateStudentModal({
     enrollmentNumber: "",
   });
 
+  const [touched, setTouched] = useState({
+    email: false,
+    rutOrNationalId: false,
+  });
+
+  // Validaciones en vivo
+  const isEmailValid = !formData.email || validateEmail(formData.email);
+  const emailError = touched.email && formData.email && !isEmailValid ? "Correo electrónico inválido (ej: usuario@dominio.cl)" : null;
+
+  const isRutValid = !formData.rutOrNationalId || validateRut(formData.rutOrNationalId);
+  const rutError = touched.rutOrNationalId && formData.rutOrNationalId && !isRutValid ? "RUT chileno inválido (ej: 12345678-9)" : null;
+
   const handleOpen = () => {
     setError(null);
     setSuccess(false);
+    setTouched({ email: false, rutOrNationalId: false });
     setFormData({
       firstName: "",
       lastName: "",
@@ -59,6 +73,18 @@ export function CreateStudentModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ email: true, rutOrNationalId: true });
+
+    if (formData.email && !validateEmail(formData.email)) {
+      setError("Por favor ingresa un correo electrónico válido.");
+      return;
+    }
+
+    if (formData.rutOrNationalId && !validateRut(formData.rutOrNationalId)) {
+      setError("Por favor ingresa un RUT chileno válido.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -115,7 +141,7 @@ export function CreateStudentModal({
               <div>
                 <ModalTitle>Matricular Nuevo Estudiante</ModalTitle>
                 <ModalDescription>
-                  Registra un alumno y asígnalo a su curso correspondiente.
+                  Registra un alumno y asígnalo a su curso correspondiente con validación en vivo.
                 </ModalDescription>
               </div>
             </div>
@@ -139,7 +165,7 @@ export function CreateStudentModal({
             <div className="grid grid-cols-2 gap-3">
               <Input
                 id="student-firstname"
-                label="Nombres"
+                label="Nombres *"
                 placeholder="Ej: Sofia"
                 required
                 value={formData.firstName}
@@ -150,7 +176,7 @@ export function CreateStudentModal({
 
               <Input
                 id="student-lastname"
-                label="Apellidos"
+                label="Apellidos *"
                 placeholder="Ej: Valenzuela"
                 required
                 value={formData.lastName}
@@ -161,27 +187,39 @@ export function CreateStudentModal({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Input
-                id="student-email"
-                type="email"
-                label="Correo Electrónico"
-                placeholder="sofia.valenzuela@colegio.cl"
-                required
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
+              <div>
+                <Input
+                  id="student-email"
+                  type="email"
+                  label="Correo Electrónico *"
+                  placeholder="sofia@colegio.cl"
+                  required
+                  value={formData.email}
+                  onBlur={() => setTouched({ ...touched, email: true })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+                {emailError && (
+                  <p className="text-[11px] text-red-600 dark:text-red-400 mt-1">{emailError}</p>
+                )}
+              </div>
 
-              <Input
-                id="student-rut"
-                label="RUT o Identificación"
-                placeholder="21.345.678-9"
-                value={formData.rutOrNationalId}
-                onChange={(e) =>
-                  setFormData({ ...formData, rutOrNationalId: e.target.value })
-                }
-              />
+              <div>
+                <Input
+                  id="student-rut"
+                  label="RUT Chileno"
+                  placeholder="21.345.678-9"
+                  value={formData.rutOrNationalId}
+                  onBlur={() => setTouched({ ...touched, rutOrNationalId: true })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rutOrNationalId: e.target.value })
+                  }
+                />
+                {rutError && (
+                  <p className="text-[11px] text-red-600 dark:text-red-400 mt-1">{rutError}</p>
+                )}
+              </div>
             </div>
 
             <div className="space-y-1.5 text-left">
@@ -236,6 +274,7 @@ export function CreateStudentModal({
             <Button
               type="submit"
               variant="primary"
+              disabled={isLoading || (!!formData.email && !isEmailValid) || (!!formData.rutOrNationalId && !isRutValid)}
               isLoading={isLoading}
               loadingText="Matriculando..."
             >

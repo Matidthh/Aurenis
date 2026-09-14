@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, GraduationCap, AlertCircle, CheckCircle2 } from "lucide-react";
+import { validateRut, validateEmail } from "@/lib/utils/rut";
 
 interface CreateTeacherModalProps {
   schoolSlug: string;
@@ -35,9 +36,21 @@ export function CreateTeacherModal({ schoolSlug, onTeacherCreated }: CreateTeach
     phone: "",
   });
 
+  const [touched, setTouched] = useState({
+    email: false,
+    rutOrNationalId: false,
+  });
+
+  const isEmailValid = !formData.email || validateEmail(formData.email);
+  const emailError = touched.email && formData.email && !isEmailValid ? "Correo electrónico inválido (ej: profesor@colegio.cl)" : null;
+
+  const isRutValid = !formData.rutOrNationalId || validateRut(formData.rutOrNationalId);
+  const rutError = touched.rutOrNationalId && formData.rutOrNationalId && !isRutValid ? "RUT chileno inválido (ej: 12345678-9)" : null;
+
   const handleOpen = () => {
     setError(null);
     setSuccess(false);
+    setTouched({ email: false, rutOrNationalId: false });
     setFormData({
       firstName: "",
       lastName: "",
@@ -51,6 +64,18 @@ export function CreateTeacherModal({ schoolSlug, onTeacherCreated }: CreateTeach
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ email: true, rutOrNationalId: true });
+
+    if (formData.email && !validateEmail(formData.email)) {
+      setError("Por favor ingresa un correo electrónico válido.");
+      return;
+    }
+
+    if (formData.rutOrNationalId && !validateRut(formData.rutOrNationalId)) {
+      setError("Por favor ingresa un RUT chileno válido.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -156,27 +181,39 @@ export function CreateTeacherModal({ schoolSlug, onTeacherCreated }: CreateTeach
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <Input
-                id="teacher-email"
-                type="email"
-                label="Correo Electrónico"
-                placeholder="mbielsa@colegio.cl"
-                required
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
+              <div>
+                <Input
+                  id="teacher-email"
+                  type="email"
+                  label="Correo Electrónico *"
+                  placeholder="mbielsa@colegio.cl"
+                  required
+                  value={formData.email}
+                  onBlur={() => setTouched({ ...touched, email: true })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+                {emailError && (
+                  <p className="text-[11px] text-red-600 dark:text-red-400 mt-1">{emailError}</p>
+                )}
+              </div>
 
-              <Input
-                id="teacher-rut"
-                label="RUT o Identificación"
-                placeholder="10.234.567-8"
-                value={formData.rutOrNationalId}
-                onChange={(e) =>
-                  setFormData({ ...formData, rutOrNationalId: e.target.value })
-                }
-              />
+              <div>
+                <Input
+                  id="teacher-rut"
+                  label="RUT Chileno"
+                  placeholder="10.234.567-8"
+                  value={formData.rutOrNationalId}
+                  onBlur={() => setTouched({ ...touched, rutOrNationalId: true })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rutOrNationalId: e.target.value })
+                  }
+                />
+                {rutError && (
+                  <p className="text-[11px] text-red-600 dark:text-red-400 mt-1">{rutError}</p>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -214,6 +251,7 @@ export function CreateTeacherModal({ schoolSlug, onTeacherCreated }: CreateTeach
             <Button
               type="submit"
               variant="primary"
+              disabled={isLoading || (!!formData.email && !isEmailValid) || (!!formData.rutOrNationalId && !isRutValid)}
               isLoading={isLoading}
               loadingText="Guardando..."
             >
