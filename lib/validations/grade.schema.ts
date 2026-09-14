@@ -27,3 +27,38 @@ export const UpdateGradeSchema = z.object({
 });
 
 export type UpdateGradeInput = z.infer<typeof UpdateGradeSchema>;
+
+export const CreateAssessmentSchema = z.object({
+  subjectId: z.string().min(1, "El ID de la asignatura es obligatorio"),
+  academicPeriodId: z.string().min(1, "El ID del periodo académico es obligatorio"),
+  title: z.string().min(2, "El título de la evaluación debe tener al menos 2 caracteres"),
+  description: z.string().optional(),
+  date: z.string().or(z.date()).optional(),
+  weightPercentage: z.number().min(0).max(100).optional().default(100),
+  isPublished: z.boolean().optional().default(true),
+});
+
+export type CreateAssessmentInput = z.infer<typeof CreateAssessmentSchema>;
+
+export const UpdateAssessmentSchema = z.object({
+  title: z.string().min(2).optional(),
+  description: z.string().optional(),
+  date: z.string().or(z.date()).optional(),
+  weightPercentage: z.number().min(0).max(100).optional(),
+  isPublished: z.boolean().optional(),
+});
+
+export type UpdateAssessmentInput = z.infer<typeof UpdateAssessmentSchema>;
+
+export const BulkGradeItemSchema = z.object({
+  assessmentId: z.string().min(1),
+  enrollmentId: z.string().min(1),
+  value: z.number().min(0).max(100),
+  feedback: z.string().optional(),
+});
+
+export const BulkSaveGradesSchema = z.object({
+  grades: z.array(BulkGradeItemSchema).min(1, "Debe enviar al menos una calificación para guardar"),
+});
+
+export type BulkSaveGradesInput = z.infer<typeof BulkSaveGradesSchema>;
