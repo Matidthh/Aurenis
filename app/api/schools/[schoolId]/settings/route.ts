@@ -76,6 +76,15 @@ export async function PATCH(
     }
 
     const { schoolId } = await params;
+    const school = await prisma.school.findFirst({
+      where: {
+        OR: [{ id: schoolId }, { slug: schoolId }],
+      },
+    });
+
+    if (!school) {
+      return apiError("Institución no encontrada", "NOT_FOUND", { statusCode: 404 });
+    }
 
     // Verificar si tiene permisos para modificar la configuración
     if (!session.isSystemAdmin) {
@@ -83,7 +92,7 @@ export async function PATCH(
         where: {
           userId_schoolId: {
             userId: session.userId,
-            schoolId,
+            schoolId: school.id,
           },
         },
         include: {
@@ -122,7 +131,7 @@ export async function PATCH(
       });
     }
 
-    const updated = await updateSchoolSettings(schoolId, validated.data, session.userId);
+    const updated = await updateSchoolSettings(school.id, validated.data, session.userId);
 
     return apiSuccess(
       { settings: updated },

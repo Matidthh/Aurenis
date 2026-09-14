@@ -1035,6 +1035,12 @@ export function createMockPrisma() {
         store.teacherProfiles.set(id, item);
         return item;
       },
+      async create(args: any) {
+        const id = args.data.id || `tp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
+        store.teacherProfiles.set(id, item);
+        return hydrateTeacherProfile(item, args.include);
+      },
     },
 
     studentProfile: {
@@ -1043,6 +1049,12 @@ export function createMockPrisma() {
           if (matchWhere(sp, args?.where)) return hydrateStudentProfile(sp, args?.include);
         }
         return null;
+      },
+      async create(args: any) {
+        const id = args.data.id || `sp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
+        store.studentProfiles.set(id, item);
+        return hydrateStudentProfile(item, args.include);
       },
     },
 
@@ -1077,6 +1089,12 @@ export function createMockPrisma() {
           if (matchWhere(e, args?.where)) cnt++;
         }
         return cnt;
+      },
+      async create(args: any) {
+        const id = args.data.id || `enr-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
+        store.enrollments.set(id, item);
+        return hydrateEnrollment(item, args.include);
       },
     },
 

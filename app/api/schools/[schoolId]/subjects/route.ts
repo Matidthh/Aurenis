@@ -51,38 +51,37 @@ export async function POST(
 
       const hasPermission = membership.role.permissions.some(
         (rp) =>
-          rp.permission.code === PERMISSIONS.ACADEMIC_COURSES_MANAGE ||
+          rp.permission.code === PERMISSIONS.ACADEMIC_SUBJECTS_MANAGE ||
           rp.permission.code === "*"
       );
 
       if (!hasPermission) {
         return NextResponse.json(
-          { error: "No tienes permiso para gestionar cursos en esta institución." },
+          { error: "No tienes permiso para gestionar asignaturas en esta institución." },
           { status: 403 }
         );
       }
     }
 
     const body = await req.json();
-    const { name, gradeNumber, letter, educationLevelId, year } = body;
+    const { name, code, courseId, teacherProfileId, hoursPerWeek } = body;
 
-    if (!name || !letter || !educationLevelId) {
+    if (!name || !courseId) {
       return NextResponse.json(
-        { error: "Nombre, letra de sección y nivel educativo son obligatorios." },
+        { error: "Nombre de la asignatura y curso son obligatorios." },
         { status: 400 }
       );
     }
 
-    const currentYear = year || new Date().getFullYear();
     const tenantDb = createTenantPrisma(school.id);
 
-    const newCourse = await tenantDb.course.create({
+    const newSubject = await tenantDb.subject.create({
       data: {
         name: name.trim(),
-        gradeNumber: parseInt(gradeNumber, 10) || 1,
-        letter: letter.trim().toUpperCase(),
-        educationLevelId,
-        year: currentYear,
+        code: code ? code.trim().toUpperCase() : null,
+        courseId,
+        teacherProfileId: teacherProfileId || null,
+        hoursPerWeek: parseInt(hoursPerWeek, 10) || 4,
         schoolId: school.id,
       },
     });
@@ -93,21 +92,21 @@ export async function POST(
         schoolId: school.id,
         userId: session.userId,
         action: "CREATE",
-        entityType: "COURSE",
-        entityId: newCourse.id,
-        details: { name: newCourse.name, year: currentYear },
+        entityType: "SUBJECT",
+        entityId: newSubject.id,
+        details: { name: newSubject.name, courseId },
         ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Curso creado exitosamente",
-      course: newCourse,
+      message: "Asignatura creada exitosamente",
+      subject: newSubject,
     });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Error al crear el curso" },
+      { error: error.message || "Error al crear la asignatura" },
       { status: 500 }
     );
   }

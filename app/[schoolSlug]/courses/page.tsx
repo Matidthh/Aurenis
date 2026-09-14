@@ -4,6 +4,7 @@ import { listCoursesByYear } from "@/lib/services/academic.service";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
+import { CreateCourseModal } from "@/components/academic/create-course-modal";
 import { BookOpen, Users, Layers } from "lucide-react";
 
 export default async function CoursesPage({
@@ -16,7 +17,13 @@ export default async function CoursesPage({
   const tenantDb = createTenantPrisma(tenantCtx.schoolId);
 
   const currentYear = new Date().getFullYear();
-  const courses = await listCoursesByYear(tenantDb, tenantCtx.schoolId, currentYear);
+  const [courses, educationLevels] = await Promise.all([
+    listCoursesByYear(tenantDb, tenantCtx.schoolId, currentYear),
+    tenantDb.educationLevel.findMany({
+      where: { schoolId: tenantCtx.schoolId },
+      orderBy: { orderIndex: "asc" },
+    }),
+  ]);
 
   return (
     <Page>
@@ -28,6 +35,13 @@ export default async function CoursesPage({
             <BookOpen className="w-3.5 h-3.5" />
             {courses.length} Cursos Habilitados
           </Badge>
+        }
+        action={
+          <CreateCourseModal
+            schoolSlug={schoolSlug}
+            educationLevels={educationLevels}
+            currentYear={currentYear}
+          />
         }
       />
 

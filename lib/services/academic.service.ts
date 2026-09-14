@@ -6,9 +6,9 @@ export async function getSchoolAcademicOverview(tenantDb: TenantPrismaClient, sc
 
   if (isDatabaseConfigured()) {
     try {
-      const [totalCourses, totalSubjects, activePeriod, totalStudents] = await Promise.all([
+      const [totalCourses, totalSubjects, activePeriod, totalStudents, totalAssessments] = await Promise.all([
         tenantDb.course.count({
-          where: { schoolId, year: currentYear },
+          where: { schoolId, year: currentYear, deletedAt: null },
         }),
         tenantDb.subject.count({
           where: { schoolId },
@@ -17,7 +17,10 @@ export async function getSchoolAcademicOverview(tenantDb: TenantPrismaClient, sc
           where: { schoolId, isCurrent: true },
         }),
         tenantDb.enrollment.count({
-          where: { schoolId, year: currentYear, status: "ACTIVE" },
+          where: { schoolId, year: currentYear, status: "ACTIVE", deletedAt: null },
+        }),
+        tenantDb.assessment.count({
+          where: { schoolId },
         }),
       ]);
 
@@ -27,6 +30,7 @@ export async function getSchoolAcademicOverview(tenantDb: TenantPrismaClient, sc
         totalSubjects,
         activePeriod,
         totalStudents,
+        totalAssessments,
       };
     } catch {
       // Fallback a demo si falla la conexión
@@ -39,7 +43,133 @@ export async function getSchoolAcademicOverview(tenantDb: TenantPrismaClient, sc
     totalSubjects: 24,
     activePeriod: { id: "per_sem1_demo", name: "Primer Semestre 2026", startDate: new Date("2026-03-01"), endDate: new Date("2026-07-15") },
     totalStudents: 145,
+    totalAssessments: 32,
   };
+}
+
+export interface ActivityItem {
+  id: string;
+  action: string;
+  description: string;
+  timestamp: Date;
+  user?: string;
+  type: "academic" | "security" | "attendance" | "system";
+}
+
+export async function getRecentActivities(tenantDb: TenantPrismaClient, schoolId: string): Promise<ActivityItem[]> {
+  if (isDatabaseConfigured()) {
+    try {
+      const logs = await tenantDb.auditLog.findMany({
+        where: { schoolId },
+        take: 6,
+        orderBy: { timestamp: "desc" },
+        include: { user: true },
+      });
+
+      if (logs.length > 0) {
+        return logs.map((log) => {
+          let type: ActivityItem["type"] = "system";
+          if (log.entityType === "Grade" || log.entityType === "Assessment" || log.entityType === "Course") {
+            type = "academic";
+          } else if (log.entityType === "Attendance") {
+            type = "attendance";
+          } else if (log.action === "SECURITY_EVENT" || log.action === "LOGIN") {
+            type = "security";
+          }
+
+          const userName = log.user ? `${log.user.firstName} ${log.user.lastName}` : "Sistema";
+          let description = `${log.action} en ${log.entityType}`;
+          if (log.details && typeof log.details === "object" && "message" in log.details) {
+            description = String((log.details as any).message);
+          }
+
+          return {
+            id: log.id,
+            action: log.action,
+            description,
+            timestamp: log.timestamp,
+            user: userName,
+            type,
+          };
+        });
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
+  return [
+    {
+      id: "act-1",
+      action: "UPDATE",
+      description: "Publicación de calificaciones Parcial 1 en Matemáticas (1° Medio A)",
+      timestamp: new Date(Date.now() - 1000 * 60 * 35),
+      user: "Prof. Andrea Morales",
+      type: "academic",
+    },
+    {
+      id: "act-2",
+      action: "CREATE",
+      description: "Registro de asistencia completado para 2° Básico B (26 presentes)",
+      timestamp: new Date(Date.now() - 1000 * 60 * 120),
+      user: "Prof. Carlos Fuenzalida",
+      type: "attendance",
+    },
+    {
+      id: "act-3",
+      action: "CREATE",
+      description: "Matrícula de nuevo estudiante en 3° Medio B (Registro regular)",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5),
+      user: "Admin Secretaría",
+      type: "academic",
+    },
+    {
+      id: "act-4",
+      action: "UPDATE",
+      description: "Actualización de ponderaciones semestrales en Consejo Académico",
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
+      user: "Dirección Académica",
+      type: "system",
+    },
+  ];
+}
+
+export interface AnnouncementItem {
+  id: string;
+  title: string;
+  content: string;
+  category: "Urgente" | "Académico" | "Institucional" | "Circular";
+  date: string;
+  author: string;
+}
+
+export function getSchoolAnnouncements(): AnnouncementItem[] {
+  return [
+    {
+      id: "ann-1",
+      title: "Cierre de actas primer trimestre / periodo",
+      content: "Recordatorio: El ingreso formal de todas las evaluaciones parciales culmina el próximo viernes a las 18:00 hrs.",
+      category: "Urgente",
+      date: "Hoy, 09:00",
+      author: "Unidad Técnica Pedagógica (UTP)",
+    },
+    {
+      id: "ann-2",
+      title: "Reunión general de apoderados y entrega de informes",
+      content: "Se han habilitado las descargas de informes de asistencia y rendimiento para la jornada de apoderados del jueves.",
+      category: "Institucional",
+      date: "Ayer",
+      author: "Dirección General",
+    },
+    {
+      id: "ann-3",
+      title: "Actualización de horarios de talleres extraprogramáticos",
+      content: "Los nuevos bloques de laboratorios de ciencias y deportes están disponibles en la sección de horarios.",
+      category: "Académico",
+      date: "Hace 2 días",
+      author: "Coordinación de Talleres",
+    },
+  ];
 }
 
 export interface CourseItem {

@@ -105,6 +105,15 @@ export const SYSTEM_ROUTES: Record<string, RouteMetadata> = {
     section: "Supervisión Global",
     iconName: "Shield",
   },
+  SECURITY: {
+    path: "/system/security",
+    title: "Seguridad y Auditoría",
+    breadcrumbLabel: "Seguridad",
+    isPublic: false,
+    scope: "system",
+    section: "Supervisión Global",
+    iconName: "ShieldCheck",
+  },
   SCHOOLS: {
     path: "/system/schools",
     title: "Colegios e Instituciones",
@@ -336,6 +345,12 @@ export function generateBreadcrumbs(
       crumbs.push({
         label: "Design System",
         href: "/system/design-system",
+        isCurrent: true,
+      });
+    } else if (pathname.includes("/security")) {
+      crumbs.push({
+        label: "Seguridad y Auditoría",
+        href: "/system/security",
         isCurrent: true,
       });
     }

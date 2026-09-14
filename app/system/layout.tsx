@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { AppShell } from "@/components/layout/app-shell";
 import { NavItem, UserSessionInfo } from "@/components/layout/types";
-import { Shield, Building2, PlusCircle, Palette } from "lucide-react";
+import { Shield, ShieldCheck, Building2, PlusCircle, Palette } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +18,15 @@ export default async function SystemLayout({ children }: { children: React.React
       title: "Panel General",
       href: "/system/dashboard",
       icon: <Shield className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Seguridad y Auditoría",
+      href: "/system/security",
+      icon: <ShieldCheck className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "Audit Trail",
+      badgeVariant: "brand",
       section: "Supervisión Global",
       roles: ["SYSTEM_ADMIN"],
     },

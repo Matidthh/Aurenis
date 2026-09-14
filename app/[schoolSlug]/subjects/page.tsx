@@ -3,6 +3,7 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
+import { CreateSubjectModal } from "@/components/academic/create-subject-modal";
 import { Layers, Clock, GraduationCap } from "lucide-react";
 
 export default async function SubjectsPage({
@@ -14,9 +15,8 @@ export default async function SubjectsPage({
   const tenantCtx = await requireTenantContext(schoolSlug);
   const tenantDb = createTenantPrisma(tenantCtx.schoolId);
 
-  let subjects: any[] = [];
-  try {
-    subjects = await tenantDb.subject.findMany({
+  const [subjects, courses, teachers] = await Promise.all([
+    tenantDb.subject.findMany({
       where: { schoolId: tenantCtx.schoolId },
       include: {
         course: { include: { educationLevel: true } },
@@ -36,39 +36,31 @@ export default async function SubjectsPage({
         { course: { letter: "asc" } },
         { name: "asc" },
       ],
-    });
-  } catch (err) {
-    console.warn("⚠️ Error obteniendo asignaturas de BD:", (err as Error).message);
-    subjects = [
-      {
-        id: "sub_1",
-        name: "Matemáticas",
-        code: "MAT-101",
-        hoursPerWeek: 6,
-        course: { name: "1° Básico A", educationLevel: { name: "Educación Básica" } },
-        teacher: { membership: { user: { firstName: "Roberto", lastName: "Navarro" } } },
-        _count: { assessments: 4 },
+    }),
+    tenantDb.course.findMany({
+      where: { schoolId: tenantCtx.schoolId },
+      orderBy: [{ gradeNumber: "asc" }, { letter: "asc" }],
+    }),
+    tenantDb.teacherProfile.findMany({
+      where: { membership: { schoolId: tenantCtx.schoolId } },
+      include: {
+        membership: {
+          include: { user: true },
+        },
       },
-      {
-        id: "sub_2",
-        name: "Lenguaje y Comunicación",
-        code: "LEN-101",
-        hoursPerWeek: 6,
-        course: { name: "1° Básico A", educationLevel: { name: "Educación Básica" } },
-        teacher: { membership: { user: { firstName: "Valeria", lastName: "Castro" } } },
-        _count: { assessments: 3 },
-      },
-      {
-        id: "sub_3",
-        name: "Ciencias Naturales",
-        code: "CIE-101",
-        hoursPerWeek: 4,
-        course: { name: "1° Básico A", educationLevel: { name: "Educación Básica" } },
-        teacher: null,
-        _count: { assessments: 2 },
-      },
-    ] as any[];
-  }
+    }),
+  ]);
+
+  const courseOptions = courses.map((c) => ({
+    id: c.id,
+    name: c.name,
+  }));
+
+  const teacherOptions = teachers.map((t) => ({
+    id: t.id,
+    name: `${t.membership.user.firstName} ${t.membership.user.lastName}`,
+    specialty: t.specialty,
+  }));
 
   return (
     <Page>
@@ -80,6 +72,13 @@ export default async function SubjectsPage({
             <Layers className="w-3.5 h-3.5" />
             {subjects.length} Asignaturas Registradas
           </Badge>
+        }
+        action={
+          <CreateSubjectModal
+            schoolSlug={schoolSlug}
+            courses={courseOptions}
+            teachers={teacherOptions}
+          />
         }
       />
 

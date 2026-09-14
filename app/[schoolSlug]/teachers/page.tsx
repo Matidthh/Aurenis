@@ -4,6 +4,7 @@ import { listTeachersBySchool } from "@/lib/services/teacher.service";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
+import { CreateTeacherModal } from "@/components/academic/create-teacher-modal";
 import { GraduationCap, Mail, BookOpen } from "lucide-react";
 
 export default async function TeachersPage({
@@ -28,6 +29,7 @@ export default async function TeachersPage({
             {teachers.length} Docentes Registrados
           </Badge>
         }
+        action={<CreateTeacherModal schoolSlug={schoolSlug} />}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
