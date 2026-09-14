@@ -16,9 +16,10 @@ import { Plus, GraduationCap, AlertCircle, CheckCircle2 } from "lucide-react";
 
 interface CreateTeacherModalProps {
   schoolSlug: string;
+  onTeacherCreated?: () => void;
 }
 
-export function CreateTeacherModal({ schoolSlug }: CreateTeacherModalProps) {
+export function CreateTeacherModal({ schoolSlug, onTeacherCreated }: CreateTeacherModalProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +75,9 @@ export function CreateTeacherModal({ schoolSlug }: CreateTeacherModalProps) {
       }
 
       setSuccess(true);
+      if (onTeacherCreated) {
+        onTeacherCreated();
+      }
       setTimeout(() => {
         setIsOpen(false);
         router.refresh();

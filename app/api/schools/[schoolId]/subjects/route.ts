@@ -4,6 +4,57 @@ import { prisma } from "@/lib/db/prisma";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ schoolId: string }> }
+) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+
+    const { schoolId } = await params;
+    const school = await prisma.school.findFirst({
+      where: {
+        OR: [{ id: schoolId }, { slug: schoolId }],
+      },
+    });
+
+    if (!school) {
+      return NextResponse.json({ error: "Institución no encontrada" }, { status: 404 });
+    }
+
+    const tenantDb = createTenantPrisma(school.id);
+    const subjects = await tenantDb.subject.findMany({
+      where: { schoolId: school.id },
+      include: {
+        course: {
+          include: { educationLevel: true },
+        },
+        teacher: {
+          include: {
+            membership: {
+              include: { user: true },
+            },
+          },
+        },
+      },
+      orderBy: [{ course: { gradeNumber: "asc" } }, { name: "asc" }],
+    });
+
+    return NextResponse.json({
+      success: true,
+      subjects,
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Error al listar asignaturas" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ schoolId: string }> }
