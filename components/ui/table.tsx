@@ -1,5 +1,5 @@
-import React from "react";
-import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { ChevronLeft, ChevronRight, Inbox, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 // 1. Table Root Wrapper
@@ -251,5 +251,181 @@ export function TablePagination({
         </button>
       </div>
     </div>
+  );
+}
+
+// 10. Generic DataTable with Sorting and Row Selection
+export interface Column<T> {
+  key: keyof T | string;
+  header: string;
+  sortable?: boolean;
+  align?: "left" | "center" | "right";
+  cell?: (item: T) => React.ReactNode;
+  className?: string;
+}
+
+export interface DataTableProps<T> {
+  data: T[];
+  columns: Column<T>[];
+  keyExtractor: (item: T) => string;
+  selectable?: boolean;
+  selectedIds?: string[];
+  onSelectionChange?: (selectedIds: string[]) => void;
+  emptyTitle?: string;
+  emptyDescription?: string;
+  containerClassName?: string;
+  className?: string;
+}
+
+export function DataTable<T>({
+  data,
+  columns,
+  keyExtractor,
+  selectable = false,
+  selectedIds = [],
+  onSelectionChange,
+  emptyTitle = "No se encontraron registros",
+  emptyDescription = "No hay elementos para mostrar en esta tabla.",
+  containerClassName,
+  className,
+}: DataTableProps<T>) {
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedData = useMemo(() => {
+    if (!sortKey) return data;
+    return [...data].sort((a: any, b: any) => {
+      const aVal = a[sortKey];
+      const bVal = b[sortKey];
+      if (aVal === bVal) return 0;
+      if (aVal === null || aVal === undefined) return 1;
+      if (bVal === null || bVal === undefined) return -1;
+      const comparison = aVal < bVal ? -1 : 1;
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [data, sortKey, sortDirection]);
+
+  const allSelected = data.length > 0 && data.every((item) => selectedIds.includes(keyExtractor(item)));
+  const someSelected = data.some((item) => selectedIds.includes(keyExtractor(item))) && !allSelected;
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!onSelectionChange) return;
+    if (e.target.checked) {
+      const allIds = data.map((item) => keyExtractor(item));
+      onSelectionChange(Array.from(new Set([...selectedIds, ...allIds])));
+    } else {
+      const currentIdsToRemove = new Set(data.map((item) => keyExtractor(item)));
+      onSelectionChange(selectedIds.filter((id) => !currentIdsToRemove.has(id)));
+    }
+  };
+
+  const handleSelectRow = (item: T) => {
+    if (!onSelectionChange) return;
+    const id = keyExtractor(item);
+    if (selectedIds.includes(id)) {
+      onSelectionChange(selectedIds.filter((selectedId) => selectedId !== id));
+    } else {
+      onSelectionChange([...selectedIds, id]);
+    }
+  };
+
+  const colSpanCount = columns.length + (selectable ? 1 : 0);
+
+  return (
+    <Table containerClassName={containerClassName} className={className}>
+      <TableHeader>
+        <tr>
+          {selectable && (
+            <th scope="col" className="w-12 px-4 py-3.5">
+              <input
+                type="checkbox"
+                aria-label="Seleccionar todos los elementos"
+                checked={allSelected}
+                ref={(input) => {
+                  if (input) input.indeterminate = someSelected;
+                }}
+                onChange={handleSelectAll}
+                className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300 dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
+              />
+            </th>
+          )}
+          {columns.map((col) => {
+            const isSorted = sortKey === col.key;
+            const alignClasses = {
+              left: "text-left",
+              center: "text-center",
+              right: "text-right",
+            };
+            return (
+              <TableHead
+                key={String(col.key)}
+                align={col.align || "left"}
+                onClick={() => col.sortable && handleSort(String(col.key))}
+                className={cn(
+                  col.sortable && "cursor-pointer hover:text-slate-900 dark:hover:text-white transition",
+                  col.className
+                )}
+              >
+                <div className={cn("flex items-center gap-1.5", col.align === "right" && "justify-end", col.align === "center" && "justify-center")}>
+                  <span>{col.header}</span>
+                  {col.sortable && (
+                    <span className="text-slate-400">
+                      {isSorted ? (
+                        sortDirection === "asc" ? (
+                          <ArrowUp className="w-3.5 h-3.5 text-brand-600" />
+                        ) : (
+                          <ArrowDown className="w-3.5 h-3.5 text-brand-600" />
+                        )
+                      ) : (
+                        <ArrowUpDown className="w-3.5 h-3.5 opacity-50 hover:opacity-100" />
+                      )}
+                    </span>
+                  )}
+                </div>
+              </TableHead>
+            );
+          })}
+        </tr>
+      </TableHeader>
+      <TableBody>
+        {sortedData.length === 0 ? (
+          <TableEmptyState title={emptyTitle} description={emptyDescription} colSpan={colSpanCount} />
+        ) : (
+          sortedData.map((item) => {
+            const id = keyExtractor(item);
+            const isSelected = selectedIds.includes(id);
+            return (
+              <TableRow key={id} isSelected={isSelected}>
+                {selectable && (
+                  <td className="w-12 px-4 py-3.5">
+                    <input
+                      type="checkbox"
+                      aria-label={`Seleccionar elemento ${id}`}
+                      checked={isSelected}
+                      onChange={() => handleSelectRow(item)}
+                      className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300 dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
+                    />
+                  </td>
+                )}
+                {columns.map((col) => (
+                  <TableCell key={String(col.key)} align={col.align || "left"} className={col.className}>
+                    {col.cell ? col.cell(item) : (item as any)[col.key]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })
+        )}
+      </TableBody>
+    </Table>
   );
 }
