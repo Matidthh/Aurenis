@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { PERMISSIONS } from "@/lib/constants/permissions";
+import { validateStudentRecordAccess } from "@/lib/security/object-authorization";
 
 export async function GET(
   _req: NextRequest,
@@ -21,6 +22,20 @@ export async function GET(
 
     if (!school) {
       return NextResponse.json({ error: "Institución no encontrada" }, { status: 404 });
+    }
+
+    // Comprobar pertenencia al colegio y permisos a nivel de objeto (BOLA / IDOR)
+    const authResult = await validateStudentRecordAccess(
+      session,
+      school.id,
+      studentId
+    );
+
+    if (!authResult.allowed) {
+      return NextResponse.json(
+        { error: authResult.reason || "Acceso denegado" },
+        { status: authResult.statusCode || 403 }
+      );
     }
 
     const tenantDb = createTenantPrisma(school.id);
@@ -349,6 +364,37 @@ export async function DELETE(
 
     if (!school) {
       return NextResponse.json({ error: "Institución no encontrada" }, { status: 404 });
+    }
+
+    // Comprobar pertenencia al colegio y permisos para eliminar (aislamiento multi-tenant)
+    if (!session.isSystemAdmin) {
+      const membership = await prisma.membership.findUnique({
+        where: {
+          userId_schoolId: {
+            userId: session.userId,
+            schoolId: school.id,
+          },
+        },
+        include: {
+          role: {
+            include: { permissions: { include: { permission: true } } },
+          },
+        },
+      });
+
+      if (!membership || !membership.isActive) {
+        return NextResponse.json({ error: "Acceso denegado a esta institución" }, { status: 403 });
+      }
+
+      const canManage = membership.role.permissions.some(
+        (rp) =>
+          rp.permission.code === PERMISSIONS.PEOPLE_STUDENTS_MANAGE ||
+          rp.permission.code === "*"
+      );
+
+      if (!canManage) {
+        return NextResponse.json({ error: "Acceso denegado. Sin permisos para eliminar estudiantes." }, { status: 403 });
+      }
     }
 
     const tenantDb = createTenantPrisma(school.id);

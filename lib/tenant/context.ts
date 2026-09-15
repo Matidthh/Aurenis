@@ -124,10 +124,16 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
             suspensionReason: school.status === "SUSPENDED" ? "Institución suspendida por administración." : null,
             subscription: subscriptionInfo,
           };
+        } else {
+          // Bloqueo estricto multi-tenant: el colegio existe pero el usuario no pertenece a él
+          throw new TenantAccessError("No tienes acceso a esta institución (violación de aislamiento multi-tenant).");
         }
       }
-    } catch {
-      // Fallback demo
+    } catch (err) {
+      if (err instanceof TenantAccessError) {
+        throw err;
+      }
+      // Fallback demo solo ante errores de conexión a base de datos
     }
   }
 

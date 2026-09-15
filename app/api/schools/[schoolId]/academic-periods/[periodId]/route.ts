@@ -52,7 +52,8 @@ export async function PATCH(
       const hasPermission = membership.role.permissions.some(
         (rp) =>
           rp.permission.code === PERMISSIONS.SCHOOL_SETTINGS_UPDATE ||
-          rp.permission.code === "academic:periods:manage"
+          rp.permission.code === "academic:periods:manage" ||
+          rp.permission.code === "*"
       );
 
       if (!hasPermission) {
@@ -133,7 +134,8 @@ export async function DELETE(
       const hasPermission = membership.role.permissions.some(
         (rp) =>
           rp.permission.code === PERMISSIONS.SCHOOL_SETTINGS_UPDATE ||
-          rp.permission.code === "academic:periods:manage"
+          rp.permission.code === "academic:periods:manage" ||
+          rp.permission.code === "*"
       );
 
       if (!hasPermission) {

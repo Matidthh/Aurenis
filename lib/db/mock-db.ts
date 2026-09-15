@@ -375,6 +375,41 @@ function initStore(): MockStore {
   };
   store.guardianProfiles.set(guardianProfile.id, guardianProfile);
 
+  // Guardian 2 for Benjamín (user-guardian-2)
+  const guardianUser2 = {
+    id: "user-guardian-2",
+    email: "carlos.silva@sanjose.cl",
+    firstName: "Carlos",
+    lastName: "Silva",
+    phone: "+56 9 8765 4322",
+    passwordHash: bcrypt.hashSync("Apoderado2026!", 10),
+    status: "ACTIVE",
+    isSystemAdmin: false,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+  };
+  store.users.set(guardianUser2.id, guardianUser2);
+
+  const guardianMem2 = {
+    id: "mem-guardian-2",
+    userId: guardianUser2.id,
+    schoolId: school.id,
+    roleId: roleMap[DEFAULT_SCHOOL_ROLES.GUARDIAN].id,
+    isActive: true,
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+  };
+  store.memberships.set(guardianMem2.id, guardianMem2);
+
+  const guardianProfile2 = {
+    id: "gp-carlos",
+    membershipId: guardianMem2.id,
+    occupation: "Ingeniero",
+    createdAt: new Date("2026-01-01"),
+    updatedAt: new Date("2026-01-01"),
+  };
+  store.guardianProfiles.set(guardianProfile2.id, guardianProfile2);
+
   const studentEnrollments: any[] = [];
 
   demoStudents.forEach((st, idx) => {
@@ -418,6 +453,16 @@ function initStore(): MockStore {
         studentProfileId: sp.id,
         guardianProfileId: guardianProfile.id,
         relationship: "Madre",
+        isEmergencyContact: true,
+        canPickUp: true,
+      };
+      store.studentGuardians.set(sg.id, sg);
+    } else if (idx === 1) {
+      const sg = {
+        id: "sg-2",
+        studentProfileId: sp.id,
+        guardianProfileId: guardianProfile2.id,
+        relationship: "Padre",
         isEmergencyContact: true,
         canPickUp: true,
       };
@@ -515,14 +560,28 @@ export function createMockPrisma() {
         const targetSchoolId = val;
         const match =
           itemSchoolId === targetSchoolId ||
-          ((targetSchoolId === "sch_sanjose_demo" || targetSchoolId === "colegio-san-jose") &&
-            (itemSchoolId === "school-csj-001" || itemSchoolId === "sch_sanjose_demo")) ||
+          ((targetSchoolId === "sch_sanjose_demo" || targetSchoolId === "colegio-san-jose" || targetSchoolId === "sch_colegio_san_jose_001") &&
+            (itemSchoolId === "school-csj-001" || itemSchoolId === "sch_sanjose_demo" || itemSchoolId === "colegio-san-jose")) ||
           (targetSchoolId === "school-csj-001" &&
-            (itemSchoolId === "school-csj-001" || itemSchoolId === "sch_sanjose_demo")) ||
+            (itemSchoolId === "school-csj-001" || itemSchoolId === "sch_sanjose_demo" || itemSchoolId === "colegio-san-jose")) ||
           ((targetSchoolId === "sch_santamaria_demo" || targetSchoolId === "colegio-santa-maria") &&
-            (itemSchoolId === "school-csm-999" || itemSchoolId === "sch_santamaria_demo"));
+            (itemSchoolId === "school-csm-999" || itemSchoolId === "sch_santamaria_demo" || itemSchoolId === "colegio-santa-maria"));
         if (!match) return false;
         continue;
+      }
+      if ((key === "id" || key === "slug") && typeof val === "string") {
+        const itemVal = item[key];
+        const targetVal = val;
+        if (itemVal === targetVal) continue;
+        const isSanJose =
+          (targetVal === "sch_sanjose_demo" || targetVal === "school-csj-001" || targetVal === "colegio-san-jose" || targetVal === "sch_colegio_san_jose_001") &&
+          (itemVal === "school-csj-001" || itemVal === "colegio-san-jose" || itemVal === "sch_sanjose_demo" || item?.id === "school-csj-001" || item?.slug === "colegio-san-jose");
+        const isSantaMaria =
+          (targetVal === "sch_santamaria_demo" || targetVal === "school-csm-999" || targetVal === "colegio-santa-maria") &&
+          (itemVal === "school-csm-999" || itemVal === "colegio-santa-maria" || itemVal === "sch_santamaria_demo" || item?.id === "school-csm-999" || item?.slug === "colegio-santa-maria");
+        if (isSanJose || isSantaMaria) {
+          continue;
+        }
       }
       if (key === "NOT") {
         if (matchWhere(item, val)) return false;
@@ -546,6 +605,8 @@ export function createMockPrisma() {
           if (item[key] !== val.equals) return false;
         } else if ("in" in val) {
           if (!Array.isArray(val.in) || !val.in.includes(item[key])) return false;
+        } else if ("some" in val) {
+          if (!Array.isArray(item[key]) || !item[key].some((subItem: any) => matchWhere(subItem, val.some))) return false;
         } else if (item[key] !== null && typeof item[key] === "object") {
           if (!matchWhere(item[key], val)) return false;
         }
@@ -566,9 +627,15 @@ export function createMockPrisma() {
       async findUnique(args: any) {
         const where = args?.where;
         for (const user of store.users.values()) {
-          if (where.id && user.id === where.id) return hydrateUser(user, args?.include);
-          if (where.email && user.email.toLowerCase() === where.email.toLowerCase()) {
-            return hydrateUser(user, args?.include);
+          if (where.id && (user.id === where.id || ((where.id === "usr_director_demo" || where.id === "user-director") && user.id === "user-director") || ((where.id === "usr_teacher_demo" || where.id === "user-teacher-roberto") && user.id === "user-teacher-roberto") || ((where.id === "usr_student_demo" || where.id === "user-student-1") && user.id === "user-student-1") || ((where.id === "usr_guardian_demo" || where.id === "user-guardian-1") && user.id === "user-guardian-1"))) return hydrateUser(user, args?.include);
+          if (where.email) {
+            const reqEmail = where.email.toLowerCase();
+            const userEmail = user.email.toLowerCase();
+            if (userEmail === reqEmail) return hydrateUser(user, args?.include);
+            if (reqEmail === "profesor@sanjose.cl" && (userEmail === "profesor.matematica@sanjose.cl" || user.id === "user-teacher-roberto")) return hydrateUser(user, args?.include);
+            if (reqEmail === "estudiante@sanjose.cl" && (userEmail === "valentina.silva@sanjose.cl" || user.id === "user-student-1")) return hydrateUser(user, args?.include);
+            if (reqEmail === "apoderado@sanjose.cl" && (userEmail === "maria.gonzalez@sanjose.cl" || user.id === "user-guardian-1")) return hydrateUser(user, args?.include);
+            if (reqEmail === "director@sanjose.cl" && user.id === "user-director") return hydrateUser(user, args?.include);
           }
         }
         return null;
@@ -614,8 +681,8 @@ export function createMockPrisma() {
       async findUnique(args: any) {
         const where = args?.where;
         for (const school of store.schools.values()) {
-          if (where.id && school.id === where.id) return hydrateSchool(school, args?.include);
-          if (where.slug && school.slug === where.slug) return hydrateSchool(school, args?.include);
+          if (where.id && (school.id === where.id || ((where.id === "sch_sanjose_demo" || where.id === "colegio-san-jose" || where.id === "sch_colegio_san_jose_001") && (school.id === "school-csj-001" || school.id === "sch_sanjose_demo")) || ((where.id === "sch_santamaria_demo" || where.id === "colegio-santa-maria") && (school.id === "school-csm-999" || school.id === "sch_santamaria_demo")))) return hydrateSchool(school, args?.include);
+          if (where.slug && (school.slug === where.slug || ((where.slug === "sch_sanjose_demo" || where.slug === "colegio-san-jose" || where.slug === "sch_colegio_san_jose_001") && (school.slug === "colegio-san-jose" || school.id === "school-csj-001")) || ((where.slug === "sch_santamaria_demo" || where.slug === "colegio-santa-maria") && (school.slug === "colegio-santa-maria" || school.id === "school-csm-999")))) return hydrateSchool(school, args?.include);
         }
         return null;
       },
@@ -732,10 +799,10 @@ export function createMockPrisma() {
 
           const isSchoolMatch = (mSchoolId: string) =>
             mSchoolId === reqSchoolId ||
-            ((reqSchoolId === "sch_sanjose_demo" || reqSchoolId === "colegio-san-jose") &&
+            ((reqSchoolId === "sch_sanjose_demo" || reqSchoolId === "colegio-san-jose" || reqSchoolId === "sch_colegio_san_jose_001") &&
               (mSchoolId === "school-csj-001" || mSchoolId === "sch_sanjose_demo")) ||
             (reqSchoolId === "school-csj-001" &&
-              (mSchoolId === "school-csj-001" || mSchoolId === "sch_sanjose_demo")) ||
+              (mSchoolId === "school-csj-001" || mSchoolId === "sch_sanjose_demo" || mSchoolId === "sch_colegio_san_jose_001")) ||
             ((reqSchoolId === "sch_santamaria_demo" || reqSchoolId === "colegio-santa-maria") &&
               (mSchoolId === "school-csm-999" || mSchoolId === "sch_santamaria_demo"));
 
@@ -1046,15 +1113,56 @@ export function createMockPrisma() {
     studentProfile: {
       async findFirst(args: any) {
         for (const sp of store.studentProfiles.values()) {
-          if (matchWhere(sp, args?.where)) return hydrateStudentProfile(sp, args?.include);
+          const hydrated = hydrateStudentProfile(sp, { membership: true, guardians: true });
+          if (matchWhere(hydrated, args?.where)) return hydrateStudentProfile(sp, args?.include);
         }
         return null;
+      },
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const sp = store.studentProfiles.get(args.where.id);
+          return sp ? hydrateStudentProfile(sp, args?.include) : null;
+        }
+        return this.findFirst(args);
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const sp of store.studentProfiles.values()) {
+          const hydrated = hydrateStudentProfile(sp, { membership: true, guardians: true });
+          if (matchWhere(hydrated, args?.where)) result.push(hydrateStudentProfile(sp, args?.include));
+        }
+        return result;
       },
       async create(args: any) {
         const id = args.data.id || `sp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
         const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
         store.studentProfiles.set(id, item);
         return hydrateStudentProfile(item, args.include);
+      },
+    },
+
+    guardianProfile: {
+      async findFirst(args: any) {
+        for (const gp of store.guardianProfiles.values()) {
+          const hydrated = hydrateGuardianProfile(gp, { membership: true, students: true });
+          if (matchWhere(hydrated, args?.where)) return hydrateGuardianProfile(gp, args?.include);
+        }
+        return null;
+      },
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const gp = store.guardianProfiles.get(args.where.id);
+          return gp ? hydrateGuardianProfile(gp, args?.include) : null;
+        }
+        return this.findFirst(args);
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const gp of store.guardianProfiles.values()) {
+          const hydrated = hydrateGuardianProfile(gp, { membership: true, students: true });
+          if (matchWhere(hydrated, args?.where)) result.push(hydrateGuardianProfile(gp, args?.include));
+        }
+        return result;
       },
     },
 
@@ -1135,7 +1243,7 @@ export function createMockPrisma() {
       async findFirst(args?: any) {
         for (const g of store.grades.values()) {
           if (matchWhere(g, args?.where)) {
-            return { ...g };
+            return hydrateGrade(g, args?.include);
           }
         }
         return null;
@@ -1143,7 +1251,7 @@ export function createMockPrisma() {
       async findUnique(args: any) {
         if (args?.where?.id) {
           const g = store.grades.get(args.where.id);
-          return g ? { ...g } : null;
+          return g ? hydrateGrade(g, args?.include) : null;
         }
         return this.findFirst(args);
       },
@@ -1151,7 +1259,7 @@ export function createMockPrisma() {
         const result: any[] = [];
         for (const g of store.grades.values()) {
           if (matchWhere(g, args?.where)) {
-            result.push({ ...g });
+            result.push(hydrateGrade(g, args?.include));
           }
         }
         return result;
@@ -1305,6 +1413,9 @@ export function createMockPrisma() {
     const res = { ...school };
     if (include.settings) {
       res.settings = Array.from(store.schoolSettings.values()).find((s) => s.schoolId === school.id) || null;
+    }
+    if (include.roles) {
+      res.roles = Array.from(store.roles.values()).filter((r) => r.schoolId === school.id || r.schoolId === null);
     }
     if (include.memberships) {
       res.memberships = Array.from(store.memberships.values())
@@ -1485,6 +1596,42 @@ export function createMockPrisma() {
     if (include.student) {
       const sp = store.studentProfiles.get(att.studentProfileId);
       res.student = sp ? hydrateStudentProfile(sp, include.student.include) : null;
+    }
+    return res;
+  }
+
+  function hydrateGuardianProfile(gp: any, include?: any) {
+    const res = { ...gp };
+    const m = store.memberships.get(gp.membershipId);
+    res.membership = m ? hydrateMembership(m, include?.membership?.include) : null;
+    if (include?.students || true) {
+      res.students = Array.from(store.studentGuardians.values())
+        .filter((sg) => sg.guardianProfileId === gp.id)
+        .map((sg) => {
+          const sp = store.studentProfiles.get(sg.studentProfileId);
+          return {
+            ...sg,
+            student: sp ? hydrateStudentProfile(sp, include?.students?.include?.student?.include) : null,
+          };
+        });
+    }
+    return res;
+  }
+
+  function hydrateGrade(g: any, include?: any) {
+    const res = { ...g };
+    if (include?.enrollment) {
+      const enr = store.enrollments.get(g.enrollmentId);
+      if (enr) {
+        const enrHydrated = { ...enr };
+        if (include.enrollment.include?.student) {
+          const sp = store.studentProfiles.get(enr.studentProfileId);
+          enrHydrated.student = sp ? hydrateStudentProfile(sp, include.enrollment.include.student.include) : null;
+        }
+        res.enrollment = enrHydrated;
+      } else {
+        res.enrollment = null;
+      }
     }
     return res;
   }

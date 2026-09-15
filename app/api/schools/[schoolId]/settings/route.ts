@@ -24,19 +24,43 @@ export async function GET(
         where: { OR: [{ id: schoolId }, { slug: schoolId }] },
       });
 
-      if (school) {
-        const membership = await prisma.membership.findUnique({
-          where: {
-            userId_schoolId: {
-              userId: session.userId,
-              schoolId: school.id,
+      if (!school) {
+        return apiError("Institución no encontrada", "NOT_FOUND", { statusCode: 404 });
+      }
+
+      const membership = await prisma.membership.findUnique({
+        where: {
+          userId_schoolId: {
+            userId: session.userId,
+            schoolId: school.id,
+          },
+        },
+        include: {
+          role: {
+            include: {
+              permissions: {
+                include: { permission: true },
+              },
             },
           },
-        });
+        },
+      });
 
-        if (!membership || !membership.isActive) {
-          return apiError("Acceso denegado a esta institución", "FORBIDDEN", { statusCode: 403 });
-        }
+      if (!membership || !membership.isActive) {
+        return apiError("Acceso denegado a esta institución", "FORBIDDEN", { statusCode: 403 });
+      }
+
+      const hasViewPermission = membership.role.permissions.some(
+        (rp) =>
+          rp.permission.code === PERMISSIONS.SCHOOL_SETTINGS_VIEW ||
+          rp.permission.code === PERMISSIONS.SCHOOL_SETTINGS_UPDATE ||
+          rp.permission.code === "*"
+      );
+
+      if (!hasViewPermission) {
+        return apiError("No posees el permiso para ver la configuración del colegio.", "FORBIDDEN", {
+          statusCode: 403,
+        });
       }
     }
 

@@ -5,6 +5,36 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { UpdateGradeSchema } from "@/lib/validations/grade.schema";
 import { updateGrade, deleteGrade } from "@/lib/services/grade.service";
+import { validateSingleGradeAccess } from "@/lib/security/object-authorization";
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ schoolId: string; gradeId: string }> }
+) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+    }
+
+    const { schoolId, gradeId } = await params;
+    const authResult = await validateSingleGradeAccess(session, schoolId, gradeId);
+
+    if (!authResult.allowed) {
+      return NextResponse.json(
+        { error: authResult.reason || "Acceso denegado" },
+        { status: authResult.statusCode || 403 }
+      );
+    }
+
+    return NextResponse.json({ success: true, grade: authResult.grade });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Error al consultar calificación" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function PATCH(
   req: NextRequest,

@@ -5,6 +5,7 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { CreateGradeSchema } from "@/lib/validations/grade.schema";
 import { listAssessmentsWithGrades, createGrade } from "@/lib/services/grade.service";
+import { validateGradesAccess } from "@/lib/security/object-authorization";
 
 export async function GET(
   req: NextRequest,
@@ -17,34 +18,29 @@ export async function GET(
     }
 
     const { schoolId } = await params;
+    const studentIdParam =
+      req.nextUrl.searchParams.get("studentId") ||
+      req.nextUrl.searchParams.get("enrollmentId") ||
+      null;
 
-    // Verificar pertenencia y permisos
-    if (!session.isSystemAdmin) {
-      const membership = await prisma.membership.findUnique({
-        where: {
-          userId_schoolId: { userId: session.userId, schoolId },
-        },
-        include: {
-          role: {
-            include: { permissions: { include: { permission: true } } },
-          },
-        },
-      });
-
-      if (!membership || !membership.isActive) {
-        return NextResponse.json({ error: "Acceso denegado a esta institución" }, { status: 403 });
-      }
-
-      const hasView = membership.role.permissions.some(
-        (rp) => rp.permission.code === PERMISSIONS.GRADES_VIEW
+    // Validar autorización a nivel de objeto (BOLA / IDOR)
+    const authResult = await validateGradesAccess(session, schoolId, studentIdParam);
+    if (!authResult.allowed) {
+      return NextResponse.json(
+        { error: authResult.reason || "Acceso denegado" },
+        { status: authResult.statusCode || 403 }
       );
-      if (!hasView) {
-        return NextResponse.json({ error: "Acceso denegado. Sin permisos de lectura de notas." }, { status: 403 });
-      }
     }
 
     const tenantDb = createTenantPrisma(schoolId);
-    const assessments = await listAssessmentsWithGrades(tenantDb, schoolId);
+    const subjectId = req.nextUrl.searchParams.get("subjectId") || undefined;
+    const periodId = req.nextUrl.searchParams.get("periodId") || undefined;
+
+    const assessments = await listAssessmentsWithGrades(tenantDb, schoolId, {
+      subjectId,
+      periodId,
+      allowedStudentProfileIds: authResult.allowedStudentProfileIds,
+    });
 
     return NextResponse.json({ success: true, assessments });
   } catch (error: any) {

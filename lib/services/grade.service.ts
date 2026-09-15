@@ -36,11 +36,15 @@ export interface AssessmentWithGradesItem {
 export async function listAssessmentsWithGrades(
   tenantDb: TenantPrismaClient,
   schoolId: string,
-  options?: { subjectId?: string; periodId?: string }
+  options?: {
+    subjectId?: string;
+    periodId?: string;
+    allowedStudentProfileIds?: string[];
+  }
 ): Promise<AssessmentWithGradesItem[]> {
   if (isDatabaseConfigured()) {
     try {
-      const assessments = await tenantDb.assessment.findMany({
+      let assessments = await tenantDb.assessment.findMany({
         where: {
           schoolId,
           ...(options?.subjectId ? { subjectId: options.subjectId } : {}),
@@ -50,13 +54,27 @@ export async function listAssessmentsWithGrades(
         orderBy: { date: "desc" },
       });
 
-      if (assessments.length > 0) return assessments as unknown as AssessmentWithGradesItem[];
+      if (assessments.length > 0) {
+        if (options?.allowedStudentProfileIds) {
+          const allowedSet = new Set(options.allowedStudentProfileIds);
+          assessments = assessments.map((ass: any) => ({
+            ...ass,
+            grades: (ass.grades || []).filter((g: any) => {
+              const studentId =
+                g.enrollment?.student?.id ||
+                g.enrollment?.studentProfileId;
+              return studentId ? allowedSet.has(studentId) : false;
+            }),
+          }));
+        }
+        return assessments as unknown as AssessmentWithGradesItem[];
+      }
     } catch {
       // Fallback a demo si falla la conexión
     }
   }
 
-  return [
+  const demoItems: AssessmentWithGradesItem[] = [
     {
       id: "ass_1_demo",
       title: "Control Parcial 1: Álgebra y Ecuaciones",
@@ -74,10 +92,11 @@ export async function listAssessmentsWithGrades(
           enrollment: {
             id: "enr_1_demo",
             student: {
+              id: "sp-1",
               membership: {
                 user: { firstName: "Martina", lastName: "González" },
               },
-            },
+            } as any,
           },
         },
         {
@@ -86,10 +105,11 @@ export async function listAssessmentsWithGrades(
           enrollment: {
             id: "enr_2_demo",
             student: {
+              id: "sp-2",
               membership: {
                 user: { firstName: "Benjamín", lastName: "Silva" },
               },
-            },
+            } as any,
           },
         },
         {
@@ -98,15 +118,28 @@ export async function listAssessmentsWithGrades(
           enrollment: {
             id: "enr_3_demo",
             student: {
+              id: "sp-3",
               membership: {
                 user: { firstName: "Sofía", lastName: "Rojas" },
               },
-            },
+            } as any,
           },
         },
       ],
     },
   ];
+
+  if (options?.allowedStudentProfileIds) {
+    const allowedSet = new Set(options.allowedStudentProfileIds);
+    return demoItems.map((ass) => ({
+      ...ass,
+      grades: ass.grades.filter((g: any) =>
+        allowedSet.has(g.enrollment?.student?.id || g.enrollment?.studentProfileId)
+      ),
+    }));
+  }
+
+  return demoItems;
 }
 
 export async function getSchoolGradingConfig(tenantDb: TenantPrismaClient, schoolId: string) {
