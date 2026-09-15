@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { TablePagination } from "@/components/ui/table";
+import { TableRowSkeleton, Skeleton } from "@/components/ui/skeleton";
 import {
   Search,
   Filter,
@@ -100,12 +102,14 @@ interface StudentListViewProps {
   schoolSlug: string;
   enrollments: RawEnrollment[];
   courses: CourseOption[];
+  isLoading?: boolean;
 }
 
 export function StudentListView({
   schoolSlug,
   enrollments,
   courses,
+  isLoading = false,
 }: StudentListViewProps) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
@@ -114,6 +118,13 @@ export function StudentListView({
   const [selectedStudentForView, setSelectedStudentForView] = useState<StudentProfileData | null>(null);
   const [selectedStudentForEdit, setSelectedStudentForEdit] = useState<StudentProfileData | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+
+  // Resetear a la página 1 cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCourse, selectedStatus]);
 
   // Transformar enrollment a StudentProfileData
   const formatStudentData = (enrollment: RawEnrollment): StudentProfileData => {
@@ -184,6 +195,13 @@ export function StudentListView({
       return matchesSearch && matchesCourse && matchesStatus;
     });
   }, [enrollments, searchTerm, selectedCourse, selectedStatus]);
+
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage) || 1;
+
+  const paginatedStudents = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredStudents.slice(start, start + itemsPerPage);
+  }, [filteredStudents, currentPage, itemsPerPage]);
 
   const handleDeleteEnrollment = async (studentProfileId: string) => {
     if (!confirm("¿Estás seguro de dar de baja la matrícula de este estudiante?")) return;
@@ -292,14 +310,18 @@ export function StudentListView({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {filteredStudents.map((enrollment) => {
-                const user = enrollment.student.membership.user;
-                const guardianContact = enrollment.student.guardians[0]?.guardian.membership.user;
-                const guardianRel = enrollment.student.guardians[0]?.relationship || "Apoderado";
-                const studentProfileData = formatStudentData(enrollment);
+              {isLoading
+                ? Array.from({ length: itemsPerPage || 8 }).map((_, idx) => (
+                    <TableRowSkeleton key={idx} columns={6} />
+                  ))
+                : paginatedStudents.map((enrollment) => {
+                    const user = enrollment.student.membership.user;
+                    const guardianContact = enrollment.student.guardians[0]?.guardian.membership.user;
+                    const guardianRel = enrollment.student.guardians[0]?.relationship || "Apoderado";
+                    const studentProfileData = formatStudentData(enrollment);
 
-                return (
-                  <tr
+                    return (
+                      <tr
                     key={enrollment.id}
                     id={`student-row-${enrollment.id}`}
                     className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition group cursor-pointer"
@@ -403,7 +425,7 @@ export function StudentListView({
                 );
               })}
 
-              {filteredStudents.length === 0 && (
+              {filteredStudents.length === 0 && !isLoading && (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-slate-400 space-y-2">
                     <p className="font-semibold text-slate-600 dark:text-slate-300">
@@ -418,6 +440,19 @@ export function StudentListView({
             </tbody>
           </table>
         </div>
+
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredStudents.length}
+          itemsPerPage={itemsPerPage}
+          pageSizeOptions={[10, 25, 50]}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(newSize) => {
+            setItemsPerPage(newSize);
+            setCurrentPage(1);
+          }}
+        />
       </div>
 
       {/* Modal Ficha Detallada */}

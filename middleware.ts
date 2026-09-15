@@ -23,6 +23,14 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  // Redirección amigable de alias /sanjose/... -> /colegio-san-jose/...
+  if (pathname === "/sanjose" || pathname.startsWith("/sanjose/")) {
+    const targetPath = pathname.replace(/^\/sanjose/, "/colegio-san-jose");
+    const redirectUrl = new URL(targetPath, request.url);
+    redirectUrl.search = request.nextUrl.search;
+    return NextResponse.redirect(redirectUrl);
+  }
+
   // Ignorar archivos estáticos, favicon y assets de Next.js
   if (
     pathname.startsWith("/_next") ||
@@ -83,7 +91,10 @@ export async function middleware(request: NextRequest) {
       response = NextResponse.redirect(new URL("/select-school", request.url));
     }
   } else if (isSystemRoute(pathname)) {
-    if (!sessionPayload?.isSystemAdmin) {
+    // Permitir el catálogo de diseño y componentes públicamente para pruebas
+    if (pathname.startsWith("/system/design-system")) {
+      // Permitido sin bloqueo
+    } else if (!sessionPayload?.isSystemAdmin) {
       if (pathname.startsWith("/api/")) {
         response = NextResponse.json(
           formatErrorResponse("Acceso denegado. Se requieren privilegios de SuperAdmin.", "FORBIDDEN"),

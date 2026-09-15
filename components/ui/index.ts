@@ -5,3 +5,4 @@ export * from "./modal";
 export * from "./table";
 export * from "./page-header";
 export * from "./stat-card";
+export * from "./skeleton";

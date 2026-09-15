@@ -20,6 +20,13 @@ import {
   TableCell,
   TablePagination,
   PageHeader,
+  StatCard,
+  StatCardSkeleton,
+  TableSkeleton,
+  TableRowSkeleton,
+  Skeleton,
+  CardSkeleton,
+  SmoothTransition,
 } from "@/components/ui";
 import {
   Palette,
@@ -34,6 +41,11 @@ import {
   ExternalLink,
   ShieldCheck,
   Eye,
+  Loader2,
+  Sparkles,
+  Layers,
+  RefreshCw,
+  Zap,
 } from "lucide-react";
 
 export default function DesignSystemShowcasePage() {
@@ -42,13 +54,47 @@ export default function DesignSystemShowcasePage() {
   const [testInput, setTestInput] = useState("");
   const [inputError, setInputError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [isSimulatingHttp, setIsSimulatingHttp] = useState(false);
+  const [skeletonVariant, setSkeletonVariant] = useState<"shimmer" | "pulse">("shimmer");
 
-  // Muestra de datos para la tabla
+  const simulateHttpRequest = () => {
+    setIsSimulatingHttp(true);
+    setTimeout(() => {
+      setIsSimulatingHttp(false);
+    }, 2400);
+  };
+
+  // Muestra amplia de datos para demostrar paginación y selector de filas
   const sampleStudents = [
     { id: 1, name: "Lucas Muñoz", rut: "22.678.901-4", course: "1° Medio A", status: "Activo", grade: 6.8 },
     { id: 2, name: "Valentina Silva", rut: "23.456.789-0", course: "1° Medio A", status: "Activo", grade: 6.5 },
     { id: 3, name: "Sebastián Reyes", rut: "22.987.654-1", course: "1° Medio B", status: "Condicional", grade: 4.2 },
     { id: 4, name: "Camila Morales", rut: "23.111.222-3", course: "2° Medio A", status: "Inactivo", grade: 5.4 },
+    { id: 5, name: "Ignacio Tapia", rut: "23.234.567-8", course: "2° Medio B", status: "Activo", grade: 6.1 },
+    { id: 6, name: "Florencia Castro", rut: "22.345.678-9", course: "3° Medio A", status: "Activo", grade: 6.9 },
+    { id: 7, name: "Mateo Fernández", rut: "23.456.123-k", course: "3° Medio B", status: "Condicional", grade: 4.5 },
+    { id: 8, name: "Isidora Valenzuela", rut: "22.567.890-2", course: "4° Medio A", status: "Activo", grade: 6.3 },
+    { id: 9, name: "Agustín Soto", rut: "23.678.901-3", course: "4° Medio B", status: "Inactivo", grade: 5.1 },
+    { id: 10, name: "Martina González", rut: "22.789.012-4", course: "1° Medio A", status: "Activo", grade: 6.7 },
+    { id: 11, name: "Tomás Araya", rut: "23.890.123-5", course: "1° Medio B", status: "Activo", grade: 5.8 },
+    { id: 12, name: "Sofía Vargas", rut: "22.901.234-6", course: "2° Medio A", status: "Activo", grade: 6.4 },
+    { id: 13, name: "Benjamín Romero", rut: "23.012.345-7", course: "2° Medio B", status: "Condicional", grade: 4.8 },
+    { id: 14, name: "Antonia Medina", rut: "22.123.456-8", course: "3° Medio A", status: "Activo", grade: 6.2 },
+    { id: 15, name: "Vicente Espinoza", rut: "23.234.567-9", course: "3° Medio B", status: "Inactivo", grade: 3.9 },
+    { id: 16, name: "Catalina Paredes", rut: "22.345.678-0", course: "4° Medio A", status: "Activo", grade: 6.6 },
+    { id: 17, name: "Emilio Bravo", rut: "23.456.789-1", course: "4° Medio B", status: "Activo", grade: 5.9 },
+    { id: 18, name: "Javiera Herrera", rut: "22.567.890-3", course: "1° Medio A", status: "Activo", grade: 6.0 },
+    { id: 19, name: "Maximiliano Fuentes", rut: "23.678.901-5", course: "1° Medio B", status: "Condicional", grade: 4.4 },
+    { id: 20, name: "Francisca Cárdenas", rut: "22.789.012-6", course: "2° Medio A", status: "Activo", grade: 6.5 },
+    { id: 21, name: "Rodrigo Navarro", rut: "23.890.123-7", course: "2° Medio B", status: "Activo", grade: 5.7 },
+    { id: 22, name: "Constanza Rivas", rut: "22.901.234-8", course: "3° Medio A", status: "Activo", grade: 6.3 },
+    { id: 23, name: "Cristóbal Vega", rut: "23.012.345-9", course: "3° Medio B", status: "Inactivo", grade: 4.9 },
+    { id: 24, name: "Fernanda Carrasco", rut: "22.123.456-1", course: "4° Medio A", status: "Activo", grade: 6.7 },
+    { id: 25, name: "Diego Miranda", rut: "23.234.567-2", course: "4° Medio B", status: "Condicional", grade: 4.3 },
+    { id: 26, name: "Paz Godoy", rut: "22.345.678-4", course: "1° Medio A", status: "Activo", grade: 6.8 },
+    { id: 27, name: "Gabriel Bustamante", rut: "23.456.789-5", course: "1° Medio B", status: "Activo", grade: 6.1 },
+    { id: 28, name: "Renata Salazar", rut: "22.567.890-6", course: "2° Medio A", status: "Activo", grade: 6.4 },
   ];
 
   return (
@@ -276,6 +322,7 @@ export default function DesignSystemShowcasePage() {
           <span className="text-xs text-slate-500 font-mono">scope=&quot;col&quot; + paginación</span>
         </div>
 
+        {/* Tabla tradicional con TablePagination */}
         <Table>
           <TableHeader>
             <TableRow>
@@ -287,35 +334,348 @@ export default function DesignSystemShowcasePage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sampleStudents.map((st) => (
-              <TableRow key={st.id}>
-                <TableCell className="font-semibold text-slate-900 dark:text-white">
-                  {st.name}
-                </TableCell>
-                <TableCell className="font-mono text-xs">{st.rut}</TableCell>
-                <TableCell>{st.course}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={st.status === "Activo" ? "success" : st.status === "Condicional" ? "warning" : "danger"}
-                    dot
-                  >
-                    {st.status}
-                  </Badge>
-                </TableCell>
-                <TableCell align="right" className="font-bold text-brand-600 dark:text-brand-400">
-                  {st.grade.toFixed(1)}
-                </TableCell>
-              </TableRow>
-            ))}
+            {sampleStudents
+              .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+              .map((st) => (
+                <TableRow key={st.id}>
+                  <TableCell className="font-semibold text-slate-900 dark:text-white">
+                    {st.name}
+                  </TableCell>
+                  <TableCell className="font-mono text-xs">{st.rut}</TableCell>
+                  <TableCell>{st.course}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={st.status === "Activo" ? "success" : st.status === "Condicional" ? "warning" : "danger"}
+                      dot
+                    >
+                      {st.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell align="right" className="font-bold text-brand-600 dark:text-brand-400">
+                    {st.grade.toFixed(1)}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
         <TablePagination
           currentPage={currentPage}
-          totalPages={3}
-          totalItems={12}
-          itemsPerPage={4}
+          totalPages={Math.ceil(sampleStudents.length / itemsPerPage)}
+          totalItems={sampleStudents.length}
+          itemsPerPage={itemsPerPage}
+          pageSizeOptions={[10, 25, 50]}
           onPageChange={setCurrentPage}
+          onItemsPerPageChange={(newSize) => {
+            setItemsPerPage(newSize);
+            setCurrentPage(1);
+          }}
         />
+      </section>
+
+      {/* SECCIÓN 6: SKELETON LOADERS ANIMADOS & TRANSICIONES VISUALES SUAVES (ANTI-CLS) */}
+      <section className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-brand-600" />
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                6. Componentes Skeleton Loaders Animados & Transiciones Suaves
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500">
+              Eliminan los saltos de layout (CLS = 0) durante peticiones HTTP, reemplazando spinners genéricos por esqueletos dimensionales exactos con animación shimmer.
+            </p>
+          </div>
+
+          {/* Controles interactivos de prueba */}
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSkeletonVariant(skeletonVariant === "shimmer" ? "pulse" : "shimmer")}
+              className="text-xs"
+              title="Cambiar tipo de animación"
+            >
+              Animación: <strong className="ml-1 uppercase text-brand-600">{skeletonVariant}</strong>
+            </Button>
+            <Button
+              variant={isSimulatingHttp ? "secondary" : "primary"}
+              size="sm"
+              leftIcon={
+                isSimulatingHttp ? (
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-brand-600" />
+                ) : (
+                  <Zap className="w-3.5 h-3.5" />
+                )
+              }
+              onClick={simulateHttpRequest}
+            >
+              {isSimulatingHttp ? "Cargando (2.5s)..." : "Simular Petición HTTP"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsSimulatingHttp(!isSimulatingHttp)}
+              className="text-xs"
+            >
+              {isSimulatingHttp ? "Fijar Datos Reales" : "Fijar Skeleton"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Comparativa Visual: Spinner Genérico vs Skeleton Shimmer */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 rounded-2xl border border-red-200 dark:border-red-900/40 bg-red-50/40 dark:bg-red-950/20 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-red-700 dark:text-red-400">
+              <XCircle className="w-4 h-4" />
+              <span>Patrón Obsoleto: Spinners Genéricos Centrados</span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Dejan la pantalla en blanco con un ícono circular en rotación, provocando un salto brusco de layout (Cumulative Layout Shift) cuando los datos finalmente se renderizan.
+            </p>
+            <div className="h-20 bg-white/70 dark:bg-slate-900/70 rounded-xl border border-dashed border-red-200 dark:border-red-900/60 flex items-center justify-center gap-2 text-slate-400 text-xs">
+              <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+              <span>Cargando datos... (Layout shift alto)</span>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Patrón Moderno: Esqueletos Dimensionales Exactos</span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Reservan el espacio físico exacto de tarjetas, filas y botones mediante un gradiente animado suave (shimmer), ofreciendo percepción de carga instantánea sin saltos.
+            </p>
+            <div className="h-20 bg-white/70 dark:bg-slate-900/70 rounded-xl border border-emerald-200 dark:border-emerald-900/60 p-3 flex flex-col justify-center gap-2">
+              <Skeleton variant={skeletonVariant} className="h-3.5 w-1/3 rounded-md" />
+              <Skeleton variant={skeletonVariant} className="h-5 w-2/3 rounded-lg" />
+            </div>
+          </div>
+        </div>
+
+        {/* SUBSECCIÓN A: TARJETAS DE RESUMEN Y MÉTRICAS (STAT CARDS) */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <Layers className="w-4 h-4 text-brand-600" />
+              A. Skeletons de Tarjetas de Resumen & Métricas (Stat Cards)
+            </h3>
+            <span className="text-[11px] font-mono text-slate-400">
+              Estado: {isSimulatingHttp ? "Cargando con Skeleton" : "Renderizando Datos Reales"}
+            </span>
+          </div>
+
+          <SmoothTransition
+            isLoading={isSimulatingHttp}
+            skeleton={
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCardSkeleton variant={skeletonVariant} />
+                <StatCardSkeleton variant={skeletonVariant} />
+                <StatCardSkeleton variant={skeletonVariant} />
+                <StatCardSkeleton variant={skeletonVariant} />
+              </div>
+            }
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard
+                title="Estudiantes Activos"
+                value="1,248"
+                subtitle="+12% vs ciclo anterior"
+                icon={<User className="w-5 h-5 text-brand-600" />}
+              />
+              <StatCard
+                title="Tasa de Asistencia"
+                value="94.2%"
+                subtitle="Promedio últimos 30 días"
+                icon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+              />
+              <StatCard
+                title="Matrículas en Trámite"
+                value="34"
+                subtitle="Pendientes de validación"
+                icon={<AlertTriangle className="w-5 h-5 text-amber-500" />}
+              />
+              <StatCard
+                title="Colegios Conectados"
+                value="18"
+                subtitle="En 3 comunas activas"
+                icon={<ShieldCheck className="w-5 h-5 text-purple-600" />}
+              />
+            </div>
+          </SmoothTransition>
+        </div>
+
+        {/* SUBSECCIÓN B: SKELETON PARA TABLAS COMPLETAS CON PAGINACIÓN */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <Layers className="w-4 h-4 text-brand-600" />
+              B. Skeletons para Tablas y Paginación (DataTable Skeleton)
+            </h3>
+            <span className="text-[11px] font-mono text-slate-400">
+              Mantiene cabecera, anchos de columna y paginador
+            </span>
+          </div>
+
+          <SmoothTransition
+            isLoading={isSimulatingHttp}
+            skeleton={
+              <TableSkeleton
+                variant={skeletonVariant}
+                rows={5}
+                showToolbar
+                showPagination
+                columns={[
+                  { header: "Estudiante", width: "35%", align: "left" },
+                  { header: "RUN", width: "20%", align: "left" },
+                  { header: "Curso", width: "20%", align: "left" },
+                  { header: "Estado", width: "15%", align: "left" },
+                  { header: "Acciones", width: "10%", align: "right" },
+                ]}
+              />
+            }
+          >
+            <div className="space-y-4">
+              {/* Barra de herramientas activa de ejemplo */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="flex items-center gap-3 flex-1">
+                  <Input
+                    placeholder="Buscar estudiante por nombre o RUN..."
+                    leftIcon={<Search className="w-4 h-4 text-slate-400" />}
+                    containerClassName="w-full sm:w-80"
+                  />
+                  <Badge variant="neutral">28 Estudiantes</Badge>
+                </div>
+                <Button size="sm" leftIcon={<Plus className="w-3.5 h-3.5" />}>
+                  Nuevo Alumno
+                </Button>
+              </div>
+
+              {/* Tabla con datos reales */}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Estudiante</TableHead>
+                    <TableHead>RUN</TableHead>
+                    <TableHead>Curso</TableHead>
+                    <TableHead>Estado</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sampleStudents.slice(0, 5).map((student) => (
+                    <TableRow key={student.id}>
+                      <TableCell className="font-semibold text-slate-900 dark:text-white">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-950 text-brand-600 font-bold flex items-center justify-center text-xs border border-brand-200 dark:border-brand-800">
+                            {student.name.split(" ")[0][0]}
+                            {student.name.split(" ")[1]?.[0] || ""}
+                          </div>
+                          <div>
+                            <div>{student.name}</div>
+                            <div className="text-xs text-slate-400 font-normal">alumno@aurenis.edu</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-mono text-xs">{student.rut}</TableCell>
+                      <TableCell>{student.course}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            student.status === "Activo"
+                              ? "success"
+                              : student.status === "Condicional"
+                              ? "warning"
+                              : "neutral"
+                          }
+                        >
+                          {student.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm">
+                          Ver Ficha
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </SmoothTransition>
+        </div>
+
+        {/* SUBSECCIÓN C: TARJETAS DE CONTENIDO & AVISOS (CARD SKELETON) */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <Layers className="w-4 h-4 text-brand-600" />
+              C. Skeletons para Fichas y Módulos de Contenido (CardSkeleton)
+            </h3>
+          </div>
+
+          <SmoothTransition
+            isLoading={isSimulatingHttp}
+            skeleton={
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <CardSkeleton variant={skeletonVariant} lines={3} />
+                <CardSkeleton variant={skeletonVariant} lines={3} />
+                <CardSkeleton variant={skeletonVariant} lines={3} />
+              </div>
+            }
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 dark:text-white text-sm">
+                    Reunión de Apoderados
+                  </span>
+                  <Badge variant="brand">Académico</Badge>
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Convocatoria oficial para revisión del informe trimestral y calificaciones parciales de la cohorte 2026.
+                </p>
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+                  <span>Jueves 19:00 hrs</span>
+                  <span className="text-brand-600 font-semibold">Gimnasio Central</span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 dark:text-white text-sm">
+                    Cierre de Notas Semestrales
+                  </span>
+                  <Badge variant="warning">Importante</Badge>
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Último plazo para que los docentes registren evaluaciones pendientes en la plataforma Aurenis.
+                </p>
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+                  <span>Viernes 23:59 hrs</span>
+                  <span className="text-amber-600 font-semibold">Portal Docente</span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 dark:text-white text-sm">
+                    Jornada Deportiva Interescolar
+                  </span>
+                  <Badge variant="success">Extracurricular</Badge>
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Participación de selecciones de fútbol, voleibol y atletismo representando al establecimiento.
+                </p>
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+                  <span>Sábado 09:00 hrs</span>
+                  <span className="text-emerald-600 font-semibold">Canchas Club</span>
+                </div>
+              </div>
+            </div>
+          </SmoothTransition>
+        </div>
       </section>
 
       {/* MODAL DE PRUEBA */}

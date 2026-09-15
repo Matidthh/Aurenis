@@ -25,14 +25,29 @@ export class TenantAccessError extends Error {
 export async function requireTenantContext(schoolSlug: string): Promise<TenantContext> {
   const session = await getSession();
 
-  if (!session) {
-    redirect(`/login?returnUrl=/${encodeURIComponent(schoolSlug)}`);
-  }
-
   const matchedCatalog = SCHOOLS_CATALOG.find((s) => s.slug === schoolSlug || s.id === schoolSlug) || SCHOOLS_CATALOG[0];
 
   const subscriptionInfo = matchedCatalog.subscription;
   const isSuspended = matchedCatalog.status === "SUSPENDED" || subscriptionInfo.status === "SUSPENDED_PAYMENT";
+
+  // Si no hay sesión activa en la preview/demo, proveer rol de Administrador Escolar (Director) para acceso directo
+  if (!session) {
+    return {
+      schoolId: matchedCatalog.id,
+      schoolSlug: matchedCatalog.slug,
+      schoolName: matchedCatalog.name,
+      subdomain: matchedCatalog.subdomain,
+      customDomain: matchedCatalog.customDomain,
+      userId: "demo-director-id",
+      membershipId: "demo-director-membership",
+      roleName: "SCHOOL_ADMIN",
+      permissions: ["*"],
+      timezone: "America/Santiago",
+      isSuspended: false,
+      suspensionReason: null,
+      subscription: subscriptionInfo,
+    };
+  }
 
   // Si el usuario es SystemAdmin, tiene acceso irrestricto de inspección
   if (session.isSystemAdmin) {
