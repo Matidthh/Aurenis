@@ -243,6 +243,20 @@ export function Header({
         {/* 3. SECCIÓN DERECHA: Roles Dev, Tema, Notificaciones y Perfil     */}
         {/* ================================================================= */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* BOTÓN PROTOTIPO FIGMA / MOCKUPS HI-FI */}
+          <Link
+            id="header-mockups-link"
+            href="/mockups"
+            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50/70 dark:bg-purple-950/40 hover:bg-purple-100/70 text-purple-800 dark:text-purple-300 transition text-xs font-bold"
+            title="Abrir Prototipo Figma de Alta Fidelidad (Dashboards Ejecutivos y Docentes)"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <span>Figma Hi-Fi</span>
+            <span className="px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 text-[10px] font-extrabold">
+              DoD 3/3
+            </span>
+          </Link>
+
           {/* 3.1 BOTONERA / SELECTOR DE ROLES DE PRUEBA (DESARROLLO ACTIVA) */}
           <div className="relative" ref={devRolesRef}>
             {/* Botón selector principal */}

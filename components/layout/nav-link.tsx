@@ -33,7 +33,7 @@ export function NavLink({
   title,
 }: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = isRouteActive(pathname, href, exact);
+  const isActive = isRouteActive(pathname || "/", href, exact);
 
   return (
     <Link

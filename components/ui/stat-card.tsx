@@ -19,7 +19,7 @@ export function StatCard({ title, value, subtitle, icon, className, isLoading }:
   return (
     <div
       className={cn(
-        "p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2",
+        "p-5 rounded-2xl neumo-card border border-slate-200 dark:border-slate-800 space-y-2",
         className
       )}
     >

@@ -17,7 +17,7 @@ export default function NotFound() {
         <div className="pt-2">
           <Link
             href="/login"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 text-white font-medium hover:bg-brand-700 transition w-full"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition w-full"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver al Inicio de Sesión

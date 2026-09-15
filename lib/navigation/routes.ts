@@ -279,7 +279,7 @@ export function buildTenantPath(schoolSlug: string, section?: TenantSectionKey):
 /**
  * Comprueba de forma robusta si un enlace o sección está activo en función de la ruta actual
  */
-export function isRouteActive(currentPath: string, targetHref: string, exact: boolean = false): boolean {
+export function isRouteActive(currentPath?: string | null, targetHref?: string | null, exact: boolean = false): boolean {
   if (!currentPath || !targetHref) return false;
 
   // Normalizar removiendo slash final si existe (excepto si es "/")
@@ -308,17 +308,18 @@ export function isRouteActive(currentPath: string, targetHref: string, exact: bo
  * para cualquier ruta del sistema o tenant escolar.
  */
 export function generateBreadcrumbs(
-  pathname: string,
+  pathname?: string | null,
   context?: {
     schoolName?: string;
     schoolSlug?: string;
   }
 ): BreadcrumbItem[] {
+  const safePath = pathname || "/";
   const crumbs: BreadcrumbItem[] = [];
 
   // Rutas del Panel Global de SuperAdmin (/system/...)
-  if (pathname.startsWith("/system")) {
-    const isDashboard = pathname === "/system" || pathname === "/system/dashboard";
+  if (safePath.startsWith("/system")) {
+    const isDashboard = safePath === "/system" || safePath === "/system/dashboard";
     crumbs.push({
       label: "Panel Global",
       href: "/system/dashboard",
@@ -326,7 +327,7 @@ export function generateBreadcrumbs(
       iconName: "Shield",
     });
 
-    if (pathname.includes("/schools/new")) {
+    if (safePath.includes("/schools/new")) {
       crumbs.push({
         label: "Instituciones",
         href: "/system/schools",
@@ -337,19 +338,19 @@ export function generateBreadcrumbs(
         href: "/system/schools/new",
         isCurrent: true,
       });
-    } else if (pathname.includes("/schools")) {
+    } else if (safePath.includes("/schools")) {
       crumbs.push({
         label: "Colegios e Instituciones",
         href: "/system/schools",
         isCurrent: true,
       });
-    } else if (pathname.includes("/design-system")) {
+    } else if (safePath.includes("/design-system")) {
       crumbs.push({
         label: "Design System",
         href: "/system/design-system",
         isCurrent: true,
       });
-    } else if (pathname.includes("/security")) {
+    } else if (safePath.includes("/security")) {
       crumbs.push({
         label: "Seguridad y Auditoría",
         href: "/system/security",
@@ -361,7 +362,7 @@ export function generateBreadcrumbs(
   }
 
   // Ruta intermedia de selección de colegio
-  if (pathname === "/select-school") {
+  if (safePath === "/select-school") {
     crumbs.push({
       label: "Inicio",
       href: "/",
@@ -377,7 +378,7 @@ export function generateBreadcrumbs(
   }
 
   // Rutas de Institución Escolar (/[schoolSlug]/...)
-  const segments = pathname.split("/").filter(Boolean);
+  const segments = safePath.split("/").filter(Boolean);
 
   if (segments.length > 0) {
     const slug = context?.schoolSlug || segments[0];

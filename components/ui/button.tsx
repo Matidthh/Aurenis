@@ -44,22 +44,22 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variantStyles: Record<ButtonVariant, string> = {
       // Brand 600 (#016fc7) con texto blanco tiene ratio de contraste 4.82:1 (PASS AA)
       primary:
-        "bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-sm shadow-brand-600/20 border border-transparent",
+        "text-brand-700 hover:text-brand-800 active:text-brand-900",
       // Secondary neutral para acciones de apoyo
       secondary:
-        "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700",
+        "text-slate-800 dark:text-slate-100",
       // Outline con borde de alto contraste
       outline:
-        "bg-transparent border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-850 active:bg-slate-100",
+        "text-slate-700 dark:text-slate-200",
       // Ghost para navegación limpia o barras de herramientas
       ghost:
-        "bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white border border-transparent",
+        "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white",
       // Danger (#dc2626) con texto blanco: 4.7:1 (PASS AA)
       danger:
-        "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm shadow-red-600/20 border border-transparent",
+        "text-red-600 hover:text-red-700 active:text-red-800",
       // Success (#059669) con texto blanco: 4.65:1 (PASS AA)
       success:
-        "bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 shadow-sm shadow-emerald-600/20 border border-transparent",
+        "text-emerald-600 hover:text-emerald-700 active:text-emerald-800",
     };
 
     // 2. Estilos por Tamaño (Cumple objetivo táctil en móvil de min 44px)
@@ -84,7 +84,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={isLoading}
         aria-disabled={isDisabled}
         className={cn(
-          "inline-flex items-center justify-center transition-all duration-150 select-none cursor-pointer whitespace-nowrap",
+          "inline-flex items-center justify-center transition-all duration-150 select-none cursor-pointer whitespace-nowrap neumo-button",
           variantStyles[variant],
           sizeStyles[size],
           focusStyles,

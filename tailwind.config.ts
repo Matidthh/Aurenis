@@ -9,6 +9,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-plus-jakarta)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        handwriting: ["var(--font-caveat)", "cursive", "sans-serif"],
+      },
       colors: {
         brand: {
           50: "#f0f7ff",

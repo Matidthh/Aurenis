@@ -26,7 +26,7 @@ export function Breadcrumbs({
   // Si no se suministran items personalizados, se generan dinámicamente con la jerarquía de rutas
   const items =
     customItems ||
-    generateBreadcrumbs(pathname, {
+    generateBreadcrumbs(pathname || "/", {
       schoolName: schoolContext?.schoolName,
       schoolSlug: schoolContext?.schoolSlug,
     });

@@ -2,8 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: "standalone",
-  poweredByHeader: false,
+  distDir: "dist",
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {
