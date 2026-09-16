@@ -1,23 +1,68 @@
 /**
+ * Utilidades de validación y formateo para RUN/RUT chileno, correos y rangos numéricos.
+ * Algoritmo oficial Módulo 11 para la República de Chile.
+ */
+
+export interface ValidationResult {
+  isValid: boolean;
+  error?: string;
+  formatted?: string;
+}
+
+/**
  * Validador oficial de RUT (Rol Único Tributario / RUN) chileno con algoritmo Módulo 11.
+ * Admite formatos: "12.345.678-9", "12345678-9", "123456789", "12.345.678-K", "12345678-k"
  */
 export function validateRut(rutStr: string): boolean {
-  if (!rutStr || typeof rutStr !== "string") return false;
+  return validateRutWithReason(rutStr).isValid;
+}
 
-  // Limpiar puntos, espacios y guion
-  const cleanRut = rutStr.trim().replace(/\./g, "").toUpperCase();
-  if (!cleanRut.includes("-")) return false;
+/**
+ * Validador de RUT chileno con explicación del motivo de fallo.
+ */
+export function validateRutWithReason(rutStr: string): ValidationResult {
+  if (!rutStr || typeof rutStr !== "string") {
+    return { isValid: false, error: "El RUN es obligatorio." };
+  }
 
-  const parts = cleanRut.split("-");
-  if (parts.length !== 2) return false;
+  const trimmed = rutStr.trim();
+  if (trimmed.length === 0) {
+    return { isValid: false, error: "El RUN no puede estar vacío." };
+  }
 
-  const body = parts[0];
-  const dv = parts[1];
+  // Limpiar puntos, espacios y normalizar mayúsculas
+  const clean = trimmed.replace(/\./g, "").replace(/\s/g, "").toUpperCase();
 
-  if (!/^\d+$/.test(body)) return false;
-  if (!/^[0-9K]$/.test(dv)) return false;
+  let body = "";
+  let dv = "";
 
-  // Calcular Dígito Verificador Módulo 11
+  if (clean.includes("-")) {
+    const parts = clean.split("-");
+    if (parts.length !== 2) {
+      return { isValid: false, error: "Formato de RUN inválido (solo debe contener un guion)." };
+    }
+    body = parts[0];
+    dv = parts[1];
+  } else {
+    // Si no contiene guion, el último carácter es el DV
+    if (clean.length < 2) {
+      return { isValid: false, error: "El RUN ingresado es demasiado corto." };
+    }
+    body = clean.slice(0, -1);
+    dv = clean.slice(-1);
+  }
+
+  // Validar que el cuerpo sean solo dígitos (entre 6 y 8 dígitos para personas naturales y personas jurídicas)
+  if (!/^\d{6,9}$/.test(body)) {
+    return { isValid: false, error: "El cuerpo del RUN debe contener entre 6 y 9 dígitos numéricos." };
+  }
+
+  // Validar que el DV sea un dígito o 'K'
+  if (!/^[0-9K]$/.test(dv)) {
+    return { isValid: false, error: "El dígito verificador debe ser un número del 0 al 9 o la letra K." };
+  }
+
+  // Algoritmo Módulo 11
   let sum = 0;
   let multiplier = 2;
 
@@ -38,16 +83,75 @@ export function validateRut(rutStr: string): boolean {
     calculatedDv = calculatedDvNum.toString();
   }
 
-  return calculatedDv === dv;
+  if (calculatedDv !== dv) {
+    return {
+      isValid: false,
+      error: `Dígito verificador incorrecto (se esperaba "${calculatedDv}" para el cuerpo ${body}).`,
+    };
+  }
+
+  return {
+    isValid: true,
+    formatted: formatRut(clean),
+  };
 }
 
 /**
- * Validador de formato de correo electrónico
+ * Validador estricto de formato de correo electrónico
+ * Rechaza: strings sin @, sin dominio, con caracteres inválidos, espacios o puntos consecutivos.
  */
 export function validateEmail(email: string): boolean {
-  if (!email || typeof email !== "string") return false;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.trim());
+  return validateEmailWithReason(email).isValid;
+}
+
+export function validateEmailWithReason(email: string): ValidationResult {
+  if (!email || typeof email !== "string") {
+    return { isValid: false, error: "El correo electrónico es obligatorio." };
+  }
+
+  const trimmed = email.trim();
+  if (trimmed.length === 0) {
+    return { isValid: false, error: "El correo electrónico no puede estar vacío." };
+  }
+
+  // RFC 5322 simplificado y seguro
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+
+  if (!emailRegex.test(trimmed)) {
+    return { isValid: false, error: "Formato de correo electrónico inválido (ej: usuario@colegio.cl)." };
+  }
+
+  return { isValid: true };
+}
+
+/**
+ * Validador de rangos numéricos con límites mínimo y máximo.
+ */
+export function validateNumberRange(
+  val: number | string,
+  min: number,
+  max: number,
+  fieldLabel = "El valor"
+): ValidationResult {
+  if (val === "" || val === null || val === undefined) {
+    return { isValid: false, error: `${fieldLabel} es obligatorio.` };
+  }
+
+  const num = typeof val === "number" ? val : parseFloat(String(val).replace(",", "."));
+
+  if (isNaN(num) || !isFinite(num)) {
+    return { isValid: false, error: `${fieldLabel} debe ser un número válido.` };
+  }
+
+  if (num < min) {
+    return { isValid: false, error: `${fieldLabel} no puede ser menor a ${min}.` };
+  }
+
+  if (num > max) {
+    return { isValid: false, error: `${fieldLabel} no puede superar el máximo permitido de ${max}.` };
+  }
+
+  return { isValid: true };
 }
 
 /**

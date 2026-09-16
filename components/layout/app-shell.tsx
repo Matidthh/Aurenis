@@ -5,6 +5,7 @@ import { Sidebar } from "./sidebar";
 import { Header } from "./header";
 import { CommandPalette } from "./command-palette";
 import { NavItem, UserSessionInfo, SchoolContextInfo } from "./types";
+import { NetworkErrorBanner } from "@/components/ui/network-error-banner";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -120,6 +121,9 @@ export function AppShell({
 
       {/* 2. Columna Principal: Header + Contenedor Central */}
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden min-h-screen">
+        {/* Banner Global de Estado de Red / Fallos 500 / 503 con opción de reintento */}
+        <NetworkErrorBanner variant="top-banner" />
+
         {/* Header Superior */}
         <Header
           isCollapsed={isCollapsed}

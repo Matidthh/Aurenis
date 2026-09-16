@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   BookOpen,
@@ -8,6 +8,7 @@ import {
   Trash2,
   CheckCircle2,
   AlertTriangle,
+  AlertCircle,
   Clock,
   Save,
   Sliders,
@@ -15,6 +16,7 @@ import {
   Layers,
   GraduationCap,
   Building,
+  Loader2,
 } from "lucide-react";
 import { TeacherData } from "./teacher-management-mockup";
 
@@ -68,13 +70,28 @@ export function SubjectAssignmentModal({
   const [selectedCourse, setSelectedCourse] = useState(AVAILABLE_COURSES[0]);
   const [selectedWeeklyHours, setSelectedWeeklyHours] = useState(4);
   const [selectedRoom, setSelectedRoom] = useState(ROOMS[0]);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (teacher) {
       setAssignedSubjects(teacher.subjects || []);
+      setSelectedSubjectName(AVAILABLE_SUBJECTS_CATALOG[0].name);
+      setSelectedCourse(AVAILABLE_COURSES[0]);
+      setSelectedWeeklyHours(4);
+      setSelectedRoom(ROOMS[0]);
+      setAddError(null);
+      setIsSaving(false);
+      setSaveSuccess(false);
     }
-  }, [teacher]);
+  }, [teacher, isOpen]);
+
+  function handleClose() {
+    if (isSaving) return;
+    setAddError(null);
+    onClose();
+  }
 
   if (!isOpen || !teacher) return null;
 
@@ -84,13 +101,19 @@ export function SubjectAssignmentModal({
   const isOverloaded = currentTotalHours > maxLegalHours;
 
   function handleAddSubject() {
+    setAddError(null);
     // Validar si ya existe exactamente esa asignatura para ese curso
     const alreadyExists = assignedSubjects.some(
       (s) => s.name === selectedSubjectName && s.course === selectedCourse
     );
 
     if (alreadyExists) {
-      alert(`El profesor ya tiene asignada la materia "${selectedSubjectName}" en el curso "${selectedCourse}".`);
+      setAddError(`El profesor ya tiene asignada la materia "${selectedSubjectName}" en el curso "${selectedCourse}".`);
+      return;
+    }
+
+    if (selectedWeeklyHours <= 0) {
+      setAddError("Las horas semanales deben ser mayores a 0.");
       return;
     }
 
@@ -103,21 +126,27 @@ export function SubjectAssignmentModal({
     };
 
     setAssignedSubjects([...assignedSubjects, newSub]);
+    setAddError(null);
   }
 
   function handleRemoveSubject(id: string) {
+    if (isSaving) return;
     setAssignedSubjects(assignedSubjects.filter((s) => s.id !== id));
   }
 
   function handleSave() {
-    setSaveSuccess(true);
+    setIsSaving(true);
     setTimeout(() => {
-      setSaveSuccess(false);
-      if (onSaveAssignments && teacher) {
-        onSaveAssignments(teacher.id, assignedSubjects);
-      }
-      onClose();
-    }, 1200);
+      setIsSaving(false);
+      setSaveSuccess(true);
+      setTimeout(() => {
+        setSaveSuccess(false);
+        if (onSaveAssignments && teacher) {
+          onSaveAssignments(teacher.id, assignedSubjects);
+        }
+        handleClose();
+      }, 1000);
+    }, 800);
   }
 
   return (
@@ -140,8 +169,11 @@ export function SubjectAssignmentModal({
           </div>
 
           <button
-            onClick={onClose}
-            className="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition"
+            type="button"
+            onClick={handleClose}
+            disabled={isSaving}
+            className="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition disabled:opacity-40 disabled:cursor-not-allowed"
+            aria-label="Cerrar modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -208,10 +240,18 @@ export function SubjectAssignmentModal({
               </h4>
             </div>
 
+            {addError && (
+              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 flex items-center gap-2 font-medium">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+                <span>{addError}</span>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="space-y-1">
                 <label className="font-bold text-slate-700 dark:text-slate-300">Asignatura</label>
                 <select
+                  disabled={isSaving}
                   value={selectedSubjectName}
                   onChange={(e) => {
                     setSelectedSubjectName(e.target.value);
@@ -219,8 +259,9 @@ export function SubjectAssignmentModal({
                       (c) => c.name === e.target.value
                     );
                     if (catalogItem) setSelectedWeeklyHours(catalogItem.defaultHours);
+                    if (addError) setAddError(null);
                   }}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold focus:outline-hidden"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold focus:outline-hidden disabled:bg-slate-100 dark:disabled:bg-slate-850 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {AVAILABLE_SUBJECTS_CATALOG.map((cat) => (
                     <option key={cat.name} value={cat.name}>
@@ -233,9 +274,13 @@ export function SubjectAssignmentModal({
               <div className="space-y-1">
                 <label className="font-bold text-slate-700 dark:text-slate-300">Curso</label>
                 <select
+                  disabled={isSaving}
                   value={selectedCourse}
-                  onChange={(e) => setSelectedCourse(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold focus:outline-hidden"
+                  onChange={(e) => {
+                    setSelectedCourse(e.target.value);
+                    if (addError) setAddError(null);
+                  }}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold focus:outline-hidden disabled:bg-slate-100 dark:disabled:bg-slate-850 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {AVAILABLE_COURSES.map((crs) => (
                     <option key={crs} value={crs}>
@@ -251,18 +296,23 @@ export function SubjectAssignmentModal({
                   type="number"
                   min={1}
                   max={12}
+                  disabled={isSaving}
                   value={selectedWeeklyHours}
-                  onChange={(e) => setSelectedWeeklyHours(Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold focus:outline-hidden"
+                  onChange={(e) => {
+                    setSelectedWeeklyHours(Number(e.target.value));
+                    if (addError) setAddError(null);
+                  }}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold focus:outline-hidden disabled:bg-slate-100 dark:disabled:bg-slate-850 disabled:opacity-60 disabled:cursor-not-allowed"
                 />
               </div>
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-700 dark:text-slate-300">Sala / Espacio</label>
                 <select
+                  disabled={isSaving}
                   value={selectedRoom}
                   onChange={(e) => setSelectedRoom(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold focus:outline-hidden"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-semibold focus:outline-hidden disabled:bg-slate-100 dark:disabled:bg-slate-850 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {ROOMS.map((r) => (
                     <option key={r} value={r}>
@@ -276,7 +326,8 @@ export function SubjectAssignmentModal({
             <button
               type="button"
               onClick={handleAddSubject}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-xs transition"
+              disabled={isSaving}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-xs transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Añadir a la Carga del Docente</span>
@@ -319,8 +370,10 @@ export function SubjectAssignmentModal({
                       {sub.weeklyHours} hrs pedagógicas
                     </span>
                     <button
+                      type="button"
+                      disabled={isSaving}
                       onClick={() => handleRemoveSubject(sub.id)}
-                      className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition"
+                      className="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition disabled:opacity-40 disabled:cursor-not-allowed"
                       title="Quitar Asignación"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -341,17 +394,26 @@ export function SubjectAssignmentModal({
         {/* Footer */}
         <div className="p-4 bg-slate-50 dark:bg-slate-850 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+            type="button"
+            onClick={handleClose}
+            disabled={isSaving}
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Cancelar
           </button>
 
           <button
+            type="button"
             onClick={handleSave}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-extrabold bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20 transition"
+            disabled={isSaving}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-extrabold bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
-            {saveSuccess ? (
+            {isSaving ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Guardando...</span>
+              </>
+            ) : saveSuccess ? (
               <>
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Asignaciones Guardadas</span>

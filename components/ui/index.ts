@@ -6,3 +6,5 @@ export * from "./table";
 export * from "./page-header";
 export * from "./stat-card";
 export * from "./skeleton";
+export * from "./network-error-banner";
+export * from "./network-error-state";
