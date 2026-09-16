@@ -249,7 +249,6 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
   if (pathname === "/api/auth/login" || pathname === "/api/auth/logout") return true;
   if (pathname === "/system/design-system" || pathname.startsWith("/system/design-system")) return true;
-  if (pathname.startsWith("/colegio-san-jose") || pathname.startsWith("/sanjose")) return true;
   if (pathname === "/_not-found" || pathname === "/404" || pathname === "/500" || pathname === "/_error") return true;
   return false;
 }
@@ -440,4 +439,19 @@ function formatSegmentLabel(segment: string): string {
     .split(/[-_]/)
     .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : ""))
     .join(" ");
+}
+
+/**
+ * Valida y sanitiza una URL de retorno (returnUrl) para prevenir vulnerabilidades de Open Redirect
+ */
+export function getSafeReturnUrl(rawReturnUrl?: string | null, fallbackUrl: string = "/"): string {
+  if (!rawReturnUrl || typeof rawReturnUrl !== "string") return fallbackUrl;
+  const trimmed = rawReturnUrl.trim();
+  // Debe ser una ruta relativa que empiece con '/' y no con '//' ni esquemas absolutos como http:/https:/javascript:
+  if (trimmed.startsWith("/") && !trimmed.startsWith("//") && !trimmed.includes("://") && !trimmed.startsWith("/\\")) {
+    // Si la ruta es /login o /forgot-password, no tiene sentido volver a login
+    if (trimmed === "/login" || trimmed.startsWith("/login?")) return fallbackUrl;
+    return trimmed;
+  }
+  return fallbackUrl;
 }

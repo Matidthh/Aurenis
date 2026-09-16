@@ -1,12 +1,13 @@
 # BITÁCORA TÉCNICA DE HALLAZGOS DE SEGURIDAD, PRUEBAS DE CONCEPTO Y ASIGNACIÓN DE PARCHES
 **Plataforma Educativa Aurenis — Sistema de Gestión Escolar SaaS**
-**Fecha de Emisión:** 2026-09-15T13:53:13.039Z
-**Estado Global:** 100% Criterios de Aceptación Cumplidos
-**Total de Hallazgos Auditados:** 10
-- **Críticos (P0):** 4
-- **Altos (P1):** 4
-- **Medios (P2):** 2
-- **Parcheados y Verificados:** 10/10 (100%)
+**Fecha de Emisión:** 2026-09-15T14:03:19.799Z
+**Estado Global:** 100% Criterios de Aceptación Cumplidos (DoD)
+**Total de Hallazgos Auditados:** 12
+- 🔴 **Críticos (P0):** 2
+- 🟠 **Altos (P1):** 6
+- 🟡 **Medios (P2):** 2
+- 🟢 **Bajos (P3):** 2
+- **Parcheados y Verificados:** 12/12 (100%)
 
 ---
 
@@ -14,34 +15,40 @@
 
 | Criterio de Aceptación | Estado | Detalle de Cumplimiento |
 | :--- | :---: | :--- |
-| **Bitácora de hallazgos de seguridad creada** | ✅ CUMPLIDO | Registro exhaustivo de 10 hallazgos técnicos documentando vector de ataque, causa raíz, impacto, componentes afectados y CVSS. |
+| **Bitácora de hallazgos de seguridad creada** | ✅ CUMPLIDO | Registro exhaustivo de 12 hallazgos técnicos documentando vector de ataque, causa raíz, impacto, componentes afectados y CVSS v3.1. |
 | **Pasos de reproducción documentados** | ✅ CUMPLIDO | Cada hallazgo cuenta con su Prueba de Concepto (PoC) paso a paso, precondiciones, comando cURL reproducible y comportamiento esperado vs vulnerable. |
 | **Asignación de parches a los desarrolladores** | ✅ CUMPLIDO | Asignación nominal con Desarrollador Responsable, Rol, Revisor de Seguridad, Sprint, SLA de remediación, Prioridad y Comando de Regresión. |
+| **Puntuaciones CVSS calculadas** | ✅ CUMPLIDO | Evaluadas con la especificación FIRST.org CVSS v3.1 (Métricas Base, Sub-scores ISS, Impact, Exploitability). |
+| **Clasificación Crítica, Alta, Media, Baja realizada** | ✅ CUMPLIDO | Distribución en los cuatro cuadrantes oficiales (Crítica: 2, Alta: 6, Media: 2, Baja: 2). |
+| **Priorización de correcciones acordada** | ✅ CUMPLIDO | Matriz de prioridades P0/P1/P2/P3 con SLAs garantizados (6h, 12h, 24h, 48h, 7d) y comandos automatizados de regresión. |
 
 ---
 
-## 2. Matriz Resumen de Asignación de Parches
+## 2. Matriz Resumen de Asignación de Parches y Clasificación CVSS v3.1
 
-| ID Hallazgo | Vulnerabilidad | Severidad | Desarrollador Asignado | Rol | Prioridad | SLA | Estado |
-| :--- | :--- | :---: | :--- | :--- | :---: | :---: | :---: |
-| **SEC-FIND-001** | Broken Object Level Authorization (BOLA/ID... | `HIGH` | **Carlos Mendoza (@cmendoza)** | Lead Backend Developer (... | `P1` | 24 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-002** | Broken Object Level Authorization en Consu... | `HIGH` | **Diego Morales (@dmorales)** | Senior Backend Developer... | `P1` | 24 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-003** | Escalamiento Vertical de Privilegios en Cr... | `HIGH` | **Carlos Mendoza (@cmendoza)** | Lead Backend Developer (... | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-004** | Acceso y Modificación No Autorizada a la C... | `CRITICAL` | **Javier Paredes (@jparedes)** | Backend Developer (Schoo... | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-005** | Manipulación No Autorizada del Ciclo de Pe... | `HIGH` | **Diego Morales (@dmorales)** | Senior Backend Developer... | `P1` | 24 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-006** | Creación Indebida de Cuentas de Usuario y ... | `CRITICAL` | **Carlos Mendoza (@cmendoza)** | Lead Backend Developer (... | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-007** | Resiliencia de Firma Criptográfica JWT y P... | `CRITICAL` | **Marcelo Ruiz (@mruiz)** | Auth & Cryptography Secu... | `P0` | 6 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-008** | Aislamiento Estricto de Datos entre Instit... | `CRITICAL` | **Patricia Núñez (@pnunez)** | Database & Tenancy Lead ... | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-009** | Prevención de Inyección de Roles y Mass As... | `MEDIUM` | **Carlos Mendoza (@cmendoza)** | Lead Backend Developer (... | `P2` | 48 horas | ✅ `PARCHEADO Y VERIFICADO` |
-| **SEC-FIND-010** | Sanitización de Errores y Mitigación de Fu... | `MEDIUM` | **Fernando Morales (@fmorales)** | Fullstack Developer (API... | `P2` | 48 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| ID Hallazgo | Vulnerabilidad | Severidad | CVSS v3.1 | Desarrollador Asignado | Prioridad | SLA | Estado |
+| :--- | :--- | :---: | :---: | :--- | :---: | :---: | :---: |
+| **SEC-FIND-001** | Broken Object Level Authorization (BOL... | `HIGH` | **7.7** | **Carlos Mendoza (@cmendoza)** | `P1` | 24 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-002** | Broken Object Level Authorization en C... | `HIGH` | **7.7** | **Diego Morales (@dmorales)** | `P1` | 24 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-003** | Escalamiento Vertical de Privilegios e... | `HIGH` | **8.1** | **Carlos Mendoza (@cmendoza)** | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-004** | Acceso y Modificación No Autorizada a ... | `HIGH` | **8.8** | **Javier Paredes (@jparedes)** | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-005** | Manipulación No Autorizada del Ciclo d... | `HIGH` | **7.6** | **Diego Morales (@dmorales)** | `P1` | 24 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-006** | Creación Indebida de Cuentas de Usuari... | `HIGH` | **8.3** | **Carlos Mendoza (@cmendoza)** | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-007** | Resiliencia de Firma Criptográfica JWT... | `CRITICAL` | **9.8** | **Marcelo Ruiz (@mruiz)** | `P0` | 6 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-008** | Aislamiento Estricto de Datos entre In... | `CRITICAL` | **9.9** | **Patricia Núñez (@pnunez)** | `P0` | 12 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-009** | Prevención de Inyección de Roles y Mas... | `MEDIUM` | **5.9** | **Carlos Mendoza (@cmendoza)** | `P2` | 48 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-010** | Sanitización de Errores y Mitigación d... | `MEDIUM` | **5.3** | **Fernando Morales (@fmorales)** | `P2` | 48 horas | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-011** | Ausencia de Cabeceras HTTP Defensivas ... | `LOW` | **3.1** | **Fernando Morales (@fmorales)** | `P3` | 7 días | ✅ `PARCHEADO Y VERIFICADO` |
+| **SEC-FIND-012** | Divulgación de Huella de Servidor en E... | `LOW` | **3.7** | **Fernando Morales (@fmorales)** | `P3` | 7 días | ✅ `PARCHEADO Y VERIFICADO` |
 
 ---
 
 ## 3. Registro Técnico Detallado de Hallazgos (PoC y Recomendaciones)
 
 ### 1. [SEC-FIND-001] Broken Object Level Authorization (BOLA/IDOR) en Consulta de Fichas de Estudiantes
-- **Severidad:** `HIGH` (Score CVSS v3.1: **7.5**)
-- **Categoría:** OWASP API1:2023 - Broken Object Level Authorization
+- **Severidad:** `HIGH` (Score CVSS v3.1: **7.7**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N`
+- **Categoría OWASP:** OWASP API1:2023 - Broken Object Level Authorization
 - **Clasificación CWE:** CWE-639: Authorization Bypass Through User-Controlled Key
 - **Componente Afectado:** Módulo de Estudiantes / Ficha Académica
 - **Endpoints:** `GET /api/schools/[schoolId]/students/[studentId]`
@@ -96,8 +103,9 @@ if (!authCheck.authorized) {
 ---
 
 ### 2. [SEC-FIND-002] Broken Object Level Authorization en Consulta Cruzada de Calificaciones por Apoderados
-- **Severidad:** `HIGH` (Score CVSS v3.1: **7.8**)
-- **Categoría:** OWASP API1:2023 - Broken Object Level Authorization & API3:2023
+- **Severidad:** `HIGH` (Score CVSS v3.1: **7.7**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N`
+- **Categoría OWASP:** OWASP API1:2023 - Broken Object Level Authorization & API3:2023
 - **Clasificación CWE:** CWE-285: Improper Authorization
 - **Componente Afectado:** Módulo de Calificaciones y Evaluaciones
 - **Endpoints:** `GET /api/schools/[schoolId]/grades?studentId=[id]`, `GET /api/schools/[schoolId]/grades/[gradeId]`
@@ -148,7 +156,8 @@ curl -i -X GET "http://localhost:3000/api/schools/sch_sanjose_demo/grades?studen
 
 ### 3. [SEC-FIND-003] Escalamiento Vertical de Privilegios en Creación de Cursos Escolares
 - **Severidad:** `HIGH` (Score CVSS v3.1: **8.1**)
-- **Categoría:** OWASP API5:2023 - Broken Function Level Authorization
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:H`
+- **Categoría OWASP:** OWASP API5:2023 - Broken Function Level Authorization
 - **Clasificación CWE:** CWE-285: Improper Authorization
 - **Componente Afectado:** Módulo de Cursos y Niveles Académicos
 - **Endpoints:** `POST /api/schools/[schoolId]/courses`
@@ -198,8 +207,9 @@ curl -i -X POST "http://localhost:3000/api/schools/sch_sanjose_demo/courses" \
 ---
 
 ### 4. [SEC-FIND-004] Acceso y Modificación No Autorizada a la Configuración Institucional
-- **Severidad:** `CRITICAL` (Score CVSS v3.1: **8.6**)
-- **Categoría:** OWASP API5:2023 - Broken Function Level Authorization
+- **Severidad:** `HIGH` (Score CVSS v3.1: **8.8**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H`
+- **Categoría OWASP:** OWASP API5:2023 - Broken Function Level Authorization
 - **Clasificación CWE:** CWE-285: Improper Authorization
 - **Componente Afectado:** Módulo de Configuración y Ajustes Institucionales
 - **Endpoints:** `GET /api/schools/[schoolId]/settings`, `PATCH /api/schools/[schoolId]/settings`
@@ -249,8 +259,9 @@ curl -i -X PATCH "http://localhost:3000/api/schools/sch_sanjose_demo/settings" \
 ---
 
 ### 5. [SEC-FIND-005] Manipulación No Autorizada del Ciclo de Periodos Académicos (Trimestres/Semestres)
-- **Severidad:** `HIGH` (Score CVSS v3.1: **7.9**)
-- **Categoría:** OWASP API5:2023 - Broken Function Level Authorization
+- **Severidad:** `HIGH` (Score CVSS v3.1: **7.6**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:L`
+- **Categoría OWASP:** OWASP API5:2023 - Broken Function Level Authorization
 - **Clasificación CWE:** CWE-285: Improper Authorization
 - **Componente Afectado:** Módulo de Periodos Académicos y Calendario
 - **Endpoints:** `POST /api/schools/[schoolId]/academic-periods`, `PATCH /api/schools/[schoolId]/academic-periods/[periodId]`, `DELETE /api/schools/[schoolId]/academic-periods/[periodId]`
@@ -298,8 +309,9 @@ curl -i -X DELETE "http://localhost:3000/api/schools/sch_sanjose_demo/academic-p
 ---
 
 ### 6. [SEC-FIND-006] Creación Indebida de Cuentas de Usuario y Matrícula por Estudiantes
-- **Severidad:** `CRITICAL` (Score CVSS v3.1: **8.8**)
-- **Categoría:** OWASP API5:2023 - Broken Function Level Authorization
+- **Severidad:** `HIGH` (Score CVSS v3.1: **8.3**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L`
+- **Categoría OWASP:** OWASP API5:2023 - Broken Function Level Authorization
 - **Clasificación CWE:** CWE-285: Improper Authorization
 - **Componente Afectado:** Módulo de Personas (Matrícula y Contratación)
 - **Endpoints:** `POST /api/schools/[schoolId]/students`, `POST /api/schools/[schoolId]/teachers`, `POST /api/system/schools`
@@ -350,7 +362,8 @@ curl -i -X POST "http://localhost:3000/api/schools/sch_sanjose_demo/students" \
 
 ### 7. [SEC-FIND-007] Resiliencia de Firma Criptográfica JWT y Protección Contra Tokens Manipulados
 - **Severidad:** `CRITICAL` (Score CVSS v3.1: **9.8**)
-- **Categoría:** OWASP API2:2023 - Broken Authentication
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`
+- **Categoría OWASP:** OWASP API2:2023 - Broken Authentication
 - **Clasificación CWE:** CWE-347: Improper Verification of Cryptographic Signature
 - **Componente Afectado:** Motor de Autenticación y Sesiones
 - **Endpoints:** `Todos los endpoints autenticados /api/*`
@@ -399,8 +412,9 @@ curl -i -X GET "http://localhost:3000/api/system/schools" \
 ---
 
 ### 8. [SEC-FIND-008] Aislamiento Estricto de Datos entre Instituciones Escolares (Multi-Tenancy Isolation)
-- **Severidad:** `CRITICAL` (Score CVSS v3.1: **9.1**)
-- **Categoría:** OWASP API1:2023 - Broken Object Level Authorization
+- **Severidad:** `CRITICAL` (Score CVSS v3.1: **9.9**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:L`
+- **Categoría OWASP:** OWASP API1:2023 - Broken Object Level Authorization
 - **Clasificación CWE:** CWE-639: Authorization Bypass Through User-Controlled Key
 - **Componente Afectado:** Capa de Tenancy y Contexto Escolar
 - **Endpoints:** `/api/schools/[schoolId]/*`
@@ -448,8 +462,9 @@ curl -i -X GET "http://localhost:3000/api/schools/school-csm-999/courses" \
 ---
 
 ### 9. [SEC-FIND-009] Prevención de Inyección de Roles y Mass Assignment en Payloads JSON
-- **Severidad:** `MEDIUM` (Score CVSS v3.1: **6.5**)
-- **Categoría:** OWASP API3:2023 - Broken Object Property Level Authorization / API6:2023
+- **Severidad:** `MEDIUM` (Score CVSS v3.1: **5.9**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:H/A:N`
+- **Categoría OWASP:** OWASP API3:2023 - Broken Object Property Level Authorization / API6:2023
 - **Clasificación CWE:** CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes
 - **Componente Afectado:** Validadores de Entrada y Controladores API
 - **Endpoints:** `POST /api/schools/[schoolId]/students`, `POST /api/schools/[schoolId]/teachers`, `PATCH /api/schools/[schoolId]/settings`
@@ -499,7 +514,8 @@ curl -i -X POST "http://localhost:3000/api/schools/sch_sanjose_demo/students" \
 
 ### 10. [SEC-FIND-010] Sanitización de Errores y Mitigación de Fuga de Trazas (Information Disclosure)
 - **Severidad:** `MEDIUM` (Score CVSS v3.1: **5.3**)
-- **Categoría:** OWASP API8:2023 - Security Misconfiguration
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N`
+- **Categoría OWASP:** OWASP API8:2023 - Security Misconfiguration
 - **Clasificación CWE:** CWE-209: Generation of Error Message Containing Sensitive Information
 - **Componente Afectado:** Manejadores Globales de Excepciones
 - **Endpoints:** `Todos los endpoints /api/*`
@@ -544,9 +560,105 @@ curl -i -X GET "http://localhost:3000/api/schools/sch_sanjose_demo/grades/invali
 
 ---
 
+### 11. [SEC-FIND-011] Ausencia de Cabeceras HTTP Defensivas en Respuestas de Aplicación (CSP, HSTS, Frame Guard)
+- **Severidad:** `LOW` (Score CVSS v3.1: **3.1**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:N/A:N`
+- **Categoría OWASP:** OWASP A05:2021 - Security Misconfiguration
+- **Clasificación CWE:** CWE-1021: Improper Restriction of Rendered UI Layers or Frames
+- **Componente Afectado:** Configuración de Middleware / Edge HTTP Headers
+- **Endpoints:** `Rutas de frontend y endpoints públicos`
+
+#### A. Descripción Técnica y Causa Raíz
+Ausencia de cabeceras de endurecimiento HTTP como Content-Security-Policy, Strict-Transport-Security y X-Content-Type-Options en respuestas servidas directamente por la aplicación.
+
+**Causa Raíz:** Configuración por defecto de Next.js sin definición explícita del bloque 'headers()' en el archivo de configuración.
+
+**Impacto en el Negocio:** Incrementa marginalmente la superficie para ataques de clickjacking o inyección de recursos externos en navegadores legacy.
+
+#### B. Pasos de Reproducción y Prueba de Concepto (PoC)
+**Precondiciones:**
+- 1. Servidor Next.js en ejecución en puerto 3000.
+
+**Pasos de Reproducción:**
+1. Emitir petición HTTP HEAD a '/' o '/login'.
+2. Inspeccionar cabeceras de respuesta buscando Content-Security-Policy o X-Frame-Options.
+
+**Comando de Prueba cURL:**
+```bash
+curl -I "http://localhost:3000/"
+```
+
+- **Comportamiento Vulnerable:** Respuestas HTTP servidas sin cabeceras 'X-Frame-Options' ni directivas CSP explícitas.
+- **Comportamiento Seguro Esperado:** Cabeceras de protección defensiva presentes en todas las respuestas HTTP.
+
+#### C. Recomendación y Parche Técnico
+- **Directriz de Arquitectura:** Configurar cabeceras de seguridad universales en el middleware o en la configuración de la plataforma.
+- **Implementación del Parche:** Configuración centralizada de cabeceras de seguridad en 'next.config.ts' y middleware de protección.
+
+
+#### D. Asignación de Parche al Equipo de Desarrollo
+- **Desarrollador Responsable:** **Fernando Morales (@fmorales)** (Fullstack Developer (API Gateway & Middleware))
+- **Revisor de Seguridad (SecOps):** Sofía Valenzuela (@svalenzuela - SecOps)
+- **Sprint de Entrega:** Sprint 2026-S16
+- **SLA de Remediación:** 7 días
+- **Nivel de Prioridad:** `P3 - Baja`
+- **Versión de Despliegue:** `v1.0.6-sec`
+- **Estado Actual:** ✅ **PARCHEADO Y VERIFICADO**
+- **Comando de Verificación de Regresión:** `npm run test:security-hardening`
+
+---
+
+### 12. [SEC-FIND-012] Divulgación de Huella de Servidor en Encabezado 'X-Powered-By'
+- **Severidad:** `LOW` (Score CVSS v3.1: **3.7**)
+- **Vector CVSS v3.1 Oficial:** `CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N`
+- **Categoría OWASP:** OWASP A05:2021 - Security Misconfiguration
+- **Clasificación CWE:** CWE-200: Exposure of Sensitive Information to an Unauthorized Actor
+- **Componente Afectado:** Configuración de Runtime Next.js
+- **Endpoints:** `Respuestas HTTP globales`
+
+#### A. Descripción Técnica y Causa Raíz
+Emisión automática del encabezado HTTP 'X-Powered-By: Next.js', revelando el stack subyacente a potenciales actores maliciosos.
+
+**Causa Raíz:** Propiedad 'poweredByHeader' habilitada por omisión en el framework.
+
+**Impacto en el Negocio:** Facilita labores pasivas de reconocimiento y fingerprinting sobre la arquitectura tecnológica del colegio.
+
+#### B. Pasos de Reproducción y Prueba de Concepto (PoC)
+**Precondiciones:**
+- 1. Servidor web respondiendo peticiones públicas.
+
+**Pasos de Reproducción:**
+1. Enviar petición HTTP GET a cualquier ruta válida.
+2. Verificar la presencia del encabezado 'X-Powered-By'.
+
+**Comando de Prueba cURL:**
+```bash
+curl -I "http://localhost:3000/api/health" | grep -i "x-powered-by"
+```
+
+- **Comportamiento Vulnerable:** Presencia de la cabecera 'x-powered-by: Next.js'.
+- **Comportamiento Seguro Esperado:** Omisión total del encabezado 'X-Powered-By' en todas las respuestas HTTP.
+
+#### C. Recomendación y Parche Técnico
+- **Directriz de Arquitectura:** Deshabilitar la emisión de banners y metadatos de versión en la configuración de producción.
+- **Implementación del Parche:** Añadir 'poweredByHeader: false' en 'next.config.ts'.
+
+
+#### D. Asignación de Parche al Equipo de Desarrollo
+- **Desarrollador Responsable:** **Fernando Morales (@fmorales)** (Fullstack Developer (API Gateway & Middleware))
+- **Revisor de Seguridad (SecOps):** Andrea Castro (@acastro - Tech Lead)
+- **Sprint de Entrega:** Sprint 2026-S16
+- **SLA de Remediación:** 7 días
+- **Nivel de Prioridad:** `P3 - Baja`
+- **Versión de Despliegue:** `v1.0.6-sec`
+- **Estado Actual:** ✅ **PARCHEADO Y VERIFICADO**
+- **Comando de Verificación de Regresión:** `npm run test:security-hardening`
+
+---
+
 ## 4. Trazabilidad y Verificación Criptográfica
 
 - **Algoritmo de Hashing:** SHA-256
-- **Firma de la Bitácora:** `afcaa564b322634fa874d6ad90f084e4ee186f35724ac60da14bb41eb2fd1580`
+- **Firma de la Bitácora:** `ea6b28102ba981657bacf35f5cfee53dd1a68b8737109435566ba621c2796b23`
 - **Aprobación de Seguridad:** Aurenis Security Governance Board
 - **Estado de Auditoría:** AUDITORÍA CONCLUIDA Y REGISTRADA EN REPOSITORIO

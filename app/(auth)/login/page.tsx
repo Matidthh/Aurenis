@@ -32,6 +32,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@/components/ui/modal";
+import { getSafeReturnUrl } from "@/lib/navigation/routes";
 
 interface DemoAccount {
   id: string;
@@ -249,9 +250,13 @@ export default function LoginPage() {
         throw new Error(data.error || "Credenciales incorrectas o usuario no encontrado.");
       }
 
-      if (data.redirectUrl) {
+      const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+      const requestedReturnUrl = searchParams.get("returnUrl");
+      const targetUrl = getSafeReturnUrl(requestedReturnUrl, data.redirectUrl || "/select-school");
+
+      if (targetUrl) {
         // Redirección directa nativa para garantizar transporte de cookies en contextos iframe
-        window.location.href = data.redirectUrl;
+        window.location.href = targetUrl;
       } else {
         router.push("/select-school");
         router.refresh();
@@ -288,8 +293,12 @@ export default function LoginPage() {
         throw new Error(data.error || "No fue posible iniciar sesión con la cuenta demo.");
       }
 
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
+      const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
+      const requestedReturnUrl = searchParams.get("returnUrl");
+      const targetUrl = getSafeReturnUrl(requestedReturnUrl, data.redirectUrl || "/select-school");
+
+      if (targetUrl) {
+        window.location.href = targetUrl;
       } else {
         router.push("/select-school");
         router.refresh();

@@ -717,6 +717,15 @@ export function createMockPrisma() {
         }
         return cnt;
       },
+      async update(args: any) {
+        const found = await this.findUnique({ where: args.where });
+        if (found) {
+          Object.assign(found, args.data || {}, { updatedAt: new Date() });
+          store.schools.set(found.id, found);
+          return hydrateSchool(found, args.include);
+        }
+        throw new Error("School not found");
+      },
       async create(args: any) {
         const id = args.data.id || `school-${Date.now()}`;
         const { settings, ...rest } = args.data;
@@ -1413,6 +1422,16 @@ export function createMockPrisma() {
     const res = { ...school };
     if (include.settings) {
       res.settings = Array.from(store.schoolSettings.values()).find((s) => s.schoolId === school.id) || null;
+    }
+    if (include.academicPeriods) {
+      res.academicPeriods = Array.from(store.academicPeriods.values())
+        .filter((p) => p.schoolId === school.id || ((school.id === "school-csj-001" || school.id === "sch_sanjose_demo") && (p.schoolId === "school-csj-001" || p.schoolId === "sch_sanjose_demo")))
+        .map((p) => ({
+          ...p,
+          _count: {
+            assessments: Array.from(store.assessments.values()).filter((a) => a.academicPeriodId === p.id).length,
+          },
+        }));
     }
     if (include.roles) {
       res.roles = Array.from(store.roles.values()).filter((r) => r.schoolId === school.id || r.schoolId === null);

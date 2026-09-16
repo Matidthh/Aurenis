@@ -50,23 +50,23 @@ function cleanupExpiredRecords(windowMs: number) {
  * Configuraciones predefinidas de limitación de tasa
  */
 export const RATE_LIMIT_CONFIGS = {
-  // Login: 1000 intentos por minuto por IP/identificador para evitar bloqueos
+  // Login: 5 intentos por minuto por IP/identificador para mitigar ataques de fuerza bruta
   LOGIN: {
     windowMs: 60 * 1000,
-    max: 1000,
-    message: "Demasiados intentos de inicio de sesión. Por favor, espere un momento antes de reintentar.",
+    max: process.env.RATE_LIMIT_LOGIN_MAX ? parseInt(process.env.RATE_LIMIT_LOGIN_MAX, 10) : 5,
+    message: "Demasiados intentos de inicio de sesión. Por favor, espere un minuto antes de reintentar.",
   },
-  // API general: 5000 peticiones por minuto
+  // API general: 1000 peticiones por minuto
   API_GENERAL: {
     windowMs: 60 * 1000,
-    max: 5000,
+    max: 1000,
     message: "Límite de peticiones de API excedido. Intente más tarde.",
   },
-  // Recuperación de clave: 100 intentos cada 15 minutos
+  // Recuperación de clave: 20 intentos cada 15 minutos
   PASSWORD_RESET: {
     windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: "Demasiadas solicitudes de recuperación. Intente en unos minutos.",
+    max: 20,
+    message: "Demasiadas solicitudes de recuperación. Intente en 15 minutos.",
   },
 } as const;
 

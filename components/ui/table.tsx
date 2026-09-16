@@ -197,6 +197,8 @@ export interface TablePaginationProps {
   totalPages: number;
   totalItems: number;
   itemsPerPage: number;
+  pageSizeOptions?: number[];
+  onItemsPerPageChange?: (size: number) => void;
   onPageChange: (page: number) => void;
   className?: string;
 }
@@ -206,10 +208,12 @@ export function TablePagination({
   totalPages,
   totalItems,
   itemsPerPage,
+  pageSizeOptions,
+  onItemsPerPageChange,
   onPageChange,
   className,
 }: TablePaginationProps) {
-  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const startItem = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
@@ -219,10 +223,30 @@ export function TablePagination({
         className
       )}
     >
-      <div>
-        Mostrando <span className="font-semibold text-slate-700 dark:text-slate-300">{startItem}</span> a{" "}
-        <span className="font-semibold text-slate-700 dark:text-slate-300">{endItem}</span> de{" "}
-        <span className="font-semibold text-slate-700 dark:text-slate-300">{totalItems}</span> registros
+      <div className="flex items-center gap-3">
+        <span>
+          Mostrando <span className="font-semibold text-slate-700 dark:text-slate-300">{startItem}</span> a{" "}
+          <span className="font-semibold text-slate-700 dark:text-slate-300">{endItem}</span> de{" "}
+          <span className="font-semibold text-slate-700 dark:text-slate-300">{totalItems}</span> registros
+        </span>
+
+        {pageSizeOptions && onItemsPerPageChange && (
+          <div className="flex items-center gap-1.5 ml-2 border-l border-slate-200 dark:border-slate-700 pl-3">
+            <span>Por pág:</span>
+            <select
+              aria-label="Registros por página"
+              value={itemsPerPage}
+              onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded px-2 py-0.5 text-xs text-slate-700 dark:text-slate-200"
+            >
+              {pageSizeOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-1">
