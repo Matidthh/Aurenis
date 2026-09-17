@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NetworkStatusProvider } from "@/lib/network/network-context";
+import { NetworkErrorBanner } from "@/components/ui/network-error-banner";
+import { ToastProvider } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
   title: "Aurenis",
@@ -17,10 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className="antialiased min-h-screen bg-[#F8F8F5] text-slate-900 font-sans">
-        {children}
+      <body className="antialiased min-h-screen">
+        <NetworkStatusProvider>
+          <ToastProvider>
+            <NetworkErrorBanner />
+            {children}
+          </ToastProvider>
+        </NetworkStatusProvider>
       </body>
     </html>
   );
 }
-

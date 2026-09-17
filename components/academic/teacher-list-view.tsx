@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Search,
   Filter,
@@ -29,6 +30,8 @@ import { CreateTeacherModal } from "./create-teacher-modal";
 import { AssignSubjectModal, CourseOption, AvailableSubjectOption } from "./assign-subject-modal";
 import { EditTeacherModal } from "./edit-teacher-modal";
 import { TeacherProfileModal } from "./teacher-profile-modal";
+import { DestructiveConfirmModal } from "@/components/ui/destructive-confirm-modal";
+import { useToast } from "@/components/ui/toast";
 
 interface TeacherListViewProps {
   schoolSlug: string;
@@ -59,8 +62,9 @@ export function TeacherListView({
   const [assignModalTeacher, setAssignModalTeacher] = useState<TeacherItem | null>(null);
   const [editModalTeacher, setEditModalTeacher] = useState<TeacherItem | null>(null);
   const [profileModalTeacher, setProfileModalTeacher] = useState<TeacherItem | null>(null);
+  const [teacherToDelete, setTeacherToDelete] = useState<TeacherItem | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { toastDelete, toastError, toastSuccess } = useToast();
 
   // Sync state if initialTeachers prop changes
   useEffect(() => {
@@ -127,10 +131,7 @@ export function TeacherListView({
   };
 
   const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3500);
+    toastSuccess(msg);
   };
 
   // Extract unique specialties
@@ -188,12 +189,11 @@ export function TeacherListView({
     });
   }, [teachers, searchTerm, selectedSpecialty, selectedAssignmentStatus]);
 
-  // Delete / Unlink Teacher
-  const handleDeleteTeacher = async (teacher: TeacherItem) => {
+  // Delete / Unlink Teacher execution via DestructiveConfirmModal
+  const handleExecuteDeleteTeacher = async () => {
+    if (!teacherToDelete) return;
+    const teacher = teacherToDelete;
     const teacherName = `${teacher.membership.user.firstName} ${teacher.membership.user.lastName}`;
-    if (!confirm(`¿Estás seguro de desvincular al docente ${teacherName}? Se removerán también sus asignaciones de asignaturas.`)) {
-      return;
-    }
 
     setIsDeleting(teacher.id);
     try {
@@ -206,10 +206,15 @@ export function TeacherListView({
         throw new Error(d.error || "No se pudo desvincular al docente");
       }
 
-      showToast(`Docente ${teacherName} desvinculado con éxito.`);
+      toastDelete("Docente desvinculado", {
+        description: `El profesor(a) ${teacherName} ha sido desvinculado y sus asignaturas liberadas.`,
+      });
+      setTeacherToDelete(null);
       await refreshTeachersData();
     } catch (err: any) {
-      alert(err.message || "Error al comunicarse con el servidor.");
+      toastError("Error al desvincular", {
+        description: err.message || "Error al comunicarse con el servidor.",
+      });
     } finally {
       setIsDeleting(null);
     }
@@ -217,14 +222,6 @@ export function TeacherListView({
 
   return (
     <div className="space-y-6">
-      {/* Toast de Notificación Reactiva */}
-      {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 p-4 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xl flex items-center gap-3 animate-in slide-in-from-bottom-5 duration-200">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 dark:text-emerald-600 shrink-0" />
-          <span className="text-sm font-medium">{toastMessage}</span>
-        </div>
-      )}
-
       {/* 1. Métricas e Indicadores Cuantitativos */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-1">
@@ -513,7 +510,7 @@ export function TeacherListView({
                       id={`btn-delete-teacher-card-${teacher.id}`}
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleDeleteTeacher(teacher)}
+                      onClick={() => setTeacherToDelete(teacher)}
                       disabled={isDeleting === teacher.id}
                       className="p-1.5 text-slate-400 hover:text-red-600 dark:hover:text-red-400"
                       title="Desvincular Docente"
@@ -649,7 +646,7 @@ export function TeacherListView({
                             id={`btn-delete-teacher-table-${teacher.id}`}
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteTeacher(teacher)}
+                            onClick={() => setTeacherToDelete(teacher)}
                             disabled={isDeleting === teacher.id}
                             className="text-slate-400 hover:text-red-600 dark:hover:text-red-400"
                             title="Desvincular Docente"
@@ -669,27 +666,36 @@ export function TeacherListView({
 
       {/* Estado vacío cuando no hay resultados */}
       {filteredTeachers.length === 0 && (
-        <div className="py-12 px-6 rounded-2xl bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-800 text-center space-y-3 shadow-sm">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-            <GraduationCap className="w-6 h-6" />
-          </div>
-          <p className="font-semibold text-slate-900 dark:text-white text-base">
-            No se encontraron docentes con los criterios seleccionados
-          </p>
-          <p className="text-xs text-slate-500 max-w-md mx-auto">
-            Prueba ajustando los filtros de búsqueda o especialidad, o registra un nuevo profesor en el cuerpo docente.
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setSearchTerm("");
-              setSelectedSpecialty("ALL");
-              setSelectedAssignmentStatus("ALL");
-            }}
-          >
-            Limpiar Filtros
-          </Button>
+        <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <EmptyState
+            variant={searchTerm ? "search" : (selectedSpecialty !== "ALL" || selectedAssignmentStatus !== "ALL") ? "filter" : "no-data"}
+            title={
+              searchTerm || selectedSpecialty !== "ALL" || selectedAssignmentStatus !== "ALL"
+                ? "No encontramos docentes con esos criterios"
+                : "No hay docentes registrados en la institución"
+            }
+            description={
+              searchTerm || selectedSpecialty !== "ALL" || selectedAssignmentStatus !== "ALL"
+                ? "Revisa la ortografía del nombre o especialidad, o restablece los filtros para listar todo el cuerpo docente."
+                : "Registra profesores para asignarles asignaturas curriculares y cursos correspondientes."
+            }
+            searchTerm={searchTerm}
+            onResetFilters={
+              searchTerm || selectedSpecialty !== "ALL" || selectedAssignmentStatus !== "ALL"
+                ? () => {
+                    setSearchTerm("");
+                    setSelectedSpecialty("ALL");
+                    setSelectedAssignmentStatus("ALL");
+                  }
+                : undefined
+            }
+            resetLabel="Restablecer filtros de búsqueda"
+            helpfulTips={[
+              "Intenta buscar por el nombre o apellido del docente.",
+              "Verifica que la especialidad seleccionada coincida con los profesores activos.",
+              "Puedes dar de alta un nuevo docente con el botón 'Nuevo Docente' de la cabecera.",
+            ]}
+          />
         </div>
       )}
 
@@ -733,6 +739,29 @@ export function TeacherListView({
           onOpenEditModal={(t) => setEditModalTeacher(t)}
         />
       )}
+
+      {/* Modal Destructivo para Desvincular Profesor */}
+      <DestructiveConfirmModal
+        isOpen={Boolean(teacherToDelete)}
+        onClose={() => setTeacherToDelete(null)}
+        onConfirm={handleExecuteDeleteTeacher}
+        title="¿Desvincular al docente de la institución?"
+        entityName={
+          teacherToDelete
+            ? `${teacherToDelete.membership.user.firstName} ${teacherToDelete.membership.user.lastName} (${teacherToDelete.specialty || "Especialidad General"})`
+            : undefined
+        }
+        description="Esta acción desvinculará al profesor del cuerpo docente del colegio y removerá todas las asignaturas que tiene a cargo en los diferentes cursos."
+        requiredConfirmationText="DESVINCULAR"
+        confirmButtonText="Confirmar Desvinculación"
+        cancelButtonText="Cancelar y Mantener Docente"
+        isLoading={isDeleting !== null}
+        warningDetails={[
+          "Se liberarán las asignaturas asignadas a este docente, requiriendo un nuevo profesor a cargo.",
+          "Se revocarán sus credenciales de acceso institucional al portal académico.",
+          "Las calificaciones ya ingresadas por este docente se conservarán en el historial de actas por auditoría ministerial.",
+        ]}
+      />
     </div>
   );
 }

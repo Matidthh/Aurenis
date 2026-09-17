@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TablePagination } from "@/components/ui/table";
 import { TableRowSkeleton, Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Search,
   Filter,
@@ -24,6 +25,8 @@ import {
 import { CreateStudentModal } from "./create-student-modal";
 import { StudentProfileModal, StudentProfileData } from "./student-profile-modal";
 import { EditStudentModal } from "./edit-student-modal";
+import { useToast } from "@/components/ui/toast";
+import { DestructiveConfirmModal } from "@/components/ui/destructive-confirm-modal";
 
 interface RawEnrollment {
   id: string;
@@ -112,11 +115,13 @@ export function StudentListView({
   isLoading = false,
 }: StudentListViewProps) {
   const router = useRouter();
+  const { toastDelete, toastError } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCourse, setSelectedCourse] = useState<string>("ALL");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [selectedStudentForView, setSelectedStudentForView] = useState<StudentProfileData | null>(null);
   const [selectedStudentForEdit, setSelectedStudentForEdit] = useState<StudentProfileData | null>(null);
+  const [studentToDelete, setStudentToDelete] = useState<{ id: string; name: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
@@ -203,21 +208,74 @@ export function StudentListView({
     return filteredStudents.slice(start, start + itemsPerPage);
   }, [filteredStudents, currentPage, itemsPerPage]);
 
-  const handleDeleteEnrollment = async (studentProfileId: string) => {
-    if (!confirm("¿Estás seguro de dar de baja la matrícula de este estudiante?")) return;
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setSelectedCourse("ALL");
+    setSelectedStatus("ALL");
+    setCurrentPage(1);
+  };
+
+  const activeFilterList = useMemo(() => {
+    const list: Array<{ id: string; label: string; value: string; onRemove?: () => void }> = [];
+    if (searchTerm) {
+      list.push({
+        id: "search",
+        label: "Búsqueda",
+        value: searchTerm,
+        onRemove: () => setSearchTerm(""),
+      });
+    }
+    if (selectedCourse !== "ALL") {
+      const courseName = courses.find((c) => c.id === selectedCourse)?.name || selectedCourse;
+      list.push({
+        id: "course",
+        label: "Curso",
+        value: courseName,
+        onRemove: () => setSelectedCourse("ALL"),
+      });
+    }
+    if (selectedStatus !== "ALL") {
+      const statusLabel =
+        selectedStatus === "ACTIVE"
+          ? "Activos"
+          : selectedStatus === "SUSPENDED"
+          ? "Suspendidos"
+          : "Inactivos";
+      list.push({
+        id: "status",
+        label: "Estado",
+        value: statusLabel,
+        onRemove: () => setSelectedStatus("ALL"),
+      });
+    }
+    return list;
+  }, [searchTerm, selectedCourse, selectedStatus, courses]);
+
+  const handleExecuteDeleteEnrollment = async () => {
+    if (!studentToDelete) return;
+    const studentProfileId = studentToDelete.id;
+    const studentName = studentToDelete.name;
     setIsDeleting(studentProfileId);
     try {
       const res = await fetch(`/api/schools/${schoolSlug}/students/${studentProfileId}`, {
         method: "DELETE",
       });
       if (res.ok) {
+        toastDelete("Matrícula dada de baja", {
+          description: `El estudiante ${studentName} ha sido retirado del curso correctamente.`,
+        });
+        setStudentToDelete(null);
         router.refresh();
       } else {
         const d = await res.json();
-        alert(d.error || "No se pudo dar de baja la matrícula");
+        toastError("No se pudo dar de baja la matrícula", {
+          description: d.error || "Ocurrió un error inesperado en el servidor.",
+        });
       }
     } catch {
-      alert("Error al comunicarse con el servidor");
+      toastError("Fallo de comunicación", {
+        description: "No se pudo conectar con el servidor para procesar la baja.",
+      });
     } finally {
       setIsDeleting(null);
     }
@@ -412,7 +470,12 @@ export function StudentListView({
                           id={`btn-delete-student-${enrollment.id}`}
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteEnrollment(enrollment.student.id)}
+                          onClick={() =>
+                            setStudentToDelete({
+                              id: enrollment.student.id,
+                              name: `${enrollment.student.membership.user.firstName} ${enrollment.student.membership.user.lastName}`,
+                            })
+                          }
                           disabled={isDeleting === enrollment.student.id}
                           className="text-slate-400 hover:text-red-600 dark:hover:text-red-400"
                           title="Dar de baja matrícula"
@@ -426,16 +489,31 @@ export function StudentListView({
               })}
 
               {filteredStudents.length === 0 && !isLoading && (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-400 space-y-2">
-                    <p className="font-semibold text-slate-600 dark:text-slate-300">
-                      No se encontraron estudiantes
-                    </p>
-                    <p className="text-xs">
-                      Intenta ajustando los criterios de búsqueda o registra un nuevo estudiante con el botón superior.
-                    </p>
-                  </td>
-                </tr>
+                <EmptyState
+                  inTable
+                  colSpan={6}
+                  variant={searchTerm ? "search" : activeFilterList.length > 0 ? "filter" : "no-data"}
+                  title={
+                    searchTerm || activeFilterList.length > 0
+                      ? "No encontramos estudiantes con esos criterios"
+                      : "Aún no hay estudiantes matriculados"
+                  }
+                  description={
+                    searchTerm || activeFilterList.length > 0
+                      ? "Revisa si el RUN o nombre está bien escrito, o restablece los filtros activos para ver todo el alumnado."
+                      : "Comienza registrando la primera matrícula de la institución para asignarle curso y apoderados."
+                  }
+                  searchTerm={searchTerm}
+                  onResetFilters={activeFilterList.length > 0 ? handleResetFilters : undefined}
+                  resetLabel="Restablecer todos los filtros"
+                  activeFilters={activeFilterList}
+                  helpfulTips={[
+                    "Verifica que el RUN no contenga caracteres extraños o errores tipográficos.",
+                    "Prueba buscando sólo por el primer apellido o por los primeros dígitos del RUN.",
+                    "Comprueba si el estudiante pertenece a otro curso o nivel escolar.",
+                    "Si el alumno no figura en el sistema, puedes matricularlo pulsando 'Nuevo Estudiante'.",
+                  ]}
+                />
               )}
             </tbody>
           </table>
@@ -498,6 +576,25 @@ export function StudentListView({
           }}
         />
       )}
+
+      {/* Modal Destructivo para Dar de Baja / Eliminar Alumno */}
+      <DestructiveConfirmModal
+        isOpen={Boolean(studentToDelete)}
+        onClose={() => setStudentToDelete(null)}
+        onConfirm={handleExecuteDeleteEnrollment}
+        title="¿Dar de baja la matrícula del alumno?"
+        entityName={studentToDelete?.name}
+        description="Esta operación retirará al estudiante del curso y congelará su historial de asistencia y calificaciones en las actas vigentes."
+        requiredConfirmationText="DAR DE BAJA"
+        confirmButtonText="Confirmar Baja del Alumno"
+        cancelButtonText="Cancelar y Mantener Alumno"
+        isLoading={isDeleting !== null}
+        warningDetails={[
+          "Se revocarán los accesos del estudiante al portal académico.",
+          "El registro ministerial de matrícula quedará archivado como inactivo.",
+          "Esta acción requiere autorización de Inspectoría o Dirección Escolar.",
+        ]}
+      />
     </div>
   );
 }

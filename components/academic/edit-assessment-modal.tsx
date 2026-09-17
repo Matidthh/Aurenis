@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Save, Calendar, Percent, BookOpen } from "lucide-react";
 import { GradeMatrixAssessment } from "@/lib/services/grade.service";
+import { DestructiveConfirmModal } from "@/components/ui/destructive-confirm-modal";
 
 interface EditAssessmentModalProps {
   isOpen: boolean;
@@ -38,6 +39,7 @@ export function EditAssessmentModal({
   const [isPublished, setIsPublished] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,11 +111,11 @@ export function EditAssessmentModal({
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm(`¿Estás seguro de eliminar la columna "${assessment.title}" (${assessment.code}) y todas sus calificaciones registradas?`)) {
-      return;
-    }
+  const handleRequestDelete = () => {
+    setIsConfirmDeleteOpen(true);
+  };
 
+  const handleExecuteDelete = async () => {
     try {
       setIsDeleting(true);
       setError(null);
@@ -127,6 +129,7 @@ export function EditAssessmentModal({
         throw new Error(json.error || "Error al eliminar evaluación");
       }
 
+      setIsConfirmDeleteOpen(false);
       onDeleted(assessment.id);
       onClose();
     } catch (err: any) {
@@ -235,7 +238,7 @@ export function EditAssessmentModal({
           <Button
             type="button"
             variant="ghost"
-            onClick={handleDelete}
+            onClick={handleRequestDelete}
             disabled={isDeleting || isSubmitting}
             className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/40"
           >
@@ -254,6 +257,24 @@ export function EditAssessmentModal({
           </div>
         </ModalFooter>
       </form>
+
+      {/* Modal Destructivo para Eliminar Columna de Evaluación */}
+      <DestructiveConfirmModal
+        isOpen={isConfirmDeleteOpen}
+        onClose={() => setIsConfirmDeleteOpen(false)}
+        onConfirm={handleExecuteDelete}
+        title="¿Eliminar columna de evaluación y calificaciones?"
+        entityName={assessment ? `${assessment.title} (${assessment.code})` : undefined}
+        description="Esta acción eliminará de forma permanente la evaluación seleccionada y todas las notas asignadas a los alumnos en esta columna. Los promedios del curso se recalcularán automáticamente."
+        requiredConfirmationText="ELIMINAR"
+        confirmButtonText="Confirmar Eliminación de Columna"
+        cancelButtonText="Cancelar y Conservar"
+        isLoading={isDeleting}
+        warningDetails={[
+          "Se borrarán todas las notas registradas para cada estudiante en este casillero.",
+          "El promedio acumulado y ponderado de los estudiantes se actualizará de inmediato.",
+        ]}
+      />
     </Modal>
   );
 }

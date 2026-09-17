@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, UserPlus, AlertCircle, CheckCircle2 } from "lucide-react";
 import { validateRut, validateEmail, formatRut } from "@/lib/utils/rut";
+import { useToast } from "@/components/ui/toast";
 
 interface CourseOption {
   id: string;
@@ -30,6 +31,7 @@ export function CreateStudentModal({
   courses,
 }: CreateStudentModalProps) {
   const router = useRouter();
+  const { toastSuccess, toastError } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -109,12 +111,18 @@ export function CreateStudentModal({
       }
 
       setSuccess(true);
+      toastSuccess("Estudiante matriculado con éxito", {
+        description: `${formData.firstName} ${formData.lastName} ha sido registrado correctamente.`,
+      });
       setTimeout(() => {
         setIsOpen(false);
         router.refresh();
       }, 700);
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
+      toastError("Error al matricular estudiante", {
+        description: err.message || "Por favor verifica los datos ingresados.",
+      });
     } finally {
       setIsLoading(false);
     }

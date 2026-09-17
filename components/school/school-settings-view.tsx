@@ -30,6 +30,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CreatePeriodModal } from "./create-period-modal";
 import { EditPeriodModal } from "./edit-period-modal";
+import { DestructiveConfirmModal } from "@/components/ui/destructive-confirm-modal";
+import { useToast } from "@/components/ui/toast";
 
 export interface AcademicPeriodItem {
   id: string;
@@ -99,6 +101,9 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
   // Modals state
   const [isCreatePeriodOpen, setIsCreatePeriodOpen] = useState(false);
   const [editingPeriod, setEditingPeriod] = useState<AcademicPeriodItem | null>(null);
+  const [periodToClose, setPeriodToClose] = useState<AcademicPeriodItem | null>(null);
+  const [isClosingPeriod, setIsClosingPeriod] = useState(false);
+  const { toastSuccess, toastError, toastDelete } = useToast();
 
   // Calculate if there are unsaved changes in general settings
   const hasUnsavedChanges = useMemo(() => {
@@ -227,27 +232,48 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
     }
   };
 
-  // Quick toggle closed state
-  const handleToggleClosedPeriod = async (periodId: string, currentClosed: boolean) => {
+  // Request toggle or modal for closed state (Actas de Calificaciones)
+  const handleRequestToggleClosedPeriod = (period: AcademicPeriodItem) => {
+    if (!period.isClosed) {
+      // Acción Crítica Destructiva: Requiere confirmación con modal destructivo
+      setPeriodToClose(period);
+    } else {
+      // Reabrir actas: confirmación directa segura
+      handleExecuteToggleClosedPeriod(period.id, false);
+    }
+  };
+
+  const handleExecuteToggleClosedPeriod = async (periodId: string, closing: boolean) => {
+    setIsClosingPeriod(true);
     try {
       const res = await fetch(`/api/schools/${schoolId}/academic-periods/${periodId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isClosed: !currentClosed }),
+        body: JSON.stringify({ isClosed: closing }),
       });
 
-      if (!res.ok) throw new Error("Error al modificar estado de cierre");
+      if (!res.ok) throw new Error("Error al modificar estado de cierre del período");
 
       setPeriods((prev) =>
-        prev.map((p) => (p.id === periodId ? { ...p, isClosed: !currentClosed } : p))
+        prev.map((p) => (p.id === periodId ? { ...p, isClosed: closing } : p))
       );
 
-      setToastMessage({
-        type: "success",
-        text: !currentClosed ? "Actas de calificaciones bloqueadas (solo lectura)." : "Actas de calificaciones desbloqueadas para edición.",
-      });
+      if (closing) {
+        toastDelete("Actas de Calificaciones Cerradas", {
+          description: "El período ha sido sellado. Las actas ahora están en modo de solo lectura para auditoría.",
+        });
+      } else {
+        toastSuccess("Actas Reabiertas", {
+          description: "Se han desbloqueado las actas para rectificación o ingreso extemporáneo.",
+        });
+      }
+      setPeriodToClose(null);
     } catch (err: any) {
-      setToastMessage({ type: "error", text: err.message });
+      toastError("Error al procesar actas", {
+        description: err.message || "No se pudo actualizar el estado de las actas.",
+      });
+    } finally {
+      setIsClosingPeriod(false);
     }
   };
 
@@ -1034,7 +1060,8 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
                       <td className="py-3.5 px-3 text-center">
                         <button
                           type="button"
-                          onClick={() => handleToggleClosedPeriod(p.id, p.isClosed)}
+                          id={`btn-toggle-actas-${p.id}`}
+                          onClick={() => handleRequestToggleClosedPeriod(p)}
                           className="inline-flex items-center gap-1 cursor-pointer transition"
                           title={p.isClosed ? "Click para desbloquear actas" : "Click para bloquear actas"}
                         >
@@ -1111,6 +1138,29 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
           }}
         />
       )}
+
+      {/* Modal Destructivo para Cerrar Actas de Calificaciones */}
+      <DestructiveConfirmModal
+        isOpen={Boolean(periodToClose)}
+        onClose={() => setPeriodToClose(null)}
+        onConfirm={() => {
+          if (periodToClose) {
+            handleExecuteToggleClosedPeriod(periodToClose.id, true);
+          }
+        }}
+        title="¿Cerrar y sellar actas de calificaciones?"
+        entityName={periodToClose ? `Período Académico: ${periodToClose.name} (${periodToClose.year})` : undefined}
+        description="Al cerrar las actas, el período se congelará formalmente. Ningún docente podrá crear evaluaciones adicionales ni modificar notas registradas sin autorización ministerial o de dirección."
+        requiredConfirmationText="CERRAR ACTAS"
+        confirmButtonText="Confirmar Cierre de Actas"
+        cancelButtonText="Cancelar y Mantener Abiertas"
+        isLoading={isClosingPeriod}
+        warningDetails={[
+          "Se bloqueará la edición en la matriz de calificaciones de todos los cursos vinculados a este período.",
+          "Las actas se sellarán en formato de solo lectura para auditoría y emisión de certificados.",
+          "Cualquier modificación posterior requerirá la reapertura explícita del período por un administrador del sistema.",
+        ]}
+      />
     </div>
   );
 }

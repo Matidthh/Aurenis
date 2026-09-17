@@ -27,6 +27,7 @@ import {
 import { UserSessionInfo, SchoolContextInfo } from "./types";
 import { Breadcrumbs } from "./breadcrumbs";
 import { cn } from "@/lib/utils/cn";
+import { NetworkIndicatorPill } from "@/components/ui/network-status-card";
 import { DEMO_ROLES, DemoRoleAccount, executeRoleSwitch, findMatchingDemoRole } from "@/lib/auth/demo-roles";
 
 interface HeaderProps {
@@ -407,6 +408,11 @@ export function Header({
               <span className="max-w-[130px] truncate">{schoolContext.schoolName}</span>
             </Link>
           )}
+
+          {/* Indicador discreto de estado de conectividad */}
+          <div className="hidden sm:flex items-center">
+            <NetworkIndicatorPill />
+          </div>
 
           {/* 3.3 BOTÓN DE TEMA CLARO / OSCURO */}
           <button

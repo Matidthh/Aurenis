@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Edit3, AlertCircle, CheckCircle2 } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 
 interface CourseOption {
   id: string;
@@ -56,6 +57,7 @@ export function EditStudentModal({
   onSuccess,
 }: EditStudentModalProps) {
   const router = useRouter();
+  const { toastSuccess, toastError } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -96,6 +98,9 @@ export function EditStudentModal({
       }
 
       setSuccess(true);
+      toastSuccess("Cambios guardados con éxito", {
+        description: `La ficha de ${formData.firstName} ${formData.lastName} ha sido actualizada.`,
+      });
       setTimeout(() => {
         setSuccess(false);
         onClose();
@@ -104,6 +109,9 @@ export function EditStudentModal({
       }, 700);
     } catch (err: any) {
       setError(err.message || "Ocurrió un error inesperado.");
+      toastError("Error al guardar cambios", {
+        description: err.message || "No se pudo actualizar la información del estudiante.",
+      });
     } finally {
       setIsLoading(false);
     }

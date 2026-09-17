@@ -27,7 +27,13 @@ import {
   Skeleton,
   CardSkeleton,
   SmoothTransition,
+  EmptyState,
+  NetworkErrorBanner,
+  NetworkStatusCard,
+  NetworkIndicatorPill,
+  useToast,
 } from "@/components/ui";
+import { useNetworkStatus } from "@/lib/network/network-context";
 import {
   Palette,
   CheckCircle2,
@@ -46,6 +52,7 @@ import {
   Layers,
   RefreshCw,
   Zap,
+  Bell,
 } from "lucide-react";
 
 export default function DesignSystemShowcasePage() {
@@ -57,6 +64,21 @@ export default function DesignSystemShowcasePage() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isSimulatingHttp, setIsSimulatingHttp] = useState(false);
   const [skeletonVariant, setSkeletonVariant] = useState<"shimmer" | "pulse">("shimmer");
+
+  // Estados interactivos para Empty States ilustrados
+  const [emptyStateVariant, setEmptyStateVariant] = useState<"search" | "filter" | "no-data">("search");
+  const [emptySearchTerm, setEmptySearchTerm] = useState("Astrid Lindgren");
+  const [emptyFilters, setEmptyFilters] = useState([
+    { id: "1", label: "Curso", value: "4° Medio B" },
+    { id: "2", label: "Estado", value: "Suspendidos" },
+  ]);
+
+  // Contexto de Red e Indicadores de Conexión
+  const { triggerNetworkError, clearError, isOnline, activeError } = useNetworkStatus();
+  const [selectedSimulatedCard, setSelectedSimulatedCard] = useState<"500" | "503" | "offline">("500");
+
+  // Sistema de Toasts accesibles
+  const { toastSuccess, toastDelete, toastError, toastInfo, clearAllToasts, toasts } = useToast();
 
   const simulateHttpRequest = () => {
     setIsSimulatingHttp(true);
@@ -675,6 +697,478 @@ export default function DesignSystemShowcasePage() {
               </div>
             </div>
           </SmoothTransition>
+        </div>
+      </section>
+
+      {/* SECCIÓN 7: VISTAS EXPLICATIVAS CON ILUSTRACIONES Y ESTADOS VACÍOS (EMPTY STATES) */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-brand-600" />
+              <span>7. Estados Vacíos Ilustrados y Textos Guía Amigables</span>
+            </h2>
+            <p className="text-xs text-slate-500">
+              Vistas explicativas con ilustraciones vectoriales amigables, instrucciones de búsqueda paso a paso y botón directo para restablecer filtros.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setEmptyStateVariant("search")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                emptyStateVariant === "search"
+                  ? "bg-brand-600 text-white"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+              }`}
+            >
+              Variante Búsqueda
+            </button>
+            <button
+              onClick={() => setEmptyStateVariant("filter")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                emptyStateVariant === "filter"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+              }`}
+            >
+              Variante Filtro
+            </button>
+            <button
+              onClick={() => setEmptyStateVariant("no-data")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                emptyStateVariant === "no-data"
+                  ? "bg-slate-700 text-white"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+              }`}
+            >
+              Variante Sin Registros
+            </button>
+          </div>
+        </div>
+
+        {/* Demo interactivo: dentro de una tabla real y con botón de restablecer filtros */}
+        <div className="space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="relative flex-1 sm:w-72">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Simular búsqueda..."
+                  value={emptySearchTerm}
+                  onChange={(e) => setEmptySearchTerm(e.target.value)}
+                  className="w-full text-xs rounded-xl pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+              {emptySearchTerm && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setEmptySearchTerm("")}
+                  className="text-xs text-slate-500"
+                >
+                  Limpiar
+                </Button>
+              )}
+            </div>
+
+            <div className="text-xs text-slate-500 flex items-center gap-2">
+              <span>Filtros simulados activos:</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">
+                {emptyFilters.length} activos
+              </span>
+              {emptyFilters.length === 0 && (
+                <button
+                  onClick={() =>
+                    setEmptyFilters([
+                      { id: "1", label: "Curso", value: "4° Medio B" },
+                      { id: "2", label: "Estado", value: "Suspendidos" },
+                    ])
+                  }
+                  className="text-brand-600 underline font-semibold text-xs"
+                >
+                  Restaurar filtros de prueba
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Renderizado dentro de tabla simulada */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 dark:bg-slate-850/60 border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <tr>
+                    <th className="px-6 py-3.5">Estudiante</th>
+                    <th className="px-6 py-3.5">RUN</th>
+                    <th className="px-6 py-3.5">Curso</th>
+                    <th className="px-6 py-3.5">Estado</th>
+                    <th className="px-6 py-3.5 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <EmptyState
+                    inTable
+                    colSpan={5}
+                    variant={emptyStateVariant}
+                    title={
+                      emptyStateVariant === "no-data"
+                        ? "Aún no hay registros en este módulo"
+                        : emptySearchTerm || emptyFilters.length > 0
+                        ? "No encontramos registros que coincidan con tu búsqueda"
+                        : "No se encontraron resultados"
+                    }
+                    description={
+                      emptyStateVariant === "no-data"
+                        ? "Comienza creando el primer registro con el botón de acción superior."
+                        : "Intenta ajustando los términos de búsqueda o restablece los filtros para ver todos los datos."
+                    }
+                    searchTerm={emptySearchTerm}
+                    onResetFilters={
+                      emptySearchTerm || emptyFilters.length > 0
+                        ? () => {
+                            setEmptySearchTerm("");
+                            setEmptyFilters([]);
+                          }
+                        : undefined
+                    }
+                    resetLabel="Restablecer todos los filtros"
+                    activeFilters={emptyFilters.map((f) => ({
+                      ...f,
+                      onRemove: () => setEmptyFilters((prev) => prev.filter((item) => item.id !== f.id)),
+                    }))}
+                    helpfulTips={[
+                      "Verifica que el nombre o identificación no tenga errores tipográficos.",
+                      "Comprueba si los filtros de curso o estado están restringiendo los resultados.",
+                      "Prueba utilizando términos más cortos o palabras clave generales.",
+                    ]}
+                  />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN 8: ALERTAS DE RED, INDICADORES DE FALLO DE CONEXIÓN Y CÓDIGOS HTTP 500 / 503 */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-500" />
+              <span>8. Alertas de Conexión, Códigos HTTP 500/503 y Reintento Manual</span>
+            </h2>
+            <p className="text-xs text-slate-500">
+              Banner global de fallo de red, manejo preventivo de errores 500 y 503 con opción de reintento manual y registro discreto en consola.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <NetworkIndicatorPill />
+          </div>
+        </div>
+
+        {/* Panel de prueba interactiva */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">1. Simular HTTP 500</span>
+              <Badge variant="danger" size="sm">Internal Error</Badge>
+            </div>
+            <p className="text-xs text-slate-500">
+              Desencadena una alerta global para fallos críticos de backend con registro en consola y botón de reintento manual.
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                triggerNetworkError({
+                  type: "server_500",
+                  statusCode: 500,
+                  message: "Error interno del servidor (HTTP 500)",
+                  detail: "Fallo temporal en la base de datos de calificaciones.",
+                  endpoint: "/api/schools/calificaciones/sync",
+                })
+              }
+              className="w-full text-xs font-semibold border-red-300 dark:border-red-900 text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/40"
+            >
+              Disparar Error 500
+            </Button>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">2. Simular HTTP 503</span>
+              <Badge variant="warning" size="sm">Service Unavailable</Badge>
+            </div>
+            <p className="text-xs text-slate-500">
+              Simula indisponibilidad temporal por alta demanda o sincronización, orientando al usuario a reintentar.
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                triggerNetworkError({
+                  type: "service_unavailable_503",
+                  statusCode: 503,
+                  message: "Servicio no disponible temporalmente (HTTP 503)",
+                  detail: "El clúster de base de datos se encuentra bajo mantenimiento programado.",
+                  endpoint: "/api/schools/asistencia/batch",
+                })
+              }
+              className="w-full text-xs font-semibold border-amber-300 dark:border-amber-900 text-amber-800 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40"
+            >
+              Disparar Error 503
+            </Button>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">3. Simular Desconexión</span>
+              <Badge variant="neutral" size="sm">Offline</Badge>
+            </div>
+            <p className="text-xs text-slate-500">
+              Simula pérdida de conexión a internet o cable de red desconectado con botón manual para reintentar.
+            </p>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() =>
+                triggerNetworkError({
+                  type: "offline",
+                  message: "Sin conexión a internet detectada",
+                  detail: "Comprueba tu señal Wi-Fi o datos móviles antes de reintentar.",
+                })
+              }
+              className="w-full text-xs font-semibold text-slate-700 dark:text-slate-200"
+            >
+              Disparar Estado Offline
+            </Button>
+          </div>
+        </div>
+
+        {/* Demostración de Componente NetworkStatusCard embebido */}
+        <div className="space-y-2 pt-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Vista embebida en página / bloque (NetworkStatusCard):
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedSimulatedCard("500")}
+                className={`text-xs px-2.5 py-1 rounded-lg font-medium transition ${
+                  selectedSimulatedCard === "500"
+                    ? "bg-red-600 text-white"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                Card 500
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedSimulatedCard("503")}
+                className={`text-xs px-2.5 py-1 rounded-lg font-medium transition ${
+                  selectedSimulatedCard === "503"
+                    ? "bg-amber-600 text-white"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                Card 503
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedSimulatedCard("offline")}
+                className={`text-xs px-2.5 py-1 rounded-lg font-medium transition ${
+                  selectedSimulatedCard === "offline"
+                    ? "bg-slate-700 text-white"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                Card Offline
+              </button>
+            </div>
+          </div>
+
+          <NetworkStatusCard
+            type={
+              selectedSimulatedCard === "503"
+                ? "service_unavailable_503"
+                : selectedSimulatedCard === "offline"
+                ? "offline"
+                : "server_500"
+            }
+            statusCode={selectedSimulatedCard === "503" ? 503 : selectedSimulatedCard === "500" ? 500 : undefined}
+            onRetry={async () => {
+              await new Promise((r) => setTimeout(r, 700));
+            }}
+          />
+        </div>
+      </section>
+
+      {/* 9. NOTIFICACIONES EMERGENTES (TOASTS) */}
+      <section id="section-design-system-toasts" className="space-y-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/80 dark:text-emerald-300">
+            <Bell className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              9. Notificaciones Emergentes (Toasts) y Confirmaciones
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Confirmación inmediata de acciones guardadas o eliminadas, temporizador exacto de 3 segundos, cola controlada (máx. 4) y alto contraste WCAG AA.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                Disparadores Interactivos de Notificación
+              </span>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                Prueba cada tipo semántico. Observa la barra de progreso de 3 segundos y el descarte automático.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">
+                Activos en cola: {toasts.length} / 4
+              </span>
+              {toasts.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllToasts}
+                  className="text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400 font-semibold px-2 py-1"
+                >
+                  Limpiar todos
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* Disparador de Guardado / Éxito */}
+            <button
+              type="button"
+              id="btn-toast-trigger-save"
+              onClick={() => {
+                toastSuccess("Ficha guardada exitosamente", {
+                  description: "Los cambios curriculares y de matrícula fueron sincronizados.",
+                });
+              }}
+              className="flex items-center gap-3 p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/80 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-900 dark:text-emerald-100 hover:bg-emerald-100/70 dark:hover:bg-emerald-950/40 transition text-left group"
+            >
+              <div className="p-2 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold">Toast Guardado</div>
+                <div className="text-[11px] text-emerald-700 dark:text-emerald-300/80">3s auto-descarte</div>
+              </div>
+            </button>
+
+            {/* Disparador de Eliminado */}
+            <button
+              type="button"
+              id="btn-toast-trigger-delete"
+              onClick={() => {
+                toastDelete("Registro eliminado", {
+                  description: "La matrícula fue dada de baja del libro escolar.",
+                });
+              }}
+              className="flex items-center gap-3 p-3.5 rounded-xl border border-rose-200 dark:border-rose-800/80 bg-rose-50/50 dark:bg-rose-950/20 text-rose-900 dark:text-rose-100 hover:bg-rose-100/70 dark:hover:bg-rose-950/40 transition text-left group"
+            >
+              <div className="p-2 rounded-lg bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300">
+                <Trash2 className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold">Toast Eliminado</div>
+                <div className="text-[11px] text-rose-700 dark:text-rose-300/80">Confirmación crítica</div>
+              </div>
+            </button>
+
+            {/* Disparador de Error */}
+            <button
+              type="button"
+              id="btn-toast-trigger-error"
+              onClick={() => {
+                toastError("Error al procesar solicitud", {
+                  description: "No se pudieron guardar las calificaciones por conflicto de concurrencia.",
+                });
+              }}
+              className="flex items-center gap-3 p-3.5 rounded-xl border border-red-200 dark:border-red-800/80 bg-red-50/50 dark:bg-red-950/20 text-red-900 dark:text-red-100 hover:bg-red-100/70 dark:hover:bg-red-950/40 transition text-left group"
+            >
+              <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-300">
+                <XCircle className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold">Toast Error</div>
+                <div className="text-[11px] text-red-700 dark:text-red-300/80">Alerta de operación</div>
+              </div>
+            </button>
+
+            {/* Disparador Informativo con Acción */}
+            <button
+              type="button"
+              id="btn-toast-trigger-info"
+              onClick={() => {
+                toastInfo("Informe disponible para descarga", {
+                  description: "El libro de asistencia mensual ha sido generado en PDF.",
+                  action: {
+                    label: "Descargar informe",
+                    onClick: () => {
+                      toastSuccess("Descarga iniciada", { description: "Guardando archivo en descargas." });
+                    },
+                  },
+                });
+              }}
+              className="flex items-center gap-3 p-3.5 rounded-xl border border-blue-200 dark:border-blue-800/80 bg-blue-50/50 dark:bg-blue-950/20 text-blue-900 dark:text-blue-100 hover:bg-blue-100/70 dark:hover:bg-blue-950/40 transition text-left group"
+            >
+              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">
+                <Zap className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-bold">Toast con Acción</div>
+                <div className="text-[11px] text-blue-700 dark:text-blue-300/80">Interactividad rica</div>
+              </div>
+            </button>
+          </div>
+
+          {/* Características Técnicas del Sistema de Notificaciones */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 space-y-1">
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                Auto-descarte 3 Segundos
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Temporizador visual lineal (`shrinkWidth 3000ms`) que expira y remueve automáticamente la notificación sin requerir interacción manual.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 space-y-1">
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-brand-500" />
+                Accesibilidad y Contraste WCAG
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Semántica `role=&quot;status&quot;`, `aria-live=&quot;polite&quot;`, botones cerrables con etiqueta y contraste auditado &gt; 4.5:1 en modo claro y oscuro.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 space-y-1">
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-purple-500" />
+                Cola de Mensajes Controlada
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Límite estricto de 4 notificaciones simultáneas en pantalla. Al recibir nuevas, la más antigua se descarta ordenadamente para no obstruir el viewport.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 

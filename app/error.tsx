@@ -1,100 +1,108 @@
 "use client";
 
-import { useEffect } from "react";
-import { AlertTriangle, RotateCcw, ServerCrash, Wrench, WifiOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AlertTriangle, RotateCcw, ServerCrash, Radio, WifiOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { discreetLogger } from "@/lib/api/discreet-logger";
 
 export default function ErrorPage({
   error,
   reset,
 }: {
-  error: Error & { digest?: string; status?: number };
+  error: Error & { digest?: string; statusCode?: number };
   reset: () => void;
 }) {
-  const is503 = error.message?.includes("503") || (error as any).status === 503;
-  const is500 = error.message?.includes("500") || (error as any).status === 500 || (!is503 && !navigator?.onLine);
-  const isOffline = typeof navigator !== "undefined" && !navigator.onLine;
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  // Detección de posibles códigos 500 / 503 en el mensaje o digest
+  const is503 =
+    error.statusCode === 503 ||
+    error.message?.includes("503") ||
+    error.message?.toLowerCase().includes("unavailable");
+
+  const is500 =
+    error.statusCode === 500 ||
+    error.message?.includes("500") ||
+    (!is503 && Boolean(error.digest));
 
   useEffect(() => {
-    if (is500) {
-      discreetLogger.logHttp500({
-        errorCode: error.digest,
-        errorMessage: error.message,
-      });
-    } else if (is503) {
-      discreetLogger.logHttp503({
-        errorCode: error.digest,
-        errorMessage: error.message,
-      });
-    } else if (isOffline) {
-      discreetLogger.logNetworkError({
-        errorMessage: error.message,
-      });
-    } else {
-      discreetLogger.logHttpError({
-        errorMessage: error.message,
-      });
-    }
-  }, [error, is500, is503, isOffline]);
+    // Registro discreto y formateado en consola
+    const timestamp = new Date().toLocaleTimeString();
+    const code = is503 ? 503 : is500 ? 500 : "ERROR";
+    console.error(
+      `%c[Aurenis ErrorHandler] (${timestamp}) Fallo capturado [HTTP ${code}]`,
+      "color: #ef4444; font-weight: bold;",
+      {
+        message: error.message,
+        digest: error.digest,
+        stack: error.stack,
+      }
+    );
+  }, [error, is500, is503]);
 
-  const config = isOffline
-    ? {
-        icon: <WifiOff className="w-7 h-7 text-amber-600 dark:text-amber-400" />,
-        bgIcon: "bg-amber-100 dark:bg-amber-950/50",
-        badge: "SIN CONEXIÓN",
-        badgeVariant: "warning" as const,
-        title: "Sin conexión a Internet",
-        description: "No fue posible comunicarse con los servicios de Aurenis. Compruebe su conexión de red.",
-      }
-    : is503
-    ? {
-        icon: <Wrench className="w-7 h-7 text-orange-600 dark:text-orange-400" />,
-        bgIcon: "bg-orange-100 dark:bg-orange-950/50",
-        badge: "HTTP 503 · MANTENIMIENTO",
-        badgeVariant: "warning" as const,
-        title: "Servicio no disponible temporalmente",
-        description: "El sistema se encuentra en proceso de mantenimiento o alta demanda. Intente nuevamente en unos minutos.",
-      }
-    : {
-        icon: <ServerCrash className="w-7 h-7 text-red-600 dark:text-red-400" />,
-        bgIcon: "bg-red-100 dark:bg-red-950/50",
-        badge: "HTTP 500 · ERROR DEL SERVIDOR",
-        badgeVariant: "danger" as const,
-        title: "Error interno del servidor",
-        description: "Se ha producido un inconveniente al procesar la solicitud. Nuestro equipo técnico ha sido notificado.",
-      };
+  const handleRetry = async () => {
+    setIsRetrying(true);
+    console.info("%c[Aurenis ErrorHandler] Ejecutando reintento manual...", "color: #3b82f6; font-weight: bold;");
+    try {
+      reset();
+    } finally {
+      setTimeout(() => setIsRetrying(false), 500);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white">
       <div className="max-w-md w-full text-center space-y-6 bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl">
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto ${config.bgIcon}`}>
-          {config.icon}
+        <div
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-xs ${
+            is503
+              ? "bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400"
+              : "bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400"
+          }`}
+        >
+          {is503 ? <Radio className="w-7 h-7" /> : <ServerCrash className="w-7 h-7" />}
         </div>
+
         <div className="space-y-2">
-          <div className="flex justify-center">
-            <Badge variant={config.badgeVariant} size="sm">
-              {config.badge}
+          <div className="flex items-center justify-center gap-2">
+            <h1 className="text-xl font-bold tracking-tight">
+              {is503
+                ? "Servicio temporalmente no disponible"
+                : is500
+                ? "Error interno del servidor"
+                : "Ocurrió un error inesperado"}
+            </h1>
+            <Badge variant={is503 ? "warning" : "danger"} size="sm" dot>
+              {is503 ? "HTTP 503" : is500 ? "HTTP 500" : "Fallo"}
             </Badge>
           </div>
-          <h1 className="text-xl font-bold tracking-tight">{config.title}</h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            {config.description}
+
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            {is503
+              ? "El servidor está ocupado o realizando una sincronización de seguridad. Espera un momento y reintenta."
+              : "Se produjo una excepción no prevista en el servidor. Tus datos locales se mantienen seguros."}
           </p>
+
+          {error.digest && (
+            <p className="text-[11px] text-slate-400 font-mono pt-1">
+              Código de rastreo: {error.digest}
+            </p>
+          )}
         </div>
+
         <div className="pt-2">
           <Button
+            id="btn-error-retry"
             variant="primary"
-            onClick={() => reset()}
-            leftIcon={<RotateCcw className="w-4 h-4" />}
-            className="w-full"
+            isLoading={isRetrying}
+            onClick={handleRetry}
+            leftIcon={<RotateCcw className={`w-4 h-4 ${isRetrying ? "animate-spin" : ""}`} />}
+            className="w-full font-semibold"
           >
-            Reintentar operación
+            {isRetrying ? "Reintentando conexión..." : "Reintentar"}
           </Button>
         </div>
       </div>
     </div>
   );
 }
-

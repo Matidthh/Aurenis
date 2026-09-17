@@ -9,7 +9,7 @@ export const SECURITY_HEADERS: Record<string, string> = {
   // 1. Strict-Transport-Security (HSTS) - Forzar HTTPS durante 1 año incluyendo subdominios
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
 
-  // 2. Content-Security-Policy (CSP) - Protección estricta contra XSS, inyección de código y framing malicioso
+  // 2. Content-Security-Policy (CSP) - Protección estricta con soporte explícito para iframe de AI Studio y Cloud Run
   "Content-Security-Policy": [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
@@ -17,7 +17,7 @@ export const SECURITY_HEADERS: Record<string, string> = {
     "img-src 'self' data: https: blob:",
     "font-src 'self' data: https:",
     "connect-src 'self' https: wss:",
-    "frame-ancestors 'self' https://ai.studio https://*.google.com",
+    "frame-ancestors 'self' https://ai.studio https://*.google.com https://*.googleusercontent.com https://*.run.app https://*.aistudio.google.com",
     "form-action 'self'",
     "base-uri 'self'",
     "object-src 'none'",
@@ -26,19 +26,13 @@ export const SECURITY_HEADERS: Record<string, string> = {
   // 3. X-Content-Type-Options - Prevenir sniffing de tipos MIME
   "X-Content-Type-Options": "nosniff",
 
-  // 4. X-Frame-Options - Protección anti-clickjacking
-  "X-Frame-Options": "SAMEORIGIN",
-
-  // 5. X-XSS-Protection - Filtro XSS heredado
-  "X-XSS-Protection": "1; mode=block",
-
-  // 6. Referrer-Policy - Protección de privacidad en enlaces salientes
+  // 4. Referrer-Policy - Protección de privacidad en enlaces salientes
   "Referrer-Policy": "strict-origin-when-cross-origin",
 
-  // 7. Permissions-Policy - Restricción de APIs del navegador no requeridas
+  // 5. Permissions-Policy - Restricción de APIs del navegador no requeridas
   "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 
-  // 8. Server - Identificador genérico sin revelación de versión ni stack tecnológico
+  // 6. Server - Identificador genérico sin revelación de versión ni stack tecnológico
   "Server": "Aurenis-Gateway",
 };
 
@@ -67,6 +61,9 @@ export function applySecurityHeaders<T = any>(response: NextResponse<T>): NextRe
   for (const forbidden of FORBIDDEN_VERSION_HEADERS) {
     response.headers.delete(forbidden);
   }
+
+  // Asegurar que x-frame-options no bloquee el renderizado en iframe dentro de AI Studio
+  response.headers.delete("x-frame-options");
 
   return response;
 }

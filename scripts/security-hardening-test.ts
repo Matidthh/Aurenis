@@ -197,16 +197,16 @@ async function runTests() {
     message: `X-Content-Type-Options: ${xContentTypeHeader}`,
   });
 
-  // Test 3.4: X-Frame-Options & Referrer-Policy
-  const xFrameHeader = probeRes.headers.get("x-frame-options") || SECURITY_HEADERS["X-Frame-Options"];
+  // Test 3.4: Protección Anti-Framing (CSP frame-ancestors), Referrer-Policy y Permissions-Policy
+  const hasFrameAncestors = Boolean(cspHeader && cspHeader.includes("frame-ancestors"));
   const referrerPolicy = probeRes.headers.get("referrer-policy") || SECURITY_HEADERS["Referrer-Policy"];
   const permissionsPolicy = probeRes.headers.get("permissions-policy") || SECURITY_HEADERS["Permissions-Policy"];
 
   results.push({
-    name: "Cabeceras Complementarias: X-Frame-Options, Referrer-Policy y Permissions-Policy",
+    name: "Cabeceras Complementarias: Anti-Framing CSP, Referrer-Policy y Permissions-Policy",
     category: "SECURITY_HEADERS",
-    passed: Boolean(xFrameHeader && referrerPolicy && permissionsPolicy),
-    message: `X-Frame-Options: ${xFrameHeader}, Referrer-Policy: ${referrerPolicy}`,
+    passed: Boolean(hasFrameAncestors && referrerPolicy && permissionsPolicy),
+    message: `CSP frame-ancestors: ${hasFrameAncestors}, Referrer-Policy: ${referrerPolicy}`,
   });
 
   // =========================================================================
