@@ -13,7 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { MOCK_TEACHERS, TeacherData } from "../components/teachers/teacher-management-mockup";
+import { MOCK_TEACHERS, TeacherData } from "../components/features/teachers/teacher-management-mockup";
 import { createTenantPrisma } from "../lib/db/tenant-extension";
 import { PERMISSIONS } from "../lib/constants/permissions";
 import { ROLE_PRESETS, DEFAULT_SCHOOL_ROLES } from "../lib/constants/roles";

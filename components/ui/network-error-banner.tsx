@@ -27,9 +27,22 @@ export interface NetworkErrorBannerProps {
    * @default true
    */
   sticky?: boolean;
+
+  /**
+   * Variante de presentación visual:
+   * - "top-banner": Barra ancha superior de cabecera/pantalla completa
+   * - "inline": Tarjeta contenida para incrustar en el flujo de la página
+   * - "floating": Notificación flotante emergente fija en esquina inferior
+   * @default "top-banner"
+   */
+  variant?: "top-banner" | "inline" | "floating";
 }
 
-export function NetworkErrorBanner({ className, sticky = true }: NetworkErrorBannerProps) {
+export function NetworkErrorBanner({
+  className,
+  sticky = true,
+  variant = "top-banner",
+}: NetworkErrorBannerProps) {
   const { activeError, clearError, retryLastOperation, isRetrying, isOnline } = useNetworkStatus();
   const [showDetails, setShowDetails] = useState(false);
 
@@ -89,8 +102,13 @@ export function NetworkErrorBanner({ className, sticky = true }: NetworkErrorBan
       role="alert"
       aria-live="assertive"
       className={cn(
-        "w-full z-50 transition-all duration-200 shadow-md border-b",
-        sticky && "sticky top-0",
+        "z-50 transition-all duration-200",
+        variant === "top-banner" && [
+          "w-full shadow-md border-b",
+          sticky && "sticky top-0",
+        ],
+        variant === "inline" && "w-full rounded-2xl border shadow-xs my-3",
+        variant === "floating" && "fixed bottom-5 right-5 max-w-lg w-[calc(100%-2.5rem)] rounded-2xl border shadow-xl",
         config.themeClasses,
         className
       )}
