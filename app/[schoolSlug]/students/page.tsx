@@ -5,7 +5,7 @@ import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
-import { StudentDirectoryManager } from "@/components/students/student-directory-manager";
+import { StudentDirectoryManager } from "@/components/features/students/student-directory-manager";
 
 export default async function StudentsPage({
   params,

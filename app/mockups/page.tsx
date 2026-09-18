@@ -13,27 +13,27 @@ import {
   StudentTableMockup,
   StudentMockupData,
   MOCK_STUDENTS,
-} from "@/components/students/student-table-mockup";
-import { StudentFullProfileModal } from "@/components/students/student-full-profile-modal";
-import { StudentRegistrationModal } from "@/components/students/student-registration-modal";
+} from "@/components/features/students/student-table-mockup";
+import { StudentFullProfileModal } from "@/components/features/students/student-full-profile-modal";
+import { StudentRegistrationModal } from "@/components/features/students/student-registration-modal";
 import {
   TeacherManagementMockup,
   TeacherData,
   MOCK_TEACHERS,
-} from "@/components/teachers/teacher-management-mockup";
-import { SubjectAssignmentModal } from "@/components/teachers/subject-assignment-modal";
-import { TeacherEditProfileModal } from "@/components/teachers/teacher-edit-profile-modal";
-import { NewTeacherModal } from "@/components/teachers/new-teacher-modal";
-import { GradeMatrixSpreadsheet } from "@/components/grades/grade-matrix-spreadsheet";
+} from "@/components/features/teachers/teacher-management-mockup";
+import { SubjectAssignmentModal } from "@/components/features/teachers/subject-assignment-modal";
+import { TeacherEditProfileModal } from "@/components/features/teachers/teacher-edit-profile-modal";
+import { NewTeacherModal } from "@/components/features/teachers/new-teacher-modal";
+import { GradeMatrixSpreadsheet } from "@/components/features/academic/grade-matrix-spreadsheet";
 import { ReplicatedHero } from "@/components/landing/replicated-hero";
 import { FigmaTokenInspector } from "@/components/mockups/figma-token-inspector";
 import { FigmaCommentsDrawer } from "@/components/mockups/figma-comments-drawer";
-import { StudentRiskModal } from "@/components/mockups/student-risk-modal";
-import { QuickAttendanceModal } from "@/components/mockups/quick-attendance-modal";
+import { StudentRiskModal } from "@/components/features/students/student-risk-modal";
+import { QuickAttendanceModal } from "@/components/features/academic/quick-attendance-modal";
 import {
   CriteriaChecklistModal,
   CriterionItem,
-} from "@/components/mockups/criteria-checklist-modal";
+} from "@/components/features/academic/criteria-checklist-modal";
 import { INITIAL_COMMENTS, MockupComment } from "@/components/mockups/mockup-data";
 import {
   ArrowLeft,

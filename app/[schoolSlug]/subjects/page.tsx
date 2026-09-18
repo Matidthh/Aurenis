@@ -3,7 +3,7 @@ import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
-import { CreateSubjectModal } from "@/components/academic/create-subject-modal";
+import { CreateSubjectModal } from "@/components/features/academic/create-subject-modal";
 import { Layers, Clock, GraduationCap } from "lucide-react";
 
 export default async function SubjectsPage({

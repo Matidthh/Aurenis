@@ -167,39 +167,48 @@ const DEMO_USERS: Record<string, DemoUser> = {
  * Autentica un usuario con email y contraseña.
  * Retorna el usuario y sus membresías activas.
  */
-export async function authenticateUser(email: string, plainPassword: string) {
-  const normalizedEmail = email.toLowerCase().trim();
+export async function authenticateUser(identifier: string, plainPassword: string) {
+  const normalized = identifier.toLowerCase().trim();
+  const cleanRut = normalized.replace(/\./g, "").toUpperCase();
 
-  let user: DemoUser | null = null;
-  if (isDatabaseConfigured()) {
-    try {
-      user = await prisma.user.findUnique({
-        where: { email: normalizedEmail },
-        include: {
-          memberships: {
-            where: { isActive: true },
-            include: {
-              school: {
-                include: { settings: true },
-              },
-              role: {
-                include: {
-                  permissions: {
-                    include: { permission: true },
-                  },
+  let user: any = null;
+  try {
+    // Intentar buscar por correo electrónico o por RUT nacional
+    user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: normalized },
+          { rutOrNationalId: cleanRut },
+          { rutOrNationalId: normalized },
+        ],
+      },
+      include: {
+        memberships: {
+          where: { isActive: true },
+          include: {
+            school: {
+              include: { settings: true },
+            },
+            role: {
+              include: {
+                permissions: {
+                  include: { permission: true },
                 },
               },
             },
           },
         },
-      });
-    } catch {
-      // Fallback a demo si falla la conexión
-    }
+      },
+    });
+  } catch {
+    // Fallback a demo si falla la conexión
   }
 
   if (!user) {
-    const demo = DEMO_USERS[normalizedEmail];
+    // También verificar en demo users por email o por RUT
+    const demo = DEMO_USERS[normalized] || Object.values(DEMO_USERS).find(
+      (d: any) => d.rutOrNationalId && (d.rutOrNationalId.toLowerCase() === cleanRut.toLowerCase() || d.rutOrNationalId.toLowerCase() === normalized)
+    );
     if (demo) {
       const validPasswords = [
         demo.password,

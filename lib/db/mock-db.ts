@@ -1299,6 +1299,28 @@ export function createMockPrisma() {
         }
         return cnt;
       },
+      async upsert(args: any) {
+        let found: any = null;
+        if (args?.where?.assessmentId_enrollmentId) {
+          const { assessmentId, enrollmentId } = args.where.assessmentId_enrollmentId;
+          for (const g of store.grades.values()) {
+            if (g.assessmentId === assessmentId && g.enrollmentId === enrollmentId) {
+              found = g;
+              break;
+            }
+          }
+        } else if (args?.where?.id) {
+          found = store.grades.get(args.where.id);
+        }
+        if (found) {
+          Object.assign(found, args.update || {}, { updatedAt: new Date() });
+          return hydrateGrade(found, args.include);
+        }
+        const id = `grade-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        const item = { ...args.create, id, createdAt: new Date(), updatedAt: new Date() };
+        store.grades.set(id, item);
+        return hydrateGrade(item, args.include);
+      },
     },
 
     attendanceRecord: {
@@ -1462,6 +1484,10 @@ export function createMockPrisma() {
     if (include.role) {
       const r = store.roles.get(m.roleId);
       res.role = r ? hydrateRole(r, include.role.include) : null;
+    }
+    if (include.teacherProfile) {
+      const tp = Array.from(store.teacherProfiles.values()).find((t) => t.membershipId === m.id);
+      res.teacherProfile = tp || null;
     }
     return res;
   }

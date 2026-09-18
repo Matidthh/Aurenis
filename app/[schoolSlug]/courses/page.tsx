@@ -4,7 +4,7 @@ import { listCoursesByYear } from "@/lib/services/academic.service";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
-import { CreateCourseModal } from "@/components/academic/create-course-modal";
+import { CreateCourseModal } from "@/components/features/academic/create-course-modal";
 import { BookOpen, Users, Layers } from "lucide-react";
 
 export default async function CoursesPage({

@@ -5,7 +5,7 @@ import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Award } from "lucide-react";
-import { GradesPageClient } from "@/components/grades/grades-page-client";
+import { GradesPageClient } from "@/components/features/academic/grades-page-client";
 
 export default async function GradesPage({
   params,

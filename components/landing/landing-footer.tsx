@@ -23,9 +23,14 @@ export function LandingFooter() {
               Plataforma de gestión escolar multi-institucional para Chile. Libros de clases digitales, planilla de notas de alta velocidad, seguimiento académico Decreto 67 y portales para toda la comunidad educativa.
             </p>
 
-            <div className="flex items-center gap-2 text-[11px] text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800/60 px-3.5 py-2 rounded-xl w-fit">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Acreditado Circular 30 • Superintendencia de Educación</span>
+            <div className="flex items-center gap-2 text-[11px] text-blue-300 font-bold bg-blue-950/60 border border-blue-800/60 px-3.5 py-2 rounded-xl w-fit">
+              <ShieldCheck className="w-4 h-4 text-blue-400 shrink-0" />
+              <span>Estructurado para Registro Escolar · Notas y Asistencia</span>
+            </div>
+
+            <div className="pt-2 text-xs text-slate-300 space-y-1">
+              <div>Contacto directo: <a href="mailto:contacto@aurenis.cl" className="text-blue-400 hover:underline font-semibold">contacto@aurenis.cl</a></div>
+              <div className="text-slate-400">Región de Valparaíso, Chile</div>
             </div>
           </div>
 
@@ -97,26 +102,21 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          {/* Columna 4: Instituciones & Figma */}
+          {/* Columna 4: Establecimientos & Accesos */}
           <div className="space-y-4">
             <h4 className="font-bold text-white text-sm tracking-tight">
-              Diseño & Colegios
+              Establecimientos & Accesos
             </h4>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/mockups" className="text-slate-400 hover:text-white font-medium transition flex items-center gap-1">
-                  <span>Prototipo Interactivo Figma</span>
+                <Link href="/colegio-san-jose/dashboard" className="text-slate-400 hover:text-white font-medium transition flex items-center gap-1">
+                  <span>Colegio San José (Demo)</span>
                   <ArrowUpRight className="w-3 h-3 text-blue-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/mockups" className="text-slate-400 hover:text-white font-medium transition">
-                  Tokens de Diseño & Colores
-                </Link>
-              </li>
-              <li>
-                <Link href="/colegio-san-jose/dashboard" className="text-slate-400 hover:text-white font-medium transition">
-                  Colegio San José (Demo)
+                <Link href="/dashboard" className="text-slate-400 hover:text-white font-medium transition">
+                  Portal Directivo Central
                 </Link>
               </li>
               <li>
@@ -136,12 +136,12 @@ export function LandingFooter() {
         {/* Barra de Copyright */}
         <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-medium">
           <div>
-            © 2026 Aurenis Inc. Todos los derechos reservados. Diseñado para liceos y colegios de Chile.
+            © 2026 AURENIS. Plataforma de Gestión Escolar. Desarrollada para colegios y liceos de Chile.
           </div>
 
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1 text-slate-400">
-              Hecho con dedicación para la educación pública y subvencionada
+              Desarrollado con dedicación para la gestión pedagógica y directiva
             </span>
           </div>
         </div>

@@ -39,47 +39,83 @@
   }
 }
 
-/* Clases utilitarias de Neumorfismo (Soft UI) con efecto sobresaliente pronunciado */
+/* Clases utilitarias de Neumorfismo (Soft UI) con efecto sobresaliente táctil */
 .neumo-card {
   background: #f0f4f8;
-  box-shadow: 12px 12px 24px #cbd5e1, -12px -12px 24px #ffffff;
+  box-shadow: 10px 10px 22px #cbd5e1, -10px -10px 22px #ffffff;
   border-radius: 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.9);
   transition: all 0.25s ease;
 }
 
 .neumo-card:hover {
-  box-shadow: 14px 14px 28px #b8c4d4, -14px -14px 28px #ffffff;
+  box-shadow: 12px 12px 26px #b8c4d4, -12px -12px 26px #ffffff;
 }
 
 .neumo-card-flat {
   background: #f0f4f8;
-  box-shadow: 6px 6px 14px #cbd5e1, -6px -6px 14px #ffffff;
+  box-shadow: 5px 5px 12px #cbd5e1, -5px -5px 12px #ffffff;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.75);
 }
 
 .neumo-inset {
   background: #f0f4f8;
-  box-shadow: inset 5px 5px 10px #cbd5e1, inset -5px -5px 10px #ffffff;
+  box-shadow: inset 4px 4px 8px #cbd5e1, inset -4px -4px 8px #ffffff;
   border-radius: 0.875rem;
 }
 
 .neumo-button {
   background: #f0f4f8;
-  box-shadow: 6px 6px 14px #cbd5e1, -6px -6px 14px #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  transition: all 0.2s ease;
+  box-shadow: 5px 5px 12px #cbd5e1, -5px -5px 12px #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .neumo-button:hover {
-  box-shadow: 8px 8px 18px #cbd5e1, -8px -8px 18px #ffffff;
+  box-shadow: 7px 7px 16px #b8c4d4, -7px -7px 16px #ffffff;
   transform: translateY(-1px);
 }
 
 .neumo-button:active, .neumo-button-active {
-  box-shadow: inset 4px 4px 8px #cbd5e1, inset -4px -4px 8px #ffffff;
+  box-shadow: inset 3px 3px 6px #cbd5e1, inset -3px -3px 6px #ffffff;
   transform: translateY(0);
+}
+
+/* Soporte modo oscuro para elementos Neumórficos */
+.dark .neumo-card {
+  background: #1e293b;
+  box-shadow: 8px 8px 20px #090d16, -8px -8px 20px #2d3d52;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .neumo-card:hover {
+  box-shadow: 10px 10px 24px #090d16, -10px -10px 24px #2d3d52;
+}
+
+.dark .neumo-card-flat {
+  background: #1e293b;
+  box-shadow: 5px 5px 12px #090d16, -5px -5px 12px #2d3d52;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dark .neumo-inset {
+  background: #1e293b;
+  box-shadow: inset 4px 4px 8px #090d16, inset -4px -4px 8px #2d3d52;
+}
+
+.dark .neumo-button {
+  background: #1e293b;
+  box-shadow: 4px 4px 10px #090d16, -4px -4px 10px #2d3d52;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark .neumo-button:hover {
+  box-shadow: 6px 6px 14px #090d16, -6px -6px 14px #2d3d52;
+}
+
+.dark .neumo-button:active, .dark .neumo-button-active {
+  box-shadow: inset 3px 3px 6px #090d16, inset -3px -3px 6px #2d3d52;
 }
 
 .font-handwriting {

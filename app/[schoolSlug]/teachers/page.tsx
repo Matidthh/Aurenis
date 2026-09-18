@@ -5,7 +5,7 @@ import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap } from "lucide-react";
-import { TeacherDirectoryManager } from "@/components/teachers/teacher-directory-manager";
+import { TeacherDirectoryManager } from "@/components/features/teachers/teacher-directory-manager";
 
 export default async function TeachersPage({
   params,

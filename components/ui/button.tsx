@@ -10,7 +10,8 @@ export type ButtonVariant =
   | "outline"
   | "ghost"
   | "danger"
-  | "success";
+  | "success"
+  | "neumorphic";
 
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
@@ -21,6 +22,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loadingText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  neumorphic?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -36,30 +38,34 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       disabled,
       type = "button",
+      neumorphic = false,
       ...props
     },
     ref
   ) => {
     // 1. Estilos por Variante (WCAG AA validado)
     const variantStyles: Record<ButtonVariant, string> = {
-      // Brand 600 (#016fc7) con texto blanco tiene ratio de contraste 4.82:1 (PASS AA)
+      // Primary sólido Brand 600 (#2563eb / #1d4ed8) con texto blanco de alto contraste (4.82:1)
       primary:
-        "text-brand-700 hover:text-brand-800 active:text-brand-900",
+        "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white shadow-xs font-semibold",
       // Secondary neutral para acciones de apoyo
       secondary:
-        "text-slate-800 dark:text-slate-100",
+        "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-medium",
       // Outline con borde de alto contraste
       outline:
-        "text-slate-700 dark:text-slate-200",
+        "border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200 font-medium",
       // Ghost para navegación limpia o barras de herramientas
       ghost:
-        "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white",
-      // Danger (#dc2626) con texto blanco: 4.7:1 (PASS AA)
+        "bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium",
+      // Danger (#dc2626) sólido con texto blanco (4.7:1)
       danger:
-        "text-red-600 hover:text-red-700 active:text-red-800",
-      // Success (#059669) con texto blanco: 4.65:1 (PASS AA)
+        "bg-red-600 hover:bg-red-700 active:bg-red-800 text-white shadow-xs font-semibold",
+      // Success (#059669) sólido con texto blanco (4.65:1)
       success:
-        "text-emerald-600 hover:text-emerald-700 active:text-emerald-800",
+        "bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-xs font-semibold",
+      // Neumorphic para botones seleccionados con relieve Soft UI táctil
+      neumorphic:
+        "neumo-button text-slate-800 dark:text-slate-100 font-medium",
     };
 
     // 2. Estilos por Tamaño (Cumple objetivo táctil en móvil de min 44px)
@@ -72,9 +78,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // 3. Foco Visible Accesible (WCAG 2.4.7 Focus Visible)
     const focusStyles =
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900";
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900";
 
     const isDisabled = disabled || isLoading;
+    const isNeumo = variant === "neumorphic" || neumorphic;
 
     return (
       <button
@@ -84,10 +91,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={isLoading}
         aria-disabled={isDisabled}
         className={cn(
-          "inline-flex items-center justify-center transition-all duration-150 select-none cursor-pointer whitespace-nowrap neumo-button",
+          "inline-flex items-center justify-center transition-all duration-150 select-none cursor-pointer whitespace-nowrap",
           variantStyles[variant],
           sizeStyles[size],
           focusStyles,
+          isNeumo && "neumo-button",
           isDisabled && "opacity-50 cursor-not-allowed pointer-events-none shadow-none",
           className
         )}

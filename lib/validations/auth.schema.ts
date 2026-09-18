@@ -1,9 +1,8 @@
 import { z } from "zod";
-import { StrictEmailSchema } from "./common.schema";
 
 export const LoginSchema = z.object({
-  email: StrictEmailSchema,
-  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres"),
+  email: z.string().min(2, "Ingresa tu correo institucional o RUT"),
+  password: z.string().min(1, "La contraseña es requerida"),
 });
 
 export type LoginInput = z.infer<typeof LoginSchema>;

@@ -2,7 +2,7 @@ import { requireTenantContext } from "@/lib/tenant/context";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
-import { SchoolSettingsView } from "@/components/school/school-settings-view";
+import { SchoolSettingsView } from "@/components/features/school/school-settings-view";
 import { getSchoolFullDetails } from "@/lib/services/school.service";
 import { Settings, ShieldCheck } from "lucide-react";
 
