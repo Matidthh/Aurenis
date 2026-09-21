@@ -1,6 +1,6 @@
 # INFORME DE CONTROL VERTICAL Y AUDITORÍA RBAC
 **Plataforma Educativa Aurenis — Control de Acceso Basado en Roles**
-**Fecha de Auditoría:** 2026-09-15T13:46:05.842Z
+**Fecha de Auditoría:** 2026-09-21T13:19:37.135Z
 **Estado:** APROBADO (100% Criterios de Aceptación Cumplidos)
 **Total de Pruebas Evaluadas:** 22
 **Pruebas Aprobadas:** 22
@@ -122,6 +122,6 @@ Los resultados de las 22 evaluaciones confirman que la plataforma Aurenis cuenta
 ## 6. Verificación Criptográfica de Integridad
 
 - **Algoritmo de Hash:** SHA-256
-- **Firma Digital del Reporte:** `843059063baa73fa9ea53f03aeea765bedc8cbcf9323a738dfee9ddbc11d5731`
+- **Firma Digital del Reporte:** `820a0262a5e4b3769a629a144e22a07b03eead0ee865a54b7606dbcd6edbc65c`
 - **Validador:** Aurenis Security Engine (RBAC Verification Module)
 - **Certificación:** CONFORME Y APROBADO PARA PRODUCCIÓN

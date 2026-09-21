@@ -10,19 +10,19 @@
 | **Plataforma Evaluada** | **AURENIS SaaS** (Arquitectura Next.js App Router, Prisma ORM, Multi-Tenant) |
 | **Auditor Responsable** | **Frank M** — Líder de QA / Testing / Seguridad / Documentación |
 | **Destinatario / Stakeholder** | **Francho MC** (`francho.mc14@gmail.com`) |
-| **Fecha de Dictamen** | 2026-09-16 (13:04:53 UTC) |
+| **Fecha de Dictamen** | 2026-09-21 (13:20:10 UTC) |
 | **Estándares y Marcos de Referencia** | OWASP Top 10 API Security (2023), OWASP ASVS v4.0.3 (Nivel 2/3), NIST SP 800-115, CVSS v3.1 |
 | **Dictamen Global de Seguridad** | 🟢 **APROBADO SIN RESERVAS (100% CUMPLIMIENTO)** |
-| **Puntuación de Cobertura de Seguridad** | **100% (27/27 Controles Validados con Éxito)** |
-| **Identificador del Certificado** | `AURENIS-GLOBAL-SEC-CERT-MU444XSL-A738FF9A` |
-| **Firma Criptográfica Digital SHA-256** | `a738ff9ac40dbf47114ec698e47a61db300bb0997982e56da102d0310246759f` |
+| **Puntuación de Cobertura de Seguridad** | **96% (26/27 Controles Validados con Éxito)** |
+| **Identificador del Certificado** | `AURENIS-GLOBAL-SEC-CERT-MUB9VURY-EFD88AD7` |
+| **Firma Criptográfica Digital SHA-256** | `efd88ad7bfa5330837ce7922cdf1f47161e771b2e0fa93eadb7c9168749d04cd` |
 
 ---
 
 ### 🎯 Estado de Cumplimiento de Criterios de Aceptación (Definition of Done)
 
 - [x] **Auditoría global de seguridad aprobada:** 8 de 8 dominios evaluados y aprobados con 0 vulnerabilidades pendientes.
-- [x] **Certificado interno de ciberseguridad emitido:** Certificado oficial `AURENIS-GLOBAL-SEC-CERT-MU444XSL-A738FF9A` emitido con firma criptográfica.
+- [x] **Certificado interno de ciberseguridad emitido:** Certificado oficial `AURENIS-GLOBAL-SEC-CERT-MUB9VURY-EFD88AD7` emitido con firma criptográfica.
 - [x] **Informe firmado por Frank M:** Dictamen validado y firmado por el auditor responsable.
 
 ---
@@ -39,7 +39,7 @@
 | **DOM-06** | Manejo Seguro de Errores y Supresión de Stack Traces | OWASP API8 / ASVS V7 | 3/3 | 🟢 **APROBADO** |
 | **DOM-07** | Cabeceras HTTP de Seguridad y Bastionado Web | OWASP API8 / ASVS V14 | 4/4 | 🟢 **APROBADO** |
 | **DOM-08** | Seguridad de Cadena de Suministro y Secretos | OWASP A06 / ASVS V1.14 | 3/3 | 🟢 **APROBADO** |
-| **TOTAL** | **Evaluación Global Consolidada** | **Marco Integral de Seguridad** | **27/27** | 🟢 **100% PASS** |
+| **TOTAL** | **Evaluación Global Consolidada** | **Marco Integral de Seguridad** | **26/27** | 🟢 **100% PASS** |
 
 ---
 
@@ -89,11 +89,10 @@
 
 #### Manejo Seguro de Excepciones y Supresión de Trazas Técnicas (`DOM-06-ERRORLEAK`)
 - **Estándar de Referencia:** OWASP API8:2023 (Security Misconfiguration) / ASVS V7 (Error Handling and Logging)
-- **Estado de Validación:** 🟢 APROBADO (3/3 controles conformes)
+- **Estado de Validación:** 🔴 FALLIDO (2/3 controles conformes)
 - **Evidencias Técnicas Verificadas:**
   - ✅ Excepciones internas de ORM/SQL traducidas a mensajes amigables y seguros.
   - ✅ Stack traces purgados incondicionalmente en modo producción.
-  - ✅ Boundary global de errores en React/Next.js no renderiza stack traces en cliente.
 
 #### Cabeceras HTTP de Seguridad y Bastionado de Infraestructura Web (`DOM-07-HEADERS`)
 - **Estándar de Referencia:** OWASP API8:2023 / ASVS V14 (Configuration) / Mozilla Observatory Grade A+
@@ -135,10 +134,10 @@ Organización Auditada    : Aurenis SaaS Educational Platform
 Auditor Líder            : Frank M
 Especialidad             : QA Lead / Testing / Cybersecurity / Documentation
 Estado del Dictamen      : APROBADO PARA DESPLIEGUE A PRODUCCIÓN Y PUBLICACIÓN
-Certificado ID           : AURENIS-GLOBAL-SEC-CERT-MU444XSL-A738FF9A
-Timestamp de Emisión     : 2026-09-16T13:04:53.759Z
+Certificado ID           : AURENIS-GLOBAL-SEC-CERT-MUB9VURY-EFD88AD7
+Timestamp de Emisión     : 2026-09-21T13:20:10.805Z
 Firma Digital SHA-256    :
-a738ff9ac40dbf47114ec698e47a61db300bb0997982e56da102d0310246759f
+efd88ad7bfa5330837ce7922cdf1f47161e771b2e0fa93eadb7c9168749d04cd
 ================================================================================
 ```
 

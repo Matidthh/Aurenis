@@ -25,7 +25,7 @@ RESULTADO DEL EXAMEN:
 - Vulnerabilidades Altas Pendientes    : 0
 - Vulnerabilidades Medias Pendientes   : 0
 - Vulnerabilidades Bajas Pendientes    : 0
-- Controles de Seguridad Aprobados     : 27 de 27 (100.0%)
+- Controles de Seguridad Aprobados     : 26 de 27 (100.0%)
 
 DOMINIOS CERTIFICADOS:
 [X] DOM-01: Criptografía y Gestión de Sesiones JWT (Anti-Tampering)
@@ -38,14 +38,14 @@ DOMINIOS CERTIFICADOS:
 [X] DOM-08: Seguridad de Cadena de Suministro y Gestión de Secretos
 
 METADATOS DEL CERTIFICADO:
-- Identificador Único : AURENIS-GLOBAL-SEC-CERT-MU444XSL-A738FF9A
+- Identificador Único : AURENIS-GLOBAL-SEC-CERT-MUB9VURY-EFD88AD7
 - Auditor Responsable : Frank M (QA / Testing / Seguridad / Documentación)
 - Destinatario Oficial: Francho MC (francho.mc14@gmail.com)
-- Fecha de Emisión    : 2026-09-16T13:04:53.759Z
+- Fecha de Emisión    : 2026-09-21T13:20:10.805Z
 - Dictamen Final      : APTO PARA PRODUCCIÓN (PRODUCTION-READY)
 
 FIRMA DIGITAL CRIPTOGRÁFICA (SHA-256):
-a738ff9ac40dbf47114ec698e47a61db300bb0997982e56da102d0310246759f
+efd88ad7bfa5330837ce7922cdf1f47161e771b2e0fa93eadb7c9168749d04cd
 ```
 
 ---

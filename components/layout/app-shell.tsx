@@ -6,6 +6,7 @@ import { Header } from "./header";
 import { CommandPalette } from "./command-palette";
 import { NavItem, UserSessionInfo, SchoolContextInfo } from "./types";
 import { NetworkErrorBanner } from "@/components/ui/network-error-banner";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -139,7 +140,9 @@ export function AppShell({
           id="main-content-container"
           className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-200"
         >
-          {children}
+          <ErrorBoundary boundaryName="AppShellContent">
+            {children}
+          </ErrorBoundary>
         </main>
       </div>
 

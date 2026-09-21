@@ -30,6 +30,12 @@
     --radius: 1rem;
   }
 
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
   body {
     color: var(--foreground);
     background: var(--background);
@@ -37,6 +43,49 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Optimización Táctil Global: eliminación de retardo de 300ms en smartphones */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Normalización de inputs numéricos en WebKit y Firefox */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* Normalización de botones en Firefox */
+  button::-moz-focus-inner,
+  [type="button"]::-moz-focus-inner,
+  [type="reset"]::-moz-focus-inner,
+  [type="submit"]::-moz-focus-inner {
+    border-style: none;
+    padding: 0;
+  }
+
+  /* Soporte de sticky positioning para Safari / WebKit */
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+/* Soporte universal de scrollbars para Firefox y Chromium/WebKit */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
 }
 
 /* Clases utilitarias de Neumorfismo (Soft UI) con efecto sobresaliente táctil */

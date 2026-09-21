@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Inbox, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { EmptyState } from "./empty-state";
 
 // 1. Table Root Wrapper
 export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> {
@@ -165,27 +166,45 @@ export function TableCaption({
 export interface TableEmptyStateProps {
   title?: string;
   description?: string;
+  searchTerm?: string;
+  activeFilterCount?: number;
+  onClearFilters?: () => void;
+  clearButtonText?: string;
+  icon?: "search" | "inbox" | "filter" | React.ReactNode;
   action?: React.ReactNode;
+  secondaryAction?: React.ReactNode;
   colSpan?: number;
+  compact?: boolean;
 }
 
 export function TableEmptyState({
   title = "No se encontraron registros",
   description = "No hay datos disponibles para mostrar en esta vista.",
+  searchTerm,
+  activeFilterCount,
+  onClearFilters,
+  clearButtonText = "Limpiar filtros",
+  icon,
   action,
+  secondaryAction,
   colSpan = 1,
+  compact = false,
 }: TableEmptyStateProps) {
   return (
     <tr>
       <td colSpan={colSpan} className="p-8 text-center">
-        <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-2.5">
-          <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-            <Inbox className="w-6 h-6" />
-          </div>
-          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">{title}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 text-center">{description}</p>
-          {action && <div className="pt-2">{action}</div>}
-        </div>
+        <EmptyState
+          icon={icon || (searchTerm || onClearFilters ? "search" : "inbox")}
+          title={title}
+          description={description}
+          searchTerm={searchTerm}
+          activeFilterCount={activeFilterCount}
+          onClearFilters={onClearFilters}
+          clearButtonText={clearButtonText}
+          action={action}
+          secondaryAction={secondaryAction}
+          compact={compact}
+        />
       </td>
     </tr>
   );
@@ -292,6 +311,12 @@ export interface DataTableProps<T> {
   onSelectionChange?: (selectedIds: string[]) => void;
   emptyTitle?: string;
   emptyDescription?: string;
+  emptySearchTerm?: string;
+  activeFilterCount?: number;
+  onClearFilters?: () => void;
+  clearButtonText?: string;
+  emptyAction?: React.ReactNode;
+  emptyIcon?: "search" | "inbox" | "filter" | React.ReactNode;
   containerClassName?: string;
   className?: string;
 }
@@ -305,6 +330,12 @@ export function DataTable<T>({
   onSelectionChange,
   emptyTitle = "No se encontraron registros",
   emptyDescription = "No hay elementos para mostrar en esta tabla.",
+  emptySearchTerm,
+  activeFilterCount,
+  onClearFilters,
+  clearButtonText = "Limpiar filtros",
+  emptyAction,
+  emptyIcon,
   containerClassName,
   className,
 }: DataTableProps<T>) {
@@ -417,7 +448,17 @@ export function DataTable<T>({
       </TableHeader>
       <TableBody>
         {sortedData.length === 0 ? (
-          <TableEmptyState title={emptyTitle} description={emptyDescription} colSpan={colSpanCount} />
+          <TableEmptyState
+            title={emptyTitle}
+            description={emptyDescription}
+            searchTerm={emptySearchTerm}
+            activeFilterCount={activeFilterCount}
+            onClearFilters={onClearFilters}
+            clearButtonText={clearButtonText}
+            action={emptyAction}
+            icon={emptyIcon}
+            colSpan={colSpanCount}
+          />
         ) : (
           sortedData.map((item) => {
             const id = keyExtractor(item);

@@ -22,9 +22,13 @@ import {
   BookOpen,
   GraduationCap,
   FileSpreadsheet,
+  ServerCrash,
+  SlidersHorizontal,
+  Globe,
+  Database,
 } from "lucide-react";
 
-export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "fluid";
+export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "mobile-se" | "fluid";
 export type ActiveTab =
   | "hero-landing"
   | "grade-matrix"
@@ -35,7 +39,11 @@ export type ActiveTab =
   | "student-profile"
   | "student-registration"
   | "executive"
-  | "teacher";
+  | "teacher"
+  | "error-resilience"
+  | "device-matrix"
+  | "browser-matrix"
+  | "e2e-flow";
 
 interface FigmaToolbarProps {
   activeTab: ActiveTab;
@@ -206,18 +214,78 @@ export function FigmaToolbar({
               <School className="w-3.5 h-3.5" />
               <span>Dashboard Directivo</span>
             </button>
+
+            <button
+              onClick={() => onTabChange("error-resilience")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "error-resilience"
+                  ? "bg-rose-600 text-white shadow-xs"
+                  : "text-rose-400 hover:text-rose-200 hover:bg-rose-950/40"
+              }`}
+            >
+              <ServerCrash className="w-3.5 h-3.5" />
+              <span>Resiliencia & Errores 500</span>
+              <span className="text-[10px] px-1 py-0.2 rounded bg-rose-500/30 text-rose-200 font-bold hidden sm:inline">
+                DoD UI 500
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("device-matrix")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "device-matrix"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-blue-400 hover:text-blue-200 hover:bg-blue-950/40"
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-300" />
+              <span>Matriz de Dispositivos</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-500/30 text-cyan-200 font-bold hidden sm:inline">
+                DoD Móvil
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("browser-matrix")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "browser-matrix"
+                  ? "bg-indigo-600 text-white shadow-xs"
+                  : "text-indigo-400 hover:text-indigo-200 hover:bg-indigo-950/40"
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5 text-indigo-300" />
+              <span>4 Navegadores</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-bold hidden sm:inline">
+                DoD Web
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("e2e-flow")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "e2e-flow"
+                  ? "bg-emerald-600 text-white shadow-xs"
+                  : "text-emerald-400 hover:text-emerald-200 hover:bg-emerald-950/40"
+              }`}
+            >
+              <Database className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Flujo E2E & BD</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-200 font-bold hidden sm:inline">
+                DoD E2E
+              </span>
+            </button>
           </div>
         </div>
 
         {/* Lado derecho: Controles de Viewport, Zoom, Tokens, Criterios y Hotspots */}
         <div className="flex items-center gap-2 flex-wrap justify-between md:justify-end">
           {/* Selector de Dispositivo / Viewport */}
-          <div className="hidden lg:flex items-center bg-slate-800/80 p-0.5 rounded-lg border border-slate-700/60 text-slate-400">
+          <div className="flex items-center bg-slate-800/80 p-0.5 rounded-lg border border-slate-700/60 text-slate-400">
             <button
-              title="Desktop 1440px"
+              title="Desktop 1440px / Monitores 4K"
               onClick={() => onViewportChange("desktop")}
               className={`p-1.5 rounded-md hover:text-slate-100 transition ${
-                viewport === "desktop" ? "bg-slate-700 text-white shadow-xs" : ""
+                viewport === "desktop" ? "bg-slate-700 text-white shadow-xs font-bold" : ""
               }`}
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -226,34 +294,45 @@ export function FigmaToolbar({
               title="Laptop 1200px"
               onClick={() => onViewportChange("laptop")}
               className={`p-1.5 rounded-md hover:text-slate-100 transition ${
-                viewport === "laptop" ? "bg-slate-700 text-white shadow-xs" : ""
+                viewport === "laptop" ? "bg-slate-700 text-white shadow-xs font-bold" : ""
               }`}
             >
               <Laptop className="w-3.5 h-3.5" />
             </button>
             <button
-              title="Tablet 834px"
+              title="Tablet 834px (iPad)"
               onClick={() => onViewportChange("tablet")}
               className={`p-1.5 rounded-md hover:text-slate-100 transition ${
-                viewport === "tablet" ? "bg-slate-700 text-white shadow-xs" : ""
+                viewport === "tablet" ? "bg-slate-700 text-white shadow-xs font-bold" : ""
               }`}
             >
               <Tablet className="w-3.5 h-3.5" />
             </button>
             <button
-              title="Mobile 390px"
+              title="Mobile Estándar 390px"
               onClick={() => onViewportChange("mobile")}
               className={`p-1.5 rounded-md hover:text-slate-100 transition ${
-                viewport === "mobile" ? "bg-slate-700 text-white shadow-xs" : ""
+                viewport === "mobile" ? "bg-slate-700 text-white shadow-xs font-bold" : ""
               }`}
             >
               <Smartphone className="w-3.5 h-3.5" />
             </button>
             <button
-              title="Full Fluid Viewport"
+              title="Mobile Compacto 375px (iPhone SE / 0 Overflow)"
+              onClick={() => onViewportChange("mobile-se")}
+              className={`px-1.5 py-1 rounded-md hover:text-slate-100 transition text-[10px] font-black leading-none ${
+                viewport === "mobile-se"
+                  ? "bg-blue-600 text-white shadow-xs"
+                  : "text-slate-400 hover:bg-slate-700/60"
+              }`}
+            >
+              375
+            </button>
+            <button
+              title="Full Fluid Viewport (100%)"
               onClick={() => onViewportChange("fluid")}
               className={`p-1.5 rounded-md hover:text-slate-100 transition ${
-                viewport === "fluid" ? "bg-slate-700 text-white shadow-xs" : ""
+                viewport === "fluid" ? "bg-slate-700 text-white shadow-xs font-bold" : ""
               }`}
             >
               <Maximize2 className="w-3.5 h-3.5" />

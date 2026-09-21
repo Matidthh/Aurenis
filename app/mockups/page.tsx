@@ -13,27 +13,31 @@ import {
   StudentTableMockup,
   StudentMockupData,
   MOCK_STUDENTS,
-} from "@/components/features/students/student-table-mockup";
-import { StudentFullProfileModal } from "@/components/features/students/student-full-profile-modal";
-import { StudentRegistrationModal } from "@/components/features/students/student-registration-modal";
+} from "@/components/students/student-table-mockup";
+import { StudentFullProfileModal } from "@/components/students/student-full-profile-modal";
+import { StudentRegistrationModal } from "@/components/students/student-registration-modal";
 import {
   TeacherManagementMockup,
   TeacherData,
   MOCK_TEACHERS,
-} from "@/components/features/teachers/teacher-management-mockup";
-import { SubjectAssignmentModal } from "@/components/features/teachers/subject-assignment-modal";
-import { TeacherEditProfileModal } from "@/components/features/teachers/teacher-edit-profile-modal";
-import { NewTeacherModal } from "@/components/features/teachers/new-teacher-modal";
-import { GradeMatrixSpreadsheet } from "@/components/features/academic/grade-matrix-spreadsheet";
+} from "@/components/teachers/teacher-management-mockup";
+import { SubjectAssignmentModal } from "@/components/teachers/subject-assignment-modal";
+import { TeacherEditProfileModal } from "@/components/teachers/teacher-edit-profile-modal";
+import { NewTeacherModal } from "@/components/teachers/new-teacher-modal";
+import { GradeMatrixSpreadsheet } from "@/components/grades/grade-matrix-spreadsheet";
+import { ErrorResilienceMockup } from "@/components/mockups/error-resilience-mockup";
+import { DeviceMatrixView } from "@/components/mockups/device-matrix-view";
+import { BrowserMatrixView } from "@/components/mockups/browser-matrix-view";
+import { E2ENetworkFlowView } from "@/components/mockups/e2e-network-flow-view";
 import { ReplicatedHero } from "@/components/landing/replicated-hero";
 import { FigmaTokenInspector } from "@/components/mockups/figma-token-inspector";
 import { FigmaCommentsDrawer } from "@/components/mockups/figma-comments-drawer";
-import { StudentRiskModal } from "@/components/features/students/student-risk-modal";
-import { QuickAttendanceModal } from "@/components/features/academic/quick-attendance-modal";
+import { StudentRiskModal } from "@/components/mockups/student-risk-modal";
+import { QuickAttendanceModal } from "@/components/mockups/quick-attendance-modal";
 import {
   CriteriaChecklistModal,
   CriterionItem,
-} from "@/components/features/academic/criteria-checklist-modal";
+} from "@/components/mockups/criteria-checklist-modal";
 import { INITIAL_COMMENTS, MockupComment } from "@/components/mockups/mockup-data";
 import {
   ArrowLeft,
@@ -192,6 +196,147 @@ export default function MockupsPage() {
       completed: true,
       details: ["Barra de progreso de pasos y validación en tiempo real."],
     },
+    {
+      id: "dod-resilience-1",
+      title: "Banners de error amigables visualizados",
+      description: "Banners no intrusivos con mensajes claros en español, códigos de estado HTTP (500, 503), ícono semántico y diseño consistente.",
+      completed: true,
+      details: [
+        "Presentación clara sin tecnicismos agresivos ni jerga cruda expuesta.",
+        "Variantes de top-banner y tarjetas de estado local para tablas y vistas.",
+        "Manejo de códigos HTTP 500 (Internal Server Error) y 503 (Servicio no disponible).",
+      ],
+    },
+    {
+      id: "dod-resilience-2",
+      title: "Opción de reintentar funcional",
+      description: "Botón de reintento interactivo con estado de carga, verificación de salud de endpoint y notificación de recuperación.",
+      completed: true,
+      details: [
+        "Mecanismo de retry automático o bajo demanda sin recarga forzada destructiva.",
+        "Transición a banner de éxito al recuperar conectividad con el servidor.",
+        "Protección contra peticiones en bucle infinito durante fallas continuas.",
+      ],
+    },
+    {
+      id: "dod-resilience-3",
+      title: "Ausencia de pantallas blancas en cliente",
+      description: "Error Boundary en React para capturar excepciones de renderizado y prevenir White Screen of Death en cliente.",
+      completed: true,
+      details: [
+        "Aislamiento de errores a nivel de componente sin bloquear la navegación de la aplicación.",
+        "Discreet logging sin filtrar stack traces o datos sensibles en producción.",
+        "Opciones duales de recuperación: reintentar módulo o recargar contexto.",
+      ],
+    },
+    {
+      id: "dod-responsive-1",
+      title: "Ausencia de desbordamiento horizontal en 375px",
+      description: "Ajuste milimétrico para anchos compactos de 375px (iPhone SE) sin scroll horizontal involuntario en la página raíz, marcos contenedores ni ventanas modales.",
+      completed: true,
+      details: [
+        "Viewport contenedor acotado y reglas globales con overflow-x: hidden y max-w-full.",
+        "Grillas matriciales y tablas contenidas en contenedores con scroll horizontal táctil controlado e indicador visual.",
+        "Modales de matrícula, asignaturas y edición ajustados para pantallas ultra-compactas con márgenes seguros.",
+        "Padding responsivo escalonado (p-3 en mobile a p-8 en desktop) para optimizar el área útil.",
+      ],
+    },
+    {
+      id: "dod-responsive-2",
+      title: "Tablas y botones operables en táctil",
+      description: "Objetivos táctiles (hit-areas) según estándares WCAG 2.5.5 (mínimo 44×44px / 38-44px), eliminación del retraso de toque con touch-action: manipulation y gestos táctiles de desplazamiento suaves en tablas.",
+      completed: true,
+      details: [
+        "touch-action: manipulation implementado en todos los controles interactivos para eliminar la latencia de 300ms.",
+        "Celdas matriciales con altura táctil accesible, retroalimentación táctil inmediata al tap e ingreso numérico rápido.",
+        "Botones de acciones en filas de tablas (ver, editar, asignar) con target mínimo de 38-44px.",
+        "Alternancia ágil entre Vista Tabla (con scroll táctil horizontal) y Vista Tarjetas de alta legibilidad en smartphones.",
+      ],
+    },
+    {
+      id: "dod-responsive-3",
+      title: "Matriz de dispositivos documentada",
+      description: "Auditoría exhaustiva documentada que clasifica 5 rangos de dispositivos (Mobile Compacto 375px, Mobile Estándar 390px, Tablets 768-834px, Laptops 1200px y Monitores 4K 1440px+) con simulación en vivo.",
+      completed: true,
+      details: [
+        "Pestaña dedicada 'Matriz de Dispositivos' integrada en la barra de prototipos de Figma.",
+        "Especificación técnica por dispositivo: DPR, comportamiento de tablas, estándares táctiles y estrategia de layout.",
+        "Selector interactivo en la barra superior para alternar directamente entre 375px, 390px, 834px, 1200px y 1440px.",
+        "Validación con 100% de ítems comprobados sin regresiones visuales ni de interacción.",
+      ],
+    },
+    {
+      id: "dod-browser-1",
+      title: "Comprobación en 4 navegadores principales",
+      description: "Verificación y certificación de compatibilidad exhaustiva en Google Chrome (Blink), Mozilla Firefox (Gecko), Microsoft Edge (Chromium) y Apple Safari (WebKit en macOS e iOS).",
+      completed: true,
+      details: [
+        "Auditoría de compatibilidad de los 3 motores web fundamentales: Blink, Gecko y WebKit.",
+        "Mapeo de características CSS modernas (Grid, Flex gap, Variables, Transform, Backdrop-filter).",
+        "Pestaña interactiva '4 Navegadores' con métricas de Core Web Vitals y suite de pruebas en vivo.",
+        "Pruebas de atajos de teclado y eventos táctiles en entornos Windows, macOS, Android e iOS.",
+      ],
+    },
+    {
+      id: "dod-browser-2",
+      title: "Diseño e interactividad idénticos",
+      description: "Paridad milimétrica entre motores en sombras neumórficas Soft UI, métricas tipográficas (Plus Jakarta Sans y Caveat), distribución de planillas y micro-animaciones a 60 FPS.",
+      completed: true,
+      details: [
+        "Normalización de fuentes y smoothing (-webkit-font-smoothing: antialiased, -moz-osx-font-smoothing: grayscale).",
+        "Soporte estricto para -webkit-backdrop-filter y backdrop-filter estándar en modales y paneles.",
+        "Eliminación de estilos nativos discrepantes (-moz-appearance: textfield, -webkit-appearance: none).",
+        "Comportamiento unificado de planillas de notas Decreto 67 con guardado automático y feedback visual.",
+      ],
+    },
+    {
+      id: "dod-browser-3",
+      title: "Cero fallas de renderizado",
+      description: "Ausencia total de artefactos gráficos, desfase de cabeceras sticky en Safari (-webkit-sticky), bordes espurios en Firefox, desbordamientos de flexbox o saltos acumulativos de diseño (CLS = 0.000).",
+      completed: true,
+      details: [
+        "Corrección de sticky positioning para tablas matriciales con posición sticky compatible con Safari.",
+        "Reset button::-moz-focus-inner { border: 0 } previniendo desplazamientos en Firefox.",
+        "Scrollbars universales estilizados para Firefox (scrollbar-width: thin) y motores basados en Chromium/WebKit.",
+        "Prevención de Cumulative Layout Shift (CLS = 0) en carga inicial y transiciones de pantalla.",
+      ],
+    },
+    {
+      id: "dod-e2e-1",
+      title: "Llamadas API completas verificadas con Network tab",
+      description: "Trazabilidad HTTP total inspeccionable con panel Network integrado (REST APIs, status 200/201, latencias < 250ms, headers, payloads y reintentos automáticos con backoff exponencial).",
+      completed: true,
+      details: [
+        "Inspección detallada de peticiones POST, GET, PUT y DELETE para estudiantes, notas Decreto 67, asistencia y asignaturas.",
+        "Payloads JSON estructurados y tipados validados con esquemas Drizzle / Zod.",
+        "Monitoreo de latencia en milisegundos, headers de seguridad y códigos de respuesta HTTP oficiales.",
+        "Filtros avanzados por método HTTP, estado y texto en la consola de red integrada.",
+      ],
+    },
+    {
+      id: "dod-e2e-2",
+      title: "Persistencia de datos en PostgreSQL comprobada",
+      description: "Verificación de operaciones CRUD atómicas en PostgreSQL con Drizzle ORM, integridad referencial (FKs), transacciones ACID y persistencia demostrada en tests de integración.",
+      completed: true,
+      details: [
+        "Consultas SQL trazadas (SELECT, INSERT, UPDATE, DELETE) con recuento de registros afectados y tiempo de ejecución.",
+        "Validación de esquemas: tablas schools, users, teachers, students, enrollments, courses, grade_records y attendance.",
+        "Mecanismo de aislamiento transaccional y rollback garantizado ante errores de mutación.",
+        "Suite de verificación 'npm run test:e2e' con 10/10 pruebas de persistencia superadas con 100% de éxito.",
+      ],
+    },
+    {
+      id: "dod-e2e-3",
+      title: "Flujos de trabajo pasados",
+      description: "Ejecución de flujos de negocio escolares de inicio a fin: Registro & Matrícula de Alumno, Calificación & Promedio Decreto 67, y Asignación de Carga Horaria Docente.",
+      completed: true,
+      details: [
+        "Flujo 1: Matrícula de alumno con validación RUN, guardado en base de datos e incorporación al libro de clases.",
+        "Flujo 2: Ingreso masivo de notas parciales N1-N4, cálculo automático de ponderaciones y semaforización cromática.",
+        "Flujo 3: Asignación de asignaturas y cálculo de carga horaria semanal respetando topes de la Ley Carrera Docente.",
+        "Ejecución interactiva 'Paso a Paso' o 'Batch' con feedback visual y registro de eventos en tiempo real.",
+      ],
+    },
   ]);
 
   function handleToggleCriterion(id: string) {
@@ -247,6 +392,7 @@ export default function MockupsPage() {
     laptop: "max-w-[1200px]",
     tablet: "max-w-[834px]",
     mobile: "max-w-[390px]",
+    "mobile-se": "max-w-[375px]",
     fluid: "max-w-7xl",
   }[viewport];
 
@@ -343,7 +489,7 @@ export default function MockupsPage() {
 
         {/* Marco del Dispositivo / Canvas Contenedor */}
         <div
-          className={`w-full ${viewportWidthClass} transition-all duration-300 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-slate-800/80 relative min-h-[85vh]`}
+          className={`w-full ${viewportWidthClass} transition-all duration-300 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-3 sm:p-6 lg:p-8 shadow-2xl border border-slate-800/80 relative min-h-[85vh]`}
           style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}
         >
           {activeTab === "hero-landing" && (
@@ -614,6 +760,37 @@ export default function MockupsPage() {
                 </button>
               </div>
             </div>
+          )}
+
+          {activeTab === "error-resilience" && (
+            <ErrorResilienceMockup
+              onMarkCriterion={(id) => {
+                if (id === "dod-err-1") handleToggleCriterion("dod-resilience-1");
+                if (id === "dod-err-2") handleToggleCriterion("dod-resilience-2");
+                if (id === "dod-err-3") handleToggleCriterion("dod-resilience-3");
+              }}
+            />
+          )}
+
+          {activeTab === "device-matrix" && (
+            <DeviceMatrixView
+              currentViewport={viewport}
+              onSelectViewport={(vp) => setViewport(vp)}
+              onNavigateToTab={(tab) => setActiveTab(tab)}
+            />
+          )}
+
+          {activeTab === "browser-matrix" && (
+            <BrowserMatrixView
+              onNavigateToTab={(tab) => setActiveTab(tab)}
+            />
+          )}
+
+          {activeTab === "e2e-flow" && (
+            <E2ENetworkFlowView
+              onNavigateToTab={(tab) => setActiveTab(tab as any)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
           )}
         </div>
       </main>
