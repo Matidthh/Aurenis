@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Award, Calendar, Percent, BookOpen } from "lucide-react";
+import { apiClient } from "@/lib/api";
 
 interface CreateAssessmentModalProps {
   isOpen: boolean;
@@ -61,26 +62,18 @@ export function CreateAssessmentModal({
       setIsSubmitting(true);
       setError(null);
 
-      const res = await fetch(`/api/schools/${schoolId}/grades/assessments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subjectId,
-          academicPeriodId,
-          title: title.trim(),
-          description: description.trim() || undefined,
-          date,
-          weightPercentage: weight,
-          isPublished,
-        }),
+      const response = await apiClient.post<any>(`/api/schools/${schoolId}/grades/assessments`, {
+        subjectId,
+        academicPeriodId,
+        title: title.trim(),
+        description: description.trim() || undefined,
+        date,
+        weightPercentage: weight,
+        isPublished,
       });
 
-      const json = await res.json();
-      if (!res.ok) {
-        throw new Error(json.error || "Error al crear la evaluación");
-      }
-
-      onCreated(json.data || json.assessment || {
+      const responseData = response.data;
+      onCreated(responseData?.data || responseData?.assessment || {
         id: `ass_${Date.now()}`,
         title: title.trim(),
         description: description.trim() || undefined,

@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, GraduationCap, AlertCircle, CheckCircle2 } from "lucide-react";
+import { apiClient } from "@/lib/api";
 
 interface EducationLevelOption {
   id: string;
@@ -64,23 +65,13 @@ export function CreateCourseModal({
     setError(null);
 
     try {
-      const res = await fetch(`/api/schools/${schoolSlug}/courses`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          gradeNumber: parseInt(formData.gradeNumber, 10),
-          letter: formData.letter,
-          educationLevelId: formData.educationLevelId,
-          year: parseInt(formData.year, 10),
-        }),
+      await apiClient.post(`/api/schools/${schoolSlug}/courses`, {
+        name: formData.name,
+        gradeNumber: parseInt(formData.gradeNumber, 10),
+        letter: formData.letter,
+        educationLevelId: formData.educationLevelId,
+        year: parseInt(formData.year, 10),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "No se pudo crear el curso.");
-      }
 
       setSuccess(true);
       setTimeout(() => {

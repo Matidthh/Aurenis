@@ -1,25 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter } from "@/components/ui/modal";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, AlertCircle, Percent } from "lucide-react";
-import { AcademicPeriodItem } from "./school-settings-view";
+import { Calendar, Plus, AlertCircle, Percent } from "lucide-react";
+import { apiClient } from "@/lib/api";
 
 interface CreatePeriodModalProps {
   isOpen: boolean;
-  schoolId: string;
   onClose: () => void;
-  onPeriodCreated: (newPeriod: AcademicPeriodItem) => void;
+  schoolId: string;
+  onPeriodCreated: (newPeriod: any) => void;
   termType?: string;
   existingPeriodsCount?: number;
 }
 
 export function CreatePeriodModal({
   isOpen,
-  schoolId,
   onClose,
+  schoolId,
   onPeriodCreated,
   termType = "SEMESTER",
   existingPeriodsCount = 0,
@@ -27,161 +26,172 @@ export function CreatePeriodModal({
   const currentYear = new Date().getFullYear();
   const defaultName =
     termType === "TRIMESTER"
-      ? `${existingPeriodsCount + 1}° Trimestre`
-      : `${existingPeriodsCount + 1}° Semestre`;
+      ? `${existingPeriodsCount + 1}° Trimestre ${currentYear}`
+      : `${existingPeriodsCount + 1}° Semestre ${currentYear}`;
 
-  const [name, setName] = useState(defaultName);
-  const [year, setYear] = useState(currentYear);
-  const [startDate, setStartDate] = useState(`${currentYear}-03-01`);
-  const [endDate, setEndDate] = useState(`${currentYear}-07-15`);
-  const [weightPercentage, setWeightPercentage] = useState<number>(50);
-  const [isCurrent, setIsCurrent] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: defaultName,
+    year: currentYear,
+    startDate: `${currentYear}-03-01`,
+    endDate: `${currentYear}-07-15`,
+    weightPercentage: termType === "TRIMESTER" ? 33 : 50,
+    isCurrent: existingPeriodsCount === 0,
+    isClosed: false,
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("El nombre del período es requerido.");
-      return;
-    }
-    if (new Date(startDate) >= new Date(endDate)) {
-      setError("La fecha de inicio debe ser anterior a la fecha de término.");
-      return;
-    }
-
-    setIsSubmitting(true);
     setError(null);
 
-    try {
-      const newPeriod: AcademicPeriodItem = {
-        id: `period_${Date.now()}`,
-        name: name.trim(),
-        year: Number(year),
-        startDate,
-        endDate,
-        isCurrent,
-        isClosed: false,
-        weightPercentage: Number(weightPercentage) || 0,
-      };
+    if (!formData.name.trim()) {
+      setError("El nombre del periodo es requerido");
+      return;
+    }
 
-      onPeriodCreated(newPeriod);
+    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      setError("La fecha de término debe ser posterior a la fecha de inicio");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await apiClient.post<any>(`/api/schools/${schoolId}/academic-periods`, formData);
+      const data = response.data;
+
+      onPeriodCreated(data?.data?.period || data?.period || { ...formData, id: `p_${Date.now()}` });
       onClose();
-      setName("");
     } catch (err: any) {
-      setError(err?.message || "Ocurrió un error al crear el período.");
+      setError(err.message || "Error al crear el periodo académico");
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <ModalHeader>
-        <ModalTitle>Añadir Período Académico</ModalTitle>
-        <ModalDescription>
-          Configura un nuevo semestre o trimestre para el registro de calificaciones.
-        </ModalDescription>
-      </ModalHeader>
-
       <form onSubmit={handleSubmit}>
-        <ModalBody>
+        <ModalHeader>
+          <ModalTitle>Nuevo Periodo Académico</ModalTitle>
+          <ModalDescription>
+            Define un nuevo semestre o trimestre para el año lectivo institucional.
+          </ModalDescription>
+        </ModalHeader>
+
+        <ModalBody className="space-y-4">
           {error && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-center gap-2">
+            <div className="p-3 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 rounded-xl text-xs flex items-center gap-2 border border-red-200 dark:border-red-800">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Nombre del Período
+            <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+              Nombre del Periodo *
             </label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ej: 1° Semestre"
+            <input
+              type="text"
               required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="Ej: Primer Semestre 2026"
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Año Lectivo
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Año Lectivo *
               </label>
-              <Input
+              <input
                 type="number"
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
-                min={2020}
-                max={2035}
                 required
+                min={2020}
+                max={2030}
+                value={formData.year}
+                onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) || currentYear })}
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
                 Ponderación Anual (%)
               </label>
               <div className="relative">
-                <Input
+                <input
                   type="number"
-                  value={weightPercentage}
-                  onChange={(e) => setWeightPercentage(Number(e.target.value))}
-                  min={1}
+                  min={0}
                   max={100}
-                  required
+                  value={formData.weightPercentage}
+                  onChange={(e) => setFormData({ ...formData, weightPercentage: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-3.5 py-2 pr-8 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
                 />
-                <Percent className="w-4 h-4 text-slate-400 absolute right-3 top-2.5 pointer-events-none" />
+                <Percent className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5" />
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Fecha de Inicio
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Fecha de Inicio *
               </label>
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  required
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                />
+              </div>
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Fecha de Término
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Fecha de Término *
               </label>
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  required
+                  value={formData.endDate}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 pt-2">
-            <input
-              type="checkbox"
-              id="isCurrentCheck"
-              checked={isCurrent}
-              onChange={(e) => setIsCurrent(e.target.checked)}
-              className="rounded border-slate-300 text-brand-600 focus:ring-brand-500 w-4 h-4 cursor-pointer"
-            />
-            <label htmlFor="isCurrentCheck" className="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-              Establecer como período académico activo/vigente
+          <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-2">
+            <label className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
+              <input
+                type="checkbox"
+                checked={formData.isCurrent}
+                onChange={(e) => setFormData({ ...formData, isCurrent: e.target.checked })}
+                className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300"
+              />
+              <span>Marcar como Periodo Vigente Actual</span>
             </label>
+            <p className="text-[11px] text-slate-500 ml-6">
+              El periodo vigente es el seleccionado por defecto en libros de clases y planillas de notas.
+            </p>
           </div>
         </ModalBody>
 
         <ModalFooter>
-          <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+          <Button variant="outline" size="sm" type="button" onClick={onClose} disabled={isLoading}>
             Cancelar
           </Button>
-          <Button type="submit" variant="primary" disabled={isSubmitting}>
-            {isSubmitting ? "Creando..." : "Crear Período"}
+          <Button variant="primary" size="sm" type="submit" disabled={isLoading}>
+            <Plus className="w-4 h-4 mr-1.5" />
+            {isLoading ? "Creando..." : "Crear Periodo"}
           </Button>
         </ModalFooter>
       </form>

@@ -24,6 +24,7 @@ import {
   Layers,
 } from "lucide-react";
 import { TeacherItem } from "@/lib/services/teacher.service";
+import { apiClient } from "@/lib/api";
 
 export interface CourseOption {
   id: string;
@@ -105,19 +106,10 @@ export function AssignSubjectModal({
     setSuccess(null);
 
     try {
-      const res = await fetch(`/api/schools/${schoolSlug}/teachers/${teacher.id}/assign`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subjectId: selectedSubjectId,
-          hoursPerWeek: customHours,
-        }),
+      await apiClient.post(`/api/schools/${schoolSlug}/teachers/${teacher.id}/assign`, {
+        subjectId: selectedSubjectId,
+        hoursPerWeek: customHours,
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "No se pudo asignar la asignatura");
-      }
 
       setSuccess("Asignatura vinculada correctamente al profesor.");
       setSelectedSubjectId("");
@@ -145,23 +137,14 @@ export function AssignSubjectModal({
     setSuccess(null);
 
     try {
-      const res = await fetch(`/api/schools/${schoolSlug}/teachers/${teacher.id}/assign`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          hoursPerWeek: newSubjectHours,
-          createNewSubject: {
-            name: newSubjectName.trim(),
-            code: newSubjectCode.trim() || undefined,
-            courseId: newSubjectCourseId,
-          },
-        }),
+      await apiClient.post(`/api/schools/${schoolSlug}/teachers/${teacher.id}/assign`, {
+        hoursPerWeek: newSubjectHours,
+        createNewSubject: {
+          name: newSubjectName.trim(),
+          code: newSubjectCode.trim() || undefined,
+          courseId: newSubjectCourseId,
+        },
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "No se pudo crear la asignatura.");
-      }
 
       setSuccess("Nueva asignatura creada y asignada con éxito.");
       setNewSubjectName("");
@@ -185,16 +168,9 @@ export function AssignSubjectModal({
     setError(null);
 
     try {
-      const res = await fetch(`/api/schools/${schoolSlug}/teachers/${teacher.id}/assign`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subjectId }),
+      await apiClient.delete(`/api/schools/${schoolSlug}/teachers/${teacher.id}/assign`, {
+        body: { subjectId },
       });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "No se pudo desvincular la asignatura.");
-      }
 
       setSuccess("Asignatura desvinculada exitosamente.");
       onAssignmentUpdated();

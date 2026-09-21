@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { CreateAssessmentModal } from "./create-assessment-modal";
 import { EditAssessmentModal } from "./edit-assessment-modal";
+import { apiClient } from "@/lib/api";
 import {
   Award,
   Search,
@@ -314,16 +315,9 @@ export function GradeMatrixView({
           };
         });
 
-      const res = await fetch(`/api/schools/${schoolId}/grades/bulk`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ grades: payloadGrades }),
+      await apiClient.post(`/api/schools/${schoolId}/grades/bulk`, {
+        grades: payloadGrades,
       });
-
-      const json = await res.json();
-      if (!res.ok) {
-        throw new Error(json.error || "Error al guardar calificaciones masivas");
-      }
 
       // Actualizar estado local base de estudiantes con las nuevas notas
       setStudents((prev) =>

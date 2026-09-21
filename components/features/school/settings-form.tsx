@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Loader2 } from "lucide-react";
+import { apiClient } from "@/lib/api";
 
 interface SettingsFormProps {
   schoolId: string;
@@ -27,17 +28,7 @@ export function SchoolSettingsForm({ schoolId, initialSettings }: SettingsFormPr
     setStatusMessage(null);
 
     try {
-      const res = await fetch(`/api/schools/${schoolId}/settings`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "Error al actualizar la configuración");
-      }
-
+      await apiClient.patch(`/api/schools/${schoolId}/settings`, formData);
       setStatusMessage({ type: "success", text: "Configuración actualizada exitosamente." });
     } catch (err: any) {
       setStatusMessage({ type: "error", text: err.message });

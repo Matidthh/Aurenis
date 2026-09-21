@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, BookOpen, AlertCircle, CheckCircle2 } from "lucide-react";
+import { apiClient } from "@/lib/api";
 
 interface CourseOption {
   id: string;
@@ -69,23 +70,13 @@ export function CreateSubjectModal({
     setError(null);
 
     try {
-      const res = await fetch(`/api/schools/${schoolSlug}/subjects`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          code: formData.code,
-          courseId: formData.courseId,
-          teacherProfileId: formData.teacherProfileId || undefined,
-          hoursPerWeek: parseInt(formData.hoursPerWeek, 10),
-        }),
+      await apiClient.post(`/api/schools/${schoolSlug}/subjects`, {
+        name: formData.name,
+        code: formData.code,
+        courseId: formData.courseId,
+        teacherProfileId: formData.teacherProfileId || undefined,
+        hoursPerWeek: parseInt(formData.hoursPerWeek, 10),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "No se pudo crear la asignatura.");
-      }
 
       setSuccess(true);
       setTimeout(() => {

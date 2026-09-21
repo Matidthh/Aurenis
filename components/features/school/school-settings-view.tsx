@@ -33,6 +33,7 @@ import { Badge } from "@/components/ui/badge";
 import { CreatePeriodModal } from "./create-period-modal";
 import { EditPeriodModal } from "./edit-period-modal";
 import { SchoolBackupCard } from "./school-backup-card";
+import { apiClient } from "@/lib/api";
 
 export interface AcademicPeriodItem {
   id: string;
@@ -171,17 +172,7 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
         defaultAssessmentWeight: settingsData.defaultAssessmentWeight,
       };
 
-      const res = await fetch(`/api/schools/${schoolId}/settings`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const json = await res.json();
-
-      if (!res.ok) {
-        throw new Error(json.error?.message || json.error || "Error al actualizar configuración");
-      }
+      await apiClient.patch(`/api/schools/${schoolId}/settings`, payload);
 
       setToastMessage({
         type: "success",
@@ -206,13 +197,9 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
   // Quick toggle active period
   const handleToggleCurrentPeriod = async (periodId: string) => {
     try {
-      const res = await fetch(`/api/schools/${schoolId}/academic-periods/${periodId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isCurrent: true }),
+      await apiClient.patch(`/api/schools/${schoolId}/academic-periods/${periodId}`, {
+        isCurrent: true,
       });
-
-      if (!res.ok) throw new Error("Error al activar periodo");
 
       setPeriods((prev) =>
         prev.map((p) => ({
@@ -233,13 +220,9 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
   // Quick toggle closed state
   const handleToggleClosedPeriod = async (periodId: string, currentClosed: boolean) => {
     try {
-      const res = await fetch(`/api/schools/${schoolId}/academic-periods/${periodId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isClosed: !currentClosed }),
+      await apiClient.patch(`/api/schools/${schoolId}/academic-periods/${periodId}`, {
+        isClosed: !currentClosed,
       });
-
-      if (!res.ok) throw new Error("Error al modificar estado de cierre");
 
       setPeriods((prev) =>
         prev.map((p) => (p.id === periodId ? { ...p, isClosed: !currentClosed } : p))

@@ -15,6 +15,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { apiClient } from "@/lib/api";
 
 interface SchoolItem {
   id: string;
@@ -65,10 +66,8 @@ export function SchoolSubscriptionTable({ initialSchools }: { initialSchools: Sc
 
     // Llamar al endpoint o actualizar estado localmente
     try {
-      const res = await fetch(`/api/system/schools/${schoolId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+      await apiClient.patch(`/api/system/schools/${schoolId}/status`, {
+        status: newStatus,
       });
 
       // Actualizar localmente de inmediato para feedback instantáneo

@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Trash2, Save, Calendar, Percent, BookOpen } from "lucide-react";
 import { GradeMatrixAssessment } from "@/lib/services/grade.service";
+import { apiClient } from "@/lib/api";
 
 interface EditAssessmentModalProps {
   isOpen: boolean;
@@ -75,22 +76,13 @@ export function EditAssessmentModal({
       setIsSubmitting(true);
       setError(null);
 
-      const res = await fetch(`/api/schools/${schoolId}/grades/assessments/${assessment.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim() || undefined,
-          date,
-          weightPercentage: weight,
-          isPublished,
-        }),
+      await apiClient.patch(`/api/schools/${schoolId}/grades/assessments/${assessment.id}`, {
+        title: title.trim(),
+        description: description.trim() || undefined,
+        date,
+        weightPercentage: weight,
+        isPublished,
       });
-
-      const json = await res.json();
-      if (!res.ok) {
-        throw new Error(json.error || "Error al actualizar la evaluación");
-      }
 
       onUpdated({
         ...assessment,
@@ -118,14 +110,7 @@ export function EditAssessmentModal({
       setIsDeleting(true);
       setError(null);
 
-      const res = await fetch(`/api/schools/${schoolId}/grades/assessments/${assessment.id}`, {
-        method: "DELETE",
-      });
-
-      const json = await res.json();
-      if (!res.ok) {
-        throw new Error(json.error || "Error al eliminar evaluación");
-      }
+      await apiClient.delete(`/api/schools/${schoolId}/grades/assessments/${assessment.id}`);
 
       onDeleted(assessment.id);
       onClose();

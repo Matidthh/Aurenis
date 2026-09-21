@@ -1,214 +1,264 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter } from "@/components/ui/modal";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Trash2, AlertCircle, Percent } from "lucide-react";
-import { AcademicPeriodItem } from "./school-settings-view";
+import { Calendar, Save, Trash2, AlertCircle, Percent, Lock, Unlock } from "lucide-react";
+import { apiClient } from "@/lib/api";
+
+interface AcademicPeriodData {
+  id: string;
+  name: string;
+  year: number;
+  startDate: string;
+  endDate: string;
+  isCurrent: boolean;
+  isClosed: boolean;
+  weightPercentage?: number;
+  assessmentsCount?: number;
+}
 
 interface EditPeriodModalProps {
   isOpen: boolean;
-  period: AcademicPeriodItem;
-  schoolId: string;
   onClose: () => void;
-  onPeriodUpdated: (updated: AcademicPeriodItem) => void;
+  period: AcademicPeriodData | null;
+  schoolId: string;
+  onPeriodUpdated: (updatedPeriod: AcademicPeriodData) => void;
   onPeriodDeleted: (periodId: string) => void;
 }
 
 export function EditPeriodModal({
   isOpen,
+  onClose,
   period,
   schoolId,
-  onClose,
   onPeriodUpdated,
   onPeriodDeleted,
 }: EditPeriodModalProps) {
-  const [name, setName] = useState(period.name);
-  const [year, setYear] = useState(period.year);
-  const [startDate, setStartDate] = useState(period.startDate);
-  const [endDate, setEndDate] = useState(period.endDate);
-  const [weightPercentage, setWeightPercentage] = useState<number>(period.weightPercentage ?? 50);
-  const [isCurrent, setIsCurrent] = useState(period.isCurrent);
-  const [isClosed, setIsClosed] = useState(period.isClosed);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: period?.name || "",
+    year: period?.year || new Date().getFullYear(),
+    startDate: period?.startDate || "",
+    endDate: period?.endDate || "",
+    weightPercentage: period?.weightPercentage ?? 50,
+    isCurrent: period?.isCurrent ?? false,
+    isClosed: period?.isClosed ?? false,
+  });
+
+  useEffect(() => {
+    if (period) {
+      setFormData({
+        name: period.name,
+        year: period.year,
+        startDate: period.startDate,
+        endDate: period.endDate,
+        weightPercentage: period.weightPercentage ?? 50,
+        isCurrent: period.isCurrent,
+        isClosed: period.isClosed,
+      });
+      setError(null);
+    }
+  }, [period]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  if (!period) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("El nombre del período es requerido.");
-      return;
-    }
-    if (new Date(startDate) >= new Date(endDate)) {
-      setError("La fecha de inicio debe ser anterior a la fecha de término.");
-      return;
-    }
-
-    setIsSubmitting(true);
     setError(null);
 
-    try {
-      const updated: AcademicPeriodItem = {
-        ...period,
-        name: name.trim(),
-        year: Number(year),
-        startDate,
-        endDate,
-        isCurrent,
-        isClosed,
-        weightPercentage: Number(weightPercentage) || 0,
-      };
+    if (!formData.name.trim()) {
+      setError("El nombre del periodo es requerido");
+      return;
+    }
 
-      onPeriodUpdated(updated);
+    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      setError("La fecha de término debe ser posterior a la fecha de inicio");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await apiClient.patch<any>(`/api/schools/${schoolId}/academic-periods/${period.id}`, formData);
+      const data = response.data;
+
+      onPeriodUpdated(data?.data?.period || data?.period || { ...period, ...formData });
       onClose();
     } catch (err: any) {
-      setError(err?.message || "Ocurrió un error al actualizar el período.");
+      setError(err.message || "Error al actualizar el periodo académico");
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
-  const handleDelete = () => {
-    if (confirm(`¿Estás seguro de eliminar el período "${period.name}"?`)) {
+  const handleDelete = async () => {
+    if (period.assessmentsCount && period.assessmentsCount > 0) {
+      setError(`No es posible eliminar este periodo porque tiene ${period.assessmentsCount} evaluaciones registradas.`);
+      return;
+    }
+
+    if (!confirm(`¿Estás seguro de eliminar el periodo "${period.name}"? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setError(null);
+
+    try {
+      await apiClient.delete(`/api/schools/${schoolId}/academic-periods/${period.id}`);
+
       onPeriodDeleted(period.id);
       onClose();
+    } catch (err: any) {
+      setError(err.message || "Error al eliminar el periodo académico");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <ModalHeader>
-        <ModalTitle>Editar Período: {period.name}</ModalTitle>
-        <ModalDescription>
-          Modifica la ponderación, fechas y estado de cierre de actas.
-        </ModalDescription>
-      </ModalHeader>
-
       <form onSubmit={handleSubmit}>
-        <ModalBody>
+        <ModalHeader>
+          <ModalTitle>Editar Periodo Académico</ModalTitle>
+          <ModalDescription>
+            Modifica las fechas y ponderación de {period.name}
+          </ModalDescription>
+        </ModalHeader>
+
+        <ModalBody className="space-y-4">
           {error && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-600 rounded-xl text-xs flex items-center gap-2">
+            <div className="p-3 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 rounded-xl text-xs flex items-center gap-2 border border-red-200 dark:border-red-800">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-              Nombre del Período
+            <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+              Nombre del Periodo *
             </label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ej: 1° Semestre"
+            <input
+              type="text"
               required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
                 Año Lectivo
               </label>
-              <Input
+              <input
                 type="number"
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
-                min={2020}
-                max={2035}
                 required
+                min={2020}
+                max={2030}
+                value={formData.year}
+                onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) || period.year })}
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
                 Ponderación Anual (%)
               </label>
               <div className="relative">
-                <Input
+                <input
                   type="number"
-                  value={weightPercentage}
-                  onChange={(e) => setWeightPercentage(Number(e.target.value))}
-                  min={1}
+                  min={0}
                   max={100}
-                  required
+                  value={formData.weightPercentage}
+                  onChange={(e) => setFormData({ ...formData, weightPercentage: parseFloat(e.target.value) || 0 })}
+                  className="w-full px-3.5 py-2 pr-8 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
                 />
-                <Percent className="w-4 h-4 text-slate-400 absolute right-3 top-2.5 pointer-events-none" />
+                <Percent className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5" />
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Fecha de Inicio
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Fecha de Inicio *
               </label>
-              <Input
+              <input
                 type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
                 required
+                value={formData.startDate}
+                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                Fecha de Término
+              <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Fecha de Término *
               </label>
-              <Input
+              <input
                 type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
                 required
+                value={formData.endDate}
+                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
               />
             </div>
           </div>
 
-          <div className="space-y-2 pt-2">
-            <div className="flex items-center gap-2">
+          <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+            <label className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
               <input
                 type="checkbox"
-                id="isCurrentEditCheck"
-                checked={isCurrent}
-                onChange={(e) => setIsCurrent(e.target.checked)}
-                className="rounded border-slate-300 text-brand-600 focus:ring-brand-500 w-4 h-4 cursor-pointer"
+                checked={formData.isCurrent}
+                onChange={(e) => setFormData({ ...formData, isCurrent: e.target.checked })}
+                className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300"
               />
-              <label htmlFor="isCurrentEditCheck" className="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                Período académico activo/vigente
-              </label>
-            </div>
+              <span>Periodo Vigente Actual</span>
+            </label>
 
-            <div className="flex items-center gap-2">
+            <label className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
               <input
                 type="checkbox"
-                id="isClosedEditCheck"
-                checked={isClosed}
-                onChange={(e) => setIsClosed(e.target.checked)}
-                className="rounded border-slate-300 text-rose-600 focus:ring-rose-500 w-4 h-4 cursor-pointer"
+                checked={formData.isClosed}
+                onChange={(e) => setFormData({ ...formData, isClosed: e.target.checked })}
+                className="w-4 h-4 rounded text-red-600 focus:ring-red-500 border-slate-300"
               />
-              <label htmlFor="isClosedEditCheck" className="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                Cerrar actas y bloquear calificaciones en este período
-              </label>
-            </div>
+              <span className="flex items-center gap-1.5">
+                {formData.isClosed ? <Lock className="w-3.5 h-3.5 text-red-500" /> : <Unlock className="w-3.5 h-3.5 text-emerald-500" />}
+                Bloquear / Cerrar Actas de Calificación (Solo lectura)
+              </span>
+            </label>
           </div>
         </ModalBody>
 
-        <ModalFooter className="justify-between">
+        <ModalFooter className="flex items-center justify-between">
           <Button
+            variant="danger"
+            size="sm"
             type="button"
-            variant="ghost"
             onClick={handleDelete}
-            className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+            disabled={isLoading || isDeleting || (period.assessmentsCount ?? 0) > 0}
+            title={(period.assessmentsCount ?? 0) > 0 ? "Tiene evaluaciones registradas" : "Eliminar periodo"}
           >
-            <Trash2 className="w-4 h-4 mr-1.5" />
-            Eliminar
+            <Trash2 className="w-4 h-4 mr-1" />
+            {isDeleting ? "Eliminando..." : "Eliminar"}
           </Button>
 
           <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+            <Button variant="outline" size="sm" type="button" onClick={onClose} disabled={isLoading || isDeleting}>
               Cancelar
             </Button>
-            <Button type="submit" variant="primary" disabled={isSubmitting}>
-              {isSubmitting ? "Guardando..." : "Guardar Cambios"}
+            <Button variant="primary" size="sm" type="submit" disabled={isLoading || isDeleting}>
+              <Save className="w-4 h-4 mr-1.5" />
+              {isLoading ? "Guardando..." : "Guardar Cambios"}
             </Button>
           </div>
         </ModalFooter>

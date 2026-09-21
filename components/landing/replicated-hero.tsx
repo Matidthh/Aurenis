@@ -36,11 +36,7 @@ interface ReplicatedHeroProps {
   hideHeader?: boolean;
 }
 
-export function ReplicatedHero({
-  onOpenDemoModal,
-  onOpenQuoteModal,
-  hideHeader = false,
-}: ReplicatedHeroProps) {
+export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader = false }: ReplicatedHeroProps) {
   const router = useRouter();
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [activeNav, setActiveNav] = useState("inicio");
@@ -78,73 +74,67 @@ export function ReplicatedHero({
 
       {/* 1. Header / Navbar */}
       {!hideHeader && (
-        <header className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 pt-6 pb-4 flex items-center justify-between">
-          {/* Brand Logo */}
-          <Link href="/">
-            <AurenisLogo className="w-10 h-10" textClassName="text-slate-900 text-xl font-black tracking-tight" />
-          </Link>
+      <header className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 pt-6 pb-4 flex items-center justify-between">
+        {/* Brand Logo */}
+        <Link href="/">
+          <AurenisLogo className="w-10 h-10" textClassName="text-slate-900 text-xl font-black tracking-tight" />
+        </Link>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 lg:gap-10">
-            <button
-              onClick={() => setActiveNav("inicio")}
-              className="relative py-1 text-sm font-semibold text-blue-600 transition"
-            >
-              Inicio
-              {activeNav === "inicio" && (
-                <span className="absolute -bottom-1.5 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full mx-auto" />
-              )}
-            </button>
-            <a
-              href="/mockups"
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-            >
-              Características
-            </a>
-            <button
-              onClick={() => {
-                if (onOpenQuoteModal) onOpenQuoteModal();
-                else setShowDemoModal(true);
-              }}
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-            >
-              Planes
-            </button>
-            <button
-              onClick={() => {
-                if (onOpenQuoteModal) onOpenQuoteModal();
-                else setShowDemoModal(true);
-              }}
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-            >
-              Contacto
-            </button>
-          </nav>
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8 lg:gap-10">
+          <button
+            onClick={() => setActiveNav("inicio")}
+            className="relative py-1 text-sm font-semibold text-blue-600 transition"
+          >
+            Inicio
+            {activeNav === "inicio" && (
+              <span className="absolute -bottom-1.5 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full mx-auto" />
+            )}
+          </button>
+          <a
+            href="/mockups"
+            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+          >
+            Características
+          </a>
+          <button
+            onClick={() => setShowDemoModal(true)}
+            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+          >
+            Planes
+          </button>
+          <button
+            onClick={() => setShowDemoModal(true)}
+            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+          >
+            Contacto
+          </button>
+        </nav>
 
-          {/* Right CTA Actions */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => handleDirectLogin("director", "director@sanjose.cl", "AdminCSJ2026!")}
-              className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-semibold neumo-button transition shadow-xs"
-            >
-              {loggingIn === "director" ? (
-                <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
-              ) : (
-                "Iniciar sesión"
-              )}
-            </button>
+        {/* Right CTA Actions */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => handleDirectLogin("director", "director@sanjose.cl", "AdminCSJ2026!")}
+            className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-semibold neumo-button transition shadow-xs"
+          >
+            {loggingIn === "director" ? (
+              <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
+            ) : (
+              "Iniciar sesión"
+            )}
+          </button>
 
-            <button
-              onClick={() => {
-                if (onOpenDemoModal) onOpenDemoModal();
-                else setShowDemoModal(true);
-              }}
-              className="inline-flex items-center justify-center px-6 sm:px-7 py-2.5 rounded-full text-sm font-semibold neumo-button text-blue-600 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Comenzar ahora
-            </button>
-          </div>
-        </header>
+          <button
+            onClick={() => {
+              if (onOpenDemoModal) onOpenDemoModal();
+              else setShowDemoModal(true);
+            }}
+            className="inline-flex items-center justify-center px-6 sm:px-7 py-2.5 rounded-full text-sm font-semibold neumo-button text-blue-600 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Comenzar ahora
+          </button>
+        </div>
+      </header>
       )}
 
       {/* 2. Main Hero Content Grid */}

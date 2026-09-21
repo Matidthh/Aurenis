@@ -14,10 +14,6 @@ export function FinalCtaSection({ onOpenQuoteModal }: FinalCtaSectionProps = {})
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (onOpenQuoteModal) {
-      onOpenQuoteModal();
-      return;
-    }
     if (!email) return;
     setLoading(true);
     setTimeout(() => {

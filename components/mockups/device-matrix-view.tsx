@@ -48,7 +48,7 @@ export const DEVICE_MATRIX_DATA: DeviceSpec[] = [
     name: "Mobile Compacto (375px)",
     viewportWidth: 375,
     viewportHeight: 667,
-    targetViewport: "mobile-se",
+    targetViewport: "mobile",
     dpr: "2.0x / 3.0x",
     popularDevices: ["iPhone SE (2ª y 3ª Gen)", "iPhone 12/13 Mini", "Pixel 4a", "Galaxy A10"],
     layoutMode: "Monocolumna fluida (1 columna) con padding exterior de 12-16px",

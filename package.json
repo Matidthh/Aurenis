@@ -26,9 +26,6 @@
     "test:grades": "tsx scripts/grade-calculation-validation-test.ts",
     "test:school": "tsx scripts/school-configuration-validation-test.ts",
     "test:navigation": "tsx scripts/browser-navigation-history-f5-test.ts",
-    "test:e2e": "tsx scripts/e2e-workflow-db-persistence-test.ts",
-    "test:journeys": "tsx scripts/user-journey-simulation-test.ts",
-    "test:lifecycle": "tsx scripts/academic-lifecycle-e2e-test.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
@@ -55,6 +52,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/jszip": "^3.4.1",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

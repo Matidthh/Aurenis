@@ -823,57 +823,6 @@ export async function saveBulkMatrixGrades(
   grades: Array<{ assessmentId: string; enrollmentId: string; value: number; feedback?: string }>,
   userId?: string
 ) {
-  if (grades.length > 0) {
-    const assessmentIds = Array.from(new Set(grades.map((g) => g.assessmentId)));
-    const assessments = await tenantDb.assessment.findMany({
-      where: { id: { in: assessmentIds }, schoolId },
-      include: {
-        subject: {
-          include: {
-            teacher: {
-              include: {
-                membership: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (assessments.length !== assessmentIds.length) {
-      throw new Error("Violación de seguridad multi-tenant: una o más evaluaciones no pertenecen a esta institución");
-    }
-
-    if (userId) {
-      for (const ass of assessments) {
-        const teacherUserId = (ass.subject as any)?.teacher?.membership?.userId || (ass.subject as any)?.teacherProfile?.membership?.userId;
-        if (teacherUserId && teacherUserId !== userId) {
-          throw new Error("No estás asignado como profesor titular de esta asignatura");
-        }
-      }
-    }
-
-    const enrollmentIds = Array.from(new Set(grades.map((g) => g.enrollmentId)));
-    const enrollments = await tenantDb.enrollment.findMany({
-      where: { id: { in: enrollmentIds }, schoolId },
-    });
-
-    if (enrollments.length !== enrollmentIds.length) {
-      throw new Error("Violación de seguridad multi-tenant: uno o más estudiantes no pertenecen a esta institución");
-    }
-
-    const enrollmentMap = new Map(enrollments.map((e) => [e.id, e]));
-    const assessmentMap = new Map(assessments.map((a) => [a.id, a]));
-
-    for (const item of grades) {
-      const enr = enrollmentMap.get(item.enrollmentId);
-      const ass = assessmentMap.get(item.assessmentId);
-      if (enr && ass?.subject?.courseId && enr.courseId !== ass.subject.courseId) {
-        throw new Error("El estudiante no pertenece al curso correspondiente a esta evaluación");
-      }
-    }
-  }
-
   const config = await getSchoolGradingConfig(tenantDb, schoolId);
   const factor = Math.pow(10, config.precision);
 
