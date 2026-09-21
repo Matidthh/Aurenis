@@ -31,6 +31,7 @@
     "test:lifecycle": "tsx scripts/academic-lifecycle-e2e-test.ts",
     "test:qa-issues": "tsx scripts/qa-issue-tracker-test.ts",
     "test:severity": "tsx scripts/qa-severity-classification-test.ts",
+    "test:qa-signoff": "tsx scripts/qa-resolution-signoff-test.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",

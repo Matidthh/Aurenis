@@ -276,7 +276,7 @@ export const BROWSERS_DATA: BrowserEngineSpec[] = [
 ];
 
 interface BrowserMatrixViewProps {
-  onNavigateToTab: (tab: ActiveTab) => void;
+  onNavigateToTab?: (tab: ActiveTab) => void;
 }
 
 export function BrowserMatrixView({ onNavigateToTab }: BrowserMatrixViewProps) {
@@ -567,7 +567,7 @@ export function BrowserMatrixView({ onNavigateToTab }: BrowserMatrixViewProps) {
 
           <div className="flex items-center gap-2 flex-wrap">
             <button
-              onClick={() => onNavigateToTab("grade-matrix")}
+              onClick={() => onNavigateToTab?.("grade-matrix")}
               className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
             >
               <span>Planilla de Notas (Decreto 67)</span>
@@ -575,7 +575,7 @@ export function BrowserMatrixView({ onNavigateToTab }: BrowserMatrixViewProps) {
             </button>
 
             <button
-              onClick={() => onNavigateToTab("teachers-list")}
+              onClick={() => onNavigateToTab?.("teachers-list")}
               className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
             >
               <span>Gestión de Profesores</span>
@@ -583,7 +583,7 @@ export function BrowserMatrixView({ onNavigateToTab }: BrowserMatrixViewProps) {
             </button>
 
             <button
-              onClick={() => onNavigateToTab("students-list")}
+              onClick={() => onNavigateToTab?.("students-list")}
               className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
             >
               <span>Directorio de Estudiantes</span>
@@ -591,7 +591,7 @@ export function BrowserMatrixView({ onNavigateToTab }: BrowserMatrixViewProps) {
             </button>
 
             <button
-              onClick={() => onNavigateToTab("executive")}
+              onClick={() => onNavigateToTab?.("executive")}
               className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
             >
               <span>Dashboard Directivo</span>
@@ -599,7 +599,7 @@ export function BrowserMatrixView({ onNavigateToTab }: BrowserMatrixViewProps) {
             </button>
 
             <button
-              onClick={() => onNavigateToTab("error-resilience")}
+              onClick={() => onNavigateToTab?.("error-resilience")}
               className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
             >
               <span>Módulo de Resiliencia</span>

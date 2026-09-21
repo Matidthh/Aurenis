@@ -112,6 +112,34 @@ const CriteriaChecklistModal = dynamic(
   () => import("@/components/mockups/criteria-checklist-modal").then((m) => m.CriteriaChecklistModal),
   { ssr: false }
 );
+const QAIssueTrackerView = dynamic(
+  () => import("@/components/mockups/qa-issue-tracker-view").then((m) => m.QAIssueTrackerView),
+  { ssr: false, loading: () => <LoadingFallback title="Tablero de QA & Conformidad" /> }
+);
+const ErrorResilienceMockup = dynamic(
+  () => import("@/components/mockups/error-resilience-mockup").then((m) => m.ErrorResilienceMockup),
+  { ssr: false, loading: () => <LoadingFallback title="Resiliencia de Errores" /> }
+);
+const DeviceMatrixView = dynamic(
+  () => import("@/components/mockups/device-matrix-view").then((m) => m.DeviceMatrixView),
+  { ssr: false, loading: () => <LoadingFallback title="Matriz de Dispositivos" /> }
+);
+const BrowserMatrixView = dynamic(
+  () => import("@/components/mockups/browser-matrix-view").then((m) => m.BrowserMatrixView),
+  { ssr: false, loading: () => <LoadingFallback title="Matriz de Navegadores" /> }
+);
+const E2ENetworkFlowView = dynamic(
+  () => import("@/components/mockups/e2e-network-flow-view").then((m) => m.E2ENetworkFlowView),
+  { ssr: false, loading: () => <LoadingFallback title="Flujo de Red E2E" /> }
+);
+const UserJourneySimulator = dynamic(
+  () => import("@/components/mockups/user-journey-simulator").then((m) => m.UserJourneySimulator),
+  { ssr: false, loading: () => <LoadingFallback title="Simulador de Experiencia" /> }
+);
+const AcademicLifecycleE2EView = dynamic(
+  () => import("@/components/mockups/academic-lifecycle-e2e-view").then((m) => m.AcademicLifecycleE2EView),
+  { ssr: false, loading: () => <LoadingFallback title="Ciclo de Vida Académico" /> }
+);
 
 export default function MockupsPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("grade-matrix");
@@ -255,6 +283,39 @@ export default function MockupsPage() {
       completed: true,
       details: ["Barra de progreso de pasos y validación en tiempo real."],
     },
+    {
+      id: "dod-qa-1",
+      title: "Atención al 100% de observaciones de QA",
+      description: "Solución ágil de detalles visuales, errores de alineación, redondeo Decreto 67 y validación de RUN chileno.",
+      completed: true,
+      details: [
+        "100% de incidencias del backlog de QA resueltas y verificadas.",
+        "Alineación de bordes e inputs en WebKit Safari iOS y Chrome Desktop.",
+        "Truncamiento y redondeo ministerial conforme al Decreto 67.",
+      ],
+    },
+    {
+      id: "dod-qa-2",
+      title: "Verificación de soluciones en entornos de pruebas",
+      description: "Validación de soluciones en Staging Cloud Run, test suites automatizadas y navegadores modernos.",
+      completed: true,
+      details: [
+        "Certificación en Staging Cloud Run y Base de Datos.",
+        "Pruebas multi-navegador (Chrome 128, Safari 17.5, Firefox ESR, Edge).",
+        "Validación responsive en iPhone SE 375px y Desktop 1440px.",
+      ],
+    },
+    {
+      id: "dod-qa-3",
+      title: "Firma de conformidad de correcciones",
+      description: "Emisión de acta digital de conformidad QA con sellos criptográficos y firmas de los 5 integrantes del equipo.",
+      completed: true,
+      details: [
+        "Firmas digitales de Malcom Marcelo, Lucas P., Maicol R., Frank M. y Carlos M.",
+        "Generación de hash SHA-256 de inmutabilidad de acta de entrega.",
+        "Dictamen formal de aprobación para pase a producción.",
+      ],
+    },
   ]);
 
   function handleToggleCriterion(id: string) {
@@ -310,6 +371,7 @@ export default function MockupsPage() {
     laptop: "max-w-[1200px]",
     tablet: "max-w-[834px]",
     mobile: "max-w-[390px]",
+    "mobile-se": "max-w-[375px]",
     fluid: "max-w-7xl",
   }[viewport];
 
@@ -662,6 +724,48 @@ export default function MockupsPage() {
                 </button>
               </div>
             </div>
+          )}
+          {activeTab === "qa-issues" && (
+            <QAIssueTrackerView
+              onOpenChecklistModal={() => setShowChecklist(true)}
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+            />
+          )}
+
+          {activeTab === "error-resilience" && (
+            <ErrorResilienceMockup />
+          )}
+
+          {activeTab === "device-matrix" && (
+            <DeviceMatrixView
+              currentViewport={viewport}
+              onSelectViewport={setViewport}
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+            />
+          )}
+
+          {activeTab === "browser-matrix" && (
+            <BrowserMatrixView onNavigateToTab={(t: any) => setActiveTab(t)} />
+          )}
+
+          {activeTab === "e2e-flow" && (
+            <E2ENetworkFlowView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "user-journeys" && (
+            <UserJourneySimulator
+              onOpenChecklistModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "lifecycle-e2e" && (
+            <AcademicLifecycleE2EView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenChecklistModal={() => setShowChecklist(true)}
+            />
           )}
         </div>
       </main>
