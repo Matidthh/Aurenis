@@ -31,6 +31,7 @@ import {
   Bug,
   Package,
   KeyRound,
+  ShieldAlert,
 } from "lucide-react";
 
 export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "mobile-se" | "fluid";
@@ -53,7 +54,10 @@ export type ActiveTab =
   | "lifecycle-e2e"
   | "qa-issues"
   | "client-packaging"
-  | "jwt-login";
+  | "jwt-login"
+  | "rbac-enforcement"
+  | "student-postgres"
+  | "teacher-postgres";
 
 interface FigmaToolbarProps {
   activeTab: ActiveTab;
@@ -357,6 +361,51 @@ export function FigmaToolbar({
               <span>Login & JWT Backend</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/30 text-purple-200 font-bold">
                 Maicol R. • Aprobado
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("rbac-enforcement")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "rbac-enforcement"
+                  ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-rose-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-rose-300 hover:text-white hover:bg-rose-950/50"
+              }`}
+            >
+              <ShieldAlert className="w-3.5 h-3.5 text-rose-300" />
+              <span>RBAC & Gating de UI</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-200 font-bold">
+                Seguridad 100%
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("student-postgres")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "student-postgres"
+                  ? "bg-gradient-to-r from-indigo-600 to-emerald-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-indigo-300 hover:text-white hover:bg-indigo-950/50"
+              }`}
+            >
+              <Database className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Estudiantes en PostgreSQL</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-bold">
+                DB Real
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("teacher-postgres")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "teacher-postgres"
+                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-emerald-300 hover:text-white hover:bg-emerald-950/50"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Docentes y Asignaturas DB</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-200 font-bold">
+                Nómina SQL
               </span>
             </button>
           </div>

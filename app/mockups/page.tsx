@@ -148,6 +148,18 @@ const JwtLoginCouplingView = dynamic(
   () => import("@/components/mockups/jwt-login-coupling-view").then((m) => m.JwtLoginCouplingView),
   { ssr: false, loading: () => <LoadingFallback title="Login y JWT Backend" /> }
 );
+const RbacSecurityEnforcementView = dynamic(
+  () => import("@/components/mockups/rbac-security-enforcement-view").then((m) => m.RbacSecurityEnforcementView),
+  { ssr: false, loading: () => <LoadingFallback title="RBAC y Gating de UI" /> }
+);
+const StudentPostgresPersistenceView = dynamic(
+  () => import("@/components/mockups/student-postgres-persistence-view").then((m) => m.StudentPostgresPersistenceView),
+  { ssr: false, loading: () => <LoadingFallback title="Estudiantes en PostgreSQL" /> }
+);
+const TeacherPostgresPersistenceView = dynamic(
+  () => import("@/components/mockups/teacher-postgres-persistence-view").then((m) => m.TeacherPostgresPersistenceView),
+  { ssr: false, loading: () => <LoadingFallback title="Nómina Docente en PostgreSQL" /> }
+);
 
 export default function MockupsPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("grade-matrix");
@@ -388,6 +400,105 @@ export default function MockupsPage() {
         "Pruebas de integración de acoplamiento cliente-servidor ejecutadas con éxito.",
         "Validación de aislamiento multi-tenant por colegio y permisos RBAC.",
         "Dictamen conjunto de aprobación 100% para despliegue productivo.",
+      ],
+    },
+    {
+      id: "dod-rbac-1",
+      title: "Interfaz ocultando opciones según rol",
+      description: "Renderizado condicional estricto en los componentes de interfaz que oculta u desactiva opciones y botones según los permisos del usuario activo.",
+      completed: true,
+      details: [
+        "Ocultamiento automático de botones de edición para roles invitados y estudiantes.",
+        "Adaptación dinámica de la navegación superior según permisos institucionales.",
+        "Eliminación de elementos huérfanos o interactivos no autorizados.",
+      ],
+    },
+    {
+      id: "dod-rbac-2",
+      title: "Backend rechazando peticiones no permitidas",
+      description: "Middleware de autorización en rutas API que bloquea y rechaza con HTTP 403 Forbidden cualquier intento de solicitud sin los permisos requeridos.",
+      completed: true,
+      details: [
+        "Protección de endpoints críticos (calificaciones, administración docente, configuración).",
+        "Validación estricta de claims JWT en cada petición HTTP entrante.",
+        "Respuestas de error estandarizadas para auditoría de seguridad.",
+      ],
+    },
+    {
+      id: "dod-rbac-3",
+      title: "Sincronización de roles 100% efectiva",
+      description: "Coherencia total entre el estado de sesión en el cliente y las reglas de validación en el servidor sin desajustes ni brechas de seguridad.",
+      completed: true,
+      details: [
+        "Pruebas cruzadas de rol y permisos ejecutadas y verificadas al 100%.",
+        "Actualización reactiva de la UI al cambiar de perfil en el simulador.",
+        "Certificación final de seguridad institucional.",
+      ],
+    },
+    {
+      id: "dod-student-db-1",
+      title: "Tabla de alumnos reflejando base de datos real",
+      description: "Conexión directa mediante Prisma ORM para poblar la tabla institucional con los registros reales alojados en PostgreSQL.",
+      completed: true,
+      details: [
+        "Consultas optimizadas con relaciones de cursos, apoderados y matrículas activas.",
+        "Mapeo de datos relacionales sin reliance en mocks estáticos.",
+        "Actualización automática y asíncrona desde el servidor.",
+      ],
+    },
+    {
+      id: "dod-student-db-2",
+      title: "Creación y edición sincronizadas al instante",
+      description: "Endpoints REST POST/PATCH conectados al ciclo de vida de matriculación y edición de fichas con validación transaccional ACID.",
+      completed: true,
+      details: [
+        "Inserción en tiempo real de nuevos alumnos y apoderados asociados.",
+        "Actualización inmediata del estado de matrícula y notas en la base de datos.",
+        "Manejo de errores y respuestas HTTP estandarizadas.",
+      ],
+    },
+    {
+      id: "dod-student-db-3",
+      title: "Prueba de integración exitosa",
+      description: "Validación E2E y test automatizado de la persistencia de estudiantes y sincronización API completados sin errores.",
+      completed: true,
+      details: [
+        "Ejecución exitosa de suite de aserciones de integración SQL.",
+        "Verificación de integridad referencial y foreign keys.",
+        "Dictamen de aprobación 100% operativo.",
+      ],
+    },
+    {
+      id: "dod-teacher-db-1",
+      title: "Lista de profesores consumiendo API real",
+      description: "Conexión de la interfaz docente con el servicio backend para poblar la nómina directamente desde la base de datos PostgreSQL.",
+      completed: true,
+      details: [
+        "Consumo asíncrono del endpoint /api/schools/[schoolId]/teachers.",
+        "Mapeo de usuarios y membresías institucionales.",
+        "Cero datos simulados en la nómina de profesores.",
+      ],
+    },
+    {
+      id: "dod-teacher-db-2",
+      title: "Asignación de asignaturas guardada en PostgreSQL",
+      description: "Persistencia de cargas horarias y materias vinculadas a profesores mediante relaciones foreign key en Prisma.",
+      completed: true,
+      details: [
+        "Creación y asignación de asignaturas por curso.",
+        "Registro de auditoría en cada asignación académica.",
+        "Validación estricta de permisos RBAC para edición docente.",
+      ],
+    },
+    {
+      id: "dod-teacher-db-3",
+      title: "Verificación de datos en vivo",
+      description: "Monitoreo en tiempo real de altas docentes y actualizaciones de carga académica reflejadas de forma instantánea.",
+      completed: true,
+      details: [
+        "Actualización reactiva tras registrar o asignar asignaturas.",
+        "Pruebas automatizadas de integración docente exitosas.",
+        "Consistencia de datos garantizada al 100%.",
       ],
     },
   ]);
@@ -851,6 +962,27 @@ export default function MockupsPage() {
 
           {activeTab === "jwt-login" && (
             <JwtLoginCouplingView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "rbac-enforcement" && (
+            <RbacSecurityEnforcementView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "student-postgres" && (
+            <StudentPostgresPersistenceView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "teacher-postgres" && (
+            <TeacherPostgresPersistenceView
               onNavigateToTab={(t: any) => setActiveTab(t)}
               onOpenCriteriaModal={() => setShowChecklist(true)}
             />

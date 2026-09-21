@@ -44,12 +44,15 @@ export function CriteriaChecklistModal({
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+    "all" | "student" | "teacher" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
   >("all");
 
   if (!isOpen) return null;
 
   const filteredCriteria = criteria.filter((c) => {
+    if (filterCategory === "student") return c.id.includes("student-db");
+    if (filterCategory === "teacher") return c.id.includes("teacher-db");
+    if (filterCategory === "rbac") return c.id.includes("rbac");
     if (filterCategory === "jwt") return c.id.includes("jwt");
     if (filterCategory === "packaging") return c.id.includes("package") || c.id.includes("dist");
     if (filterCategory === "severity") return c.id.includes("severity");
@@ -161,6 +164,39 @@ export function CriteriaChecklistModal({
               }`}
             >
               Todos ({criteria.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("student")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "student"
+                  ? "bg-gradient-to-r from-indigo-600 to-emerald-600 text-white"
+                  : "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100"
+              }`}
+            >
+              Estudiantes DB ({criteria.filter((c) => c.id.includes("student-db")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("teacher")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "teacher"
+                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
+                  : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100"
+              }`}
+            >
+              Docentes DB ({criteria.filter((c) => c.id.includes("teacher-db")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("rbac")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "rbac"
+                  ? "bg-gradient-to-r from-rose-600 to-purple-600 text-white"
+                  : "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100"
+              }`}
+            >
+              RBAC & Gating ({criteria.filter((c) => c.id.includes("rbac")).length})
             </button>
             <button
               type="button"
