@@ -28,6 +28,7 @@ import { UserSessionInfo, SchoolContextInfo } from "./types";
 import { Breadcrumbs } from "./breadcrumbs";
 import { cn } from "@/lib/utils/cn";
 import { DEMO_ROLES, DemoRoleAccount, executeRoleSwitch, findMatchingDemoRole } from "@/lib/auth/demo-roles";
+import { useAuth } from "@/lib/auth/auth-context";
 
 interface HeaderProps {
   isCollapsed: boolean;
@@ -46,6 +47,8 @@ export function Header({
   user,
   schoolContext,
 }: HeaderProps) {
+  const { logout } = useAuth();
+
   // Estados de menús flotantes
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isDevRolesOpen, setIsDevRolesOpen] = useState(false);
@@ -599,14 +602,15 @@ export function Header({
 
                 {/* Separador y botón de cerrar sesión */}
                 <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
-                  <a
+                  <button
                     id="header-dropdown-logout"
-                    href="/api/auth/logout"
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
+                    type="button"
+                    onClick={() => logout()}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition text-left cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Cerrar Sesión</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             )}

@@ -63,11 +63,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         redirectUrl: "/system/dashboard",
+        token,
         user: {
           id: user.id,
           email: user.email,
           name: `${user.firstName} ${user.lastName}`,
           isSystemAdmin: true,
+          permissions: ["*"],
         },
       });
     }
@@ -105,10 +107,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         redirectUrl: `/${mem.school.slug}/dashboard`,
+        token,
         user: {
           id: user.id,
           email: user.email,
           name: `${user.firstName} ${user.lastName}`,
+          schoolId: mem.school.id,
+          schoolSlug: mem.school.slug,
+          membershipId: mem.id,
+          roleName: mem.role.name,
+          permissions,
           activeSchool: {
             id: mem.school.id,
             slug: mem.school.slug,
@@ -133,6 +141,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       redirectUrl: "/select-school",
+      token,
       user: {
         id: user.id,
         email: user.email,

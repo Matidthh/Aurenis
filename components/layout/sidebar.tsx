@@ -16,6 +16,7 @@ import {
 import { NavItem, SchoolContextInfo } from "./types";
 import { isRouteActive, filterNavItemsByRole } from "@/lib/navigation/routes";
 import { cn } from "@/lib/utils/cn";
+import { useAuth } from "@/lib/auth/auth-context";
 
 export interface SidebarProps {
   isCollapsed: boolean;
@@ -39,6 +40,7 @@ export function Sidebar({
   userRole,
 }: SidebarProps) {
   const pathname = usePathname();
+  const { logout } = useAuth();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   // 1. Filtrado dinámico de ítems según rol del usuario conectado
@@ -350,12 +352,13 @@ export function Sidebar({
           </AnimatePresence>
         </button>
 
-        {/* Logout */}
-        <a
+        {/* Logout seguro deshaciendo estado en memoria, storage y servidor */}
+        <button
           id="sidebar-logout-link"
-          href="/api/auth/logout"
+          type="button"
+          onClick={() => logout()}
           className={cn(
-            "flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors",
+            "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left cursor-pointer",
             isCollapsed && "justify-center px-2"
           )}
           title="Cerrar Sesión"
@@ -374,7 +377,7 @@ export function Sidebar({
               </motion.span>
             )}
           </AnimatePresence>
-        </a>
+        </button>
       </div>
     </div>
   );

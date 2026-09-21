@@ -3,6 +3,7 @@ import "./globals.css";
 import { NetworkStatusProvider } from "@/lib/network/network-context";
 import { NetworkErrorBanner } from "@/components/ui/network-error-banner";
 import { ToastProvider } from "@/components/ui/toast";
+import { AuthProvider } from "@/lib/auth/auth-context";
 
 export const metadata: Metadata = {
   title: "Aurenis",
@@ -21,12 +22,14 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased min-h-screen">
-        <NetworkStatusProvider>
-          <ToastProvider>
-            <NetworkErrorBanner />
-            {children}
-          </ToastProvider>
-        </NetworkStatusProvider>
+        <AuthProvider>
+          <NetworkStatusProvider>
+            <ToastProvider>
+              <NetworkErrorBanner />
+              {children}
+            </ToastProvider>
+          </NetworkStatusProvider>
+        </AuthProvider>
       </body>
     </html>
   );
