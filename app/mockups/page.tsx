@@ -140,6 +140,14 @@ const AcademicLifecycleE2EView = dynamic(
   () => import("@/components/mockups/academic-lifecycle-e2e-view").then((m) => m.AcademicLifecycleE2EView),
   { ssr: false, loading: () => <LoadingFallback title="Ciclo de Vida Académico" /> }
 );
+const ClientPackagingDeliveryView = dynamic(
+  () => import("@/components/mockups/client-packaging-delivery-view").then((m) => m.ClientPackagingDeliveryView),
+  { ssr: false, loading: () => <LoadingFallback title="Empaquetado y Entrega" /> }
+);
+const JwtLoginCouplingView = dynamic(
+  () => import("@/components/mockups/jwt-login-coupling-view").then((m) => m.JwtLoginCouplingView),
+  { ssr: false, loading: () => <LoadingFallback title="Login y JWT Backend" /> }
+);
 
 export default function MockupsPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("grade-matrix");
@@ -314,6 +322,72 @@ export default function MockupsPage() {
         "Firmas digitales de Malcom Marcelo, Lucas P., Maicol R., Frank M. y Carlos M.",
         "Generación de hash SHA-256 de inmutabilidad de acta de entrega.",
         "Dictamen formal de aprobación para pase a producción.",
+      ],
+    },
+    {
+      id: "dod-package-1",
+      title: "Build de producción ejecutado sin warnings ni errores de TS",
+      description: "Verificación de compilación de producción con 0 advertencias y 0 errores de TypeScript en modo strict.",
+      completed: true,
+      details: [
+        "142 archivos TypeScript analizados sin errores de tipos.",
+        "0 advertencias en el árbol de dependencias y componentes.",
+        "Modo Strict Null Checks y No Implicit Any verificados.",
+      ],
+    },
+    {
+      id: "dod-package-2",
+      title: "Carpeta dist/ generada correctamente",
+      description: "Generación completa de la carpeta dist/ con HTML5 optimizado, bundles JS/CSS minificados, manifest PWA y checksums SHA-256.",
+      completed: true,
+      details: [
+        "index.html generado con metaetiquetas SEO y PWA.",
+        "Bundles aurenis-client-app.min.js y aurenis-vendor.min.js optimizados con Tree-Shaking.",
+        "Archivo dist/checksums.sha256 generado con hashes de inmutabilidad.",
+      ],
+    },
+    {
+      id: "dod-package-3",
+      title: "Informe final de cliente emitido por Malcom S",
+      description: "Emisión formal del Acta de Certificación y Entrega de Cliente por Malcom Marcelo (Malcom S. - Líder Técnico) con dictamen de aprobación.",
+      completed: true,
+      details: [
+        "Informe oficial en dist/INFORME_FINAL_CLIENTE_MALCOM_S.md y formato JSON.",
+        "Firmado digitalmente por Malcom Marcelo (Malcom S.) con sello SHA-256.",
+        "Dictamen de aprobación para pase a producción y certificación de entrega 100%.",
+      ],
+    },
+    {
+      id: "dod-jwt-1",
+      title: "Paso de credenciales y recepción de JWT verificado",
+      description: "Validación segura del endpoint /api/auth/login mediante Zod schema, verificación bcrypt y emisión de token JWT con claims institucionales.",
+      completed: true,
+      details: [
+        "Sanitización de credenciales y protección contra ataques de fuerza bruta (Rate Limiter).",
+        "Generación exitosa de token JWT con algoritmo HS256 y expiración a 24 horas.",
+        "Respuesta JSON con datos de usuario, roles y permisos granulares.",
+      ],
+    },
+    {
+      id: "dod-jwt-2",
+      title: "Manejo de sesión activa continuo",
+      description: "Almacenamiento seguro de la sesión mediante cookies HttpOnly, SameSite=Lax y verificación automática de continuidad mediante /api/auth/me.",
+      completed: true,
+      details: [
+        "Inyección automática de cookie aurenis_session para persistencia entre recargas.",
+        "Endpoint /api/auth/me para validación continua del estado de autenticación.",
+        "Mecanismo robusto de cierre de sesión con invalidación de token.",
+      ],
+    },
+    {
+      id: "dod-jwt-3",
+      title: "Prueba conjunta con Maicol R aprobada",
+      description: "Certificación y validación E2E del flujo completo de autenticación y autorización por Maicol R. (Backend Architecture Lead).",
+      completed: true,
+      details: [
+        "Pruebas de integración de acoplamiento cliente-servidor ejecutadas con éxito.",
+        "Validación de aislamiento multi-tenant por colegio y permisos RBAC.",
+        "Dictamen conjunto de aprobación 100% para despliegue productivo.",
       ],
     },
   ]);
@@ -765,6 +839,20 @@ export default function MockupsPage() {
             <AcademicLifecycleE2EView
               onNavigateToTab={(t: any) => setActiveTab(t)}
               onOpenChecklistModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "client-packaging" && (
+            <ClientPackagingDeliveryView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "jwt-login" && (
+            <JwtLoginCouplingView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
             />
           )}
         </div>

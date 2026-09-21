@@ -44,12 +44,14 @@ export function CriteriaChecklistModal({
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+    "all" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
   >("all");
 
   if (!isOpen) return null;
 
   const filteredCriteria = criteria.filter((c) => {
+    if (filterCategory === "jwt") return c.id.includes("jwt");
+    if (filterCategory === "packaging") return c.id.includes("package") || c.id.includes("dist");
     if (filterCategory === "severity") return c.id.includes("severity");
     if (filterCategory === "qa") return c.id.includes("qa") || c.id.includes("severity");
     if (filterCategory === "lifecycle") return c.id.includes("lifecycle");
@@ -159,6 +161,28 @@ export function CriteriaChecklistModal({
               }`}
             >
               Todos ({criteria.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("jwt")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "jwt"
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                  : "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 hover:bg-purple-100"
+              }`}
+            >
+              Login & JWT ({criteria.filter((c) => c.id.includes("jwt")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("packaging")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "packaging"
+                  ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                  : "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100"
+              }`}
+            >
+              Empaquetado & dist/ ({criteria.filter((c) => c.id.includes("package") || c.id.includes("dist")).length})
             </button>
             <button
               type="button"

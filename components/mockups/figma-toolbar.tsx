@@ -29,6 +29,8 @@ import {
   Users,
   Award,
   Bug,
+  Package,
+  KeyRound,
 } from "lucide-react";
 
 export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "mobile-se" | "fluid";
@@ -49,7 +51,9 @@ export type ActiveTab =
   | "e2e-flow"
   | "user-journeys"
   | "lifecycle-e2e"
-  | "qa-issues";
+  | "qa-issues"
+  | "client-packaging"
+  | "jwt-login";
 
 interface FigmaToolbarProps {
   activeTab: ActiveTab;
@@ -323,6 +327,36 @@ export function FigmaToolbar({
               <span>Bitácora QA</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-200 font-bold">
                 Hallazgos • Bugs
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("client-packaging")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "client-packaging"
+                  ? "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-indigo-300 hover:text-white hover:bg-indigo-950/50"
+              }`}
+            >
+              <Package className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Empaquetado & Entrega</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-bold">
+                dist/ • Malcom S.
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("jwt-login")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "jwt-login"
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-purple-300 hover:text-white hover:bg-purple-950/50"
+              }`}
+            >
+              <KeyRound className="w-3.5 h-3.5 text-purple-300" />
+              <span>Login & JWT Backend</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/30 text-purple-200 font-bold">
+                Maicol R. • Aprobado
               </span>
             </button>
           </div>
