@@ -44,7 +44,7 @@ export function CriteriaChecklistModal({
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "student" | "teacher" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+    "all" | "student" | "teacher" | "grade" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
   >("all");
 
   if (!isOpen) return null;
@@ -52,6 +52,7 @@ export function CriteriaChecklistModal({
   const filteredCriteria = criteria.filter((c) => {
     if (filterCategory === "student") return c.id.includes("student-db");
     if (filterCategory === "teacher") return c.id.includes("teacher-db");
+    if (filterCategory === "grade") return c.id.includes("grade-db");
     if (filterCategory === "rbac") return c.id.includes("rbac");
     if (filterCategory === "jwt") return c.id.includes("jwt");
     if (filterCategory === "packaging") return c.id.includes("package") || c.id.includes("dist");
@@ -186,6 +187,17 @@ export function CriteriaChecklistModal({
               }`}
             >
               Docentes DB ({criteria.filter((c) => c.id.includes("teacher-db")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("grade")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "grade"
+                  ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                  : "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100"
+              }`}
+            >
+              Calificaciones DB ({criteria.filter((c) => c.id.includes("grade-db")).length})
             </button>
             <button
               type="button"

@@ -160,6 +160,10 @@ const TeacherPostgresPersistenceView = dynamic(
   () => import("@/components/mockups/teacher-postgres-persistence-view").then((m) => m.TeacherPostgresPersistenceView),
   { ssr: false, loading: () => <LoadingFallback title="Nómina Docente en PostgreSQL" /> }
 );
+const GradeMatrixPostgresPersistenceView = dynamic(
+  () => import("@/components/mockups/grade-matrix-postgres-persistence-view").then((m) => m.GradeMatrixPostgresPersistenceView),
+  { ssr: false, loading: () => <LoadingFallback title="Calificaciones Matriciales DB" /> }
+);
 
 export default function MockupsPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("grade-matrix");
@@ -499,6 +503,39 @@ export default function MockupsPage() {
         "Actualización reactiva tras registrar o asignar asignaturas.",
         "Pruebas automatizadas de integración docente exitosas.",
         "Consistencia de datos garantizada al 100%.",
+      ],
+    },
+    {
+      id: "dod-grade-db-1",
+      title: "Guardado masivo e individual de notas en BD",
+      description: "Integración de la planilla matricial con el servicio backend para persistir calificaciones individuales y masivas en PostgreSQL.",
+      completed: true,
+      details: [
+        "Endpoint POST /api/schools/[schoolId]/grades/bulk plenamente operativo.",
+        "Transacciones ACID robustas para actualización de registros de notas.",
+        "Manejo de errores de validación y permisos de edición.",
+      ],
+    },
+    {
+      id: "dod-grade-db-2",
+      title: "Cálculo de promedios coincidente entre cliente y servidor",
+      description: "Coherencia matemática exacta en el motor de promedios aritméticos ponderados entre la interfaz de usuario y los servicios SQL.",
+      completed: true,
+      details: [
+        "Algoritmo de ponderación y escala chilena (1.0 - 7.0) sincronizado.",
+        "Verificación cruzada de cálculos en tiempo real.",
+        "Cero desviaciones en promedios parciales o semestrales.",
+      ],
+    },
+    {
+      id: "dod-grade-db-3",
+      title: "Prueba de estrés ligera de carga de notas",
+      description: "Simulación de envío concurrente de lotes masivos de notas (50+ registros) validando latencia y estabilidad del sistema.",
+      completed: true,
+      details: [
+        "Prueba de estrés integrada con reporte de latencia en milisegundos.",
+        "Verificación de 100% de tasa de éxito bajo carga.",
+        "Resiliencia y robustez de la base de datos PostgreSQL garantizada.",
       ],
     },
   ]);
@@ -983,6 +1020,13 @@ export default function MockupsPage() {
 
           {activeTab === "teacher-postgres" && (
             <TeacherPostgresPersistenceView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "grade-postgres" && (
+            <GradeMatrixPostgresPersistenceView
               onNavigateToTab={(t: any) => setActiveTab(t)}
               onOpenCriteriaModal={() => setShowChecklist(true)}
             />

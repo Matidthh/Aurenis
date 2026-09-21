@@ -36,6 +36,7 @@
     "test:rbac-enforcement": "tsx scripts/rbac-enforcement-test.ts",
     "test:student-postgres": "tsx scripts/student-postgres-persistence-test.ts",
     "test:teacher-postgres": "tsx scripts/teacher-postgres-persistence-test.ts",
+    "test:grade-postgres": "tsx scripts/grade-matrix-postgres-persistence-test.ts",
     "package:client": "tsx scripts/package-client-dist.ts",
     "build:dist": "tsx scripts/package-client-dist.ts",
     "build:vite": "tsx scripts/package-client-dist.ts",
