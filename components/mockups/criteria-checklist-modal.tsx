@@ -43,11 +43,15 @@ export function CriteriaChecklistModal({
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
-  const [filterCategory, setFilterCategory] = useState<"all" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e">("all");
+  const [filterCategory, setFilterCategory] = useState<
+    "all" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+  >("all");
 
   if (!isOpen) return null;
 
   const filteredCriteria = criteria.filter((c) => {
+    if (filterCategory === "severity") return c.id.includes("severity");
+    if (filterCategory === "qa") return c.id.includes("qa") || c.id.includes("severity");
     if (filterCategory === "lifecycle") return c.id.includes("lifecycle");
     if (filterCategory === "journeys") return c.id.includes("journey");
     if (filterCategory === "browser") return c.id.includes("browser");
@@ -155,6 +159,28 @@ export function CriteriaChecklistModal({
               }`}
             >
               Todos ({criteria.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("severity")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "severity"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100"
+              }`}
+            >
+              Severidad QA ({criteria.filter((c) => c.id.includes("severity")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("qa")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "qa"
+                  ? "bg-rose-600 text-white"
+                  : "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100"
+              }`}
+            >
+              Bitácora QA ({criteria.filter((c) => c.id.includes("qa")).length})
             </button>
             <button
               type="button"
