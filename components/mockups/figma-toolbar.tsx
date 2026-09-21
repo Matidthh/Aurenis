@@ -26,6 +26,8 @@ import {
   SlidersHorizontal,
   Globe,
   Database,
+  Users,
+  Award,
 } from "lucide-react";
 
 export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "mobile-se" | "fluid";
@@ -43,7 +45,9 @@ export type ActiveTab =
   | "error-resilience"
   | "device-matrix"
   | "browser-matrix"
-  | "e2e-flow";
+  | "e2e-flow"
+  | "user-journeys"
+  | "lifecycle-e2e";
 
 interface FigmaToolbarProps {
   activeTab: ActiveTab;
@@ -272,6 +276,36 @@ export function FigmaToolbar({
               <span>Flujo E2E & BD</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-200 font-bold hidden sm:inline">
                 DoD E2E
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("user-journeys")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "user-journeys"
+                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-indigo-300 hover:text-white hover:bg-indigo-950/50"
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Jornadas de Uso</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-bold">
+                Admin • Profe • Alumno
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("lifecycle-e2e")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "lifecycle-e2e"
+                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-emerald-300 hover:text-white hover:bg-emerald-950/50"
+              }`}
+            >
+              <Award className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Ciclo Académico E2E</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-200 font-bold">
+                Decreto 67 • Dictamen E2E
               </span>
             </button>
           </div>

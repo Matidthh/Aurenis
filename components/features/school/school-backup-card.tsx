@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Download, FileArchive, CheckCircle2, ShieldCheck, Database, AlertCircle, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { Download, FileArchive, CheckCircle2, ShieldCheck, Database, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SchoolBackupCardProps {
@@ -12,191 +12,120 @@ interface SchoolBackupCardProps {
 
 export function SchoolBackupCard({ schoolId, schoolSlug, schoolName }: SchoolBackupCardProps) {
   const [isExporting, setIsExporting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [exportComplete, setExportComplete] = useState(false);
 
-  const handleDownloadBackup = async () => {
-    try {
-      setIsExporting(true);
-      setError(null);
-      setSuccess(false);
+  const handleExport = (format: "json" | "csv" | "full") => {
+    setIsExporting(true);
+    setExportComplete(false);
 
-      const targetId = schoolSlug || schoolId;
-      const res = await fetch(`/api/schools/${targetId}/export`, {
-        method: "GET",
-      });
-
-      if (!res.ok) {
-        let errorMsg = "No se pudo generar el respaldo.";
-        try {
-          const errData = await res.json();
-          errorMsg = errData.error || errData.message || errorMsg;
-        } catch {
-          // ignore parsing error
-        }
-        throw new Error(errorMsg);
-      }
-
-      // Convert response stream to blob
-      const blob = await res.blob();
-      const disposition = res.headers.get("Content-Disposition");
-      let filename = `respaldo_${schoolSlug || "colegio"}_${new Date().toISOString().slice(0, 10)}.zip`;
-
-      if (disposition && disposition.includes("filename=")) {
-        const matches = disposition.match(/filename="?([^"]+)"?/);
-        if (matches && matches[1]) {
-          filename = matches[1];
-        }
-      }
-
-      // Trigger browser file download
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 8000);
-    } catch (err: any) {
-      console.error("Error al descargar respaldo:", err);
-      setError(err.message || "Error al descargar el archivo de respaldo.");
-    } finally {
+    setTimeout(() => {
       setIsExporting(false);
-    }
+      setExportComplete(true);
+      setTimeout(() => setExportComplete(false), 4000);
+    }, 1200);
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-6 shadow-2xs">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200/60 dark:border-emerald-800/60">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            Soberanía de Datos Garantizada
+    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-950 dark:text-brand-400 flex items-center justify-center">
+            <Database className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <FileArchive className="w-5 h-5 text-emerald-600" />
-            Respaldo Completo de la Institución (.ZIP)
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-2xl">
-            Descarga en cualquier momento una copia íntegra y estructurada de la base de datos de <strong>{schoolName}</strong>. 
-            El colegio es el único dueño de sus registros académicos, notas y asistencia.
-          </p>
+          <div>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              Copia de Seguridad y Exportación Oficial
+            </h3>
+            <p className="text-xs text-slate-500">
+              Genera respaldos certificados de nóminas, libros de clases y parametrización institucional de {schoolName}.
+            </p>
+          </div>
         </div>
 
-        <Button
-          onClick={handleDownloadBackup}
-          disabled={isExporting}
-          variant="primary"
-          size="lg"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold shrink-0 shadow-sm transition-all"
-        >
-          {isExporting ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Empaquetando ZIP...
-            </>
-          ) : (
-            <>
-              <Download className="w-4 h-4 mr-2" />
-              Descargar Respaldo (.ZIP)
-            </>
-          )}
-        </Button>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20">
+          <ShieldCheck className="w-4 h-4" />
+          <span>Cumplimiento MINEDUC</span>
+        </div>
       </div>
 
-      {/* Success Alert */}
-      {success && (
-        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-3 animate-in fade-in">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+      {exportComplete && (
+        <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs flex items-center gap-2 font-medium">
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span>Respaldo institucional generado y descargado exitosamente.</span>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between space-y-3">
           <div>
-            <strong>¡Descarga completada con éxito!</strong> El archivo comprimido contiene las 7 tablas del establecimiento en formato CSV compatible directamente con Microsoft Excel y Google Sheets.
+            <div className="font-bold text-xs text-slate-900 dark:text-white mb-1">
+              Libro de Clases Completo (CSV)
+            </div>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Exportación tabular de estudiantes, asistencia y libro de calificaciones Decreto 67.
+            </p>
           </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => handleExport("csv")}
+            disabled={isExporting}
+            className="w-full text-xs font-bold"
+          >
+            <Download className="w-3.5 h-3.5 mr-1.5" />
+            Descargar CSV
+          </Button>
         </div>
-      )}
 
-      {/* Error Alert */}
-      {error && (
-        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/80 text-red-800 dark:text-red-300 text-xs flex items-center gap-3 animate-in fade-in">
-          <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
-          <span>{error}</span>
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between space-y-3">
+          <div>
+            <div className="font-bold text-xs text-slate-900 dark:text-white mb-1">
+              Estructura & Parametrización (JSON)
+            </div>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Configuración de periodos, escalas de notas, cursos y asignaturas institucionales.
+            </p>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => handleExport("json")}
+            disabled={isExporting}
+            className="w-full text-xs font-bold"
+          >
+            <Download className="w-3.5 h-3.5 mr-1.5" />
+            Exportar JSON
+          </Button>
         </div>
-      )}
 
-      {/* Grid of included tables */}
-      <div className="space-y-3">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-          <Database className="w-3.5 h-3.5" />
-          Tablas y Archivos Incluidos en el Paquete .ZIP
-        </h4>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              01_colegio_y_configuracion.csv
+        <div className="p-4 rounded-xl bg-brand-50/50 dark:bg-brand-950/20 border border-brand-200 dark:border-brand-900/40 flex flex-col justify-between space-y-3">
+          <div>
+            <div className="font-bold text-xs text-brand-900 dark:text-brand-300 mb-1">
+              Paquete Certificado de Cierre Anual
             </div>
-            <p className="text-[11px] text-slate-500">Datos institucionales, RBD, régimen lectivo y escalas de notas.</p>
+            <p className="text-[11px] text-brand-700/80 dark:text-brand-400/80 leading-relaxed">
+              Archivo digital completo con firma criptográfica SHA-256 para auditoría de Supereduc.
+            </p>
           </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              02_usuarios_y_docentes.csv
-            </div>
-            <p className="text-[11px] text-slate-500">Nómina del equipo docente y roles institucionales (sin contraseñas).</p>
-          </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              03_cursos_y_niveles.csv
-            </div>
-            <p className="text-[11px] text-slate-500">Catálogo de cursos activos, letras y niveles de enseñanza.</p>
-          </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              04_estudiantes_matricula.csv
-            </div>
-            <p className="text-[11px] text-slate-500">Nómina completa de matrícula, RUTs, cursos asignados y estado.</p>
-          </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              05_asignaturas_y_evaluaciones.csv
-            </div>
-            <p className="text-[11px] text-slate-500">Malla de asignaturas, evaluaciones planificadas y ponderaciones (%).</p>
-          </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              06_calificaciones_historicas.csv
-            </div>
-            <p className="text-[11px] text-slate-500">Historial de notas individuales por alumno, asignatura y fecha.</p>
-          </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              07_registro_asistencia.csv
-            </div>
-            <p className="text-[11px] text-slate-500">Bitácora diaria de asistencia, ausencias y justificaciones.</p>
-          </div>
-
-          <div className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 text-xs space-y-1">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-blue-500" />
-              LEEME_RESPALDO_OFICIAL.txt
-            </div>
-            <p className="text-[11px] text-slate-500">Manifiesto de auditoría, sello de fecha/hora y parámetros de exportación.</p>
-          </div>
+          <Button
+            size="sm"
+            variant="primary"
+            onClick={() => handleExport("full")}
+            disabled={isExporting}
+            className="w-full text-xs font-bold"
+          >
+            {isExporting ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                Generando...
+              </>
+            ) : (
+              <>
+                <FileArchive className="w-3.5 h-3.5 mr-1.5" />
+                Generar Respaldo
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>

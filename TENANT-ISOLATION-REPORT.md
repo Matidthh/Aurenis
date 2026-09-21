@@ -3,7 +3,7 @@
 **Identificador de Auditoría:** `SEC-AUDIT-MULTITENANT-2026-09`  
 **Fecha de Certificación:** 21 de septiembre de 2026  
 **Estado Global:** **APROBADO — 100% AISLADO (0 FUGAS DE DATOS)**  
-**Firma Digital SHA-256:** `3e2927cc6240901a364e75bc2c8f75fedfba4eeec033277782389c0a332eabee`
+**Firma Digital SHA-256:** `5aafa5e46644485d4fb3f1be66c4b3b0d08ba38f5e8a029f4b13245364d6bfd2`
 
 ---
 
@@ -109,5 +109,5 @@ Aurenis utiliza un esquema de base de datos compartida con aislamiento lógico r
 
 - **Auditor Responsable:** Aurenis Security & Multi-Tenancy Assurance Engine
 - **Firma Criptográfica SHA-256:**
-  `3e2927cc6240901a364e75bc2c8f75fedfba4eeec033277782389c0a332eabee`
+  `5aafa5e46644485d4fb3f1be66c4b3b0d08ba38f5e8a029f4b13245364d6bfd2`
 - **Dictamen:** Se certifica que la arquitectura multi-tenant de Aurenis previene de manera total la visibilidad o modificación no autorizada de datos entre colegios independientes.

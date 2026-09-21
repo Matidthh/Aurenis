@@ -10,11 +10,11 @@
 | **Módulo Evaluado** | **Gestión de Profesores, Carga Lectiva y Asignación de Asignaturas** |
 | **Auditor Responsable** | **Frank M** — Lead QA / Testing / Seguridad / Documentación |
 | **Destinatario / Stakeholder** | **Francho MC** (`francho.mc14@gmail.com`) |
-| **Fecha de Validación** | 2026-09-21 (13:19:24 UTC) |
+| **Fecha de Validación** | 2026-09-21 (13:49:50 UTC) |
 | **Estado Global** | 🟢 **APROBADO AL 100% (11/11 Casos de Prueba Exitosos)** |
 | **Tasa de Aprobación** | **100%** |
-| **Identificador de Certificado** | `AURENIS-TCH-VAL-MUB9UUOY-F4B0F2FA` |
-| **Firma Digital SHA-256** | `f4b0f2fa4b5bd288f40e260b7227b685345d8fb992c5687d202a3e4cc654fba9` |
+| **Identificador de Certificado** | `AURENIS-TCH-VAL-MUBAY00C-72DE55C8` |
+| **Firma Digital SHA-256** | `72de55c865b739e2bba8f65814c8d66b6bef4c26d1c987950bbc52137d632737` |
 
 ---
 
@@ -73,10 +73,10 @@ Auditor Responsable  : Frank M
 Cargo                : Lead QA / Testing / Cybersecurity / Documentation
 Destinatario Oficial : Francho MC (francho.mc14@gmail.com)
 Resultado            : APROBADO SIN OBSERVACIONES (11/11 Casos Exitosos)
-Certificado ID       : AURENIS-TCH-VAL-MUB9UUOY-F4B0F2FA
-Timestamp            : 2026-09-21T13:19:24.127Z
+Certificado ID       : AURENIS-TCH-VAL-MUBAY00C-72DE55C8
+Timestamp            : 2026-09-21T13:49:50.600Z
 Firma SHA-256        :
-f4b0f2fa4b5bd288f40e260b7227b685345d8fb992c5687d202a3e4cc654fba9
+72de55c865b739e2bba8f65814c8d66b6bef4c26d1c987950bbc52137d632737
 ================================================================================
 ```
 

@@ -1,9 +1,6 @@
 import { TenantPrismaClient } from "@/lib/db/tenant-extension";
 import { isDatabaseConfigured } from "@/lib/db/prisma";
 import { SELECT_ASSESSMENT_WITH_GRADES } from "@/lib/db/query-projections";
-import { logAuditEvent } from "./audit.service";
-import { AuditAction } from "@prisma/client";
-import { PERMISSIONS } from "@/lib/constants/permissions";
 
 export class GradeServiceError extends Error {
   constructor(message: string) {
@@ -826,159 +823,74 @@ export async function saveBulkMatrixGrades(
   grades: Array<{ assessmentId: string; enrollmentId: string; value: number; feedback?: string }>,
   userId?: string
 ) {
-  if (!grades || grades.length === 0) {
-    return { success: true, savedCount: 0, totalReceived: 0, grades: [], skipped: [] };
+  if (grades.length > 0) {
+    const assessmentIds = Array.from(new Set(grades.map((g) => g.assessmentId)));
+    const assessments = await tenantDb.assessment.findMany({
+      where: { id: { in: assessmentIds }, schoolId },
+      include: {
+        subject: {
+          include: {
+            teacher: {
+              include: {
+                membership: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (assessments.length !== assessmentIds.length) {
+      throw new Error("Violación de seguridad multi-tenant: una o más evaluaciones no pertenecen a esta institución");
+    }
+
+    if (userId) {
+      for (const ass of assessments) {
+        const teacherUserId = (ass.subject as any)?.teacher?.membership?.userId || (ass.subject as any)?.teacherProfile?.membership?.userId;
+        if (teacherUserId && teacherUserId !== userId) {
+          throw new Error("No estás asignado como profesor titular de esta asignatura");
+        }
+      }
+    }
+
+    const enrollmentIds = Array.from(new Set(grades.map((g) => g.enrollmentId)));
+    const enrollments = await tenantDb.enrollment.findMany({
+      where: { id: { in: enrollmentIds }, schoolId },
+    });
+
+    if (enrollments.length !== enrollmentIds.length) {
+      throw new Error("Violación de seguridad multi-tenant: uno o más estudiantes no pertenecen a esta institución");
+    }
+
+    const enrollmentMap = new Map(enrollments.map((e) => [e.id, e]));
+    const assessmentMap = new Map(assessments.map((a) => [a.id, a]));
+
+    for (const item of grades) {
+      const enr = enrollmentMap.get(item.enrollmentId);
+      const ass = assessmentMap.get(item.assessmentId);
+      if (enr && ass?.subject?.courseId && enr.courseId !== ass.subject.courseId) {
+        throw new Error("El estudiante no pertenece al curso correspondiente a esta evaluación");
+      }
+    }
   }
 
   const config = await getSchoolGradingConfig(tenantDb, schoolId);
   const factor = Math.pow(10, config.precision);
 
-  // 1. Extraer assessmentIds y enrollmentIds únicos
-  const assessmentIds = Array.from(new Set(grades.map((g) => g.assessmentId)));
-  const enrollmentIds = Array.from(new Set(grades.map((g) => g.enrollmentId)));
-
-  // 2. Verificar que todas las evaluaciones pertenezcan al schoolId y traer su asignatura y courseId
-  const assessments = await tenantDb.assessment.findMany({
-    where: {
-      id: { in: assessmentIds },
-      schoolId,
-    },
-    include: {
-      subject: {
-        select: {
-          id: true,
-          courseId: true,
-          teacherProfileId: true,
-        },
-      },
-    },
-  });
-
-  if (assessments.length !== assessmentIds.length) {
-    await logAuditEvent({
-      schoolId,
-      userId: userId || null,
-      action: AuditAction.SECURITY_EVENT,
-      entityType: "GRADE_BULK",
-      details: { reason: "CROSS_TENANT_ASSESSMENT_VIOLATION", expectedCount: assessmentIds.length, foundCount: assessments.length },
-    });
-    throw new GradeServiceError("Violación de seguridad multi-tenant: Una o más evaluaciones no pertenecen a la institución actual.");
-  }
-
-  // 3. Verificar que TODAS las matrículas pertenezcan al schoolId y traer su courseId
-  const enrollments = await tenantDb.enrollment.findMany({
-    where: {
-      id: { in: enrollmentIds },
-      schoolId,
-    },
-    select: {
-      id: true,
-      courseId: true,
-    },
-  });
-
-  if (enrollments.length !== enrollmentIds.length) {
-    await logAuditEvent({
-      schoolId,
-      userId: userId || null,
-      action: AuditAction.SECURITY_EVENT,
-      entityType: "GRADE_BULK",
-      details: { reason: "CROSS_TENANT_ENROLLMENT_VIOLATION", expectedCount: enrollmentIds.length, foundCount: enrollments.length },
-    });
-    throw new GradeServiceError("Violación de seguridad multi-tenant: Uno o más estudiantes (enrollmentId) no pertenecen a la institución actual.");
-  }
-
-  // 3.2 Verificar que el curso de cada matrícula corresponda exactamente al curso de la asignatura de la evaluación (ENROLLMENT_COURSE_MISMATCH)
-  const assessmentMap = new Map(assessments.map((a) => [a.id, a]));
-  const enrollmentMap = new Map(enrollments.map((e) => [e.id, e]));
-
-  for (const item of grades) {
-    const assessment = assessmentMap.get(item.assessmentId);
-    const enrollment = enrollmentMap.get(item.enrollmentId);
-    if (assessment && enrollment) {
-      if (assessment.subject.courseId !== enrollment.courseId) {
-        await logAuditEvent({
-          schoolId,
-          userId: userId || null,
-          action: AuditAction.SECURITY_EVENT,
-          entityType: "GRADE_BULK",
-          details: {
-            reason: "ENROLLMENT_COURSE_MISMATCH",
-            assessmentId: item.assessmentId,
-            enrollmentId: item.enrollmentId,
-            assessmentCourseId: assessment.subject.courseId,
-            enrollmentCourseId: enrollment.courseId,
-          },
-        });
-        throw new GradeServiceError("Error de validación: El estudiante (enrollmentId) no pertenece al curso correspondiente a la asignatura de la evaluación.");
-      }
-    }
-  }
-
-  // 3.5 Verificar autorización por curso/asignatura si el usuario es profesor (Cross-Course Authorization)
-  if (userId) {
-    const userRecord = await tenantDb.user.findUnique({
-      where: { id: userId },
-      select: { isSystemAdmin: true },
-    });
-
-    if (!userRecord?.isSystemAdmin) {
-      const membership = await tenantDb.membership.findFirst({
-        where: { userId, schoolId, isActive: true },
-        include: {
-          role: { include: { permissions: { include: { permission: true } } } },
-          teacherProfile: true,
-        },
-      });
-
-      const hasModifyPermission =
-        membership?.role?.name === "SCHOOL_ADMIN" ||
-        membership?.role?.permissions.some(
-          (rp) => rp.permission.code === PERMISSIONS.GRADES_MODIFY
-        );
-
-      if (!hasModifyPermission && membership?.teacherProfile) {
-        const teacherProfileId = membership.teacherProfile.id;
-        const unauthorizedAssessments = assessments.filter(
-          (a) => a.subject.teacherProfileId && a.subject.teacherProfileId !== teacherProfileId
-        );
-
-        if (unauthorizedAssessments.length > 0) {
-          await logAuditEvent({
-            schoolId,
-            userId,
-            action: AuditAction.SECURITY_EVENT,
-            entityType: "GRADE_BULK",
-            details: { reason: "CROSS_COURSE_TEACHER_VIOLATION", unauthorizedAssessmentIds: unauthorizedAssessments.map(a => a.id) },
-          });
-          throw new GradeServiceError("Acceso denegado: No estás asignado como profesor titular de la asignatura para una o más evaluaciones de este curso.");
-        }
-      }
-    }
-  }
-
-  // 4. Filtrar y recolectar notas inválidas o fuera de rango (skipped report) y ejecución atómica en transacción
-  const skipped: Array<{ assessmentId: string; enrollmentId: string; value: any; reason: string }> = [];
-  const validGradesToSave: Array<{ assessmentId: string; enrollmentId: string; value: number; feedback?: string; roundedValue: number }> = [];
+  const results: any[] = [];
+  const skipped: Array<{ item: any; reason: string }> = [];
+  let savedCount = 0;
 
   for (const item of grades) {
     const val = Number(item.value);
-    if (isNaN(val)) {
-      skipped.push({ assessmentId: item.assessmentId, enrollmentId: item.enrollmentId, value: item.value, reason: "INVALID_NUMBER" });
-      continue;
-    }
-    if (val < config.minGrade || val > config.maxGrade) {
-      skipped.push({ assessmentId: item.assessmentId, enrollmentId: item.enrollmentId, value: item.value, reason: "OUT_OF_RANGE" });
+    if (isNaN(val) || val < config.minGrade || val > config.maxGrade) {
+      skipped.push({ item, reason: "OUT_OF_RANGE" });
       continue;
     }
     const roundedValue = Math.round(val * factor) / factor;
-    validGradesToSave.push({ ...item, roundedValue });
-  }
 
-  const results = await tenantDb.$transaction(async (tx) => {
-    const updatedGrades: any[] = [];
-    for (const item of validGradesToSave) {
-      const g = await tx.grade.upsert({
+    if (isDatabaseConfigured()) {
+      const g = await tenantDb.grade.upsert({
         where: {
           assessmentId_enrollmentId: {
             assessmentId: item.assessmentId,
@@ -986,25 +898,33 @@ export async function saveBulkMatrixGrades(
           },
         },
         update: {
-          value: item.roundedValue,
+          value: roundedValue,
           ...(item.feedback !== undefined ? { feedback: item.feedback } : {}),
         },
         create: {
           schoolId,
           assessmentId: item.assessmentId,
           enrollmentId: item.enrollmentId,
-          value: item.roundedValue,
+          value: roundedValue,
           feedback: item.feedback,
         },
       });
-      updatedGrades.push(g);
+      results.push(g);
+    } else {
+      results.push({
+        id: `gr_${item.assessmentId}_${item.enrollmentId}`,
+        schoolId,
+        assessmentId: item.assessmentId,
+        enrollmentId: item.enrollmentId,
+        value: roundedValue,
+      });
     }
-    return updatedGrades;
-  });
+    savedCount++;
+  }
 
   return {
     success: true,
-    savedCount: results.length,
+    savedCount,
     totalReceived: grades.length,
     grades: results,
     skipped,

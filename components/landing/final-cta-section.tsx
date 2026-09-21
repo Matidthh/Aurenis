@@ -1,96 +1,108 @@
 "use client";
 
-import React from "react";
-import { ArrowRight, Sparkles, ShieldCheck, CheckCircle2, PlayCircle, Clock, Users, Building } from "lucide-react";
-import Link from "next/link";
+import React, { useState } from "react";
+import { ArrowRight, Sparkles, CheckCircle2, Loader2, Send } from "lucide-react";
 
 interface FinalCtaSectionProps {
   onOpenQuoteModal?: () => void;
 }
 
-export function FinalCtaSection({ onOpenQuoteModal }: FinalCtaSectionProps) {
+export function FinalCtaSection({ onOpenQuoteModal }: FinalCtaSectionProps = {}) {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (onOpenQuoteModal) {
+      onOpenQuoteModal();
+      return;
+    }
+    if (!email) return;
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSubmitted(true);
+    }, 800);
+  }
 
   return (
-    <section id="contacto" className="py-20 sm:py-28 bg-[#F8F8F5] relative overflow-hidden">
-      {/* Decorative ambient subtle background glows */}
-      <div
-        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-100/40 rounded-full blur-3xl -z-10"
-        aria-hidden="true"
-      />
-
+    <section className="py-24 bg-[#F8F8F5] relative overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
-        <div className="bg-white rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden border border-slate-200/90 shadow-xl shadow-slate-200/40">
-          
+        
+        <div className="bg-blue-900 text-white rounded-3xl p-10 sm:p-16 relative overflow-hidden shadow-2xl">
+          {/* Decorative background gradients */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+
           <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
-            
-            {/* Badge de Sección */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-              <span>Modernización Escolar Sin Interrupciones</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/30 border border-blue-400/40 text-blue-200 text-xs font-bold">
+              <Sparkles className="w-4 h-4 text-blue-300" />
+              <span>Comienza la transformación digital hoy</span>
             </div>
 
-            {/* Titular Principal */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-              Transforma la gestión de tu colegio con tecnología pensada para Chile
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+              Lleva tu colegio al siguiente nivel con AURENIS
             </h2>
 
-            {/* Bajada Explicativa */}
-            <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-              Pase de asistencia en 1 clic, cálculo ponderado de calificaciones (1.0 a 7.0), control de accesos por rol institucional y exportación completa de tus datos.
+            <p className="text-blue-100 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+              Únete a las instituciones que ya optimizaron su gestión académica, redujeron la carga administrativa y conectaron a toda su comunidad.
             </p>
 
-            {/* Acciones Directas: Agendamiento y Demo */}
-            <div className="space-y-4 max-w-xl mx-auto pt-4">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            {submitted ? (
+              <div className="bg-emerald-900/90 border border-emerald-700 text-emerald-200 p-6 rounded-2xl max-w-md mx-auto space-y-2 animate-in fade-in">
+                <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto" />
+                <h3 className="font-bold text-base text-white">¡Solicitud recibida con éxito!</h3>
+                <p className="text-xs text-emerald-300">
+                  Un asesor pedagógico se pondrá en contacto contigo en menos de 2 horas hábiles.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto pt-4">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Ingresa tu correo institucional..."
+                  className="w-full sm:flex-1 px-5 py-4 rounded-full bg-white/10 border border-blue-400/30 text-white placeholder:text-blue-200 text-sm focus:outline-none focus:bg-white/20 focus:border-white transition"
+                />
                 <button
-                  type="button"
-                  onClick={() => onOpenQuoteModal?.()}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl font-bold text-sm bg-blue-600 hover:bg-blue-700 text-white transition shadow-md shadow-blue-600/20 shrink-0 cursor-pointer"
+                  type="submit"
+                  disabled={loading}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-sm bg-white text-blue-900 hover:bg-blue-50 transition shadow-lg shrink-0"
                 >
-                  <span>Agendar Demostración Directa</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-blue-900" />
+                  ) : (
+                    <>
+                      <span>Agendar Demo</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
+              </form>
+            )}
 
-                <Link
-                  href="/select-school"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-sm bg-slate-100 hover:bg-slate-200 text-slate-800 transition shrink-0"
-                >
-                  <PlayCircle className="w-4 h-4 text-blue-600" />
-                  <span>Entrar al Entorno Demo</span>
-                </Link>
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-blue-200">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Sin compromiso inicial</span>
               </div>
-
-              <div className="pt-2 text-xs text-slate-500 flex flex-wrap items-center justify-center gap-3">
-                <span>¿Dudas inmediatas?</span>
-                <a
-                  href="mailto:contacto@aurenis.cl"
-                  className="text-blue-600 hover:underline font-semibold"
-                >
-                  contacto@aurenis.cl
-                </a>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Migración asistida de datos</span>
               </div>
-            </div>
-
-            {/* Puntos de Confianza Institucional */}
-            <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-semibold text-slate-600">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>$0 Costo de Migración</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-blue-600" />
-                <span>Exportación Completa .ZIP</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-600" />
-                <span>Puesta en marcha en 48 hrs</span>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Soporte 24/7</span>
               </div>
             </div>
 
           </div>
         </div>
+
       </div>
     </section>
   );
 }
-

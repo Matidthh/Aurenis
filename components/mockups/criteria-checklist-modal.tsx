@@ -43,11 +43,13 @@ export function CriteriaChecklistModal({
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
-  const [filterCategory, setFilterCategory] = useState<"all" | "browser" | "responsive" | "resilience" | "e2e">("all");
+  const [filterCategory, setFilterCategory] = useState<"all" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e">("all");
 
   if (!isOpen) return null;
 
   const filteredCriteria = criteria.filter((c) => {
+    if (filterCategory === "lifecycle") return c.id.includes("lifecycle");
+    if (filterCategory === "journeys") return c.id.includes("journey");
     if (filterCategory === "browser") return c.id.includes("browser");
     if (filterCategory === "responsive") return c.id.includes("responsive");
     if (filterCategory === "resilience") return c.id.includes("resilience");
@@ -153,6 +155,28 @@ export function CriteriaChecklistModal({
               }`}
             >
               Todos ({criteria.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("lifecycle")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "lifecycle"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100"
+              }`}
+            >
+              Ciclo Académico E2E (3)
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("journeys")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "journeys"
+                  ? "bg-brand-600 text-white"
+                  : "bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 hover:bg-brand-100"
+              }`}
+            >
+              Jornadas de Uso (3)
             </button>
             <button
               type="button"
