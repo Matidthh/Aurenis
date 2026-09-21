@@ -3,6 +3,7 @@
  */
 
 export * from "./types";
+export * from "./api-error";
 export * from "./pagination";
 export * from "./response";
 export * from "./discreet-logger";

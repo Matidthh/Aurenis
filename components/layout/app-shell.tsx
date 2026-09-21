@@ -6,7 +6,7 @@ import { Header } from "./header";
 import { CommandPalette } from "./command-palette";
 import { NavItem, UserSessionInfo, SchoolContextInfo } from "./types";
 import { NetworkErrorBanner } from "@/components/ui/network-error-banner";
-import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { useRouteMemoryCleanup } from "@/lib/utils/memory-leak-guard";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -23,6 +23,9 @@ export function AppShell({
   schoolContext,
   isSystemAdmin,
 }: AppShellProps) {
+  // Limpieza garantizada de listeners y peticiones en vuelo al cambiar de ruta
+  useRouteMemoryCleanup();
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -140,9 +143,7 @@ export function AppShell({
           id="main-content-container"
           className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-200"
         >
-          <ErrorBoundary boundaryName="AppShellContent">
-            {children}
-          </ErrorBoundary>
+          {children}
         </main>
       </div>
 

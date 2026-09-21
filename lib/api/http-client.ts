@@ -14,6 +14,9 @@ import { AUTH_STORAGE_KEYS } from "@/lib/auth/auth-context";
 import { aurenisFetch, FetchWithRetryOptions } from "./network-status";
 import { discreetLogger } from "./discreet-logger";
 import { ApiSuccessResponse, ApiErrorResponse } from "./types";
+import { ApiHttpError, parseApiError, extractZodFieldErrors } from "./api-error";
+
+export { ApiHttpError, parseApiError, extractZodFieldErrors };
 
 export interface RequestOptions extends Omit<FetchWithRetryOptions, "body"> {
   token?: string | null;
@@ -27,6 +30,15 @@ export interface ApiResponseWrapper<T = any> {
   status: number;
   success: boolean;
   message?: string;
+}
+
+export interface SafeApiResponse<T = any> {
+  data: T | null;
+  error: ApiHttpError | null;
+  success: boolean;
+  status: number;
+  message?: string;
+  rawResponse?: Response;
 }
 
 /**
@@ -131,13 +143,47 @@ export async function request<T = any>(
       message,
     };
   } catch (error: any) {
+    const apiError = parseApiError(error);
+
     discreetLogger.logHttpError({
       url: fullUrl,
       method: fetchOptions.method || "GET",
-      status: error?.status || 500,
-      errorMessage: error?.message || "Error al procesar solicitud HTTP",
+      status: apiError.status,
+      errorMessage: apiError.userMessage || apiError.message,
     });
-    throw error;
+
+    throw apiError;
+  }
+}
+
+/**
+ * Ejecuta una petición HTTP capturando de forma segura cualquier excepción.
+ * Retorna un objeto { data, error, success, status } garantizando CERO excepciones no capturadas.
+ */
+export async function safeRequest<T = any>(
+  endpoint: string,
+  options: RequestOptions = {}
+): Promise<SafeApiResponse<T>> {
+  try {
+    const result = await request<T>(endpoint, options);
+    return {
+      data: result.data,
+      error: null,
+      success: true,
+      status: result.status,
+      message: result.message,
+      rawResponse: result.rawResponse,
+    };
+  } catch (err: unknown) {
+    const apiError = parseApiError(err);
+    return {
+      data: null,
+      error: apiError,
+      success: false,
+      status: apiError.status,
+      message: apiError.userMessage,
+      rawResponse: apiError.rawResponse,
+    };
   }
 }
 
@@ -159,4 +205,20 @@ export const apiClient = {
 
   delete: <T = any>(url: string, options?: RequestOptions) =>
     request<T>(url, { ...options, method: "DELETE" }),
+
+  // Métodos seguros (Safe API) que nunca lanzan excepciones
+  safeGet: <T = any>(url: string, options?: RequestOptions) =>
+    safeRequest<T>(url, { ...options, method: "GET" }),
+
+  safePost: <T = any>(url: string, body?: any, options?: RequestOptions) =>
+    safeRequest<T>(url, { ...options, method: "POST", body }),
+
+  safePut: <T = any>(url: string, body?: any, options?: RequestOptions) =>
+    safeRequest<T>(url, { ...options, method: "PUT", body }),
+
+  safePatch: <T = any>(url: string, body?: any, options?: RequestOptions) =>
+    safeRequest<T>(url, { ...options, method: "PATCH", body }),
+
+  safeDelete: <T = any>(url: string, options?: RequestOptions) =>
+    safeRequest<T>(url, { ...options, method: "DELETE" }),
 };

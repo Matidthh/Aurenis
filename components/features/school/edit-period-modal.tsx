@@ -3,8 +3,17 @@
 import { useState, useEffect } from "react";
 import { Modal, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
-import { Calendar, Save, Trash2, AlertCircle, Percent, Lock, Unlock } from "lucide-react";
+import { Calendar, Save, Trash2, Percent, Lock, Unlock } from "lucide-react";
 import { apiClient } from "@/lib/api";
+import { useApiFormErrors } from "@/lib/hooks/use-api-form-errors";
+import { ApiErrorAlert } from "@/components/ui/api-error-alert";
+import { FormFieldError } from "@/components/ui/form-field-error";
+import { useToast } from "@/components/ui/toast";
+
+/**
+ * Modal para Edición de Periodos Académicos con Mapeo de Errores Zod
+ * Responsable de autoría: Maicol R. (Módulos de Gestión Escolar & Configuración)
+ */
 
 interface AcademicPeriodData {
   id: string;
@@ -45,6 +54,11 @@ export function EditPeriodModal({
     isClosed: period?.isClosed ?? false,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { error, getFieldError, hasFieldError, clearErrors, handleApiError } = useApiFormErrors();
+  const { toastSuccess } = useToast();
+
   useEffect(() => {
     if (period) {
       setFormData({
@@ -56,29 +70,15 @@ export function EditPeriodModal({
         isCurrent: period.isCurrent,
         isClosed: period.isClosed,
       });
-      setError(null);
+      clearErrors();
     }
-  }, [period]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  }, [period, clearErrors]);
 
   if (!period) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    if (!formData.name.trim()) {
-      setError("El nombre del periodo es requerido");
-      return;
-    }
-
-    if (new Date(formData.endDate) < new Date(formData.startDate)) {
-      setError("La fecha de término debe ser posterior a la fecha de inicio");
-      return;
-    }
+    clearErrors();
 
     setIsLoading(true);
 
@@ -86,10 +86,14 @@ export function EditPeriodModal({
       const response = await apiClient.patch<any>(`/api/schools/${schoolId}/academic-periods/${period.id}`, formData);
       const data = response.data;
 
+      toastSuccess("Periodo Actualizado", {
+        description: `El periodo "${formData.name}" ha sido guardado exitosamente.`,
+      });
+
       onPeriodUpdated(data?.data?.period || data?.period || { ...period, ...formData });
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Error al actualizar el periodo académico");
+    } catch (err: unknown) {
+      handleApiError(err);
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +101,7 @@ export function EditPeriodModal({
 
   const handleDelete = async () => {
     if (period.assessmentsCount && period.assessmentsCount > 0) {
-      setError(`No es posible eliminar este periodo porque tiene ${period.assessmentsCount} evaluaciones registradas.`);
+      handleApiError(new Error(`No es posible eliminar este periodo porque tiene ${period.assessmentsCount} evaluaciones registradas.`));
       return;
     }
 
@@ -106,15 +110,19 @@ export function EditPeriodModal({
     }
 
     setIsDeleting(true);
-    setError(null);
+    clearErrors();
 
     try {
       await apiClient.delete(`/api/schools/${schoolId}/academic-periods/${period.id}`);
 
+      toastSuccess("Periodo Eliminado", {
+        description: `El periodo "${period.name}" fue eliminado del sistema.`,
+      });
+
       onPeriodDeleted(period.id);
       onClose();
-    } catch (err: any) {
-      setError(err.message || "Error al eliminar el periodo académico");
+    } catch (err: unknown) {
+      handleApiError(err);
     } finally {
       setIsDeleting(false);
     }
@@ -131,12 +139,7 @@ export function EditPeriodModal({
         </ModalHeader>
 
         <ModalBody className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 rounded-xl text-xs flex items-center gap-2 border border-red-200 dark:border-red-800">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
+          <ApiErrorAlert error={error} onDismiss={clearErrors} />
 
           <div>
             <label className="block text-xs font-semibold uppercase text-slate-600 dark:text-slate-400 mb-1">
@@ -146,9 +149,17 @@ export function EditPeriodModal({
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+              onChange={(e) => {
+                setFormData({ ...formData, name: e.target.value });
+                if (hasFieldError("name")) clearErrors();
+              }}
+              className={`w-full px-3.5 py-2 rounded-xl border bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none ${
+                hasFieldError("name")
+                  ? "border-rose-400 dark:border-rose-700 ring-1 ring-rose-400"
+                  : "border-slate-300 dark:border-slate-700"
+              }`}
             />
+            <FormFieldError error={getFieldError("name")} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -162,9 +173,17 @@ export function EditPeriodModal({
                 min={2020}
                 max={2030}
                 value={formData.year}
-                onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) || period.year })}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                onChange={(e) => {
+                  setFormData({ ...formData, year: parseInt(e.target.value) || period.year });
+                  if (hasFieldError("year")) clearErrors();
+                }}
+                className={`w-full px-3.5 py-2 rounded-xl border bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none ${
+                  hasFieldError("year")
+                    ? "border-rose-400 dark:border-rose-700 ring-1 ring-rose-400"
+                    : "border-slate-300 dark:border-slate-700"
+                }`}
               />
+              <FormFieldError error={getFieldError("year")} />
             </div>
 
             <div>
@@ -177,11 +196,19 @@ export function EditPeriodModal({
                   min={0}
                   max={100}
                   value={formData.weightPercentage}
-                  onChange={(e) => setFormData({ ...formData, weightPercentage: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3.5 py-2 pr-8 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                  onChange={(e) => {
+                    setFormData({ ...formData, weightPercentage: parseFloat(e.target.value) || 0 });
+                    if (hasFieldError("weightPercentage")) clearErrors();
+                  }}
+                  className={`w-full px-3.5 py-2 pr-8 rounded-xl border bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none ${
+                    hasFieldError("weightPercentage")
+                      ? "border-rose-400 dark:border-rose-700 ring-1 ring-rose-400"
+                      : "border-slate-300 dark:border-slate-700"
+                  }`}
                 />
                 <Percent className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5" />
               </div>
+              <FormFieldError error={getFieldError("weightPercentage")} />
             </div>
           </div>
 
@@ -194,9 +221,17 @@ export function EditPeriodModal({
                 type="date"
                 required
                 value={formData.startDate}
-                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                onChange={(e) => {
+                  setFormData({ ...formData, startDate: e.target.value });
+                  if (hasFieldError("startDate")) clearErrors();
+                }}
+                className={`w-full px-3.5 py-2 rounded-xl border bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none ${
+                  hasFieldError("startDate")
+                    ? "border-rose-400 dark:border-rose-700 ring-1 ring-rose-400"
+                    : "border-slate-300 dark:border-slate-700"
+                }`}
               />
+              <FormFieldError error={getFieldError("startDate")} />
             </div>
 
             <div>
@@ -207,9 +242,17 @@ export function EditPeriodModal({
                 type="date"
                 required
                 value={formData.endDate}
-                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
+                onChange={(e) => {
+                  setFormData({ ...formData, endDate: e.target.value });
+                  if (hasFieldError("endDate")) clearErrors();
+                }}
+                className={`w-full px-3.5 py-2 rounded-xl border bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none ${
+                  hasFieldError("endDate")
+                    ? "border-rose-400 dark:border-rose-700 ring-1 ring-rose-400"
+                    : "border-slate-300 dark:border-slate-700"
+                }`}
               />
+              <FormFieldError error={getFieldError("endDate")} />
             </div>
           </div>
 

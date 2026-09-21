@@ -248,10 +248,17 @@ export async function aurenisFetch<T = any>(
 
       // Errores 4xx (400, 401, 403, 404, 422, etc.)
       let clientErrMsg = response.statusText || `Error HTTP ${response.status}`;
+      let errorBody: any = null;
       try {
         const body = await response.clone().json();
+        errorBody = body;
         if (body?.error) clientErrMsg = body.error;
-      } catch {}
+      } catch {
+        try {
+          const text = await response.clone().text();
+          if (text) clientErrMsg = text;
+        } catch {}
+      }
 
       discreetLogger.logHttpError({
         url,
@@ -263,6 +270,10 @@ export async function aurenisFetch<T = any>(
 
       const clientErr = new Error(clientErrMsg) as any;
       clientErr.status = response.status;
+      clientErr.code = errorBody?.code;
+      clientErr.details = errorBody?.details;
+      clientErr.body = errorBody;
+      clientErr.rawResponse = response;
       throw clientErr;
     } catch (error: any) {
       clearTimeout(timeoutId);
