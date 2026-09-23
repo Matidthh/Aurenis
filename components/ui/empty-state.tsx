@@ -17,6 +17,13 @@ export interface EmptyStateProps {
   secondaryAction?: React.ReactNode;
   className?: string;
   compact?: boolean;
+  inTable?: boolean;
+  colSpan?: number;
+  variant?: "filter" | "search" | "no-data" | string;
+  onResetFilters?: () => void;
+  resetLabel?: string;
+  activeFilters?: any[];
+  helpfulTips?: string[];
 }
 
 export function EmptyState({
@@ -31,9 +38,21 @@ export function EmptyState({
   secondaryAction,
   className,
   compact = false,
+  inTable = false,
+  colSpan = 1,
+  variant,
+  onResetFilters,
+  resetLabel = "Restablecer filtros",
+  activeFilters,
+  helpfulTips,
 }: EmptyStateProps) {
+  const handleClear = onClearFilters || onResetFilters;
+  const filterCount = activeFilterCount ?? (activeFilters ? activeFilters.length : undefined);
+
   const renderIcon = () => {
     if (React.isValidElement(icon)) return icon;
+    if (variant === "filter") return <FilterX className={cn("text-slate-400 dark:text-slate-500", compact ? "w-6 h-6" : "w-8 h-8")} />;
+    if (variant === "inbox" || variant === "no-data") return <Inbox className={cn("text-slate-400 dark:text-slate-500", compact ? "w-6 h-6" : "w-8 h-8")} />;
 
     switch (icon) {
       case "inbox":
@@ -46,7 +65,7 @@ export function EmptyState({
     }
   };
 
-  return (
+  const content = (
     <div
       role="status"
       aria-label={title}
@@ -81,25 +100,33 @@ export function EmptyState({
           )}
         </p>
 
-        {activeFilterCount !== undefined && activeFilterCount > 0 && (
+        {filterCount !== undefined && filterCount > 0 && (
           <p className="text-[11px] text-slate-400 font-medium">
-            ({activeFilterCount} {activeFilterCount === 1 ? "filtro activo" : "filtros activos"})
+            ({filterCount} {filterCount === 1 ? "filtro activo" : "filtros activos"})
           </p>
+        )}
+
+        {helpfulTips && helpfulTips.length > 0 && (
+          <ul className="pt-2 text-xs text-slate-400 dark:text-slate-500 space-y-1 list-disc list-inside">
+            {helpfulTips.map((tip, idx) => (
+              <li key={idx}>{tip}</li>
+            ))}
+          </ul>
         )}
       </div>
 
       {/* Acciones interactivas (Botón de limpiar filtros / Acción personalizada) */}
-      {(onClearFilters || action || secondaryAction) && (
+      {(handleClear || action || secondaryAction) && (
         <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-          {onClearFilters && (
+          {handleClear && (
             <Button
               variant="outline"
               size="sm"
-              onClick={onClearFilters}
+              onClick={handleClear}
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
               className="font-semibold text-xs"
             >
-              {clearButtonText}
+              {resetLabel || clearButtonText}
             </Button>
           )}
 
@@ -109,4 +136,16 @@ export function EmptyState({
       )}
     </div>
   );
+
+  if (inTable) {
+    return (
+      <tr>
+        <td colSpan={colSpan} className="p-0">
+          {content}
+        </td>
+      </tr>
+    );
+  }
+
+  return content;
 }

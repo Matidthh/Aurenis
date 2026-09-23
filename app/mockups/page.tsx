@@ -164,6 +164,10 @@ const GradeMatrixPostgresPersistenceView = dynamic(
   () => import("@/components/mockups/grade-matrix-postgres-persistence-view").then((m) => m.GradeMatrixPostgresPersistenceView),
   { ssr: false, loading: () => <LoadingFallback title="Calificaciones Matriciales DB" /> }
 );
+const SchoolSettingsPostgresPersistenceView = dynamic(
+  () => import("@/components/mockups/school-settings-postgres-persistence-view").then((m) => m.SchoolSettingsPostgresPersistenceView),
+  { ssr: false, loading: () => <LoadingFallback title="Parametrización del Colegio en PostgreSQL" /> }
+);
 
 export default function MockupsPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("grade-matrix");
@@ -536,6 +540,39 @@ export default function MockupsPage() {
         "Prueba de estrés integrada con reporte de latencia en milisegundos.",
         "Verificación de 100% de tasa de éxito bajo carga.",
         "Resiliencia y robustez de la base de datos PostgreSQL garantizada.",
+      ],
+    },
+    {
+      id: "dod-school-settings-1",
+      title: "Persistencia de semestres y datos institucionales",
+      description: "Conexión de los formularios de parametrización institucional con la API de configuración y base de datos PostgreSQL.",
+      completed: true,
+      details: [
+        "Persistencia de nombre, RBD, dirección, lema y contacto institucional.",
+        "Gestión de semestres académicos con ponderación anual (100%).",
+        "Reglas de evaluación y escalas sincronizadas con la normativa chilena.",
+      ],
+    },
+    {
+      id: "dod-school-settings-2",
+      title: "Carga inicial de parámetros al abrir la app",
+      description: "Consumo automático de la configuración institucional al montar la aplicación con precarga en memoria y caché reactiva.",
+      completed: true,
+      details: [
+        "Consumo reactivo del endpoint GET /api/schools/[schoolId]/settings.",
+        "Mapeo de datos institucionales y semestres lectivos activos.",
+        "Cero datos huérfanos y actualización inmediata en pantalla.",
+      ],
+    },
+    {
+      id: "dod-school-settings-3",
+      title: "Verificación de guardado",
+      description: "Confirmación en tiempo real del guardado de cambios con feedback visual y validación de respuesta HTTP 200 OK en PostgreSQL.",
+      completed: true,
+      details: [
+        "Envío de PATCH y persistencia transaccional en la base de datos.",
+        "Sincronización confirmada con respuesta 200 OK del backend.",
+        "Audit log de verificación y recarga en caliente de parámetros.",
       ],
     },
   ]);
@@ -1027,6 +1064,13 @@ export default function MockupsPage() {
 
           {activeTab === "grade-postgres" && (
             <GradeMatrixPostgresPersistenceView
+              onNavigateToTab={(t: any) => setActiveTab(t)}
+              onOpenCriteriaModal={() => setShowChecklist(true)}
+            />
+          )}
+
+          {activeTab === "school-settings" && (
+            <SchoolSettingsPostgresPersistenceView
               onNavigateToTab={(t: any) => setActiveTab(t)}
               onOpenCriteriaModal={() => setShowChecklist(true)}
             />

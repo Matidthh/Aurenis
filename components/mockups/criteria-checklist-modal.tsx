@@ -44,7 +44,7 @@ export function CriteriaChecklistModal({
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "student" | "teacher" | "grade" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+    "all" | "student" | "teacher" | "grade" | "school-settings" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
   >("all");
 
   if (!isOpen) return null;
@@ -53,6 +53,7 @@ export function CriteriaChecklistModal({
     if (filterCategory === "student") return c.id.includes("student-db");
     if (filterCategory === "teacher") return c.id.includes("teacher-db");
     if (filterCategory === "grade") return c.id.includes("grade-db");
+    if (filterCategory === "school-settings") return c.id.includes("school-settings");
     if (filterCategory === "rbac") return c.id.includes("rbac");
     if (filterCategory === "jwt") return c.id.includes("jwt");
     if (filterCategory === "packaging") return c.id.includes("package") || c.id.includes("dist");
@@ -198,6 +199,17 @@ export function CriteriaChecklistModal({
               }`}
             >
               Calificaciones DB ({criteria.filter((c) => c.id.includes("grade-db")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("school-settings")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "school-settings"
+                  ? "bg-gradient-to-r from-sky-600 to-blue-600 text-white"
+                  : "bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 hover:bg-sky-100"
+              }`}
+            >
+              Parametrización DB ({criteria.filter((c) => c.id.includes("school-settings")).length})
             </button>
             <button
               type="button"

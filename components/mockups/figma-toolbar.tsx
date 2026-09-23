@@ -32,6 +32,7 @@ import {
   Package,
   KeyRound,
   ShieldAlert,
+  Settings,
 } from "lucide-react";
 
 export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "mobile-se" | "fluid";
@@ -58,7 +59,8 @@ export type ActiveTab =
   | "rbac-enforcement"
   | "student-postgres"
   | "teacher-postgres"
-  | "grade-postgres";
+  | "grade-postgres"
+  | "school-settings";
 
 interface FigmaToolbarProps {
   activeTab: ActiveTab;
@@ -422,6 +424,21 @@ export function FigmaToolbar({
               <span>Calificaciones Matriciales DB</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-bold">
                 Notas SQL
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("school-settings")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "school-settings"
+                  ? "bg-gradient-to-r from-sky-600 to-blue-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-sky-300 hover:text-white hover:bg-sky-950/50"
+              }`}
+            >
+              <Settings className="w-3.5 h-3.5 text-sky-300" />
+              <span>Parametrización Colegio DB</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-sky-500/30 text-sky-200 font-bold">
+                Config SQL
               </span>
             </button>
           </div>
