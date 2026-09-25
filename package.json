@@ -27,7 +27,7 @@
     "db:verify:performance": "tsx scripts/verify-query-performance.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^7.10.0",
     "@types/jszip": "^3.4.1",
     "@upstash/redis": "^1.38.4",
     "bcryptjs": "^3.0.2",
