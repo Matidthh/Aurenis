@@ -50,23 +50,56 @@ export default async function TenantDashboardPage({
   ]);
 
   const roleDisplayName = getRoleDisplayName(tenantCtx.roleName);
+  const isStudent = tenantCtx.roleName === "STUDENT";
+  const isTeacher = tenantCtx.roleName === "TEACHER";
+  const isGuardian = tenantCtx.roleName === "GUARDIAN";
 
-  const quickShortcuts = [
+  const allShortcuts = [
     {
       id: "shortcut-grades",
-      title: "Registro de Calificaciones",
-      description: "Ingreso de evaluaciones, ponderaciones y actas oficiales",
+      title: isStudent ? "Mis Calificaciones" : isGuardian ? "Calificaciones del Pupilo" : "Registro de Calificaciones",
+      description: isStudent
+        ? "Boletín de calificaciones, promedios y actas de evaluación"
+        : isGuardian
+        ? "Seguimiento de rendimiento académico y ponderaciones"
+        : "Ingreso de evaluaciones, ponderaciones y actas oficiales",
       href: `/${schoolSlug}/grades`,
       icon: Award,
       color: "text-amber-600 bg-amber-50 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+      roles: ["SCHOOL_ADMIN", "SYSTEM_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
     },
     {
       id: "shortcut-attendance",
-      title: "Control de Asistencia",
-      description: "Libro de clases diario, atrasos y justificaciones",
+      title: isStudent ? "Mi Asistencia" : isGuardian ? "Asistencia del Alumno" : "Control de Asistencia",
+      description: isStudent || isGuardian
+        ? "Porcentaje de asistencia acumulada, atrasos y justificaciones"
+        : "Libro de clases diario, atrasos y justificaciones",
       href: `/${schoolSlug}/attendance`,
       icon: CalendarCheck,
       color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
+      roles: ["SCHOOL_ADMIN", "SYSTEM_ADMIN", "TEACHER", "STUDENT", "GUARDIAN"],
+    },
+    {
+      id: "shortcut-subjects",
+      title: isStudent ? "Mis Asignaturas" : "Malla & Asignaturas",
+      description: isStudent
+        ? "Docentes a cargo, planificaciones y horario de clases"
+        : "Planes de estudio, docentes a cargo y horas semanales",
+      href: `/${schoolSlug}/subjects`,
+      icon: Layers,
+      color: "text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800",
+      roles: ["SCHOOL_ADMIN", "SYSTEM_ADMIN", "TEACHER", "STUDENT"],
+    },
+    {
+      id: "shortcut-courses",
+      title: isTeacher ? "Mis Cursos & Jefaturas" : "Gestión de Cursos",
+      description: isTeacher
+        ? "Niveles asignados, lista de estudiantes y sala de clases"
+        : "Niveles educativos, cursos lectivos y asignación de salas",
+      href: `/${schoolSlug}/courses`,
+      icon: BookOpen,
+      color: "text-brand-600 bg-brand-50 dark:bg-brand-950/40 dark:text-brand-400 border-brand-200 dark:border-brand-800",
+      roles: ["SCHOOL_ADMIN", "SYSTEM_ADMIN", "TEACHER"],
     },
     {
       id: "shortcut-students",
@@ -75,22 +108,7 @@ export default async function TenantDashboardPage({
       href: `/${schoolSlug}/students`,
       icon: Users,
       color: "text-blue-600 bg-blue-50 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-800",
-    },
-    {
-      id: "shortcut-courses",
-      title: "Gestión de Cursos",
-      description: "Niveles educativos, cursos lectivos y asignación de salas",
-      href: `/${schoolSlug}/courses`,
-      icon: BookOpen,
-      color: "text-brand-600 bg-brand-50 dark:bg-brand-950/40 dark:text-brand-400 border-brand-200 dark:border-brand-800",
-    },
-    {
-      id: "shortcut-subjects",
-      title: "Malla & Asignaturas",
-      description: "Planes de estudio, docentes a cargo y horas semanales",
-      href: `/${schoolSlug}/subjects`,
-      icon: Layers,
-      color: "text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800",
+      roles: ["SCHOOL_ADMIN", "SYSTEM_ADMIN"],
     },
     {
       id: "shortcut-settings",
@@ -99,8 +117,11 @@ export default async function TenantDashboardPage({
       href: `/${schoolSlug}/settings`,
       icon: Settings,
       color: "text-slate-700 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700",
+      roles: ["SCHOOL_ADMIN", "SYSTEM_ADMIN"],
     },
   ];
+
+  const quickShortcuts = allShortcuts.filter((s) => s.roles.includes(tenantCtx.roleName));
 
   return (
     <Page>

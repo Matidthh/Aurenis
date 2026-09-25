@@ -1,5 +1,7 @@
 import { TenantPrismaClient } from "@/lib/db/tenant-extension";
 import { isDatabaseConfigured } from "@/lib/db/prisma";
+import { CreateCourseSchema, UpdateCourseSchema } from "@/lib/validations";
+import { z } from "zod";
 
 export async function getSchoolAcademicOverview(tenantDb: TenantPrismaClient, schoolId: string) {
   const currentYear = new Date().getFullYear();
@@ -191,6 +193,7 @@ export async function listCoursesByYear(tenantDb: TenantPrismaClient, schoolId: 
         include: {
           educationLevel: true,
           subjects: {
+            where: { schoolId },
             include: {
               teacher: {
                 include: {
@@ -298,14 +301,28 @@ export async function createCourse(
   },
   userId?: string
 ) {
+  if (!schoolId || typeof schoolId !== "string" || schoolId.trim() === "") {
+    throw new Error("ID de institución (tenant) inválido.");
+  }
+  const validated = CreateCourseSchema.parse(input);
+
+  if (isDatabaseConfigured()) {
+    const level = await tenantDb.educationLevel.findFirst({
+      where: { id: validated.educationLevelId, schoolId },
+    });
+    if (!level) {
+      throw new Error("El nivel educativo especificado no existe o no pertenece a la institución.");
+    }
+  }
+
   const course = await tenantDb.course.create({
     data: {
       schoolId,
-      name: input.name,
-      educationLevelId: input.educationLevelId,
-      gradeNumber: input.gradeNumber,
-      letter: input.letter || null,
-      year: input.year,
+      name: validated.name,
+      educationLevelId: validated.educationLevelId,
+      gradeNumber: validated.gradeNumber,
+      letter: validated.letter || null,
+      year: validated.year,
     },
   });
 
@@ -325,6 +342,11 @@ export async function updateCourse(
   },
   userId?: string
 ) {
+  if (!schoolId || !courseId) {
+    throw new Error("IDs de institución o curso inválidos.");
+  }
+  const validated = UpdateCourseSchema.parse(input);
+
   const existing = await tenantDb.course.findFirst({
     where: { id: courseId, schoolId },
   });
@@ -333,14 +355,23 @@ export async function updateCourse(
     throw new Error(`Curso '${courseId}' no encontrado en la institución.`);
   }
 
+  if (validated.educationLevelId && isDatabaseConfigured()) {
+    const level = await tenantDb.educationLevel.findFirst({
+      where: { id: validated.educationLevelId, schoolId },
+    });
+    if (!level) {
+      throw new Error("El nivel educativo especificado no existe o no pertenece a la institución.");
+    }
+  }
+
   const updated = await tenantDb.course.update({
     where: { id: courseId },
     data: {
-      ...(input.name !== undefined ? { name: input.name } : {}),
-      ...(input.educationLevelId !== undefined ? { educationLevelId: input.educationLevelId } : {}),
-      ...(input.gradeNumber !== undefined ? { gradeNumber: input.gradeNumber } : {}),
-      ...(input.letter !== undefined ? { letter: input.letter } : {}),
-      ...(input.year !== undefined ? { year: input.year } : {}),
+      ...(validated.name !== undefined ? { name: validated.name } : {}),
+      ...(validated.educationLevelId !== undefined ? { educationLevelId: validated.educationLevelId } : {}),
+      ...(validated.gradeNumber !== undefined ? { gradeNumber: validated.gradeNumber } : {}),
+      ...(validated.letter !== undefined ? { letter: validated.letter } : {}),
+      ...(validated.year !== undefined ? { year: validated.year } : {}),
     },
   });
 
@@ -353,6 +384,10 @@ export async function deleteCourse(
   courseId: string,
   userId?: string
 ) {
+  if (!schoolId || !courseId) {
+    throw new Error("IDs de institución o curso inválidos.");
+  }
+
   const existing = await tenantDb.course.findFirst({
     where: { id: courseId, schoolId, deletedAt: null },
   });

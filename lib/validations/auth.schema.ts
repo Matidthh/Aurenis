@@ -3,6 +3,7 @@ import { z } from "zod";
 export const LoginSchema = z.object({
   email: z.string().min(2, "Ingresa tu correo institucional o RUT"),
   password: z.string().min(1, "La contraseña es requerida"),
+  schoolSlug: z.string().optional(),
 });
 
 export type LoginInput = z.infer<typeof LoginSchema>;

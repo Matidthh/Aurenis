@@ -4,3 +4,4 @@ export * from "./school.schema";
 export * from "./school-config.schema";
 export * from "./course.schema";
 export * from "./grade.schema";
+export * from "./student.schema";

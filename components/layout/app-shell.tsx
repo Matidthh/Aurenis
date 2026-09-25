@@ -31,43 +31,58 @@ export function AppShell({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [hasUserToggled, setHasUserToggled] = useState(false);
 
-  // Inicializar y sincronizar según breakpoints (sm, md, lg, xl) y localStorage
+  // Inicializar y sincronizar según breakpoints (sm, md, lg, xl) y Base de Datos (Autor: Carlos M. & Lucas P.)
   useEffect(() => {
-    function handleInitialAndResize() {
-      const width = window.innerWidth;
+    let isSubscribed = true;
 
-      // Cerrar drawer móvil si pasamos a escritorio/tablet
-      if (width >= 768 && isMobileOpen) {
-        setIsMobileOpen(false);
-      }
-
-      // Si el usuario no ha forzado un cambio manual en esta sesión:
-      // - En pantallas medianas (md: 768px a 1023px) colapsar automáticamente a íconos
-      // - En pantallas grandes (lg/xl: >= 1024px) expandir o respetar localStorage
+    async function loadSidebarPreferenceFromDatabase() {
       try {
-        const saved = localStorage.getItem("aurenis_sidebar_collapsed");
-        if (saved !== null) {
-          setIsCollapsed(saved === "true");
-          setHasUserToggled(true);
-          return;
+        const res = await fetch("/api/user/preferences");
+        if (res.ok) {
+          const json = await res.json();
+          const dbCollapsed = json?.data?.preferences?.sidebarCollapsed;
+          if (isSubscribed && typeof dbCollapsed === "boolean") {
+            setIsCollapsed(dbCollapsed);
+            setHasUserToggled(true);
+            return;
+          }
         }
       } catch {
-        // Ignorar restricciones de storage
+        // Fallback a comportamiento responsivo natural si aún no hay sesión o DB
       }
 
-      if (width >= 768 && width < 1024) {
-        // Pantalla mediana (md): colapso automático a iconos
-        setIsCollapsed(true);
-      } else if (width >= 1024) {
-        // Pantalla grande (lg/xl): expandido por defecto
-        setIsCollapsed(false);
+      if (isSubscribed && !hasUserToggled) {
+        const width = window.innerWidth;
+        if (width >= 768 && width < 1024) {
+          setIsCollapsed(true);
+        } else if (width >= 1024) {
+          setIsCollapsed(false);
+        }
       }
     }
 
-    handleInitialAndResize();
-    window.addEventListener("resize", handleInitialAndResize);
-    return () => window.removeEventListener("resize", handleInitialAndResize);
-  }, [isMobileOpen]);
+    loadSidebarPreferenceFromDatabase();
+
+    function handleResize() {
+      const width = window.innerWidth;
+      if (width >= 768 && isMobileOpen) {
+        setIsMobileOpen(false);
+      }
+      if (!hasUserToggled) {
+        if (width >= 768 && width < 1024) {
+          setIsCollapsed(true);
+        } else if (width >= 1024) {
+          setIsCollapsed(false);
+        }
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      isSubscribed = false;
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobileOpen, hasUserToggled]);
 
   // Bloquear scroll de fondo cuando el drawer móvil está abierto
   useEffect(() => {
@@ -80,13 +95,19 @@ export function AppShell({
     }
   }, [isMobileOpen]);
 
+  // Alternar colapso de la barra lateral y persistir en la Base de Datos (Autor: Carlos M. & Lucas P.)
   function toggleCollapse() {
     setHasUserToggled(true);
     setIsCollapsed((prev) => {
       const next = !prev;
-      try {
-        localStorage.setItem("aurenis_sidebar_collapsed", String(next));
-      } catch {}
+      // Persistir directamente en PostgreSQL (BBDD)
+      fetch("/api/user/preferences", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sidebarCollapsed: next }),
+      }).catch((err) => {
+        console.warn("[AppShell] Fallo al sincronizar sidebar en la base de datos:", err);
+      });
       return next;
     });
   }

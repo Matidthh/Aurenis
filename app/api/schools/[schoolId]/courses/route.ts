@@ -1,8 +1,12 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
 import { PERMISSIONS } from "@/lib/constants/permissions";
+import { sanitizeErrorMessage } from "@/lib/api/response";
 
 export async function POST(
   req: NextRequest,
@@ -73,6 +77,21 @@ export async function POST(
       );
     }
 
+    // Validación de pertenencia multi-tenant del nivel educativo (Autor: Maicol R.)
+    const level = await prisma.educationLevel.findFirst({
+      where: {
+        id: educationLevelId,
+        schoolId: school.id,
+      },
+    });
+
+    if (!level) {
+      return NextResponse.json(
+        { error: "El nivel educativo especificado no existe o no pertenece a esta institución." },
+        { status: 400 }
+      );
+    }
+
     const currentYear = year || new Date().getFullYear();
     const tenantDb = createTenantPrisma(school.id);
 
@@ -107,7 +126,7 @@ export async function POST(
     }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Error al crear el curso" },
+      { error: sanitizeErrorMessage(error.message || "Error al crear el curso") },
       { status: 500 }
     );
   }
@@ -164,7 +183,7 @@ export async function GET(
     });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Error al obtener cursos" },
+      { error: sanitizeErrorMessage(error.message || "Error al obtener cursos") },
       { status: 500 }
     );
   }

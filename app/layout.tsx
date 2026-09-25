@@ -3,7 +3,7 @@ import "./globals.css";
 import { NetworkStatusProvider } from "@/lib/network/network-context";
 import { NetworkErrorBanner } from "@/components/ui/network-error-banner";
 import { ToastProvider } from "@/components/ui/toast";
-import { AuthProvider } from "@/lib/auth/auth-context";
+import { ChunkErrorListener, ChunkErrorBoundary } from "@/components/chunk-error-handler";
 
 export const metadata: Metadata = {
   title: "Aurenis",
@@ -20,16 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body className="antialiased min-h-screen">
-        <AuthProvider>
-          <NetworkStatusProvider>
-            <ToastProvider>
-              <NetworkErrorBanner />
+    <html lang="es" suppressHydrationWarning>
+      <body className="antialiased min-h-screen" suppressHydrationWarning>
+        <ChunkErrorListener />
+        <NetworkStatusProvider>
+          <ToastProvider>
+            <NetworkErrorBanner />
+            <ChunkErrorBoundary>
               {children}
-            </ToastProvider>
-          </NetworkStatusProvider>
-        </AuthProvider>
+            </ChunkErrorBoundary>
+          </ToastProvider>
+        </NetworkStatusProvider>
       </body>
     </html>
   );

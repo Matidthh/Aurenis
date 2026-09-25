@@ -176,7 +176,9 @@ export async function getTeacherDetails(
             where: { schoolId },
             include: {
               course: true,
-              assessments: true,
+              assessments: {
+                where: { schoolId },
+              },
             },
           },
         },

@@ -25,28 +25,14 @@ export class TenantAccessError extends Error {
 export async function requireTenantContext(schoolSlug: string): Promise<TenantContext> {
   const session = await getSession();
 
-  const matchedCatalog = SCHOOLS_CATALOG.find((s) => s.slug === schoolSlug || s.id === schoolSlug) || SCHOOLS_CATALOG[0];
+  const matchedCatalog = (await getSchoolBySlug(schoolSlug)) || SCHOOLS_CATALOG[0];
 
   const subscriptionInfo = matchedCatalog.subscription;
   const isSuspended = matchedCatalog.status === "SUSPENDED" || subscriptionInfo.status === "SUSPENDED_PAYMENT";
 
-  // Si no hay sesión activa en la preview/demo, proveer rol de Administrador Escolar (Director) para acceso directo
+  // Si no hay sesión activa, rechazar acceso de forma estricta (Autor: Lucas P.)
   if (!session) {
-    return {
-      schoolId: matchedCatalog.id,
-      schoolSlug: matchedCatalog.slug,
-      schoolName: matchedCatalog.name,
-      subdomain: matchedCatalog.subdomain,
-      customDomain: matchedCatalog.customDomain,
-      userId: "demo-director-id",
-      membershipId: "demo-director-membership",
-      roleName: "SCHOOL_ADMIN",
-      permissions: ["*"],
-      timezone: "America/Santiago",
-      isSuspended: false,
-      suspensionReason: null,
-      subscription: subscriptionInfo,
-    };
+    throw new UnauthorizedError("No autenticado. Debe iniciar sesión para acceder al contexto institucional.");
   }
 
   // Si el usuario es SystemAdmin, tiene acceso irrestricto de inspección
@@ -137,7 +123,12 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
     }
   }
 
-  // Fallback demo para cualquier colegio del catálogo
+  // Verificación estricta de aislamiento multi-tenant en fallback (Autor: Lucas P. & Maicol R.)
+  if (!session.isSystemAdmin && session.activeSchoolSlug && session.activeSchoolSlug !== matchedCatalog.slug) {
+    throw new TenantAccessError("No tienes acceso a esta institución (violación de aislamiento multi-tenant).");
+  }
+
+  // Fallback demo para la institución autorizada en la sesión
   return {
     schoolId: matchedCatalog.id,
     schoolSlug: matchedCatalog.slug,
@@ -145,9 +136,9 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
     subdomain: matchedCatalog.subdomain,
     customDomain: matchedCatalog.customDomain,
     userId: session.userId,
-    membershipId: "mem_director_demo",
-    roleName: "SCHOOL_ADMIN",
-    permissions: ["*"],
+    membershipId: session.activeMembershipId || "mem_demo_active",
+    roleName: session.roleName || "SCHOOL_ADMIN",
+    permissions: session.permissions && session.permissions.length > 0 ? session.permissions : ["*"],
     timezone: "America/Santiago",
     isSuspended,
     suspensionReason: isSuspended ? "Suscripción institucional suspendida por pago pendiente." : null,

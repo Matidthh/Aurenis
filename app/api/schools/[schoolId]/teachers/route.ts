@@ -1,4 +1,8 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
@@ -6,6 +10,8 @@ import { listTeachersBySchool } from "@/lib/services/teacher.service";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { DEFAULT_SCHOOL_ROLES } from "@/lib/constants/roles";
 import bcrypt from "bcryptjs";
+import { encryptField } from "@/lib/security/encryption";
+import { sanitizeErrorMessage } from "@/lib/api/response";
 
 export async function GET(
   req: NextRequest,
@@ -28,6 +34,25 @@ export async function GET(
       return NextResponse.json({ error: "Institución no encontrada" }, { status: 404 });
     }
 
+    // Comprobar membresía institucional (BOLA / IDOR Protection - Autor: Maicol R.)
+    if (!session.isSystemAdmin) {
+      const membership = await prisma.membership.findUnique({
+        where: {
+          userId_schoolId: {
+            userId: session.userId,
+            schoolId: school.id,
+          },
+        },
+      });
+
+      if (!membership || !membership.isActive) {
+        return NextResponse.json(
+          { error: "No tienes acceso a esta institución educativa" },
+          { status: 403 }
+        );
+      }
+    }
+
     const tenantDb = createTenantPrisma(school.id);
     const teachers = await listTeachersBySchool(tenantDb, school.id);
 
@@ -37,7 +62,7 @@ export async function GET(
     });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Error al obtener profesores" },
+      { error: sanitizeErrorMessage(error.message || "Error al obtener profesores") },
       { status: 500 }
     );
   }
@@ -120,14 +145,17 @@ export async function POST(
       where: { email: email.trim().toLowerCase() },
     });
 
+    let generatedPassword: string | null = null;
     if (!teacherUser) {
-      const defaultPassword = await bcrypt.hash("Profesor2026!", 10);
+      // Generación de contraseña temporal con alta entropía CSPRNG (Autor: Lucas P.)
+      generatedPassword = `${crypto.randomBytes(8).toString("base64url")}!A1`;
+      const defaultPassword = await bcrypt.hash(generatedPassword, 10);
       teacherUser = await prisma.user.create({
         data: {
           email: email.trim().toLowerCase(),
           firstName: firstName.trim(),
           lastName: lastName.trim(),
-          rutOrNationalId: rutOrNationalId ? rutOrNationalId.trim() : null,
+          rutOrNationalId: rutOrNationalId ? encryptField(rutOrNationalId.trim()) : null,
           phone: phone ? phone.trim() : null,
           passwordHash: defaultPassword,
           status: "ACTIVE",
@@ -202,10 +230,11 @@ export async function POST(
       success: true,
       message: "Profesor registrado exitosamente",
       teacherProfileId: teacherProfile.id,
+      ...(generatedPassword ? { temporaryPassword: generatedPassword } : {}),
     });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Error al registrar profesor" },
+      { error: sanitizeErrorMessage(error.message || "Error al registrar profesor") },
       { status: 500 }
     );
   }

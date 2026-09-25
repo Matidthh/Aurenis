@@ -64,6 +64,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
   return (
     <header
       id="landing-navbar"
+      suppressHydrationWarning
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled
@@ -95,25 +96,25 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
         <nav className="hidden md:flex items-center gap-7 lg:gap-9" aria-label="Navegación principal">
           <button
             onClick={() => handleScrollTo("simulador")}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Simulador en Vivo
           </button>
           <button
             onClick={() => handleScrollTo("planes")}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Planes y Precios
           </button>
           <button
             onClick={() => handleScrollTo("testimonios")}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Casos de Éxito
           </button>
           <button
             onClick={() => handleScrollTo("faq")}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Preguntas Frecuentes
           </button>

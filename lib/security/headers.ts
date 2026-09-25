@@ -5,14 +5,16 @@
 
 import { NextResponse } from "next/server";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const SECURITY_HEADERS: Record<string, string> = {
   // 1. Strict-Transport-Security (HSTS) - Forzar HTTPS durante 1 año incluyendo subdominios
   "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
 
-  // 2. Content-Security-Policy (CSP) - Protección estricta con soporte explícito para iframe de AI Studio y Cloud Run
+  // 2. Content-Security-Policy (CSP) - Protección estricta (Autor: Frank M.)
   "Content-Security-Policy": [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+    isProduction ? "script-src 'self' 'unsafe-inline'" : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https: blob:",
     "font-src 'self' data: https:",

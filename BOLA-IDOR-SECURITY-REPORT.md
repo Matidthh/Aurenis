@@ -1,6 +1,6 @@
 # INFORME DE SEGURIDAD: PREVENCIÓN DE BOLA / IDOR (OWASP API1:2023)
 **Plataforma Institucional Aurenis**
-**Fecha de Auditoría:** 2026-09-21T13:20:06.307Z
+**Fecha de Auditoría:** 2026-09-18T18:23:59.003Z
 **Estado:** APROBADO (100% Cobertura de Criterios de Aceptación)
 **Tasa de Éxito:** 100.0% (20/20 pruebas superadas)
 
@@ -97,5 +97,5 @@ La arquitectura implementa un **Motor de Autorización a Nivel de Objeto** (`lib
 ## 5. Firma Digital del Informe
 
 **Algoritmo de Firma:** SHA-256
-**Hash Criptográfico de Integridad:** `bb4f531c87332a6105cd3d816bb1e383c0d586e2e63fe1af81b74c28d3d7e9a9`
+**Hash Criptográfico de Integridad:** `f2e6bb290dcca5eb9361306073c99e60a8f2ef27ee185f185f0c022d1334d15c`
 **Firmante:** Aurenis Security Engine (v1.0.0)

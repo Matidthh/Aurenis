@@ -591,8 +591,8 @@ export default function DesignSystemShowcasePage() {
                       <TableCell className="font-semibold text-slate-900 dark:text-white">
                         <div className="flex items-center gap-3">
                           <div className="w-9 h-9 rounded-xl bg-brand-50 dark:bg-brand-950 text-brand-600 font-bold flex items-center justify-center text-xs border border-brand-200 dark:border-brand-800">
-                            {student.name.split(" ")[0][0]}
-                            {student.name.split(" ")[1]?.[0] || ""}
+                            {(student?.name || "").split(" ")[0]?.[0] || ""}
+                            {(student?.name || "").split(" ")[1]?.[0] || ""}
                           </div>
                           <div>
                             <div>{student.name}</div>

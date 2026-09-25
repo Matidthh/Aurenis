@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertTriangle, RotateCcw, ServerCrash, Radio, WifiOff } from "lucide-react";
+import { AlertTriangle, RotateCcw, ServerCrash, Radio, WifiOff, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { isChunkLoadError, triggerChunkReload } from "@/components/chunk-error-handler";
 
 export default function ErrorPage({
   error,
@@ -13,6 +14,8 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   const [isRetrying, setIsRetrying] = useState(false);
+
+  const isChunk = isChunkLoadError(error);
 
   // Detección de posibles códigos 500 / 503 en el mensaje o digest
   const is503 =
@@ -26,6 +29,12 @@ export default function ErrorPage({
     (!is503 && Boolean(error.digest));
 
   useEffect(() => {
+    // Si es un error de chunk por deploy, activar auto-reload preventivo
+    if (isChunk) {
+      triggerChunkReload("app/error.tsx", error);
+      return;
+    }
+
     // Registro discreto y formateado en consola
     const timestamp = new Date().toLocaleTimeString();
     const code = is503 ? 503 : is500 ? 500 : "ERROR";
@@ -38,7 +47,7 @@ export default function ErrorPage({
         stack: error.stack,
       }
     );
-  }, [error, is500, is503]);
+  }, [error, is500, is503, isChunk]);
 
   const handleRetry = async () => {
     setIsRetrying(true);

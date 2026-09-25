@@ -24,6 +24,15 @@ export async function listAttendanceRecords(
 
   if (isDatabaseConfigured()) {
     try {
+      if (options?.courseId) {
+        const course = await tenantDb.course.findFirst({
+          where: { id: options.courseId, schoolId, deletedAt: null },
+        });
+        if (!course) {
+          return [];
+        }
+      }
+
       const records = await tenantDb.attendanceRecord.findMany({
         where: {
           schoolId,
@@ -102,6 +111,22 @@ export async function getAttendanceOverview(
 ) {
   if (isDatabaseConfigured()) {
     try {
+      if (courseId) {
+        const course = await tenantDb.course.findFirst({
+          where: { id: courseId, schoolId, deletedAt: null },
+        });
+        if (!course) {
+          return {
+            totalRecords: 0,
+            presentCount: 0,
+            justifiedCount: 0,
+            unjustifiedCount: 0,
+            lateCount: 0,
+            attendanceRate: 100,
+          };
+        }
+      }
+
       const [totalRecords, presentCount, justifiedCount, unjustifiedCount, lateCount] = await Promise.all([
         tenantDb.attendanceRecord.count({
           where: { schoolId, ...(courseId ? { courseId } : {}) },

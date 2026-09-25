@@ -13,6 +13,7 @@
 
 ## 📑 Tabla de Contenidos
 
+0. [Gobernanza del Equipo & Protocolo IA Obligatorio](#-gobernanza-del-equipo--protocolo-ia-obligatorio)
 1. [Visión General & Propuesta de Valor](#-visión-general--propuesta-de-valor)
 2. [Arquitectura del Sistema](#-arquitectura-del-sistema)
 3. [Stack Tecnológico](#-stack-tecnológico)
@@ -21,6 +22,14 @@
 6. [Estrategia de Pruebas & Calidad (QA)](#-estrategia-de-pruebas--calidad-qa)
 7. [Estructura del Proyecto](#-estructura-del-proyecto)
 8. [Índice de Documentación Oficial](#-índice-de-documentación-oficial)
+
+---
+
+## 👥 Gobernanza del Equipo & Protocolo IA Obligatorio
+
+Este repositorio cuenta con un protocolo formal de roles, responsabilidades y directivas obligatorias para asistentes de inteligencia artificial:
+- **[Protocolo Mandatorio de IA (`AGENTS.md`)](./AGENTS.md):** Reglas operativas que cualquier IA en cualquier entorno (AI Studio, Cursor, Claude, Copilot) debe ejecutar.
+- **[Auditoría de Roles y Protocolo Técnico del Equipo (`TEAM_ROLES_AND_AI_PROTOCOL.md`)](./TEAM_ROLES_AND_AI_PROTOCOL.md):** Manual detallado de responsabilidades para **Maicol R.** (Lead / Backend & Arquitectura), **Malcom Marcelo** (Frontend), **Lucas P.** (UI/UX) y **Frank M.** (QA & Seguridad), con el *Definition of Done (DoD)* y el plan de trabajo para el sprint final de 30 días.
 
 ---
 

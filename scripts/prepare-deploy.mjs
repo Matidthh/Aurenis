@@ -3,10 +3,23 @@ import path from "path";
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
-const nextDir = path.join(rootDir, ".next");
+const buildDir = path.join(rootDir, "build");
+// Find the active Next.js build output directory
+const nextDir = fs.existsSync(path.join(rootDir, ".next"))
+  ? path.join(rootDir, ".next")
+  : fs.existsSync(path.join(rootDir, ".next-dev"))
+  ? path.join(rootDir, ".next-dev")
+  : path.join(rootDir, ".next");
 const publicDir = path.join(rootDir, "public");
 
 try {
+  // If Next.js output was in .next-dev, also mirror to .next for standard Next tooling
+  const canonicalNextDir = path.join(rootDir, ".next");
+  if (!fs.existsSync(canonicalNextDir) && fs.existsSync(nextDir)) {
+    fs.cpSync(nextDir, canonicalNextDir, { recursive: true });
+    console.log("Mirrored Next.js build output to canonical .next directory.");
+  }
+
   if (fs.existsSync(distDir)) {
     fs.rmSync(distDir, { recursive: true, force: true });
   }
@@ -110,6 +123,10 @@ try {
 
   // Create build metadata artifact in dist
   const distFiles = fs.readdirSync(distDir);
+  if (distFiles.length === 0) {
+    throw new Error("Build artifacts verification failed: dist/ directory is empty!");
+  }
+
   fs.writeFileSync(
     path.join(distDir, "build-manifest.json"),
     JSON.stringify(
@@ -126,7 +143,13 @@ try {
     )
   );
 
-  console.log(`Successfully prepared dist/ with ${distFiles.length} top-level artifacts for deployment.`);
+  // Mirror dist to build/ in case deployment runner expects 'build/'
+  if (fs.existsSync(buildDir)) {
+    fs.rmSync(buildDir, { recursive: true, force: true });
+  }
+  fs.cpSync(distDir, buildDir, { recursive: true });
+
+  console.log(`Successfully prepared dist/ and build/ with ${distFiles.length} top-level artifacts for deployment.`);
 } catch (error) {
   console.error("Error preparing dist artifacts:", error);
   process.exit(1);

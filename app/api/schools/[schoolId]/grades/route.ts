@@ -1,4 +1,8 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
@@ -6,6 +10,11 @@ import { PERMISSIONS } from "@/lib/constants/permissions";
 import { CreateGradeSchema } from "@/lib/validations/grade.schema";
 import { listAssessmentsWithGrades, createGrade } from "@/lib/services/grade.service";
 import { validateGradesAccess } from "@/lib/security/object-authorization";
+import { sanitizeErrorMessage } from "@/lib/api/response";
+
+const SchoolIdParamSchema = z
+  .string()
+  .uuid({ message: "El parámetro schoolId debe ser un UUID válido." });
 
 export async function GET(
   req: NextRequest,
@@ -18,6 +27,20 @@ export async function GET(
     }
 
     const { schoolId } = await params;
+
+    // Validación temprana de formato UUID (Autor: Maicol R.)
+    const paramValidation = SchoolIdParamSchema.safeParse(schoolId);
+    if (!paramValidation.success) {
+      return NextResponse.json(
+        {
+          error: "Identificador de institución no válido. Se requiere un UUID válido.",
+          code: "INVALID_UUID_FORMAT",
+          details: paramValidation.error.flatten(),
+        },
+        { status: 400 }
+      );
+    }
+
     const studentIdParam =
       req.nextUrl.searchParams.get("studentId") ||
       req.nextUrl.searchParams.get("enrollmentId") ||
@@ -44,7 +67,10 @@ export async function GET(
 
     return NextResponse.json({ success: true, assessments });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Error al obtener calificaciones" }, { status: 500 });
+    return NextResponse.json(
+      { error: sanitizeErrorMessage(error.message || "Error al obtener calificaciones") },
+      { status: 500 }
+    );
   }
 }
 
@@ -59,6 +85,19 @@ export async function POST(
     }
 
     const { schoolId } = await params;
+
+    // Validación temprana de formato UUID (Autor: Maicol R.)
+    const paramValidation = SchoolIdParamSchema.safeParse(schoolId);
+    if (!paramValidation.success) {
+      return NextResponse.json(
+        {
+          error: "Identificador de institución no válido. Se requiere un UUID válido.",
+          code: "INVALID_UUID_FORMAT",
+          details: paramValidation.error.flatten(),
+        },
+        { status: 400 }
+      );
+    }
 
     // Verificar permisos para ingresar notas (GRADES_ENTER)
     if (!session.isSystemAdmin) {
@@ -104,6 +143,9 @@ export async function POST(
 
     return NextResponse.json({ success: true, grade }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Error al registrar nota" }, { status: 500 });
+    return NextResponse.json(
+      { error: sanitizeErrorMessage(error.message || "Error al registrar nota") },
+      { status: 500 }
+    );
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import {
@@ -28,6 +29,10 @@ import {
   X,
   Sparkles,
   Loader2,
+  Keyboard,
+  Calculator,
+  Database,
+  ShieldCheck,
 } from "lucide-react";
 
 interface ReplicatedHeroProps {
@@ -38,9 +43,14 @@ interface ReplicatedHeroProps {
 
 export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader = false }: ReplicatedHeroProps) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [activeNav, setActiveNav] = useState("inicio");
   const [loggingIn, setLoggingIn] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleDirectLogin(role: string, email: string, pass: string) {
     setLoggingIn(role);
@@ -61,7 +71,7 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
   }
 
   return (
-    <div className="relative min-h-screen bg-[#F8F8F5] text-slate-900 overflow-hidden selection:bg-blue-500 selection:text-white font-sans">
+    <div id="inicio" suppressHydrationWarning className="relative min-h-screen bg-[#F8F8F5] text-slate-900 overflow-hidden selection:bg-blue-500 selection:text-white font-sans">
       {/* Soft atmospheric blue radial glow in background */}
       <div
         className="pointer-events-none absolute -top-24 right-0 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] bg-gradient-to-bl from-blue-100/70 via-blue-50/40 to-transparent rounded-full blur-3xl -z-10"
@@ -72,69 +82,69 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
         aria-hidden="true"
       />
 
-      {/* 1. Header / Navbar */}
+      {/* 1. Header / Navbar (solo visible si hideHeader no está activo) */}
       {!hideHeader && (
-      <header className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 pt-6 pb-4 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/">
-          <AurenisLogo className="w-10 h-10" textClassName="text-slate-900 text-xl font-black tracking-tight" />
-        </Link>
+        <header className="w-full max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 pt-6 pb-4 flex items-center justify-between">
+          {/* Brand Logo */}
+          <Link href="/">
+            <AurenisLogo className="w-10 h-10" textClassName="text-slate-900 text-xl font-black tracking-tight" />
+          </Link>
 
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 lg:gap-10">
-          <button
-            onClick={() => setActiveNav("inicio")}
-            className="relative py-1 text-sm font-semibold text-blue-600 transition"
-          >
-            Inicio
-            {activeNav === "inicio" && (
-              <span className="absolute -bottom-1.5 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full mx-auto" />
-            )}
-          </button>
-          <a
-            href="/mockups"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-          >
-            Características
-          </a>
-          <button
-            onClick={() => setShowDemoModal(true)}
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-          >
-            Planes
-          </button>
-          <button
-            onClick={() => setShowDemoModal(true)}
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-          >
-            Contacto
-          </button>
-        </nav>
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-8 lg:gap-10">
+            <button
+              onClick={() => setActiveNav("inicio")}
+              className="relative py-1 text-sm font-semibold text-blue-600 transition"
+            >
+              Inicio
+              {activeNav === "inicio" && (
+                <span className="absolute -bottom-1.5 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full mx-auto" />
+              )}
+            </button>
+            <Link
+              href="/mockups"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+            >
+              Características
+            </Link>
+            <button
+              onClick={() => setShowDemoModal(true)}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+            >
+              Planes
+            </button>
+            <button
+              onClick={() => setShowDemoModal(true)}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
+            >
+              Contacto
+            </button>
+          </nav>
 
-        {/* Right CTA Actions */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => handleDirectLogin("director", "director@sanjose.cl", "AdminCSJ2026!")}
-            className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-semibold neumo-button transition shadow-xs"
-          >
-            {loggingIn === "director" ? (
-              <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
-            ) : (
-              "Iniciar sesión"
-            )}
-          </button>
+          {/* Right CTA Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handleDirectLogin("director", "director@sanjose.cl", "AdminCSJ2026!")}
+              className="hidden sm:inline-flex items-center justify-center px-6 py-2.5 rounded-full text-sm font-semibold neumo-button transition shadow-xs"
+            >
+              {loggingIn === "director" ? (
+                <Loader2 className="w-4 h-4 animate-spin text-slate-600" />
+              ) : (
+                "Iniciar sesión"
+              )}
+            </button>
 
-          <button
-            onClick={() => {
-              if (onOpenDemoModal) onOpenDemoModal();
-              else setShowDemoModal(true);
-            }}
-            className="inline-flex items-center justify-center px-6 sm:px-7 py-2.5 rounded-full text-sm font-semibold neumo-button text-blue-600 transition-all hover:scale-[1.02] active:scale-[0.98]"
-          >
-            Comenzar ahora
-          </button>
-        </div>
-      </header>
+            <button
+              onClick={() => {
+                if (onOpenDemoModal) onOpenDemoModal();
+                else setShowDemoModal(true);
+              }}
+              className="inline-flex items-center justify-center px-6 sm:px-7 py-2.5 rounded-full text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xs"
+            >
+              Comenzar ahora
+            </button>
+          </div>
+        </header>
       )}
 
       {/* 2. Main Hero Content Grid */}
@@ -144,130 +154,114 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
           {/* Left Column (Hero Text & Value Props) */}
           <div className="lg:col-span-6 space-y-7 sm:space-y-8 z-10">
             {/* Top Multi-Tenant Pill Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-blue-50/90 border border-blue-100/80 text-blue-700 text-xs font-semibold shadow-xs">
-              <GraduationCap className="w-4 h-4 text-blue-600" />
-              <span>Plataforma de Gestión Académica Multi-Tenant</span>
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-blue-50/95 border border-blue-200 text-blue-900 text-xs font-bold shadow-xs hover:border-blue-300 transition-all">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <span>Gestión de Notas Ponderadas · Registro de Asistencia · Roles por Usuario</span>
             </div>
 
             {/* Main Headline */}
             <div className="space-y-1">
-              <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.12]">
-                La educación, más
+              <h1 className="text-4xl sm:text-5xl lg:text-[52px] font-black text-slate-900 tracking-tight leading-[1.12]">
+                El software escolar diseñado para la
                 <br />
-                <span className="text-blue-600">simple</span>,{" "}
-                <span className="text-blue-600 relative inline-block">
-                  organizada
-                  {/* Exact double curved blue wave stroke under 'organizada' */}
+                <span className="relative inline-block text-blue-600">
+                  velocidad docente
+                  {/* Subtle, aligned accent stroke under the highlighted metric */}
                   <svg
-                    className="absolute -bottom-2.5 left-0 w-full overflow-visible pointer-events-none"
-                    height="12"
-                    viewBox="0 0 200 12"
+                    className="absolute -bottom-1.5 left-0 w-full overflow-visible pointer-events-none"
+                    height="6"
+                    viewBox="0 0 100 6"
+                    preserveAspectRatio="none"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M2 7.5C45 2.5 155 2.5 198 7.5"
+                      d="M1 4.5C28 1.5 72 1.5 99 4.5"
                       stroke="#2563eb"
-                      strokeWidth="3.2"
+                      strokeWidth="2.5"
                       strokeLinecap="round"
-                    />
-                    <path
-                      d="M8 10C50 6 150 6 192 10"
-                      stroke="#2563eb"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeOpacity="0.75"
                     />
                   </svg>
-                </span>
-                <br />
-                y conectada.
+                </span>{" "}
+                y el control directivo.
               </h1>
             </div>
 
-            {/* Subtitle / Paragraph */}
-            <p className="text-slate-500 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
-              Aurenis es una plataforma moderna que centraliza la gestión académica de tu
-              institución, optimizando procesos, mejorando la comunicación y brindando una
-              experiencia excepcional para estudiantes, docentes y administradores.
+            {/* Subtitle / Commercial Value Proposition */}
+            <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
+              Libro de Clases Digital, planilla de notas matricial con teclado numérico continuo y cálculo automático bajo Decreto 67. <strong className="text-slate-900 font-bold">Información académica centralizada, segura y sin planillas rotas.</strong>
             </p>
 
             {/* Action Buttons Row */}
-            <div className="flex flex-wrap items-center gap-4 pt-1">
+            <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={() => {
                   if (onOpenDemoModal) onOpenDemoModal();
+                  else if (onOpenQuoteModal) onOpenQuoteModal();
                   else setShowDemoModal(true);
                 }}
-                className="inline-flex items-center justify-center gap-2 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30 transition hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
-                <span>Comenzar ahora</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Solicitar Demostración Guiada</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
 
               <button
-                onClick={() => handleDirectLogin("profesor", "profesor@sanjose.cl", "Profesor2026!")}
-                className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base bg-white border border-slate-200 hover:border-slate-300 text-slate-800 hover:bg-slate-50 transition shadow-xs"
+                onClick={() => {
+                  const el = document.getElementById("simulador");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 transition-all hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <div className="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
                   <Play className="w-3 h-3 fill-blue-600 ml-0.5" />
                 </div>
-                <span>Ver demo</span>
+                <span>Ver simulador de notas</span>
               </button>
             </div>
 
-            {/* 4 Feature Props Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 pt-8 sm:pt-10 border-t border-slate-100">
-              {/* Seguro */}
-              <div className="space-y-2">
-                <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
-                  <Shield className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Seguro</h4>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    Protección de datos y acceso por roles.
-                  </p>
-                </div>
+            {/* Verifiable Trust Subtext */}
+            <div className="flex items-center gap-2 pt-1 text-xs text-slate-500 font-medium">
+              <Shield className="w-4 h-4 text-blue-600 shrink-0" />
+              <span>Plataforma web con bases de datos PostgreSQL, roles RBAC y trazabilidad académica</span>
+            </div>
+
+            {/* 4 Quantified Selling Pillars - Verifiable */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 sm:pt-8 border-t border-slate-200/80">
+              {/* Alta Velocidad */}
+              <div className="space-y-1">
+                <div className="text-xl sm:text-2xl font-black text-blue-600">0.1s</div>
+                <div className="font-bold text-slate-900 text-xs">Tipeo Rápido</div>
+                <p className="text-[11px] text-slate-500 leading-tight">
+                  Digitación continua por teclado numérico.
+                </p>
               </div>
 
-              {/* Rápido */}
-              <div className="space-y-2">
-                <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
-                  <Zap className="w-5 h-5 fill-blue-600" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Rápido</h4>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    Rendimiento optimizado y sin interrupciones.
-                  </p>
-                </div>
+              {/* Registro Estructurado */}
+              <div className="space-y-1">
+                <div className="text-xl sm:text-2xl font-black text-slate-900">Estructurado</div>
+                <div className="font-bold text-slate-900 text-xs">Registro Escolar</div>
+                <p className="text-[11px] text-slate-500 leading-tight">
+                  Diseñado para asistencia y leccionario.
+                </p>
               </div>
 
-              {/* Multidispositivo */}
-              <div className="space-y-2">
-                <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
-                  <Laptop className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Multidispositivo</h4>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    Accede desde cualquier lugar y dispositivo.
-                  </p>
-                </div>
+              {/* Decreto 67 */}
+              <div className="space-y-1">
+                <div className="text-xl sm:text-2xl font-black text-purple-600">Decreto 67</div>
+                <div className="font-bold text-slate-900 text-xs">Promedios Duales</div>
+                <p className="text-[11px] text-slate-500 leading-tight">
+                  Modo Simple o Ponderado (%).
+                </p>
               </div>
 
-              {/* Escalable */}
-              <div className="space-y-2">
-                <div className="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
-                  <Users className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Escalable</h4>
-                  <p className="text-xs text-slate-500 leading-snug mt-0.5">
-                    Crece con tu institución, sin límites.
-                  </p>
-                </div>
+              {/* Multi-Tenant */}
+              <div className="space-y-1">
+                <div className="text-xl sm:text-2xl font-black text-slate-900">PostgreSQL</div>
+                <div className="font-bold text-slate-900 text-xs">Aislamiento Seguro</div>
+                <p className="text-[11px] text-slate-500 leading-tight">
+                  Datos resguardados por colegio.
+                </p>
               </div>
             </div>
           </div>
@@ -307,10 +301,8 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
                 <div className="col-span-3 sm:col-span-3 bg-[#0c1527] text-slate-300 p-3 sm:p-4 flex flex-col justify-between select-none">
                   <div className="space-y-4 sm:space-y-5">
                     {/* Sidebar Brand Logo */}
-                    <div className="flex items-center gap-2 px-1 pt-1">
-                      <div className="w-6 h-6 rounded-lg bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center">
-                        A
-                      </div>
+                    <div className="flex items-center gap-2 px-1 pt-1" suppressHydrationWarning>
+                      <AurenisLogo className="w-6 h-6 sm:w-7 sm:h-7" showText={false} />
                       <span className="hidden sm:inline font-extrabold text-xs tracking-wider text-white">
                         AURENIS
                       </span>
@@ -763,24 +755,6 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
                   </div>
                   <div className="text-[11px] text-slate-400">
                     Portal académico
-                  </div>
-                </div>
-              </button>
-
-              {/* Prototipo Figma */}
-              <button
-                onClick={() => router.push("/mockups")}
-                className="p-4 rounded-2xl border border-slate-800 bg-slate-900 text-white hover:bg-slate-800 text-left transition flex items-center gap-3.5 group"
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold shrink-0">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-white group-hover:text-pink-300">
-                    Prototipo Figma Hi-Fi
-                  </div>
-                  <div className="text-[11px] text-slate-400">
-                    Entregables de diseño & DoD
                   </div>
                 </div>
               </button>

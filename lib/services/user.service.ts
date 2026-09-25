@@ -6,11 +6,14 @@ import { SchoolSummary } from "@/types/tenant";
 import { sessionStore } from "@/lib/auth/session-store";
 import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "@/lib/constants/roles";
 import { PERMISSIONS } from "@/lib/constants/permissions";
+import { getSchoolBySlug, SCHOOLS_CATALOG } from "./school.service";
 
 export class UserServiceError extends Error {
-  constructor(message: string) {
+  statusCode: number;
+  constructor(message: string, statusCode = 401) {
     super(message);
     this.name = "UserServiceError";
+    this.statusCode = statusCode;
   }
 }
 
@@ -164,16 +167,21 @@ const DEMO_USERS: Record<string, DemoUser> = {
 };
 
 /**
- * Autentica un usuario con email y contraseña.
+ * Autentica un usuario con email/RUT y contraseña estrictamente contra la base de datos.
  * Retorna el usuario y sus membresías activas.
+ * Autor: Malcom Marcelo
  */
-export async function authenticateUser(identifier: string, plainPassword: string) {
+export async function authenticateUser(identifier: string, plainPassword: string, schoolSlug?: string) {
   const normalized = identifier.toLowerCase().trim();
   const cleanRut = normalized.replace(/\./g, "").toUpperCase();
 
+  if (!plainPassword || typeof plainPassword !== "string" || plainPassword.trim() === "") {
+    throw new UserServiceError("Debe ingresar su contraseña.", 400);
+  }
+
   let user: any = null;
   try {
-    // Intentar buscar por correo electrónico o por RUT nacional
+    // Buscar usuario en base de datos por correo electrónico o por RUT
     user = await prisma.user.findFirst({
       where: {
         OR: [
@@ -200,40 +208,31 @@ export async function authenticateUser(identifier: string, plainPassword: string
         },
       },
     });
-  } catch {
-    // Fallback a demo si falla la conexión
+  } catch (dbError: any) {
+    console.error("[Auth Service] Error de conexión a la base de datos:", dbError);
+    throw new UserServiceError(
+      "El servicio de base de datos no está disponible temporalmente. Por favor, intente más tarde.",
+      503
+    );
   }
 
+  // Si el usuario no existe en la base de datos, rechazar inmediatamente sin fallbacks permisivos
   if (!user) {
-    // También verificar en demo users por email o por RUT
-    const demo = DEMO_USERS[normalized] || Object.values(DEMO_USERS).find(
-      (d: any) => d.rutOrNationalId && (d.rutOrNationalId.toLowerCase() === cleanRut.toLowerCase() || d.rutOrNationalId.toLowerCase() === normalized)
-    );
-    if (demo) {
-      const validPasswords = [
-        demo.password,
-        "AurenisSuperAdmin2026!",
-        "AdminCSJ2026!",
-        "Profesor2026!",
-        "Estudiante2026!",
-        "Apoderado2026!",
-      ];
-      if (validPasswords.includes(plainPassword)) {
-        return demo;
-      }
-    }
-    throw new UserServiceError("Credenciales inválidas.");
+    throw new UserServiceError("Credenciales inválidas.", 401);
   }
 
   if (user.status !== UserStatus.ACTIVE) {
-    throw new UserServiceError("Tu cuenta se encuentra suspendida o inactiva.");
+    throw new UserServiceError("Tu cuenta se encuentra suspendida o inactiva.", 403);
   }
 
-  if (user.passwordHash) {
-    const isValidPassword = await verifyPassword(plainPassword, user.passwordHash);
-    if (!isValidPassword) {
-      throw new UserServiceError("Credenciales inválidas.");
-    }
+  // Comprobar que el registro posea un hash de contraseña válido
+  if (!user.passwordHash || typeof user.passwordHash !== "string" || user.passwordHash.trim() === "") {
+    throw new UserServiceError("La cuenta no tiene credenciales configuradas o válidas.", 401);
+  }
+
+  const isValidPassword = await verifyPassword(plainPassword, user.passwordHash);
+  if (!isValidPassword) {
+    throw new UserServiceError("Credenciales inválidas.", 401);
   }
 
   // Registrar login en auditoría
@@ -247,7 +246,7 @@ export async function authenticateUser(identifier: string, plainPassword: string
         details: { email: user.email },
       });
     } catch {
-      // Si la auditoría falla por desconexión de BD, no bloquea el login
+      // Evento de auditoría no bloqueante
     }
   }
 

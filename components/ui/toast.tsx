@@ -314,24 +314,13 @@ function ToastCard({
       {duration > 0 && (
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-100 dark:bg-slate-800/60 overflow-hidden">
           <div
-            className={cn("h-full origin-left transition-all", typeStyles.progress)}
+            className={cn("h-full origin-left", typeStyles.progress)}
             style={{
-              animation: `shrinkWidth ${duration}ms linear forwards`,
+              animation: `aurenisShrinkWidth ${duration}ms linear forwards`,
             }}
           />
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes shrinkWidth {
-          from {
-            width: 100%;
-          }
-          to {
-            width: 0%;
-          }
-        }
-      `}</style>
     </div>
   );
 }

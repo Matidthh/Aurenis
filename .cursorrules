@@ -1,0 +1,17 @@
+# Cursor Rules & AI Assistant Directives - AURENIS
+
+CRITICAL: Before writing any code, answering questions or proposing modifications, you MUST read and enforce:
+1. `AGENTS.md` (Mandatory AI Protocol & Team Directives)
+2. `TEAM_ROLES_AND_AI_PROTOCOL.md` (Comprehensive Team Audit, Roles & Definition of Done)
+
+## Team Structure & Ownership
+- Maicol R.: Project Lead, Software Architecture, Backend/API, Prisma, PostgreSQL, Auth & Security.
+- Malcom Marcelo: Frontend Lead, React/Next.js Client Logic, State Management, API integration, SSR Parity.
+- Lucas P.: UI/UX Lead, Design System, Tokens, Accessibility (WCAG 2.1 AA), Layout Consistency.
+- Frank M.: QA, Automated Testing, Security Pentesting (OWASP Top 10, IDOR/BOLA), Compliance & Re-Testing.
+
+## Mandatory Rules
+- In any code analysis, you MUST explicitly state the responsible author next to each file or code block.
+- ZERO placeholders or fake in-memory mocks. Everything must be robust, typed and backed by real database models.
+- Always verify build and lint before concluding.
+- Always grant explicit GREEN LIGHT ("Luz Verde") for GitHub push once verified.

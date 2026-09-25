@@ -65,6 +65,9 @@ model User {
 
   memberships     Membership[]
   auditLogs       AuditLog[]
+  dataConsents    DataConsent[]
+  dataSubjectRequests DataSubjectRequest[]
+  userPreference  UserPreference?
 
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -72,6 +75,20 @@ model User {
   @@index([email])
   @@index([rutOrNationalId])
   @@index([status])
+}
+
+model UserPreference {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  theme                String   @default("light")
+  sidebarCollapsed     Boolean  @default(false)
+  notificationsEnabled Boolean  @default(true)
+  language             String   @default("es")
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model School {
@@ -497,3 +514,52 @@ model FileRecord {
 
   @@index([schoolId, purpose])
 }
+
+// -------------------------------------------------------------
+// 6. CUMPLIMIENTO LEY 21.719 (PRIVACIDAD Y DERECHOS ARCO)
+// -------------------------------------------------------------
+
+model DataConsent {
+  id          String   @id @default(cuid())
+  userId      String
+  schoolId    String?
+  consentType String   // Ej: "ACADEMIC_PROCESSING", "MINORS_GUARDIAN_AUTHORIZATION"
+  version     String   // Ej: "1.0"
+  ipAddress   String?
+  acceptedAt  DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([schoolId])
+}
+
+model DataSubjectRequest {
+  id          String   @id @default(cuid())
+  userId      String
+  schoolId    String?
+  requestType String   // "ACCESS", "RECTIFICATION", "SUPPRESSION", "PORTABILITY", "OPPOSITION"
+  status      String   @default("PENDING") // "PENDING", "PROCESSING", "COMPLETED", "REJECTED"
+  details     Json?
+  resolution  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([schoolId])
+  @@index([status])
+}
+
+model RevokedToken {
+  id        String   @id @default(cuid())
+  jti       String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([jti])
+  @@index([userId])
+}
+

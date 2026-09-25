@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth/session";
 import { getUserSchools } from "@/lib/services/user.service";
@@ -30,12 +31,12 @@ export default async function SelectSchoolPage() {
           <p className="text-sm text-slate-500">
             Tu cuenta no tiene colegios activos asignados actualmente. Por favor, contacta al administrador escolar de tu institución.
           </p>
-          <a
+          <Link
             href="/api/auth/logout"
             className="inline-block text-sm text-brand-600 hover:underline pt-2"
           >
             Cerrar Sesión
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -59,12 +60,12 @@ export default async function SelectSchoolPage() {
         <SchoolSelectorList schools={schools} />
 
         <div className="text-center pt-2">
-          <a
+          <Link
             href="/api/auth/logout"
             className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition"
           >
             Cerrar Sesión
-          </a>
+          </Link>
         </div>
       </div>
     </div>

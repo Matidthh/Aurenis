@@ -176,7 +176,7 @@ export function createTenantPrisma(schoolId: string) {
               return result;
             }
 
-            // Operaciones update y delete sobre registros únicos
+            // Operaciones update y delete sobre registros únicos (Hardened multi-tenant verification - Autor: Maicol R. & Malcom Marcelo)
             if (operation === "update" || operation === "delete") {
               if (operationArgs.where?.schoolId && operationArgs.where.schoolId !== schoolId) {
                 throw new TenantIsolationViolationError(
@@ -185,6 +185,69 @@ export function createTenantPrisma(schoolId: string) {
                   operationArgs.where.schoolId,
                   modelName
                 );
+              }
+
+              // Si la consulta no incluye schoolId en el where (ej. where: { id }), verificar pertenencia antes de mutar
+              if (operationArgs.where && !operationArgs.where.schoolId) {
+                try {
+                  const existing: any = await (prisma as any)[modelName]?.findUnique({
+                    where: operationArgs.where,
+                    select: { schoolId: true },
+                  });
+                  if (existing && existing.schoolId && existing.schoolId !== schoolId) {
+                    throw new TenantIsolationViolationError(
+                      `Violación de aislamiento multi-tenant: el registro objetivo '${modelName}' pertenece a otra institución.`,
+                      schoolId,
+                      existing.schoolId,
+                      modelName
+                    );
+                  }
+                } catch (err: any) {
+                  if (err instanceof TenantIsolationViolationError) throw err;
+                  // Si falla findUnique por sintaxis de where, continuar con el query estándar
+                }
+              }
+            }
+
+            // Operaciones upsert con aislamiento estricto
+            if (operation === "upsert") {
+              if (operationArgs.create) {
+                if (!operationArgs.create.schoolId) {
+                  operationArgs.create.schoolId = schoolId;
+                } else if (operationArgs.create.schoolId !== schoolId) {
+                  throw new TenantIsolationViolationError(
+                    `Violación de aislamiento multi-tenant en upsert: intento de crear datos para otra institución.`,
+                    schoolId,
+                    operationArgs.create.schoolId,
+                    modelName
+                  );
+                }
+              }
+              if (operationArgs.where?.schoolId && operationArgs.where.schoolId !== schoolId) {
+                throw new TenantIsolationViolationError(
+                  `Violación de aislamiento multi-tenant en upsert: where no coincide con tenant activo.`,
+                  schoolId,
+                  operationArgs.where.schoolId,
+                  modelName
+                );
+              }
+              if (operationArgs.where) {
+                try {
+                  const existing: any = await (prisma as any)[modelName]?.findUnique({
+                    where: operationArgs.where,
+                    select: { schoolId: true },
+                  });
+                  if (existing && existing.schoolId && existing.schoolId !== schoolId) {
+                    throw new TenantIsolationViolationError(
+                      `Violación de aislamiento multi-tenant en upsert: el registro existente pertenece a otra institución.`,
+                      schoolId,
+                      existing.schoolId,
+                      modelName
+                    );
+                  }
+                } catch (err: any) {
+                  if (err instanceof TenantIsolationViolationError) throw err;
+                }
               }
             }
           }

@@ -27,13 +27,7 @@ import {
 import { UserSessionInfo, SchoolContextInfo } from "./types";
 import { Breadcrumbs } from "./breadcrumbs";
 import { cn } from "@/lib/utils/cn";
-import { NetworkIndicatorPill } from "@/components/ui/network-status-card";
 import { DEMO_ROLES, DemoRoleAccount, executeRoleSwitch, findMatchingDemoRole } from "@/lib/auth/demo-roles";
-import { useAuth } from "@/lib/auth/auth-context";
-import {
-  LighthouseScoreBadge,
-  LighthousePerformanceModal,
-} from "@/components/ui/lighthouse-performance-modal";
 
 interface HeaderProps {
   isCollapsed: boolean;
@@ -52,13 +46,10 @@ export function Header({
   user,
   schoolContext,
 }: HeaderProps) {
-  const { logout } = useAuth();
-
   // Estados de menús flotantes
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isDevRolesOpen, setIsDevRolesOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isLighthouseOpen, setIsLighthouseOpen] = useState(false);
 
   // Estado de tema claro / oscuro con persistencia
   const [isDark, setIsDark] = useState(false);
@@ -73,28 +64,49 @@ export function Header({
   const devRolesRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
-  // Inicializar estado del tema desde localStorage o documento HTML
+  // Inicializar estado del tema desde la base de datos (Autor: Carlos M. & Lucas P.)
   useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem("aurenis_theme");
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const isCurrentlyDark =
-        savedTheme === "dark" || (!savedTheme && prefersDark) || document.documentElement.classList.contains("dark");
+    let isSubscribed = true;
 
-      if (isCurrentlyDark) {
-        document.documentElement.classList.add("dark");
-        setIsDark(true);
-      } else {
-        document.documentElement.classList.remove("dark");
-        setIsDark(false);
+    async function loadThemeFromDatabase() {
+      try {
+        const res = await fetch("/api/user/preferences");
+        if (res.ok) {
+          const json = await res.json();
+          const dbTheme = json?.data?.preferences?.theme;
+          if (isSubscribed && dbTheme) {
+            const shouldBeDark = dbTheme === "dark";
+            setIsDark(shouldBeDark);
+            if (typeof document !== "undefined") {
+              if (shouldBeDark) {
+                document.documentElement.classList.add("dark");
+              } else {
+                document.documentElement.classList.remove("dark");
+              }
+            }
+            setThemeMounted(true);
+            return;
+          }
+        }
+      } catch {
+        // Fallback no intrusivo si el endpoint no está disponible en primera carga
       }
-    } catch {
-      // Ignorar en caso de restricciones de storage
+
+      // Si no hay respuesta de la base de datos, respetar clase del documento
+      if (isSubscribed && typeof document !== "undefined") {
+        const isCurrentlyDark = document.documentElement.classList.contains("dark");
+        setIsDark(isCurrentlyDark);
+        setThemeMounted(true);
+      }
     }
-    setThemeMounted(true);
+
+    loadThemeFromDatabase();
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
-  // Alternar modo oscuro y persistir preferencia
+  // Alternar modo oscuro y persistir preferencia en la Base de Datos (Autor: Carlos M. & Lucas P.)
   function toggleTheme() {
     const nextDark = !isDark;
     setIsDark(nextDark);
@@ -104,10 +116,16 @@ export function Header({
       } else {
         document.documentElement.classList.remove("dark");
       }
-      try {
-        localStorage.setItem("aurenis_theme", nextDark ? "dark" : "light");
-      } catch {}
     }
+
+    // Persistir directamente en PostgreSQL (BBDD)
+    fetch("/api/user/preferences", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme: nextDark ? "dark" : "light" }),
+    }).catch((err) => {
+      console.warn("[Header] Fallo al sincronizar tema en la base de datos:", err);
+    });
   }
 
   // Cerrar menús al hacer clic fuera o presionar Escape
@@ -184,7 +202,7 @@ export function Header({
   return (
     <header
       id="app-header"
-      className="sticky top-0 z-30 w-full h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors"
+      className="sticky top-0 z-30 w-full h-16 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/90 dark:border-slate-800/90 shadow-xs transition-colors"
       role="banner"
     >
       <div className="flex items-center justify-between h-full px-3 sm:px-6 gap-2 sm:gap-3">
@@ -252,25 +270,6 @@ export function Header({
         {/* 3. SECCIÓN DERECHA: Roles Dev, Tema, Notificaciones y Perfil     */}
         {/* ================================================================= */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* AUDITORÍA DE VELOCIDAD LIGHTHOUSE */}
-          <div className="hidden sm:block">
-            <LighthouseScoreBadge onOpenModal={() => setIsLighthouseOpen(true)} />
-          </div>
-
-          {/* BOTÓN PROTOTIPO FIGMA / MOCKUPS HI-FI */}
-          <Link
-            id="header-mockups-link"
-            href="/mockups"
-            className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-purple-200 dark:border-purple-800/60 bg-purple-50/70 dark:bg-purple-950/40 hover:bg-purple-100/70 text-purple-800 dark:text-purple-300 transition text-xs font-bold"
-            title="Abrir Prototipo Figma de Alta Fidelidad (Dashboards Ejecutivos y Docentes)"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-            <span>Figma Hi-Fi</span>
-            <span className="px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 text-[10px] font-extrabold">
-              DoD 3/3
-            </span>
-          </Link>
-
           {/* 3.1 BOTONERA / SELECTOR DE ROLES DE PRUEBA (DESARROLLO ACTIVA) */}
           <div className="relative" ref={devRolesRef}>
             {/* Botón selector principal */}
@@ -422,17 +421,12 @@ export function Header({
             </Link>
           )}
 
-          {/* Indicador discreto de estado de conectividad */}
-          <div className="hidden sm:flex items-center">
-            <NetworkIndicatorPill />
-          </div>
-
-          {/* 3.3 BOTÓN DE TEMA CLARO / OSCURO */}
+          {/* 3.3 BOTÓN DE TEMA CLARO / OSCURO (Control táctil neumórfico) */}
           <button
             id="header-theme-toggle-btn"
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 neumo-button transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
             title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
           >
@@ -443,18 +437,18 @@ export function Header({
             )}
           </button>
 
-          {/* 3.4 NOTIFICACIONES */}
+          {/* 3.4 NOTIFICACIONES (Control táctil neumórfico) */}
           <div className="relative" ref={notificationsRef}>
             <button
               id="header-notifications-btn"
               type="button"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-              className="p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 neumo-button transition relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
               aria-label="Ver centro de notificaciones"
               aria-expanded={isNotificationsOpen}
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-600 animate-pulse" />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-brand-600 animate-pulse ring-2 ring-white dark:ring-slate-900" />
             </button>
 
             {isNotificationsOpen && (
@@ -632,27 +626,20 @@ export function Header({
 
                 {/* Separador y botón de cerrar sesión */}
                 <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
-                  <button
+                  <Link
                     id="header-dropdown-logout"
-                    type="button"
-                    onClick={() => logout()}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition text-left cursor-pointer"
+                    href="/api/auth/logout"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Cerrar Sesión</span>
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* Modal de Auditoría Google Lighthouse & Rendimiento Core Web Vitals */}
-      <LighthousePerformanceModal
-        isOpen={isLighthouseOpen}
-        onClose={() => setIsLighthouseOpen(false)}
-      />
     </header>
   );
 }

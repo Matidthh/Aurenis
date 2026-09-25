@@ -30,3 +30,26 @@ for (const p of files) {
     console.warn("Could not patch Next.js segment explorer:", err);
   }
 }
+
+const encodeUriFiles = [
+  path.join(process.cwd(), "node_modules/next/dist/shared/lib/encode-uri-path.js"),
+  path.join(process.cwd(), "node_modules/next/dist/esm/shared/lib/encode-uri-path.js"),
+];
+
+const encodeTarget = "return file.split('/').map((p)=>encodeURIComponent(p)).join('/');";
+const encodeReplacement = "if (!file || typeof file !== 'string') return file || ''; return file.split('/').map((p)=>encodeURIComponent(p)).join('/');";
+
+for (const p of encodeUriFiles) {
+  try {
+    if (fs.existsSync(p)) {
+      let content = fs.readFileSync(p, "utf-8");
+      if (content.includes(encodeTarget)) {
+        content = content.replace(encodeTarget, encodeReplacement);
+        fs.writeFileSync(p, content, "utf-8");
+      }
+    }
+  } catch (err) {
+    console.warn("Could not patch encode-uri-path:", err);
+  }
+}
+

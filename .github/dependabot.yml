@@ -1,0 +1,24 @@
+version: 2
+updates:
+  # Escaneo y actualización semanal de dependencias npm / Node.js
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "America/Santiago"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "maicolcerda1234"
+    labels:
+      - "dependencies"
+      - "security"
+    target-branch: "main"
+
+  # Escaneo y actualización de GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

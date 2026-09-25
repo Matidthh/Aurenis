@@ -1,4 +1,8 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { getSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import { createTenantPrisma } from "@/lib/db/tenant-extension";
@@ -6,6 +10,8 @@ import { PERMISSIONS } from "@/lib/constants/permissions";
 import { DEFAULT_SCHOOL_ROLES } from "@/lib/constants/roles";
 import { listStudentsBySchool } from "@/lib/services/student.service";
 import bcrypt from "bcryptjs";
+import { encryptField } from "@/lib/security/encryption";
+import { sanitizeErrorMessage } from "@/lib/api/response";
 
 export async function GET(
   req: NextRequest,
@@ -123,19 +129,37 @@ export async function POST(
       );
     }
 
+    // Validación estricta de pertenencia multi-tenant del curso (Autor: Maicol R.)
+    const course = await prisma.course.findFirst({
+      where: {
+        id: courseId,
+        schoolId: school.id,
+      },
+    });
+
+    if (!course) {
+      return NextResponse.json(
+        { error: "El curso especificado no existe o no pertenece a esta institución educativa." },
+        { status: 400 }
+      );
+    }
+
     // Buscar o crear usuario estudiante
     let studentUser = await prisma.user.findUnique({
       where: { email: email.trim().toLowerCase() },
     });
 
+    let generatedPassword: string | null = null;
     if (!studentUser) {
-      const defaultPassword = await bcrypt.hash("Estudiante2026!", 10);
+      // Generación de contraseña temporal con alta entropía CSPRNG (Autor: Lucas P.)
+      generatedPassword = `${crypto.randomBytes(8).toString("base64url")}!A1`;
+      const defaultPassword = await bcrypt.hash(generatedPassword, 10);
       studentUser = await prisma.user.create({
         data: {
           email: email.trim().toLowerCase(),
           firstName: firstName.trim(),
           lastName: lastName.trim(),
-          rutOrNationalId: rutOrNationalId ? rutOrNationalId.trim() : null,
+          rutOrNationalId: rutOrNationalId ? encryptField(rutOrNationalId.trim()) : null,
           passwordHash: defaultPassword,
           status: "ACTIVE",
         },
@@ -224,10 +248,11 @@ export async function POST(
       success: true,
       message: "Estudiante matriculado exitosamente",
       enrollmentId: enrollment.id,
+      ...(generatedPassword ? { temporaryPassword: generatedPassword } : {}),
     });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Error al matricular estudiante" },
+      { error: sanitizeErrorMessage(error.message || "Error al matricular estudiante") },
       { status: 500 }
     );
   }

@@ -1,99 +1,19 @@
 "use client";
 
 import React from "react";
-import dynamic from "next/dynamic";
 import { LandingNavbar } from "@/components/landing/navbar";
 import { ReplicatedHero } from "@/components/landing/replicated-hero";
 import { ProblemSolutionSection } from "@/components/landing/problem-solution-section";
 import { FaqSection } from "@/components/landing/faq-section";
 import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
-
-// Code-split heavy interactive sections for optimized chunk loading
-const InteractiveSandbox = dynamic(
-  () => import("@/components/landing/interactive-sandbox").then((mod) => mod.InteractiveSandbox),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando simulador interactivo...</div>
-      </div>
-    ),
-  }
-);
-
-const RoiCalculator = dynamic(
-  () => import("@/components/landing/roi-calculator").then((mod) => mod.RoiCalculator),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando calculadora ROI...</div>
-      </div>
-    ),
-  }
-);
-
-const ComparisonBattlecard = dynamic(
-  () => import("@/components/landing/comparison-battlecard").then((mod) => mod.ComparisonBattlecard),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando comparativa...</div>
-      </div>
-    ),
-  }
-);
-
-const PricingPlans = dynamic(
-  () => import("@/components/landing/pricing-plans").then((mod) => mod.PricingPlans),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando planes y tarifas...</div>
-      </div>
-    ),
-  }
-);
-
-const HowWeMigrateSection = dynamic(
-  () => import("@/components/landing/how-we-migrate-section").then((mod) => mod.HowWeMigrateSection),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando pasos de migración...</div>
-      </div>
-    ),
-  }
-);
-
-const TestimonialsSocialProof = dynamic(
-  () => import("@/components/landing/testimonials-social-proof").then((mod) => mod.TestimonialsSocialProof),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando testimonios...</div>
-      </div>
-    ),
-  }
-);
-
-const PortalsByRole = dynamic(
-  () => import("@/components/landing/portals-by-role").then((mod) => mod.PortalsByRole),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="py-20 flex items-center justify-center text-slate-400">
-        <div className="animate-pulse">Cargando módulos y portales...</div>
-      </div>
-    ),
-  }
-);
-
+import { InteractiveSandbox } from "@/components/landing/interactive-sandbox";
+import { RoiCalculator } from "@/components/landing/roi-calculator";
+import { ComparisonBattlecard } from "@/components/landing/comparison-battlecard";
+import { PricingPlans } from "@/components/landing/pricing-plans";
+import { HowWeMigrateSection } from "@/components/landing/how-we-migrate-section";
+import { TestimonialsSocialProof } from "@/components/landing/testimonials-social-proof";
+import { PortalsByRole } from "@/components/landing/portals-by-role";
 import { getBookingUrl } from "@/lib/booking";
 
 export function LandingClientPage() {
@@ -127,7 +47,10 @@ export function LandingClientPage() {
       />
 
       {/* 4. Dolores reales del colegio vs Solución AURENIS */}
-      <ProblemSolutionSection />
+      <ProblemSolutionSection
+        onOpenQuoteModal={(src) => handleOpenQuote(src || "Cotización desde Comparativa")}
+        onOpenDemoModal={(src) => handleOpenQuote(src || "Demostración desde Comparativa")}
+      />
 
       {/* 5. CALCULADORA DE RETORNO Y AHORRO: Justifica la inversión financieramente */}
       <RoiCalculator

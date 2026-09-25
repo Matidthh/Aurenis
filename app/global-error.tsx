@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ServerCrash, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { discreetLogger } from "@/lib/api/discreet-logger";
+import { isChunkLoadError, triggerChunkReload } from "@/components/chunk-error-handler";
 
 export default function GlobalError({
   error,
@@ -13,6 +14,11 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
+    if (isChunkLoadError(error)) {
+      triggerChunkReload("app/global-error.tsx", error);
+      return;
+    }
+
     discreetLogger.logHttp500({
       errorCode: error.digest,
       errorMessage: error.message || "Global application runtime error",

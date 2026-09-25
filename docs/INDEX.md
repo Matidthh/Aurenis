@@ -33,6 +33,13 @@ Este centro de documentación consolida todas las especificaciones arquitectóni
 
 ## 📑 Directorio de Documentos
 
+### 0. 👑 [Gobernanza del Equipo, Auditoría de Roles & Protocolo de IA](../TEAM_ROLES_AND_AI_PROTOCOL.md)
+*Gobernanza oficial del proyecto, división de responsabilidades y directrices de IA.*
+- Matriz de responsabilidades: **Maicol R.** (Lead / Backend & Arquitectura), **Malcom Marcelo** (Frontend), **Lucas P.** (UI/UX) y **Frank M.** (QA & Seguridad).
+- Definición de Hecho (Definition of Done - DoD) obligatoria.
+- Plan y prioridades para los próximos 30 días de desarrollo.
+- Reglas obligatorias para asistentes de IA y agentes en chats paralelos.
+
 ### 1. 🏛️ [Arquitectura Técnica del Sistema](./ARCHITECTURE.md)
 *Visión global, diseño en capas, aislamiento multi-tenant y persistencia.*
 - Principios de diseño (*Zero-Trust Multi-Tenancy*, Defensa en Profundidad).

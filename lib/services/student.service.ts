@@ -47,6 +47,7 @@ export async function listStudentsBySchool(
                 include: {
                   course: true,
                   grades: {
+                    where: { schoolId },
                     include: { assessment: true },
                     take: 10,
                   },
@@ -288,6 +289,7 @@ export async function getStudentDetails(
             include: {
               course: true,
               grades: {
+                where: { schoolId },
                 include: { assessment: true },
               },
             },

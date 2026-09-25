@@ -34,17 +34,17 @@ async function runTests() {
   // Test 1.1: Unidad - Algoritmo de Sliding Window Token Bucket
   const testIp = "192.168.1.100";
   const testKey = `login:test-${Date.now()}`;
-  resetRateLimit(testKey);
+  await resetRateLimit(testKey);
 
   let allAttemptsAllowed = true;
   for (let i = 1; i <= RATE_LIMIT_CONFIGS.LOGIN.max; i++) {
-    const res = checkRateLimit(testKey, RATE_LIMIT_CONFIGS.LOGIN);
+    const res = await checkRateLimit(testKey, RATE_LIMIT_CONFIGS.LOGIN);
     if (!res.allowed || res.remaining !== RATE_LIMIT_CONFIGS.LOGIN.max - i) {
       allAttemptsAllowed = false;
     }
   }
 
-  const blockedAttempt = checkRateLimit(testKey, RATE_LIMIT_CONFIGS.LOGIN);
+  const blockedAttempt = await checkRateLimit(testKey, RATE_LIMIT_CONFIGS.LOGIN);
   results.push({
     name: `Módulo Rate Limiter: Bloqueo en intento #${RATE_LIMIT_CONFIGS.LOGIN.max + 1} (${RATE_LIMIT_CONFIGS.LOGIN.max} max permitidos)`,
     category: "RATE_LIMITING",

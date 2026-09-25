@@ -44,7 +44,7 @@ export function StudentRiskModal({ isOpen, onClose, student }: StudentRiskModalP
         <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-850">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 flex items-center justify-center font-bold text-sm">
-              {student.name.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+              {(student?.name || "").split(" ").map((n) => n[0]).slice(0, 2).join("")}
             </div>
             <div>
               <div className="flex items-center gap-2">

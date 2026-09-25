@@ -197,6 +197,23 @@ export async function createGrade(
   const roundedValue = Math.round(val * factor) / factor;
 
   if (isDatabaseConfigured()) {
+    // Verificación estricta de aislamiento multi-tenant para assessment y enrollment (Autor: Maicol R. & Carlos M.)
+    const assessment = await tenantDb.assessment.findFirst({
+      where: { id: data.assessmentId, schoolId },
+      select: { id: true },
+    });
+    if (!assessment) {
+      throw new GradeServiceError("La evaluación especificada no existe o no pertenece a esta institución.");
+    }
+
+    const enrollment = await tenantDb.enrollment.findFirst({
+      where: { id: data.enrollmentId, schoolId },
+      select: { id: true },
+    });
+    if (!enrollment) {
+      throw new GradeServiceError("La matrícula del estudiante no existe o no pertenece a esta institución.");
+    }
+
     return await tenantDb.grade.upsert({
       where: {
         assessmentId_enrollmentId: {
@@ -342,6 +359,7 @@ export async function getGradeMatrixData(
           where: { schoolId, deletedAt: null },
           include: {
             subjects: {
+              where: { schoolId },
               include: {
                 teacher: {
                   include: {
@@ -410,7 +428,9 @@ export async function getGradeMatrixData(
               },
               grades: {
                 where: {
+                  schoolId,
                   assessment: {
+                    schoolId,
                     subjectId: selectedSubjectId,
                     academicPeriodId: selectedPeriodId,
                   },
@@ -733,6 +753,21 @@ export async function createAssessment(
   const assDate = data.date ? new Date(data.date) : new Date();
 
   if (isDatabaseConfigured()) {
+    // Verificación estricta de aislamiento multi-tenant para subject y academicPeriod (BOLA/IDOR)
+    const subject = await tenantDb.subject.findFirst({
+      where: { id: data.subjectId, schoolId },
+    });
+    if (!subject) {
+      throw new GradeServiceError("La asignatura especificada no existe o no pertenece a la institución.");
+    }
+
+    const period = await tenantDb.academicPeriod.findFirst({
+      where: { id: data.academicPeriodId, schoolId },
+    });
+    if (!period) {
+      throw new GradeServiceError("El periodo académico especificado no existe o no pertenece a la institución.");
+    }
+
     return await tenantDb.assessment.create({
       data: {
         schoolId,

@@ -196,6 +196,26 @@ npm run lint
 npm run build
 ```
 
+---
+
+## 6. Registro de Remediaciones de Seguridad y Análisis de Hallazgos (Auditoría Final)
+
+| ID | Severidad | Módulo / Archivo | Estado | Responsable | Detalle de Remediación / Justificación Arquitectónica |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| **VULN-01** | ALTO (BOLA/IDOR) | `app/api/schools/[schoolId]/teachers/route.ts` | 🟢 CORREGIDO | Maicol R. | Se incorporó validación estricta de membresía institucional en el método `GET`, devolviendo `HTTP 403 Forbidden` si el usuario no pertenece a la institución solicitada. |
+| **VULN-02** | MEDIO-ALTO | `lib/auth/password.ts` / `lib/services/user.service.ts` | 🟢 CORREGIDO | Malcom Marcelo | Se añadió guarda defensiva que rechaza inmediatamente con `false` hashes `null`, `undefined`, vacíos (`""`) o strings no válidos antes de invocar `bcrypt.compare`. |
+| **VULN-03** | MEDIO | `lib/services/user.service.ts` / `app/api/auth/login/route.ts` | 🟢 CORREGIDO | Malcom Marcelo | Se eliminó por completo el fallback a usuarios demo con contraseñas permisivas; toda autenticación se ejecuta estrictamente contra la base de datos y lanza `503` o `401` controlado. |
+| **VULN-04** | INFORMATIVO / ACEPTADO | `lib/auth/session.ts` (Revocación Inmediata JWT) | 🟡 MITIGADO POR DISEÑO | Malcom Marcelo | **Justificación:** Los JWTs poseen ciclo de vida corto y destrucción estricta de cookies `HttpOnly` en logout. No se implementa lista negra persistente en este tier para mantener la naturaleza stateless y alto rendimiento; migración a Redis JTI Blocklist programada en roadmap enterprise. |
+| **VULN-05** | MEDIO | `app/api/schools/[schoolId]/export/route.ts` | 🟢 CORREGIDO | Carlos M. | Se agregó comprobación obligatoria de sesión activa previa a la descarga del archivo `.zip`, devolviendo `HTTP 401 Unauthorized` si no existe token autenticado. |
+| **VULN-06** | MEDIO | `lib/tenant/context.ts` | 🟢 CORREGIDO | Lucas P. | Se eliminó el retorno directo de privilegios `SCHOOL_ADMIN` sin sesión activa; ahora lanza estrictamente `UnauthorizedError` (HTTP 401). |
+| **VULN-07** | MEDIO | `lib/security/rate-limiter.ts` | 🟢 DOCUMENTADO / MITIGADO | Frank M. | Se documentó la deuda técnica arquitectónica respecto a entornos distribuidos multi-nodo (migración a Upstash/Redis) y mitigación de direcciones IP compartidas bajo NAT. |
+| **VULN-08** | INFORMATIVO | `lib/services/security-firewall.service.ts` & `middleware.ts` | 🟢 CONECTADO / ACTIVO | Frank M. | Se conectó la inspección heurística perimetral (WAF) directamente en `middleware.ts`, bloqueando firmas de inyección SQL, XSS, bots (`sqlmap`, `nikto`) y payloads maliciosos con `HTTP 403`. |
+| **VULN-09** | BAJO | `package.json` (Dependencias npm) | 🟢 AUDITADO | Carlos M. | Se ejecutó `npm audit fix`, saneando dependencias transitivas sin romper compatibilidad semántica con Next.js 15 y React 19. |
+| **VULN-10** | BAJO | `app/api/schools/[schoolId]/grades/route.ts` | 🟢 CORREGIDO | Maicol R. | Se añadió validación temprana de formato UUID con Zod para el parámetro `schoolId`, respondiendo `HTTP 400 Bad Request` con mensaje descriptivo si se ingresa un slug o formato inválido. |
+| **VULN-11** | INFORMATIVO / ACEPTADO | Cliente vs Backend (Validaciones Frontend) | 🟡 MITIGADO POR ARQUITECTURA | Lucas P. | **Justificación:** Las validaciones de cliente en React son exclusivamente para UX. La integridad y seguridad de datos reside al 100% en el backend con esquemas Zod en cada ruta `/api/*` y capas de extensión Prisma con aislamiento multi-tenant. |
+
+---
+
 Firmado digitalmente:  
 **Frank M — QA / Testing / Seguridad / Documentación**  
 *Aurenis Engineering Team*

@@ -49,14 +49,30 @@ export function isOriginAllowed(origin: string | null): boolean {
     const url = new URL(origin);
     const hostname = url.hostname;
 
+    // Soporte seguro para subdominios institucionales de Aurenis (*.aurenis.app, *.aurenis.cl)
     if (
       hostname === "localhost" ||
       hostname === "127.0.0.1" ||
       hostname.endsWith(".aurenis.app") ||
-      hostname.endsWith(".aurenis.cl") ||
-      hostname.endsWith(".run.app")
+      hostname.endsWith(".aurenis.cl")
     ) {
       return true;
+    }
+
+    // Permitir el origen configurado en APP_URL si existe
+    if (process.env.APP_URL) {
+      try {
+        if (new URL(process.env.APP_URL).hostname === hostname) return true;
+      } catch {
+        // Ignorar URL malformada
+      }
+    }
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+      try {
+        if (new URL(process.env.NEXT_PUBLIC_APP_URL).hostname === hostname) return true;
+      } catch {
+        // Ignorar URL malformada
+      }
     }
   } catch {
     return false;

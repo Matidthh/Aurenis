@@ -7,6 +7,7 @@ interface MockStore {
   users: Map<string, any>;
   schools: Map<string, any>;
   schoolSettings: Map<string, any>;
+  userPreferences: Map<string, any>;
   memberships: Map<string, any>;
   roles: Map<string, any>;
   permissions: Map<string, any>;
@@ -23,6 +24,7 @@ interface MockStore {
   assessments: Map<string, any>;
   grades: Map<string, any>;
   attendanceRecords: Map<string, any>;
+  dataSubjectRequests: Map<string, any>;
   auditLogs: any[];
 }
 
@@ -31,6 +33,7 @@ function initStore(): MockStore {
     users: new Map(),
     schools: new Map(),
     schoolSettings: new Map(),
+    userPreferences: new Map(),
     memberships: new Map(),
     roles: new Map(),
     permissions: new Map(),
@@ -47,6 +50,7 @@ function initStore(): MockStore {
     assessments: new Map(),
     grades: new Map(),
     attendanceRecords: new Map(),
+    dataSubjectRequests: new Map(),
     auditLogs: [],
   };
 
@@ -788,6 +792,63 @@ export function createMockPrisma() {
       },
     },
 
+    userPreference: {
+      async findUnique(args: any) {
+        const where = args?.where;
+        for (const up of store.userPreferences.values()) {
+          if (where?.userId && up.userId === where.userId) return up;
+          if (where?.id && up.id === where.id) return up;
+        }
+        return null;
+      },
+      async findFirst(args: any) {
+        return this.findUnique(args);
+      },
+      async create(args: any) {
+        const data = args.data;
+        const newUp = {
+          id: data.id || `up_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          userId: data.userId,
+          theme: data.theme || "light",
+          sidebarCollapsed: data.sidebarCollapsed ?? false,
+          notificationsEnabled: data.notificationsEnabled ?? true,
+          language: data.language || "es",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          ...data,
+        };
+        store.userPreferences.set(newUp.id, newUp);
+        return newUp;
+      },
+      async update(args: any) {
+        const where = args?.where;
+        let target: any = null;
+        for (const up of store.userPreferences.values()) {
+          if (where?.userId && up.userId === where.userId) {
+            target = up;
+            break;
+          }
+          if (where?.id && up.id === where.id) {
+            target = up;
+            break;
+          }
+        }
+        if (!target) {
+          throw new Error("UserPreference not found");
+        }
+        Object.assign(target, args.data, { updatedAt: new Date() });
+        store.userPreferences.set(target.id, target);
+        return target;
+      },
+      async upsert(args: any) {
+        const found = await this.findUnique({ where: args.where });
+        if (found) {
+          return this.update({ where: args.where, data: args.update });
+        }
+        return this.create({ data: args.create });
+      },
+    },
+
     membership: {
       async findUnique(args: any) {
         const where = args?.where;
@@ -974,6 +1035,21 @@ export function createMockPrisma() {
     },
 
     educationLevel: {
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const item = store.educationLevels.get(args.where.id);
+          if (item && matchWhere(item, args.where)) return item;
+        }
+        return this.findFirst(args);
+      },
+      async findFirst(args?: any) {
+        for (const el of store.educationLevels.values()) {
+          if (matchWhere(el, args?.where)) {
+            return el;
+          }
+        }
+        return null;
+      },
       async findMany(args?: any) {
         return Array.from(store.educationLevels.values()).filter((el) => matchWhere(el, args?.where));
       },
@@ -1046,6 +1122,23 @@ export function createMockPrisma() {
     },
 
     subject: {
+      async findFirst(args?: any) {
+        for (const s of store.subjects.values()) {
+          if (matchWhere(s, args?.where)) {
+            return hydrateSubject(s, args?.include);
+          }
+        }
+        return null;
+      },
+      async findUnique(args?: any) {
+        if (!args?.where) return null;
+        for (const s of store.subjects.values()) {
+          if (matchWhere(s, args.where)) {
+            return hydrateSubject(s, args?.include);
+          }
+        }
+        return null;
+      },
       async findMany(args?: any) {
         const result: any[] = [];
         for (const s of store.subjects.values()) {
@@ -1345,6 +1438,38 @@ export function createMockPrisma() {
         const item = { ...args.data, id, createdAt: new Date(), updatedAt: new Date() };
         store.attendanceRecords.set(id, item);
         return hydrateAttendanceRecord(item, args.include);
+      },
+    },
+
+    dataSubjectRequest: {
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          const item = store.dataSubjectRequests.get(args.where.id);
+          if (item && matchWhere(item, args.where)) return item;
+        }
+        return this.findFirst(args);
+      },
+      async findFirst(args?: any) {
+        for (const dsr of store.dataSubjectRequests.values()) {
+          if (matchWhere(dsr, args?.where)) return dsr;
+        }
+        return null;
+      },
+      async findMany(args?: any) {
+        return Array.from(store.dataSubjectRequests.values()).filter((dsr) => matchWhere(dsr, args?.where));
+      },
+      async create(args: any) {
+        const item = { ...args.data, id: args.data.id || `dsr-${Date.now()}`, createdAt: new Date(), updatedAt: new Date() };
+        store.dataSubjectRequests.set(item.id, item);
+        return item;
+      },
+      async update(args: any) {
+        const item = await this.findFirst(args);
+        if (item) {
+          Object.assign(item, args.data, { updatedAt: new Date() });
+          return item;
+        }
+        return null;
       },
     },
 

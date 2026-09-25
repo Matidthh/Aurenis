@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest } from "next/server";
 import { toggleSchoolSubscription } from "@/lib/services/school.service";
 import { getSession } from "@/lib/auth/session";

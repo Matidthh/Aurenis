@@ -430,7 +430,7 @@ export function TeacherManagementMockup({
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-2xl bg-brand-600 text-white flex items-center justify-center font-black text-base shadow-md shadow-brand-500/20 shrink-0">
-                        {teacher.name
+                        {(teacher?.name || "")
                           .split(" ")
                           .map((n) => n[0])
                           .slice(0, 2)

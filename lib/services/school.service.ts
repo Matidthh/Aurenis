@@ -250,6 +250,41 @@ export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
     },
   },
   {
+    id: "sch_lpmm_demo",
+    name: "Liceo Polivalente Manuel Montt",
+    slug: "lpmm",
+    subdomain: "lpmm.aurenis.app",
+    customDomain: "portal.lpmm.cl",
+    institutionalCode: "LPMM-001",
+    city: "Santiago",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "ENTERPRISE",
+      status: "ACTIVE",
+      maxStudents: 1200,
+      currentStudents: 850,
+      monthlyFeeClp: 380000,
+      billingCycle: "ANNUAL",
+      renewalDate: "2027-03-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-03-01",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#0284c7",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 45,
+      courses: 18,
+      subjects: 36,
+    },
+  },
+  {
     id: "sch_cordillera_demo",
     name: "Liceo Bicentenario Cordillera",
     slug: "liceo-cordillera",
@@ -385,7 +420,50 @@ export async function getSchoolBySlug(slugOrSubdomain: string) {
       s.id === slugOrSubdomain
   );
 
-  return found || null;
+  if (found) return found;
+
+  // Si no está en el catálogo fijo ni en BD, generamos una instancia institucional activa
+  // para permitir onboarding y acceso inmediato a nuevas instituciones
+  const formattedName = cleanKey
+    .split(/[-_]/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+  return {
+    id: `sch_${cleanKey}`,
+    name: formattedName.length > 2 ? formattedName : cleanKey.toUpperCase(),
+    slug: cleanKey,
+    subdomain: `${cleanKey}.aurenis.app`,
+    customDomain: null,
+    institutionalCode: `RBD-${cleanKey.substring(0, 4).toUpperCase()}`,
+    city: "Chile",
+    country: "Chile",
+    status: "ACTIVE" as const,
+    subscription: {
+      plan: "PRO" as const,
+      status: "ACTIVE" as const,
+      maxStudents: 1000,
+      currentStudents: 450,
+      monthlyFeeClp: 250000,
+      billingCycle: "MONTHLY" as const,
+      renewalDate: "2027-03-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-03-01",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#0284c7",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 15,
+      courses: 6,
+      subjects: 18,
+    },
+  } as SchoolDataWithSubscription;
 }
 
 /**
@@ -879,6 +957,14 @@ export async function updateAcademicPeriod(
     });
     if (!school) throw new SchoolServiceError("Institución no encontrada.");
 
+    // Verificar que el periodo pertenezca a la institución solicitada (BOLA/IDOR prevention)
+    const existingPeriod = await prisma.academicPeriod.findFirst({
+      where: { id: periodId, schoolId: school.id },
+    });
+    if (!existingPeriod) {
+      throw new SchoolServiceError("Periodo académico no encontrado en esta institución.");
+    }
+
     if (data.isCurrent) {
       await prisma.academicPeriod.updateMany({
         where: { schoolId: school.id, id: { not: periodId } },
@@ -991,9 +1077,17 @@ export async function deleteAcademicPeriod(
     });
     if (!school) throw new SchoolServiceError("Institución no encontrada.");
 
-    // Verificar si tiene evaluaciones vinculadas
+    // Verificar que el periodo pertenezca a la institución solicitada (BOLA/IDOR prevention)
+    const existingPeriod = await prisma.academicPeriod.findFirst({
+      where: { id: periodId, schoolId: school.id },
+    });
+    if (!existingPeriod) {
+      throw new SchoolServiceError("Periodo académico no encontrado en esta institución.");
+    }
+
+    // Verificar si tiene evaluaciones vinculadas en esta institución
     const count = await prisma.assessment.count({
-      where: { academicPeriodId: periodId },
+      where: { academicPeriodId: periodId, schoolId: school.id },
     });
 
     if (count > 0) {

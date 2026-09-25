@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { LoginSchema } from "@/lib/validations/auth.schema";
 import { authenticateUser } from "@/lib/services/user.service";
@@ -15,7 +18,7 @@ export async function POST(req: NextRequest) {
   const rateLimitKey = `login:${clientIp}`;
 
   // Verificar límite de tasa para mitigar ataques de fuerza bruta (Rate Limiting)
-  const rateLimitResult = checkRateLimit(rateLimitKey, RATE_LIMIT_CONFIGS.LOGIN);
+  const rateLimitResult = await checkRateLimit(rateLimitKey, RATE_LIMIT_CONFIGS.LOGIN);
 
   if (!rateLimitResult.allowed) {
     return NextResponse.json(
@@ -42,10 +45,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = await authenticateUser(validated.data.email, validated.data.password);
+    const requestedSlug = validated.data.schoolSlug?.trim().toLowerCase();
+    const user = await authenticateUser(validated.data.email, validated.data.password, requestedSlug);
 
     // Tras autenticación exitosa, restablecer el contador de intentos fallidos
-    resetRateLimit(rateLimitKey);
+    await resetRateLimit(rateLimitKey);
 
     // Caso A: SuperAdmin del Sistema
     if (user.isSystemAdmin) {
@@ -63,13 +67,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         redirectUrl: "/system/dashboard",
-        token,
         user: {
           id: user.id,
           email: user.email,
           name: `${user.firstName} ${user.lastName}`,
           isSystemAdmin: true,
-          permissions: ["*"],
         },
       });
     }
@@ -84,10 +86,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Si tiene exactamente 1 colegio asociado, activamos su contexto inmediatamente
-    if (activeMemberships.length === 1) {
-      const mem = activeMemberships[0];
-      const permissions = mem.role.permissions.map((rp) => rp.permission.code);
+    // Si se solicitó un colegio o tiene exactamente 1 colegio asociado, activamos su contexto inmediatamente
+    let selectedMem: any = null;
+    if (requestedSlug) {
+      selectedMem = activeMemberships.find(
+        (m: any) => m.school?.slug?.toLowerCase() === requestedSlug || m.school?.id === requestedSlug
+      );
+    }
+
+    if (!selectedMem && activeMemberships.length === 1) {
+      selectedMem = activeMemberships[0];
+    }
+
+    if (selectedMem) {
+      const mem = selectedMem;
+      const permissions = mem.role.permissions.map((rp: any) => rp.permission.code);
 
       const token = await signSessionToken({
         sub: user.id,
@@ -107,16 +120,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         redirectUrl: `/${mem.school.slug}/dashboard`,
-        token,
         user: {
           id: user.id,
           email: user.email,
           name: `${user.firstName} ${user.lastName}`,
-          schoolId: mem.school.id,
-          schoolSlug: mem.school.slug,
-          membershipId: mem.id,
           roleName: mem.role.name,
-          permissions,
           activeSchool: {
             id: mem.school.id,
             slug: mem.school.slug,
@@ -141,7 +149,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       redirectUrl: "/select-school",
-      token,
       user: {
         id: user.id,
         email: user.email,
@@ -150,9 +157,10 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: unknown) {
+    const statusCode = typeof (error as any)?.statusCode === "number" ? (error as any).statusCode : 401;
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Error interno al iniciar sesión." },
-      { status: 401, headers: getRateLimitHeaders(rateLimitResult) }
+      { status: statusCode, headers: getRateLimitHeaders(rateLimitResult) }
     );
   }
 }
