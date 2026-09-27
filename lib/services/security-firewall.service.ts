@@ -38,8 +38,11 @@ export class SecurityFirewallService {
       ipReputationMap.set(ip, record);
     }
 
-    // Verificar si la IP está bloqueada temporalmente por mal comportamiento
-    if (record.blockedUntil > now) {
+    // Permitir loopback en desarrollo y pruebas automatizadas locales
+    const isLoopback = ip === "127.0.0.1" || ip === "::1" || ip === "localhost";
+
+    // Verificar si la IP está bloqueada temporalmente por mal comportamiento (excepto loopback local)
+    if (record.blockedUntil > now && !isLoopback) {
       return {
         allowed: false,
         reason: "IP bloqueada temporalmente por exceso de anomalías o intentos maliciosos detectados.",

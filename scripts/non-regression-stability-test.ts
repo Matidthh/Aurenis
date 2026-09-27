@@ -314,7 +314,7 @@ async function runNonRegressionSuite() {
     const disallowedOrigin = !isOriginAllowed("http://attacker-cross-site-scripting.org");
 
     // Verificación Rate Limiter
-    const rateCheck = checkRateLimit("ip-test-client-regression", RATE_LIMIT_CONFIGS.API_GENERAL);
+    const rateCheck = await checkRateLimit("ip-test-client-regression", RATE_LIMIT_CONFIGS.API_GENERAL);
 
     const pass = passSanitization && allowedOrigin && disallowedOrigin && rateCheck.allowed;
 

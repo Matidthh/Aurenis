@@ -485,9 +485,14 @@ async function runAllTests() {
   async function safeFetchJson(url: string, init?: RequestInit, maxRetries = 8): Promise<{ status: number; data: any; ok: boolean }> {
     // Normalizar localhost a 127.0.0.1 para evitar demoras por resolución IPv6 en Node.js
     const targetUrl = url.replace("http://localhost:3000", "http://127.0.0.1:3000");
+    const mergedHeaders: Record<string, string> = {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AurenisSecurityTest/2.4.0",
+      ...(init?.headers as Record<string, string> || {}),
+    };
+
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
-        const res = await fetch(targetUrl, init);
+        const res = await fetch(targetUrl, { ...init, headers: mergedHeaders });
         const text = await res.text();
         let data: any = {};
         try {

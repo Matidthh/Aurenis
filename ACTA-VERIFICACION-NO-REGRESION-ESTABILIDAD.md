@@ -1,7 +1,7 @@
 # ACTA OFICIAL DE VERIFICACIÓN DE NO-REGRESIÓN Y ESTABILIDAD DEL SISTEMA
 **Plataforma Institucional Aurenis SaaS**  
-**Certificado Oficial:** `AURENIS-REG-CERT-CC506CA1-1578`  
-**Fecha de Certificación:** 2026-09-27T15:15:32.732Z  
+**Certificado Oficial:** `AURENIS-REG-CERT-CF8CA5F0-17C7`  
+**Fecha de Certificación:** 2026-09-27T15:53:32.873Z  
 **Lead QA & Auditor:** Frank M. (*Testing / Ciberseguridad / Documentación*)  
 **Destinatario:** Francho MC (`francho.mc14@gmail.com`)  
 **Dictamen Oficial:** 🟢 **SISTEMA ESTABLE Y CERTIFICADO — CERO REGRESIONES DETECTADAS**  
@@ -27,8 +27,8 @@
 - **Autor / Responsable:** **Maicol R. (Backend)**
 - **Comportamiento Estable Previo:** Tokens JWT emitidos se firman con HS256 y persisten atributos de usuario y escuela.
 - **Análisis de Impacto tras Corrección:** Parches de seguridad SEC-FIND-003 y BUG-2026-006 mantuvieron la retrocompatibilidad en el payload.
-- **Resultado de la Prueba:** 🟢 **PASSED** (34ms)
-- **Evidencia Técnica:** JWT generado, verificado y validado con claims intactos en 34ms
+- **Resultado de la Prueba:** 🟢 **PASSED** (33ms)
+- **Evidencia Técnica:** JWT generado, verificado y validado con claims intactos en 33ms
 
 ---
 
@@ -47,7 +47,7 @@
 - **Autor / Responsable:** **Malcom S. (Frontend)**
 - **Comportamiento Estable Previo:** Validación de RUNs chilenos rechaza formatos inválidos y acepta RUNs válidos.
 - **Análisis de Impacto tras Corrección:** Normalización con .toUpperCase() y sanitización de puntos/guiones integró soporte completo para 'K' sin regresión en dígitos 0-9.
-- **Resultado de la Prueba:** 🟢 **PASSED** (3ms)
+- **Resultado de la Prueba:** 🟢 **PASSED** (1ms)
 - **Evidencia Técnica:** Todos los casos de prueba de RUNs (válidos con número y K, e inválidos) verificados con Módulo 11 oficial
 
 ---
@@ -67,7 +67,7 @@
 - **Autor / Responsable:** **Lucas P. (UI/UX) & Malcom S.**
 - **Comportamiento Estable Previo:** El registro de asistencia permite marcar Presente, Ausente, Atraso y Justificado por bloque de clase.
 - **Análisis de Impacto tras Corrección:** El encolamiento IndexedDB/LocalStorage despacha el lote atómico sin pérdida de registros previos.
-- **Resultado de la Prueba:** 🟢 **PASSED** (0ms)
+- **Resultado de la Prueba:** 🟢 **PASSED** (1ms)
 - **Evidencia Técnica:** 40 registros de asistencia procesados en lote atómico sin colisiones
 
 ---
@@ -87,7 +87,7 @@
 - **Autor / Responsable:** **Frank M. (QA Lead)**
 - **Comportamiento Estable Previo:** Las respuestas API retornan formato { success, data, error } consistente.
 - **Análisis de Impacto tras Corrección:** La capa de sanitización reemplaza stack traces internos por mensajes seguros sin alterar el payload de negocio.
-- **Resultado de la Prueba:** 🟢 **PASSED** (0ms)
+- **Resultado de la Prueba:** 🟢 **PASSED** (1ms)
 - **Evidencia Técnica:** Sanitización de stack trace comprobada (Ha ocurrido un error interno en el servidor. Por favor, intente nuevamente más tarde.), CORS estricto y rate limiting operativo
 
 ---
@@ -121,8 +121,8 @@
 ================================================================================
 CERTIFICADO OFICIAL DE NO-REGRESIÓN & CONTROL DE CALIDAD AURENIS SAAS
 ================================================================================
-Código de Certificación : AURENIS-REG-CERT-CC506CA1-1578
-Fecha y Hora de Emisión : 2026-09-27T15:15:32.732Z
+Código de Certificación : AURENIS-REG-CERT-CF8CA5F0-17C7
+Fecha y Hora de Emisión : 2026-09-27T15:53:32.873Z
 Auditor Responsable     : Frank M. (Lead QA / Testing / Ciberseguridad)
 Revisor Pedagógico      : Carlos M. (Auditor Decreto 67 / Mineduc)
 Desarrolladores Core    : Maicol R. (Backend) | Malcom S. (Frontend) | Lucas P. (UI)

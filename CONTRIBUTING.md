@@ -100,6 +100,7 @@ Ningún ticket, feature o corrección se considera terminado sin recorrer el sig
 ## 5. Documentación de Soporte Obligatoria
 - `AGENTS.md` — Protocolo canónico de IA y directrices del equipo.
 - `TEAM_ROLES_AND_AI_PROTOCOL.md` — Manual detallado de roles, gobernanza y auditoría.
+- `docs/GUIA_ORGANIZACION_DIRECTORIOS_Y_CONTRIBUIDORES.md` — Guía de organización de directorios frontend/backend y manual de onboarding.
 - `docs/ARCHITECTURE.md` — Arquitectura técnica y aislamiento multi-tenant.
 - `docs/RBAC_PERMISSIONS_MATRIX.md` — Matriz canónica de roles y permisos.
 - `docs/STRIDE_THREAT_MODELING.md` — Modelado de amenazas y vectores de ataque.
