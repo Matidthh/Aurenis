@@ -1,0 +1,44 @@
+{
+  "components/landing/landing-client-page.tsx -> @/components/landing/comparison-battlecard": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/comparison-battlecard",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_comparison-battlecard_tsx.js"
+    ]
+  },
+  "components/landing/landing-client-page.tsx -> @/components/landing/how-we-migrate-section": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/how-we-migrate-section",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_how-we-migrate-section_tsx.js"
+    ]
+  },
+  "components/landing/landing-client-page.tsx -> @/components/landing/interactive-sandbox": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/interactive-sandbox",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_interactive-sandbox_tsx.js"
+    ]
+  },
+  "components/landing/landing-client-page.tsx -> @/components/landing/portals-by-role": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/portals-by-role",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_portals-by-role_tsx.js"
+    ]
+  },
+  "components/landing/landing-client-page.tsx -> @/components/landing/pricing-plans": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/pricing-plans",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_pricing-plans_tsx.js"
+    ]
+  },
+  "components/landing/landing-client-page.tsx -> @/components/landing/roi-calculator": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/roi-calculator",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_roi-calculator_tsx.js"
+    ]
+  },
+  "components/landing/landing-client-page.tsx -> @/components/landing/testimonials-social-proof": {
+    "id": "components/landing/landing-client-page.tsx -> @/components/landing/testimonials-social-proof",
+    "files": [
+      "static/chunks/_app-pages-browser_components_landing_testimonials-social-proof_tsx.js"
+    ]
+  }
+}
