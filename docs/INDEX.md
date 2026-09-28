@@ -95,11 +95,14 @@ Este centro de documentación consolida todas las especificaciones arquitectóni
 - Datasets de prueba multi-tenant preconfigurados (Colegio San José vs. Liceo Bicentenario).
 - Matriz RACI del equipo y firmas de aprobación técnica de **Frank M.** (QA Lead) y **Maicol R.** (Project Lead).
 
-### 6. 📊 [Catálogo de Casos de Prueba Ejecutados](./CATALOGO_CASOS_DE_PRUEBA_EJECUTADOS_Y_RESULTADOS.md) | [QA Audit Report](./QA_AUDIT_REPORT.md)
-*Matriz completa del 100% de casos de prueba funcionales y no funcionales ejecutados (57/57 tests PASS).*
+### 6. 📊 [Catálogo de Casos de Prueba Ejecutados](./CATALOGO_CASOS_DE_PRUEBA_EJECUTADOS_Y_RESULTADOS.md) | [Registro Histórico de Incidencias & Bugs](./REGISTRO_HISTORICO_INCIDENCIAS_Y_RESOLUCION_BUGS.md) | [Evidencias Gráficas & Logs](./COMPILACION_GRAFICA_EVIDENCIAS_HTTP_LOGS.md) | [QA Audit Report](./QA_AUDIT_REPORT.md)
+*Matriz completa del 100% de casos de prueba ejecutados (57/57 tests PASS), libro de incidencias, métricas MTTR, expediente gráfico y trazas HTTP.*
 - Casos tabulados: Autenticación, Multi-Tenant, Decreto 67, Circular 482, Cifrado NNA, Pentest OWASP, Latencia y A11y WCAG 2.1 AA.
-- Resultados esperados vs. obtenidos y trazabilidad de KPIs de calidad (100.0% tasa de éxito).
-- Verificación formal de Criterios de Aceptación y certificación técnica de no-regresión.
+- Libro de registro de incidencias adjunto: 12 defectos catalogados con causa raíz, PoC reproducible y parches.
+- Métricas de resolución de bugs: 100% de tasa de cierre, MTTR promedio de 1.85h, 0.00 densidad residual (11.7 KLOC).
+- Matriz de trazabilidad de correcciones con desarrolladores asignados (**Maicol R.**, **Malcom Marcelo**, **Lucas P.**) y re-testing por **Frank M.**.
+- Anexo fotográfico de maquetas visuales, respuestas HTTP completas y logs de terminal en tiempo real.
+- Firmas oficiales de conformidad técnica del equipo completo.
 
 ### 7. 📖 [Guía de Usuarios y Roles Institucionales](./USER_AND_ROLES_GUIDE.md)
 *Manual funcional para usuarios y administradores escolares.*

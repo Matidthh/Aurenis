@@ -51,6 +51,15 @@ export default async function SystemLayout({ children }: { children: React.React
       section: "Ecosistema Escolar",
       roles: ["SYSTEM_ADMIN"],
     },
+    {
+      title: "Manual Técnico & Ops",
+      href: "/system/manual-tecnico",
+      icon: <Shield className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "PDF Oficial",
+      badgeVariant: "brand",
+      section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
+    },
   ];
 
   const userInfo: UserSessionInfo = {

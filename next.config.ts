@@ -9,14 +9,10 @@ export default function (phase: string): NextConfig {
   return {
     output: isDev ? undefined : "standalone",
     reactStrictMode: true,
-    devIndicators: false,
-    allowedDevOrigins: [
-      "*.run.app",
-      "*.aistudio.google.com",
-      "localhost:3000",
-      "127.0.0.1:3000",
-    ],
-    transpilePackages: ["motion"],
+    devIndicators: {
+      appIsrStatus: false,
+      buildActivity: false,
+    },
     eslint: {
       ignoreDuringBuilds: true,
     },

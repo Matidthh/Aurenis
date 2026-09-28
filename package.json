@@ -40,7 +40,10 @@
     "db:migrate:rollback": "tsx scripts/migrate-rollback.ts",
     "db:migrate:validate": "tsx scripts/migrate-validate.ts",
     "db:verify:indexes": "tsx scripts/verify-indexes.ts",
-    "db:verify:performance": "tsx scripts/verify-query-performance.ts"
+    "db:verify:performance": "tsx scripts/verify-query-performance.ts",
+    "maint:healthcheck": "tsx scripts/maintenance-healthcheck.ts",
+    "maint:db-ops": "tsx scripts/maintenance-db-ops.ts",
+    "maint:backup": "bash scripts/maintenance-db-backup.sh"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",

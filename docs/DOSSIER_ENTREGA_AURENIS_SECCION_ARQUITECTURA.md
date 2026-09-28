@@ -325,6 +325,44 @@ Se consolidó la matriz exhaustiva de **57 casos de prueba ejecutados y certific
 
 ---
 
+### 3.8 Anexo Técnico de Compilación Gráfica de Evidencias, Trazas HTTP y Registros de Ejecución
+
+Se formalizó la compilación gráfica integral con maquetas de pantalla, capturas de interfaz de alta fidelidad, trazas HTTP completas (cabeceras, cookies y payloads) y logs de terminal:
+
+1. **Evidencias Visuales por Módulo:**
+   - Portal de autenticación institucional y switch multi-tenant.
+   - Panel directivo ejecutivo con alertas tempranas según Art. 11 del Decreto 67.
+   - Sábana digital de calificaciones con truncamiento a 1 decimal y cálculo de promedios ponderados.
+   - Fichas estudiantiles con cifrado AES-256-GCM para RUN y notas médicas sensibles.
+   - Monitor de intercepción perimetral de seguridad con respuestas `403 Forbidden` ante intentos de IDOR.
+2. **Trazas HTTP y Registros de Ejecución:** Trazas completas de requests/responses y logs de test runner con tiempos de ejecución (57/57 tests superados en 1.48 segundos).
+3. **Firmas de Conformidad:** Sello digital y firmas de **Frank M.** (QA Lead), **Maicol R.** (Project Lead), **Malcom Marcelo** (Frontend Lead) y **Lucas P.** (UI/UX Lead).
+
+*Documentación de evidencias gráficas y trazas disponible en:*
+- `docs/COMPILACION_GRAFICA_EVIDENCIAS_HTTP_LOGS.md` *(Expediente maestro de capturas, trazas HTTP y logs)*
+- `ACTA-ENSAYO-GENERAL-SISTEMA-INTEGRADO.md` *(Acta oficial del ensayo general de uso del sistema)*
+
+---
+
+### 3.9 Anexo Técnico de Registro Histórico de Incidencias, Métricas de Calidad y Trazabilidad de Bugs
+
+Se integró formalmente el **Libro Canónico de Registro Histórico de Incidencias y Remediaciones** del proyecto AURENIS SaaS:
+
+1. **Indicadores Clave de Calidad (Quality KPIs):**
+   - **Tasa Global de Cierre:** 100.0% (12 de 12 incidencias resueltas y verificadas).
+   - **Tiempo Medio de Resolución (MTTR):** 1.85 horas promedio global (P0: 1.1h, P1: 1.8h, P2: 2.6h, P3: 3.5h).
+   - **Densidad de Defectos Residual:** 0.00 defectos/KLOC en producción (11.7 KLOC auditadas).
+   - **Tasa de Regresión:** 0.0% (cero defectos reabiertos o regresiones tras parches).
+2. **Trazabilidad Extremo a Extremo:** Cada incidencia cuenta con su ID único (`INC-2026-001` a `INC-2026-012`), descripción técnica, prueba de concepto (PoC), severidad, módulo, archivos modificados, desarrollador asignado (**Maicol R.**, **Malcom Marcelo**, **Lucas P.**) y suite de re-testing certificada por **Frank M.**.
+
+*Documentación de incidencias y métricas disponible en:*
+- `docs/REGISTRO_HISTORICO_INCIDENCIAS_Y_RESOLUCION_BUGS.md` *(Libro de registro histórico y matriz de trazabilidad)*
+- `DOSSIER-CONSOLIDADO-CALIDAD-METRICAS-BUGS.md` *(Dossier consolidado de calidad y métricas de bugs)*
+- `BITACORA-HALLAZGOS-SEGURIDAD.md` *(Bitácora técnica de hallazgos de seguridad y CVSS v3.1)*
+- `ACTA-VERIFICACION-PARCHES-RETESTING.md` *(Acta de verificación de parches y re-testing)*
+
+---
+
 ## 👥 4. Matriz de Componentes del Sistema por Integrante Responsable
 
 De acuerdo con el protocolo oficial de gobernanza técnica del proyecto:

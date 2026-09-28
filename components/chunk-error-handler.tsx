@@ -109,6 +109,7 @@ export function isChunkLoadError(error: unknown): boolean {
     lower.includes("missing chunk") ||
     lower.includes("cannot find module") ||
     lower.includes("encodeuripath") ||
+    lower.includes("__webpack_modules__") ||
     (lower.includes("cannot read properties of undefined") && lower.includes("split")) ||
     (error as any)?.name === "ChunkLoadError"
   );
