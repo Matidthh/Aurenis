@@ -210,12 +210,12 @@ export function Header({
         {/* 1. SECCIÓN IZQUIERDA: Menú móvil, Colapso Desktop y Breadcrumbs */}
         {/* ================================================================= */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          {/* Botón menú Móvil */}
+          {/* Botón menú Móvil con target táctil ergonómico ≥ 44px */}
           <button
             id="header-mobile-toggle-btn"
             type="button"
             onClick={onOpenMobile}
-            className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 touch-manipulation active:scale-95"
             aria-label="Abrir navegación lateral"
           >
             <Menu className="w-5 h-5" />

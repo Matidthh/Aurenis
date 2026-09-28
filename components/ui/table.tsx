@@ -12,7 +12,7 @@ export function Table({ className, containerClassName, children, ...props }: Tab
   return (
     <div
       className={cn(
-        "w-full overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs",
+        "w-full overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]",
         containerClassName
       )}
     >
@@ -263,12 +263,12 @@ export function TablePagination({
         )}
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         <button
           type="button"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition touch-manipulation active:scale-95"
           aria-label="Página anterior"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -282,7 +282,7 @@ export function TablePagination({
           type="button"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition touch-manipulation active:scale-95"
           aria-label="Página siguiente"
         >
           <ChevronRight className="w-4 h-4" />

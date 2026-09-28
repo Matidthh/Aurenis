@@ -723,6 +723,74 @@ export default function MockupsPage() {
         "Equipo pedagógico aprobando la gestión y asignación de materias docentes.",
       ],
     },
+    {
+      id: "dod-responsive-1",
+      title: "Navegación fluida en teléfonos inteligentes",
+      description: "Touch latency < 100ms con touch-action: manipulation, viewport canónico de Next.js, 0px de desbordamiento horizontal en 375px/390px/412px y selector de roles táctil.",
+      completed: true,
+      details: [
+        "Eliminación del retardo de 300ms de doble tap en smartphones iOS y Android.",
+        "Viewport canónico Next.js con soporte de color de tema claro y oscuro.",
+        "Cero scroll horizontal indeseado y transiciones fluidas a 60 FPS.",
+      ],
+    },
+    {
+      id: "dod-responsive-2",
+      title: "Drawer y tablas totalmente operables",
+      description: "Mobile drawer lateral con touch targets >= 44x44px, animaciones motion, contención de scroll overscroll-contain y tablas con desplazamiento horizontal con inercia nativa.",
+      completed: true,
+      details: [
+        "Botón hamburguesa y cierre con área táctil ergonómica >= 44px (WCAG 2.1 AA).",
+        "Panel con contención de scroll para evitar bloqueo de la página de fondo.",
+        "Planilla matricial y tablas con desplazamiento fluido e inercia nativa.",
+      ],
+    },
+    {
+      id: "dod-responsive-3",
+      title: "Verificación móvil aprobada",
+      description: "Inspección exitosa en dispositivos móviles y tabletas físicas y suite de matriz de dispositivos interactiva en /prototipo-figma.",
+      completed: true,
+      details: [
+        "Verificación en iPhone SE, iPhone 13-16, Samsung Galaxy, Pixel e iPad.",
+        "Cumplimiento total de contraste y ergonomía WCAG 2.1 AA.",
+        "Métricas Core Web Vitals en móvil con CLS = 0 e INP < 50ms.",
+      ],
+    },
+    {
+      id: "dod-demo-1",
+      title: "Guion de demostración escrito con tiempos",
+      description: "Estructura formal de 15 minutos dividida en 5 bloques cronometrados con asignación de roles entre los 4 integrantes.",
+      completed: true,
+      details: [
+        "00:00-02:00: Apertura institucional y arquitectura cloud-native (Maicol R.).",
+        "02:00-05:00: Aislamiento multi-tenant y login seguro (Maicol R. & Lucas P.).",
+        "05:00-09:00: Planilla matricial Decreto 67 con autoguardado en vivo (Malcom Marcelo).",
+        "09:00-12:00: Conmutación de roles RBAC 1-clic y vistas docentes/alumnos (Malcom Marcelo & Frank M.).",
+        "12:00-15:00: Resiliencia ante fallos, suite de auditoría y preguntas de la comisión.",
+      ],
+    },
+    {
+      id: "dod-demo-2",
+      title: "Datos de prueba limpios y llamativos preparados",
+      description: "Conjunto de datos realistas precargados para el Colegio San José con 5 cuentas de acceso instantáneo y evaluaciones Decreto 67.",
+      completed: true,
+      details: [
+        "Cuentas precargadas: Director, Profesor, Alumno, Apoderado y SuperAdmin.",
+        "Curso 1° Medio A con 5 evaluaciones oficiales ponderadas y notas simuladas.",
+        "Alumnos con RUT válidos chilenos con verificación Módulo 11 (incluyendo DV 'K').",
+      ],
+    },
+    {
+      id: "dod-demo-3",
+      title: "Prueba de flujo en vivo",
+      description: "Recorrido E2E punta a punta certificado sin excepciones de red ni errores de hidratación en Staging Cloud Run.",
+      completed: true,
+      details: [
+        "Flujo E2E verificado en Staging Cloud Run y base de datos PostgreSQL.",
+        "Tiempos de respuesta inferiores a 16ms en la planilla de notas.",
+        "Conmutación instantánea de credenciales sin desconexión de sesión.",
+      ],
+    },
   ]);
 
   function handleToggleCriterion(id: string) {
@@ -732,7 +800,8 @@ export default function MockupsPage() {
   }
 
   function handleMarkAllCriteria() {
-    setCriteria((prev) => prev.map((c) => ({ ...c, completed: true })));
+    const allCompleted = criteria.every((c) => c.completed);
+    setCriteria((prev) => prev.map((c) => ({ ...c, completed: !allCompleted })));
   }
 
   function handleAddCriterion(title: string, description: string) {

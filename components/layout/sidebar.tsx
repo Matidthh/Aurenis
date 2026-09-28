@@ -100,12 +100,12 @@ export function Sidebar({
           </AnimatePresence>
         </div>
 
-        {/* Botón cerrar para móvil */}
+        {/* Botón cerrar para móvil con touch target ≥ 44px */}
         <button
           id="sidebar-close-mobile-btn"
           type="button"
           onClick={onCloseMobile}
-          className="md:hidden p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition touch-manipulation active:scale-95"
           aria-label="Cerrar menú lateral"
         >
           <X className="w-5 h-5 shrink-0" strokeWidth={2} />
@@ -150,7 +150,7 @@ export function Sidebar({
                       onClick={() => onCloseMobile()}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors duration-150 group z-10",
+                        "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors duration-150 group z-10 min-h-[44px] touch-manipulation",
                         isCollapsed ? "justify-center" : "justify-between",
                         isActive
                           ? "text-brand-700 dark:text-brand-300 font-semibold"
@@ -413,14 +413,14 @@ export function Sidebar({
               onClick={onCloseMobile}
             />
 
-            {/* Panel lateral con deslizamiento suave con muelle */}
+            {/* Panel lateral con deslizamiento suave con muelle y contención de scroll */}
             <motion.div
               id="mobile-sidebar-panel"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 280 }}
-              className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200 dark:border-slate-800 z-10"
+              className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200 dark:border-slate-800 z-10 overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch]"
             >
               {sidebarContent}
             </motion.div>
