@@ -33,6 +33,10 @@ import {
   KeyRound,
   ShieldAlert,
   Settings,
+  Flame,
+  Clock,
+  Code2,
+  Activity,
 } from "lucide-react";
 
 export type ViewportMode = "desktop" | "laptop" | "tablet" | "mobile" | "mobile-se" | "fluid";
@@ -60,7 +64,11 @@ export type ActiveTab =
   | "student-postgres"
   | "teacher-postgres"
   | "grade-postgres"
-  | "school-settings";
+  | "school-settings"
+  | "db-error-test"
+  | "session-expiration"
+  | "client-audit"
+  | "live-modules-test";
 
 interface FigmaToolbarProps {
   activeTab: ActiveTab;
@@ -439,6 +447,66 @@ export function FigmaToolbar({
               <span>Parametrización Colegio DB</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-sky-500/30 text-sky-200 font-bold">
                 Config SQL
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("db-error-test")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "db-error-test"
+                  ? "bg-gradient-to-r from-rose-600 via-amber-600 to-red-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-rose-300 hover:text-white hover:bg-rose-950/50"
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5 text-rose-400" />
+              <span>Prueba de Errores BD & Toast</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/30 text-rose-200 font-bold">
+                E2E Toast • 0 Pantallas Blancas
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("session-expiration")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "session-expiration"
+                  ? "bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-amber-300 hover:text-white hover:bg-amber-950/50"
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              <span>Expiración & Refresh JWT</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/30 text-amber-200 font-bold">
+                Multi-Pestaña • Redirección
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("client-audit")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "client-audit"
+                  ? "bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-indigo-300 hover:text-white hover:bg-indigo-950/50"
+              }`}
+            >
+              <Code2 className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Auditoría Cliente React</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-bold">
+                Malcom S. • 0 Warnings
+              </span>
+            </button>
+
+            <button
+              onClick={() => onTabChange("live-modules-test")}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                activeTab === "live-modules-test"
+                  ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white shadow-xs ring-1 ring-white/20"
+                  : "text-emerald-300 hover:text-white hover:bg-emerald-950/50"
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Prueba en Vivo (Notas, Alumnos, Docentes)</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-200 font-bold">
+                Fluidez 60 FPS • 0 Errores
               </span>
             </button>
           </div>

@@ -44,7 +44,7 @@ export function CriteriaChecklistModal({
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "student" | "teacher" | "grade" | "school-settings" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+    "all" | "student" | "teacher" | "grade" | "school-settings" | "db-error" | "session" | "client-audit" | "live-modules" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
   >("all");
 
   if (!isOpen) return null;
@@ -54,6 +54,10 @@ export function CriteriaChecklistModal({
     if (filterCategory === "teacher") return c.id.includes("teacher-db");
     if (filterCategory === "grade") return c.id.includes("grade-db");
     if (filterCategory === "school-settings") return c.id.includes("school-settings");
+    if (filterCategory === "db-error") return c.id.includes("db-error");
+    if (filterCategory === "session") return c.id.includes("session-expire");
+    if (filterCategory === "client-audit") return c.id.includes("client-audit");
+    if (filterCategory === "live-modules") return c.id.includes("live-modules");
     if (filterCategory === "rbac") return c.id.includes("rbac");
     if (filterCategory === "jwt") return c.id.includes("jwt");
     if (filterCategory === "packaging") return c.id.includes("package") || c.id.includes("dist");
@@ -210,6 +214,50 @@ export function CriteriaChecklistModal({
               }`}
             >
               Parametrización DB ({criteria.filter((c) => c.id.includes("school-settings")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("db-error")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "db-error"
+                  ? "bg-gradient-to-r from-rose-600 to-amber-600 text-white"
+                  : "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100"
+              }`}
+            >
+              Errores BD & Toast ({criteria.filter((c) => c.id.includes("db-error")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("session")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "session"
+                  ? "bg-gradient-to-r from-amber-600 to-rose-600 text-white"
+                  : "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 hover:bg-amber-100"
+              }`}
+            >
+              Expiración & Sesión ({criteria.filter((c) => c.id.includes("session-expire")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("client-audit")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "client-audit"
+                  ? "bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 text-white"
+                  : "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100"
+              }`}
+            >
+              Auditoría Malcom S. ({criteria.filter((c) => c.id.includes("client-audit")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("live-modules")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "live-modules"
+                  ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white"
+                  : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100"
+              }`}
+            >
+              Prueba en Vivo Notas/Alumnos/Docentes ({criteria.filter((c) => c.id.includes("live-modules")).length})
             </button>
             <button
               type="button"

@@ -2,12 +2,14 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { UserSession } from "@/types/auth";
+import { sessionSync } from "./session-sync";
 
 export const AUTH_STORAGE_KEYS = {
   USER: "aurenis_user_session",
   TOKEN: "aurenis_session_token",
   REMEMBER: "aurenis_remember_me",
   INTENDED_ROUTE: "aurenis_intended_route",
+  SESSION_EXPIRED: "aurenis_session_expired",
 } as const;
 
 export interface LoginCredentials {
@@ -31,6 +33,8 @@ export interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<LoginResponseData>;
   setSessionData: (user: UserSession | null, token?: string | null) => void;
   checkAuth: () => Promise<UserSession | null>;
+  refreshToken: (simulateExpired?: boolean) => Promise<boolean>;
+  triggerSessionExpired: (reason?: string) => void;
   logout: () => Promise<void>;
 }
 
@@ -60,7 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(() => {
     if (typeof window === "undefined") return true;
     try {
-      // Si ya hay usuario en localStorage, podemos considerarlo hidratado mientras se valida en background
       return !localStorage.getItem(AUTH_STORAGE_KEYS.USER);
     } catch {
       return true;
@@ -121,12 +124,75 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return null;
       }
     } catch {
-      // En caso de fallo de red, conservamos la sesión local si ya existe en memoria
       return user;
     } finally {
       setIsLoading(false);
     }
   }, [token, user, setSessionData]);
+
+  // Disparar expiración de sesión y redirección segura al login
+  const triggerSessionExpired = useCallback((reason = "Sesión expirada por inactividad") => {
+    setUser(null);
+    setToken(null);
+
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
+        localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
+        localStorage.removeItem(AUTH_STORAGE_KEYS.REMEMBER);
+        sessionStorage.setItem(AUTH_STORAGE_KEYS.SESSION_EXPIRED, "true");
+        sessionStorage.setItem("aurenis_session_expired_reason", reason);
+      } catch {
+        // Ignorar
+      }
+
+      // Notificar a las demás pestañas abiertas para que cierren sesión en sincronía
+      sessionSync.broadcast("SESSION_EXPIRED", { reason });
+
+      // Redirección segura evitando bucles si ya estamos en /login
+      if (!window.location.pathname.startsWith("/login")) {
+        const currentPath = window.location.pathname + window.location.search;
+        sessionStorage.setItem(AUTH_STORAGE_KEYS.INTENDED_ROUTE, currentPath);
+        window.location.href = `/login?expired=true&reason=${encodeURIComponent(reason)}`;
+      }
+    }
+  }, []);
+
+  // Refresco silencioso de token JWT contra el backend
+  const refreshToken = useCallback(
+    async (simulateExpired = false): Promise<boolean> => {
+      try {
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const currentToken =
+          token || (typeof window !== "undefined" ? localStorage.getItem(AUTH_STORAGE_KEYS.TOKEN) : null);
+        if (currentToken) {
+          headers["Authorization"] = `Bearer ${currentToken}`;
+        }
+
+        const res = await fetch("/api/auth/refresh", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ simulateExpired }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data?.success && data?.token) {
+          setSessionData(data.user, data.token);
+          sessionSync.broadcast("TOKEN_REFRESHED", { token: data.token });
+          return true;
+        } else {
+          // Si el refresh falla (ej: 401 sesión expirada), invocar redirección
+          triggerSessionExpired(data?.error || "Token de refresco revocado o expirado");
+          return false;
+        }
+      } catch {
+        triggerSessionExpired("Error de conexión al renovar sesión");
+        return false;
+      }
+    },
+    [token, setSessionData, triggerSessionExpired]
+  );
 
   // Iniciar sesión conectando formulario con backend, contexto en memoria y almacenamiento local
   const login = useCallback(
@@ -164,12 +230,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Guardar en memoria de React y en localStorage
       setSessionData(sessionUser, data.token || null);
 
-      if (typeof window !== "undefined" && credentials.rememberMe !== undefined) {
+      if (typeof window !== "undefined") {
         try {
-          localStorage.setItem(AUTH_STORAGE_KEYS.REMEMBER, String(credentials.rememberMe));
+          sessionStorage.removeItem(AUTH_STORAGE_KEYS.SESSION_EXPIRED);
+          sessionStorage.removeItem("aurenis_session_expired_reason");
+          if (credentials.rememberMe !== undefined) {
+            localStorage.setItem(AUTH_STORAGE_KEYS.REMEMBER, String(credentials.rememberMe));
+          }
         } catch {
           // Ignorar
         }
+        // Notificar a las demás pestañas abiertas
+        sessionSync.broadcast("LOGIN", {
+          userId: sessionUser.userId,
+          token: data.token,
+        });
       }
 
       return data;
@@ -179,34 +254,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Cierre de sesión seguro deshaciendo estado en memoria, storage y cookies del servidor
   const logout = useCallback(async () => {
-    // 1. Limpiar estado en memoria inmediatamente
     setUser(null);
     setToken(null);
 
-    // 2. Limpiar almacenamiento local y temporal
     if (typeof window !== "undefined") {
       try {
         localStorage.removeItem(AUTH_STORAGE_KEYS.USER);
         localStorage.removeItem(AUTH_STORAGE_KEYS.TOKEN);
         localStorage.removeItem(AUTH_STORAGE_KEYS.REMEMBER);
         sessionStorage.removeItem(AUTH_STORAGE_KEYS.INTENDED_ROUTE);
+        sessionStorage.removeItem(AUTH_STORAGE_KEYS.SESSION_EXPIRED);
       } catch {
         // Ignorar
       }
+      // Notificar a otras pestañas
+      sessionSync.broadcast("LOGOUT");
     }
 
-    // 3. Notificar al servidor para invalidar cookie HTTP-only
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } catch {
       // Ignorar fallos de red durante el logout
     } finally {
-      // 4. Redirección segura a /login
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
     }
   }, []);
+
+  // Sincronización multi-pestaña limpia: escuchar eventos de otras ventanas
+  useEffect(() => {
+    const unsubscribe = sessionSync.subscribe((msg) => {
+      if (msg.type === "LOGOUT") {
+        setUser(null);
+        setToken(null);
+        if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
+          window.location.href = "/login";
+        }
+      } else if (msg.type === "SESSION_EXPIRED") {
+        setUser(null);
+        setToken(null);
+        if (typeof window !== "undefined") {
+          try {
+            sessionStorage.setItem(AUTH_STORAGE_KEYS.SESSION_EXPIRED, "true");
+            if (msg.reason) {
+              sessionStorage.setItem("aurenis_session_expired_reason", msg.reason);
+            }
+          } catch {
+            // Ignorar
+          }
+          if (!window.location.pathname.startsWith("/login")) {
+            const reasonParam = msg.reason ? `&reason=${encodeURIComponent(msg.reason)}` : "";
+            window.location.href = `/login?expired=true${reasonParam}`;
+          }
+        }
+      } else if (msg.type === "LOGIN") {
+        // Otra pestaña inició sesión: sincronizar datos
+        checkAuth();
+      } else if (msg.type === "TOKEN_REFRESHED" && msg.token) {
+        setToken(msg.token);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [checkAuth]);
 
   useEffect(() => {
     checkAuth();
@@ -222,6 +335,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         setSessionData,
         checkAuth,
+        refreshToken,
+        triggerSessionExpired,
         logout,
       }}
     >
@@ -243,6 +358,12 @@ export function useAuth(): AuthContextType {
       },
       setSessionData: () => {},
       checkAuth: async () => null,
+      refreshToken: async () => false,
+      triggerSessionExpired: () => {
+        if (typeof window !== "undefined") {
+          window.location.href = "/login?expired=true";
+        }
+      },
       logout: async () => {
         if (typeof window !== "undefined") {
           window.location.href = "/login";

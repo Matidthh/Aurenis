@@ -11,6 +11,7 @@
  */
 
 import { AUTH_STORAGE_KEYS } from "@/lib/auth/auth-context";
+import { sessionSync } from "@/lib/auth/session-sync";
 import { aurenisFetch, FetchWithRetryOptions } from "./network-status";
 import { discreetLogger } from "./discreet-logger";
 import { ApiSuccessResponse, ApiErrorResponse } from "./types";
@@ -144,6 +145,53 @@ export async function request<T = any>(
     };
   } catch (error: any) {
     const apiError = parseApiError(error);
+
+    // Intento de Refresco Silencioso de Token ante respuesta 401 Unauthorized
+    if (apiError.status === 401 && !fullUrl.includes("/api/auth/")) {
+      try {
+        const refreshRes = await fetch("/api/auth/refresh", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (refreshRes.ok) {
+          const refreshData = await refreshRes.json();
+          if (refreshData?.token) {
+            localStorage.setItem(AUTH_STORAGE_KEYS.TOKEN, refreshData.token);
+            headers.set("Authorization", `Bearer ${refreshData.token}`);
+
+            // Reintento transparente de la petición con el nuevo token
+            const { data: retryData, response: retryResponse } = await aurenisFetch<any>(fullUrl, {
+              ...fetchOptions,
+              headers,
+              body: serializedBody,
+            });
+
+            let retryUnwrapData: T = retryData;
+            if (retryData && typeof retryData === "object" && "data" in retryData && retryData.success !== false) {
+              retryUnwrapData = retryData.data as T;
+            }
+
+            return {
+              data: retryUnwrapData,
+              rawResponse: retryResponse,
+              status: retryResponse.status,
+              success: retryResponse.ok,
+            };
+          }
+        } else {
+          // El token de refresco también expiró o fue revocado
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("aurenis_session_expired", "true");
+            sessionSync.broadcast("SESSION_EXPIRED", {
+              reason: "Sesión expirada por inactividad. Ingrese nuevamente.",
+            });
+          }
+        }
+      } catch {
+        // Fallback si la llamada de refresco falla
+      }
+    }
 
     discreetLogger.logHttpError({
       url: fullUrl,
