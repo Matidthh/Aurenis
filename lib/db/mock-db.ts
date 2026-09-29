@@ -587,6 +587,16 @@ export function createMockPrisma() {
           continue;
         }
       }
+      if (key === "email" && typeof val === "string") {
+        const itemEmail = (item.email || "").toLowerCase();
+        const targetEmail = val.toLowerCase();
+        if (itemEmail === targetEmail) continue;
+        if (targetEmail === "profesor@sanjose.cl" && (itemEmail === "profesor.matematica@sanjose.cl" || item.id === "user-teacher-roberto")) continue;
+        if (targetEmail === "estudiante@sanjose.cl" && (itemEmail === "valentina.silva@sanjose.cl" || itemEmail === "sofia.valenzuela@sanjose.cl" || item.id === "user-student-1")) continue;
+        if (targetEmail === "apoderado@sanjose.cl" && (itemEmail === "maria.gonzalez@sanjose.cl" || item.id === "user-guardian-1")) continue;
+        if (targetEmail === "director@sanjose.cl" && (itemEmail === "director@sanjose.cl" || item.id === "user-director")) continue;
+        return false;
+      }
       if (key === "NOT") {
         if (matchWhere(item, val)) return false;
         continue;

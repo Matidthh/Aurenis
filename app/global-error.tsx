@@ -13,6 +13,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const isDev = process.env.NODE_ENV === "development";
+
   useEffect(() => {
     if (isChunkLoadError(error)) {
       triggerChunkReload("app/global-error.tsx", error);

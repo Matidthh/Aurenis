@@ -1,6 +1,6 @@
 # INFORME DE CONTROL VERTICAL Y AUDITORÍA RBAC
 **Plataforma Educativa Aurenis — Control de Acceso Basado en Roles**
-**Fecha de Auditoría:** 2026-09-21T13:51:57.394Z
+**Fecha de Auditoría:** 2026-09-29T11:44:26.536Z
 **Estado:** APROBADO (100% Criterios de Aceptación Cumplidos)
 **Total de Pruebas Evaluadas:** 22
 **Pruebas Aprobadas:** 22
@@ -98,7 +98,7 @@ Se ejecutó una auditoría exhaustiva de **Control de Acceso Vertical (RBAC Enfo
 - **[RBAC-DIR-01]** `PASSED` (HTTP 403/403): Director intenta crear colegios globales (SuperAdmin)
   - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de SuperAdmin."
 - **[RBAC-DIR-02]** `PASSED` (HTTP 403/403): Director intenta gestionar recursos de otra institución escolar (Aislamiento Multi-Tenant)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado a esta institución"
+  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado: El token de sesión no autoriza operaciones en la institución especificada (Violación BOLA/IDOR)."
 
 ### Línea Base Positiva (Operaciones Autorizadas)
 - **[AUTH-DIR-01]** `PASSED` (HTTP 201/201): Director crea legítimamente un curso en su colegio
@@ -122,6 +122,6 @@ Los resultados de las 22 evaluaciones confirman que la plataforma Aurenis cuenta
 ## 6. Verificación Criptográfica de Integridad
 
 - **Algoritmo de Hash:** SHA-256
-- **Firma Digital del Reporte:** `094df9d678a08024675933e6e541e8fd399879ec4efded78881390fcc2192330`
+- **Firma Digital del Reporte:** `86cf89cd77dee285bd4bd062580fe7d400de3add0324fefdd65cd8cc8b786803`
 - **Validador:** Aurenis Security Engine (RBAC Verification Module)
 - **Certificación:** CONFORME Y APROBADO PARA PRODUCCIÓN

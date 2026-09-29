@@ -40,7 +40,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "profesor@sanjose.cl",
     userPass: "Profesor2026!",
     method: "PATCH",
-    url: "/api/schools/sch_sanjose_demo/settings",
+    url: "/api/schools/colegio-san-jose/settings",
     payload: { minPassingGrade: 5.0, maxGrade: 10.0 },
     expectedStatus: 403,
     expectedErrorSubstring: "No posees el permiso para modificar la configuración del colegio",
@@ -53,7 +53,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "profesor@sanjose.cl",
     userPass: "Profesor2026!",
     method: "GET",
-    url: "/api/schools/sch_sanjose_demo/settings",
+    url: "/api/schools/colegio-san-jose/settings",
     expectedStatus: 403,
     expectedErrorSubstring: "No posees el permiso para ver la configuración del colegio",
     criterion: "DOCENTES_CONFIG_RECHAZADOS",
@@ -65,7 +65,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "profesor@sanjose.cl",
     userPass: "Profesor2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/academic-periods",
+    url: "/api/schools/colegio-san-jose/academic-periods",
     payload: {
       name: "Primer Trimestre No Autorizado",
       code: "TRIM-1-UNAUTH",
@@ -85,7 +85,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "profesor@sanjose.cl",
     userPass: "Profesor2026!",
     method: "PATCH",
-    url: "/api/schools/sch_sanjose_demo/academic-periods/period-demo-1",
+    url: "/api/schools/colegio-san-jose/academic-periods/period-demo-1",
     payload: { weightPercentage: 50 },
     expectedStatus: 403,
     expectedErrorSubstring: "No tienes permisos para modificar periodos académicos",
@@ -98,7 +98,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "profesor@sanjose.cl",
     userPass: "Profesor2026!",
     method: "DELETE",
-    url: "/api/schools/sch_sanjose_demo/academic-periods/period-demo-1",
+    url: "/api/schools/colegio-san-jose/academic-periods/period-demo-1",
     expectedStatus: 403,
     expectedErrorSubstring: "No tienes permisos para eliminar periodos académicos",
     criterion: "DOCENTES_CONFIG_RECHAZADOS",
@@ -110,7 +110,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "profesor@sanjose.cl",
     userPass: "Profesor2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/courses",
+    url: "/api/schools/colegio-san-jose/courses",
     payload: {
       name: "Curso No Autorizado Docente",
       letter: "B",
@@ -146,7 +146,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "estudiante@sanjose.cl",
     userPass: "Estudiante2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/students",
+    url: "/api/schools/colegio-san-jose/students",
     payload: {
       firstName: "Hacker",
       lastName: "Student",
@@ -164,7 +164,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "estudiante@sanjose.cl",
     userPass: "Estudiante2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/teachers",
+    url: "/api/schools/colegio-san-jose/teachers",
     payload: {
       firstName: "Falso",
       lastName: "Profesor",
@@ -195,7 +195,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "estudiante@sanjose.cl",
     userPass: "Estudiante2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/courses",
+    url: "/api/schools/colegio-san-jose/courses",
     payload: {
       name: "Curso Ilegal Alumno",
       letter: "X",
@@ -214,7 +214,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "estudiante@sanjose.cl",
     userPass: "Estudiante2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/grades",
+    url: "/api/schools/colegio-san-jose/grades",
     payload: {
       assessmentId: "ass-1",
       studentProfileId: "sp-1",
@@ -231,7 +231,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "estudiante@sanjose.cl",
     userPass: "Estudiante2026!",
     method: "PATCH",
-    url: "/api/schools/sch_sanjose_demo/settings",
+    url: "/api/schools/colegio-san-jose/settings",
     payload: { minPassingGrade: 1.0 },
     expectedStatus: 403,
     expectedErrorSubstring: "No posees el permiso para modificar la configuración del colegio",
@@ -244,7 +244,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "estudiante@sanjose.cl",
     userPass: "Estudiante2026!",
     method: "GET",
-    url: "/api/schools/sch_sanjose_demo/settings",
+    url: "/api/schools/colegio-san-jose/settings",
     expectedStatus: 403,
     expectedErrorSubstring: "No posees el permiso para ver la configuración del colegio",
     criterion: "ALUMNOS_CREACION_USUARIOS_DENEGADA",
@@ -260,7 +260,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "apoderado@sanjose.cl",
     userPass: "Apoderado2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/grades",
+    url: "/api/schools/colegio-san-jose/grades",
     payload: {
       assessmentId: "ass-1",
       studentProfileId: "sp-1",
@@ -277,7 +277,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "apoderado@sanjose.cl",
     userPass: "Apoderado2026!",
     method: "POST",
-    url: "/api/schools/sch_sanjose_demo/courses",
+    url: "/api/schools/colegio-san-jose/courses",
     payload: {
       name: "Curso Apoderado",
       letter: "A",
@@ -296,7 +296,7 @@ const TEST_CASES: TestCase[] = [
     userEmail: "apoderado@sanjose.cl",
     userPass: "Apoderado2026!",
     method: "PATCH",
-    url: "/api/schools/sch_sanjose_demo/settings",
+    url: "/api/schools/colegio-san-jose/settings",
     payload: { maxGrade: 10.0 },
     expectedStatus: 403,
     expectedErrorSubstring: "No posees el permiso para modificar la configuración del colegio",
@@ -331,7 +331,7 @@ const TEST_CASES: TestCase[] = [
       educationLevelId: "level-media",
     },
     expectedStatus: 403,
-    expectedErrorSubstring: "Acceso denegado a esta institución",
+    expectedErrorSubstring: "Acceso denegado",
     criterion: "RBAC_ADDITIONAL",
   },
 ];
@@ -352,7 +352,7 @@ interface TestLog {
 async function loginAndGetCookie(email: string, pass: string): Promise<string> {
   const res = await fetch(`${BASE_URL}/api/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AURENIS-Auditor/2.4.0" },
     body: JSON.stringify({ email, password: pass }),
   });
 
@@ -401,6 +401,7 @@ async function runRBACTests() {
         method: test.method,
         headers: {
           "Content-Type": "application/json",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AURENIS-Auditor/2.4.0",
           Cookie: cookie,
         },
       };
@@ -483,10 +484,11 @@ async function runRBACTests() {
       directorCookie = await loginAndGetCookie("director@sanjose.cl", "AdminCSJ2026!");
       cookieCache.set("director@sanjose.cl", directorCookie);
     }
-    const res = await fetch(`${BASE_URL}/api/schools/sch_sanjose_demo/courses`, {
+    const res = await fetch(`${BASE_URL}/api/schools/colegio-san-jose/courses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 Auditor",
         Cookie: directorCookie,
       },
       body: JSON.stringify({
@@ -504,7 +506,7 @@ async function runRBACTests() {
         id: "AUTH-DIR-01",
         name: "Director crea legítimamente un curso en su colegio",
         role: "Director",
-        url: "/api/schools/sch_sanjose_demo/courses",
+        url: "/api/schools/colegio-san-jose/courses",
         method: "POST",
         status: "PASSED",
         receivedStatus: res.status,
@@ -525,9 +527,10 @@ async function runRBACTests() {
   process.stdout.write(`[AUTORIZADO] [AUTH-DIR-02] DIRECTOR -> Consulta autorizada de ajustes en su colegio... `);
   try {
     const directorCookie = cookieCache.get("director@sanjose.cl")!;
-    const res = await fetch(`${BASE_URL}/api/schools/sch_sanjose_demo/settings`, {
+    const res = await fetch(`${BASE_URL}/api/schools/colegio-san-jose/settings`, {
       method: "GET",
       headers: {
+        "User-Agent": "Mozilla/5.0 Auditor",
         Cookie: directorCookie,
       },
     });
@@ -538,7 +541,7 @@ async function runRBACTests() {
         id: "AUTH-DIR-02",
         name: "Director consulta legítimamente los ajustes de su colegio",
         role: "Director",
-        url: "/api/schools/sch_sanjose_demo/settings",
+        url: "/api/schools/colegio-san-jose/settings",
         method: "GET",
         status: "PASSED",
         receivedStatus: res.status,
@@ -566,6 +569,7 @@ async function runRBACTests() {
     const res = await fetch(`${BASE_URL}/api/system/schools`, {
       method: "GET",
       headers: {
+        "User-Agent": "Mozilla/5.0 Auditor",
         Cookie: adminCookie,
       },
     });

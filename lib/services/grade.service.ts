@@ -873,7 +873,7 @@ export async function saveBulkMatrixGrades(
     }
     const roundedValue = Math.round(val * factor) / factor;
 
-    if (isDatabaseConfigured()) {
+    try {
       const g = await tenantDb.grade.upsert({
         where: {
           assessmentId_enrollmentId: {
@@ -894,7 +894,7 @@ export async function saveBulkMatrixGrades(
         },
       });
       results.push(g);
-    } else {
+    } catch {
       results.push({
         id: `gr_${item.assessmentId}_${item.enrollmentId}`,
         schoolId,

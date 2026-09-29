@@ -27,7 +27,32 @@ for (const p of files) {
       }
     }
   } catch (err) {
-    console.warn("Could not patch Next.js segment explorer:", err);
+    console.warn("Could not patch Next.js segment explorer in entry-base:", err);
+  }
+}
+
+// Also neutralize segment-explorer-node.js itself to remove 'use client' directive
+const segmentNodeFiles = [
+  path.join(process.cwd(), "node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js"),
+];
+
+const safeSegmentNodeContent = `"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SegmentViewNode = function(props) { return (props && props.children) || null; };
+exports.SegmentViewStateNode = function(props) { return (props && props.children) || null; };
+exports.SegmentBoundaryTriggerNode = function() { return null; };
+exports.SegmentStateProvider = function(props) { return (props && props.children) || null; };
+exports.useSegmentState = function() { return { boundaryType: null, setBoundaryType: function() {} }; };
+exports.SEGMENT_EXPLORER_SIMULATED_ERROR_MESSAGE = "NEXT_DEVTOOLS_SIMULATED_ERROR";
+`;
+
+for (const p of segmentNodeFiles) {
+  try {
+    if (fs.existsSync(p)) {
+      fs.writeFileSync(p, safeSegmentNodeContent, "utf-8");
+    }
+  } catch (err) {
+    console.warn("Could not patch segment-explorer-node.js:", err);
   }
 }
 
@@ -52,4 +77,3 @@ for (const p of encodeUriFiles) {
     console.warn("Could not patch encode-uri-path:", err);
   }
 }
-

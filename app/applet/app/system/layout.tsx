@@ -1,0 +1,92 @@
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth/session";
+import { AppShell } from "@/components/layout/app-shell";
+import { NavItem, UserSessionInfo } from "@/components/layout/types";
+import { Shield, ShieldCheck, Building2, PlusCircle, Palette, Presentation, Flame } from "lucide-react";
+
+export const dynamic = "force-dynamic";
+
+export default async function SystemLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession();
+
+  const navItems: NavItem[] = [
+    {
+      title: "Panel General",
+      href: "/system/dashboard",
+      icon: <Shield className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Presentación Ciberseguridad",
+      href: "/system/ciberseguridad-presentacion",
+      icon: <Presentation className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "STRIDE & OWASP",
+      badgeVariant: "brand",
+      section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Seguridad y Auditoría",
+      href: "/system/security",
+      icon: <ShieldCheck className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "Audit Trail",
+      badgeVariant: "brand",
+      section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Colegios e Instituciones",
+      href: "/system/schools",
+      icon: <Building2 className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      section: "Ecosistema Escolar",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Nuevo Colegio",
+      href: "/system/schools/new",
+      icon: <PlusCircle className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "Onboarding",
+      badgeVariant: "brand",
+      section: "Ecosistema Escolar",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Design System (Lucas)",
+      href: "/system/design-system",
+      icon: <Palette className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "Tokens & UI",
+      badgeVariant: "success",
+      section: "Ecosistema Escolar",
+      roles: ["SYSTEM_ADMIN"],
+    },
+    {
+      title: "Manual Técnico & Ops",
+      href: "/system/manual-tecnico",
+      icon: <Shield className="w-5 h-5 shrink-0" strokeWidth={2} />,
+      badge: "PDF Oficial",
+      badgeVariant: "brand",
+      section: "Supervisión Global",
+      roles: ["SYSTEM_ADMIN"],
+    },
+  ];
+
+  const userInfo: UserSessionInfo = {
+    userId: session?.userId || "superadmin-demo-id",
+    email: session?.email || "admin@aurenis.com",
+    firstName: session?.firstName || "Super",
+    lastName: session?.lastName || "Admin",
+    roleName: "SYSTEM_ADMIN",
+    isSystemAdmin: true,
+  };
+
+  return (
+    <AppShell
+      navItems={navItems}
+      user={userInfo}
+      isSystemAdmin={true}
+    >
+      {children}
+    </AppShell>
+  );
+}

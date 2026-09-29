@@ -113,12 +113,14 @@ Este centro de documentación consolida todas las especificaciones arquitectóni
   - Estudiante / Apoderado: Consulta de avances y libreta de notas.
 - Políticas de contraseñas seguras y recuperación de accesos.
 
-### 8. ⚙️ [Guía de Desarrollo y Operaciones (DevOps & Deployment)](./DEVELOPER_AND_OPERATIONS_GUIDE.md)
-*Guía de ingeniería, variables de entorno, migraciones y despliegue en producción.*
-- Configuración del entorno local (Node.js, PNPM/NPM, Next.js 15).
+### 8. ⚙️ [Guía de Desarrollo y Operaciones](./DEVELOPER_AND_OPERATIONS_GUIDE.md) | [Manual de Despliegue en Cloud Run & Cloud SQL](./MANUAL_DESPLIEGUE_CLOUD_RUN_Y_BASE_DATOS_GESTIONADA.md)
+*Guía de ingeniería, variables de entorno, Docker multi-stage, Google Cloud Run y Cloud SQL PostgreSQL.*
+- Configuración del entorno local (Node.js, NPM, Next.js 15).
 - Gestión de migraciones Prisma y seeding de base de datos.
-- Despliegue en contenedores Docker y Google Cloud Run.
-- Procedimientos de monitoreo, respaldo y contingencia.
+- **Construcción y empaquetado Docker multi-stage** (no-root, healthchecks, optimización).
+- **Aprovisionamiento y configuración de Cloud SQL PostgreSQL v15+** y Google Secret Manager.
+- **Guía de despliegue automatizada** vía Artifact Registry, Cloud Run Jobs e IAM de menor privilegio.
+- Procedimientos de monitoreo, respaldo, alta disponibilidad y rollback en caliente.
 
 ### 9. ⚖️ [Guía de Cumplimiento Normativo y Privacidad Escolar](./COMPLIANCE_AND_DATA_PRIVACY_GUIDE.md)
 *Cumplimiento legal chileno e internacional.*
@@ -148,13 +150,38 @@ Este centro de documentación consolida todas las especificaciones arquitectóni
 - Arquitectura de guardas de seguridad en 3 capas: Perímetro (`middleware.ts`), RBAC Servidor (`lib/auth/permissions.ts`) y Aislamiento ORM (`createTenantPrisma`).
 - Verificación perimetral de rutas `/system/*`, saneamiento zero-trust de cabeceras y prevención activa contra BOLA/IDOR.
 
+### 13. 📋 [Auditoría Minuciosa de Concordancia Documental vs Software](./AUDITORIA_VERIFICACION_DOCUMENTAL_SOFTWARE_VS_MANUALES.md)
+*Informe oficial de auditoría punto por punto, homologación de discrepancias y certificación de veracidad.*
+- Cotejo metrológico entre los manuales de usuario, guías SysAdmin/DevOps, Dockerfile, Cloud Run y código fuente.
+- Verificación exhaustiva de esquemas Prisma ORM, variables `.env.example`, scripts de mantenimiento y rutas API.
+- Corrección de discrepancias y certificación formal de veracidad documental firmada por el equipo de 4 integrantes.
+
+### 14. 🏛️ [Carpeta de Entrega Oficial ABP y Dossier Consolidado](../entrega-oficial-abp/README_ENTREGA_OFICIAL_ABP.md)
+*Empaquetado formal definitivo de la memoria técnica y anexos para la comisión evaluadora.*
+- **Memoria Técnica Consolidada en 10 Capítulos:** [`entrega-oficial-abp/01_MEMORIA_TECNICA_CONSOLIDADA_ABP_AURENIS.md`](../entrega-oficial-abp/01_MEMORIA_TECNICA_CONSOLIDADA_ABP_AURENIS.md).
+- **Plantilla Oficial de Impresión y Exportación a PDF:** [`entrega-oficial-abp/dossier-print-template.html`](../entrega-oficial-abp/dossier-print-template.html).
+- Portadas institucionales, índices generales, firmas de autoría y certificación con luz verde definitiva.
+
 ---
 
 ## 🛠️ Comando Rápido de Ejecución de Pruebas
 
-Para ejecutar la suite automatizada de verificación de seguridad y QA:
+Para ejecutar la suite automatizada de verificación de seguridad, QA y paridad documental:
 
 ```bash
+# Verificación de paridad documental y software
+npm run test:doc-parity
+
+# Verificación de empaquetado y entrega oficial ABP
+npm run test:abp-delivery
+
+# Verificación de despliegue en Google Cloud Run y Cloud SQL
+npm run test:cloudrun
+```
 npm test
 # Ejecuta el test runner con 57 aserciones de seguridad y RBAC
+
+npm run test:doc-parity
+# Ejecuta la auditoría automatizada de concordancia punto por punto documental vs software
+```
 ```

@@ -73,6 +73,9 @@ export type BugSeverity = "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
 export type BugPriority = "P0_BLOCKER" | "P1_HIGH" | "P2_MEDIUM" | "P3_LOW";
 export type BugStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "VERIFIED_CLOSED";
 
+// Entornos de prueba verificados para cierre de issues de QA
+export const verifiedInEnvironments = ["Staging", "Cloud Run", "Local Dev", "Navegadores"] as const;
+
 // Definición de Deuda Técnica Menor y Observaciones No Bloqueantes
 export interface TechnicalDebtItem {
   id: string;

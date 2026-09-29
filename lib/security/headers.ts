@@ -28,6 +28,9 @@ export const SECURITY_HEADERS: Record<string, string> = {
   // 3. X-Content-Type-Options - Prevenir sniffing de tipos MIME
   "X-Content-Type-Options": "nosniff",
 
+  // 3.1 X-Frame-Options - Protección Anti-Clickjacking complementaria
+  "X-Frame-Options": "SAMEORIGIN",
+
   // 4. Referrer-Policy - Protección de privacidad en enlaces salientes
   "Referrer-Policy": "strict-origin-when-cross-origin",
 

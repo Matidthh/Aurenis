@@ -1,7 +1,7 @@
 # ACTA OFICIAL DE VERIFICACIÓN DE NO-REGRESIÓN Y ESTABILIDAD DEL SISTEMA
 **Plataforma Institucional Aurenis SaaS**  
-**Certificado Oficial:** `AURENIS-REG-CERT-CF8CA5F0-17C7`  
-**Fecha de Certificación:** 2026-09-27T15:53:32.873Z  
+**Certificado Oficial:** `AURENIS-REG-CERT-CD872AD6-D886`  
+**Fecha de Certificación:** 2026-09-29T13:08:34.430Z  
 **Lead QA & Auditor:** Frank M. (*Testing / Ciberseguridad / Documentación*)  
 **Destinatario:** Francho MC (`francho.mc14@gmail.com`)  
 **Dictamen Oficial:** 🟢 **SISTEMA ESTABLE Y CERTIFICADO — CERO REGRESIONES DETECTADAS**  
@@ -27,8 +27,8 @@
 - **Autor / Responsable:** **Maicol R. (Backend)**
 - **Comportamiento Estable Previo:** Tokens JWT emitidos se firman con HS256 y persisten atributos de usuario y escuela.
 - **Análisis de Impacto tras Corrección:** Parches de seguridad SEC-FIND-003 y BUG-2026-006 mantuvieron la retrocompatibilidad en el payload.
-- **Resultado de la Prueba:** 🟢 **PASSED** (33ms)
-- **Evidencia Técnica:** JWT generado, verificado y validado con claims intactos en 33ms
+- **Resultado de la Prueba:** 🟢 **PASSED** (15ms)
+- **Evidencia Técnica:** JWT generado, verificado y validado con claims intactos en 15ms
 
 ---
 
@@ -57,8 +57,8 @@
 - **Autor / Responsable:** **Carlos M. (Auditor Decreto 67)**
 - **Comportamiento Estable Previo:** Cálculo aritmético de notas escolares con soporte de evaluaciones N1 a N10.
 - **Análisis de Impacto tras Corrección:** La fórmula Math.floor(raw * 10 + 0.0001) / 10 asegura cumplimiento estricto del Mineduc sin afectar la complejidad temporal O(1).
-- **Resultado de la Prueba:** 🟢 **PASSED** (0ms)
-- **Evidencia Técnica:** Truncamiento exacto (5.833->5.8), ponderado (6.1) y 45 cálculos ejecutados en 0ms
+- **Resultado de la Prueba:** 🟢 **PASSED** (1ms)
+- **Evidencia Técnica:** Truncamiento exacto (5.833->5.8), ponderado (6.1) y 45 cálculos ejecutados en 1ms
 
 ---
 
@@ -67,7 +67,7 @@
 - **Autor / Responsable:** **Lucas P. (UI/UX) & Malcom S.**
 - **Comportamiento Estable Previo:** El registro de asistencia permite marcar Presente, Ausente, Atraso y Justificado por bloque de clase.
 - **Análisis de Impacto tras Corrección:** El encolamiento IndexedDB/LocalStorage despacha el lote atómico sin pérdida de registros previos.
-- **Resultado de la Prueba:** 🟢 **PASSED** (1ms)
+- **Resultado de la Prueba:** 🟢 **PASSED** (0ms)
 - **Evidencia Técnica:** 40 registros de asistencia procesados en lote atómico sin colisiones
 
 ---
@@ -121,8 +121,8 @@
 ================================================================================
 CERTIFICADO OFICIAL DE NO-REGRESIÓN & CONTROL DE CALIDAD AURENIS SAAS
 ================================================================================
-Código de Certificación : AURENIS-REG-CERT-CF8CA5F0-17C7
-Fecha y Hora de Emisión : 2026-09-27T15:53:32.873Z
+Código de Certificación : AURENIS-REG-CERT-CD872AD6-D886
+Fecha y Hora de Emisión : 2026-09-29T13:08:34.430Z
 Auditor Responsable     : Frank M. (Lead QA / Testing / Ciberseguridad)
 Revisor Pedagógico      : Carlos M. (Auditor Decreto 67 / Mineduc)
 Desarrolladores Core    : Maicol R. (Backend) | Malcom S. (Frontend) | Lucas P. (UI)

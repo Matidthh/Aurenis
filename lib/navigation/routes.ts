@@ -141,6 +141,33 @@ export const SYSTEM_ROUTES: Record<string, RouteMetadata> = {
     section: "Ecosistema Escolar",
     iconName: "Palette",
   },
+  MANUAL_USUARIO: {
+    path: "/system/manual-usuario",
+    title: "Manual de Usuario por Roles",
+    breadcrumbLabel: "Manual de Usuario",
+    isPublic: false,
+    scope: "system",
+    section: "Documentación & Soporte",
+    iconName: "BookOpen",
+  },
+  MANUAL_TECNICO: {
+    path: "/system/manual-tecnico",
+    title: "Manual Técnico & Ops",
+    breadcrumbLabel: "Manual Técnico",
+    isPublic: false,
+    scope: "system",
+    section: "Documentación & Soporte",
+    iconName: "Terminal",
+  },
+  DESPLIEGUE_LOCAL: {
+    path: "/system/despliegue-local",
+    title: "Guía de Despliegue Local",
+    breadcrumbLabel: "Despliegue Local",
+    isPublic: false,
+    scope: "system",
+    section: "Documentación & Soporte",
+    iconName: "Server",
+  },
 };
 
 /**

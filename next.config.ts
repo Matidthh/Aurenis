@@ -7,20 +7,13 @@ export default function (phase: string): NextConfig {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER;
 
   return {
-    output: isDev ? undefined : "standalone",
     reactStrictMode: true,
-    devIndicators: {
-      appIsrStatus: false,
-      buildActivity: false,
-    },
+    poweredByHeader: false,
     eslint: {
       ignoreDuringBuilds: true,
     },
     env: {
       NEXT_PUBLIC_BUILD_ID: buildId,
-    },
-    generateBuildId: async () => {
-      return buildId;
     },
     async headers() {
       return [

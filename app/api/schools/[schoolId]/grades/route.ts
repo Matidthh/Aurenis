@@ -14,7 +14,8 @@ import { sanitizeErrorMessage } from "@/lib/api/response";
 
 const SchoolIdParamSchema = z
   .string()
-  .uuid({ message: "El parámetro schoolId debe ser un UUID válido." });
+  .min(2, { message: "El parámetro schoolId debe tener al menos 2 caracteres." })
+  .regex(/^[a-zA-Z0-9_-]+$/, { message: "Formato de identificador de institución no válido." });
 
 export async function GET(
   req: NextRequest,
@@ -100,10 +101,16 @@ export async function POST(
     }
 
     // Verificar permisos para ingresar notas (GRADES_ENTER)
+    const school = await prisma.school.findFirst({
+      where: {
+        OR: [{ id: schoolId }, { slug: schoolId }],
+      },
+    });
+    const targetSchoolId = school?.id || schoolId;
     if (!session.isSystemAdmin) {
       const membership = await prisma.membership.findUnique({
         where: {
-          userId_schoolId: { userId: session.userId, schoolId },
+          userId_schoolId: { userId: session.userId, schoolId: targetSchoolId },
         },
         include: {
           role: {
