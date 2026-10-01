@@ -249,6 +249,63 @@ export async function authenticateUser(identifier: string, plainPassword: string
 
     if (demoFound) {
       user = demoFound[1];
+    } else {
+      // Búsqueda en el almacén de estudiantes reales del LPMM (4° Medio E y demás cursos)
+      try {
+        const { getMockStore } = require("@/lib/db/mock-db");
+        const store = getMockStore();
+        for (const u of store.users.values()) {
+          const matchEmail = u.email && u.email.toLowerCase() === normalized;
+          const matchRut = u.rutOrNationalId && (
+            u.rutOrNationalId.toLowerCase() === cleanRut.toLowerCase() ||
+            u.rutOrNationalId.toLowerCase() === normalized
+          );
+          const matchFullName = `${u.firstName} ${u.lastName}`.toLowerCase() === normalized;
+          if (matchEmail || matchRut || matchFullName) {
+            const userMemberships = Array.from(store.memberships.values())
+              .filter((m: any) => m.userId === u.id)
+              .map((m: any) => {
+                const school = store.schools.get(m.schoolId) || DEFAULT_DEMO_SCHOOL;
+                const role = store.roles.get(m.roleId) || {
+                  id: "role-lpmm-student",
+                  name: DEFAULT_SCHOOL_ROLES.STUDENT,
+                  displayName: "Estudiante LPMM",
+                  permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+                };
+                return {
+                  id: m.id,
+                  isActive: m.isActive,
+                  school,
+                  role: {
+                    ...role,
+                    permissions: createRolePermissions(role.name || DEFAULT_SCHOOL_ROLES.STUDENT),
+                  },
+                };
+              });
+
+            user = {
+              ...u,
+              password: "EstudianteLpmm2026!",
+              memberships: userMemberships.length > 0 ? userMemberships : [
+                {
+                  id: `mem-${u.id}`,
+                  isActive: true,
+                  school: DEFAULT_DEMO_SCHOOL,
+                  role: {
+                    id: "role-lpmm-student",
+                    name: DEFAULT_SCHOOL_ROLES.STUDENT,
+                    displayName: "Estudiante 4° Medio E",
+                    permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+                  },
+                },
+              ],
+            };
+            break;
+          }
+        }
+      } catch (mockLookupErr) {
+        console.error("[Auth Service] Error al consultar mock store:", mockLookupErr);
+      }
     }
   }
 
