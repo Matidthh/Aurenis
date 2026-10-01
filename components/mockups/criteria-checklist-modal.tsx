@@ -44,7 +44,7 @@ export function CriteriaChecklistModal({
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [filterCategory, setFilterCategory] = useState<
-    "all" | "student" | "teacher" | "grade" | "school-settings" | "db-error" | "session" | "client-audit" | "live-modules" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e"
+    "all" | "student" | "teacher" | "grade" | "school-settings" | "db-error" | "session" | "client-audit" | "live-modules" | "rbac" | "jwt" | "packaging" | "severity" | "qa" | "lifecycle" | "journeys" | "browser" | "responsive" | "resilience" | "e2e" | "grades-demo"
   >("all");
 
   if (!isOpen) return null;
@@ -53,6 +53,7 @@ export function CriteriaChecklistModal({
     if (filterCategory === "student") return c.id.includes("student-db");
     if (filterCategory === "teacher") return c.id.includes("teacher-db");
     if (filterCategory === "grade") return c.id.includes("grade-db");
+    if (filterCategory === "grades-demo") return c.id.includes("grades-live-demo") || c.id.includes("dod-grades-live");
     if (filterCategory === "school-settings") return c.id.includes("school-settings");
     if (filterCategory === "db-error") return c.id.includes("db-error");
     if (filterCategory === "session") return c.id.includes("session-expire");
@@ -203,6 +204,17 @@ export function CriteriaChecklistModal({
               }`}
             >
               Calificaciones DB ({criteria.filter((c) => c.id.includes("grade-db")).length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilterCategory("grades-demo")}
+              className={`px-2.5 py-1 rounded-lg font-semibold transition shrink-0 ${
+                filterCategory === "grades-demo"
+                  ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white"
+                  : "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 hover:bg-blue-100"
+              }`}
+            >
+              Carga Notas & Promedios ({criteria.filter((c) => c.id.includes("grades-live-demo") || c.id.includes("dod-grades-live")).length})
             </button>
             <button
               type="button"

@@ -13,11 +13,13 @@ interface LandingNavbarProps {
 }
 
 export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavbarProps) {
+  const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Escuchar scroll para fondo sutil
+  // Escuchar scroll para fondo sutil tras montaje en cliente
   useEffect(() => {
+    setMounted(true);
     function handleScroll() {
       setIsScrolled(window.scrollY > 15);
     }
@@ -67,7 +69,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
       suppressHydrationWarning
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
-        isScrolled
+        mounted && isScrolled
           ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 dark:border-slate-800/90 py-3"
           : "bg-[#f2f4f8]/85 dark:bg-slate-950/85 backdrop-blur-sm border-b border-transparent py-4"
       )}
@@ -147,22 +149,27 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             Cotizar / Demo
           </Button>
 
-          {/* Toggle Menú Móvil con touch target ≥ 44px */}
+          {/* Toggle Menú Móvil */}
           <button
             id="navbar-mobile-toggle"
             type="button"
+            suppressHydrationWarning
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            aria-expanded={isMobileMenuOpen}
+            aria-expanded={mounted ? isMobileMenuOpen : false}
             aria-label="Abrir menú de navegación"
-            className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center p-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 touch-manipulation active:scale-95"
+            className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mounted && isMobileMenuOpen ? (
+              <X className="w-5 h-5" aria-hidden="true" />
+            ) : (
+              <Menu className="w-5 h-5" aria-hidden="true" />
+            )}
           </button>
         </div>
       </div>
 
       {/* 4. Menú Móvil Simplificado */}
-      {isMobileMenuOpen && (
+      {mounted && isMobileMenuOpen && (
         <div
           id="navbar-mobile-drawer"
           className="md:hidden fixed inset-x-0 top-[60px] bottom-0 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 p-6 overflow-y-auto flex flex-col justify-between z-40 animate-in fade-in slide-in-from-top-4 duration-200"

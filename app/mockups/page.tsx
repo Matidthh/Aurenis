@@ -791,6 +791,39 @@ export default function MockupsPage() {
         "Conmutación instantánea de credenciales sin desconexión de sesión.",
       ],
     },
+    {
+      id: "dod-grades-live-demo-1",
+      title: "Flujo de carga de notas en directo probado",
+      description: "Edición y carga interactiva de calificaciones en tiempo real con navegación ágil por teclado (Enter, Flechas, Tab), conversión automática de 2 dígitos (ej: 65 -> 6.5), autoguardado y validación de rango (1.0 a 7.0).",
+      completed: true,
+      details: [
+        "Ingreso fluido de notas parciales (N1 a N5) con validación estricta de rango ministerial chileno.",
+        "Atajos de teclado con auto-avance vertical u horizontal configurable para alta velocidad de digitación.",
+        "Indicador de estado guardado en vivo y sincronización reactiva inmediata sin latencia.",
+      ],
+    },
+    {
+      id: "dod-grades-live-demo-2",
+      title: "Cálculo de promedios visualizado en pantalla",
+      description: "Recálculo instantáneo reactivo de promedios ponderados por alumno y métricas globales del curso (promedio general, % de aprobación, desviación estándar e histograma cromático Decreto 67).",
+      completed: true,
+      details: [
+        "Fórmula ponderada Decreto 67 con redondeo ministerial oficial a un decimal.",
+        "Semaforización cromática instantánea: Rojo (<4.0), Ámbar (4.0-4.9), Verde (5.0-5.9), Azul (6.0-7.0).",
+        "Panel de estadísticas del curso y distribución de notas actualizado en cada tipeo (<16ms).",
+      ],
+    },
+    {
+      id: "dod-grades-live-demo-3",
+      title: "Mapeo completo",
+      description: "Integración bidireccional completa entre la planilla de calificaciones, el directorio de estudiantes y las fichas individuales 360° con desglose de notas, asistencia y alertas de riesgo.",
+      completed: true,
+      details: [
+        "Acceso directo a la Ficha 360° del alumno desde la planilla matricial o el directorio escolar.",
+        "Visualización integral de historial académico, asistencia, red de apoyo apoderados y situación PIE.",
+        "Mapeo consistente de datos entre roles de Profesor, UTP, Director y Alumno/Apoderado.",
+      ],
+    },
   ]);
 
   function handleToggleCriterion(id: string) {
