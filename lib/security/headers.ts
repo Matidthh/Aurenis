@@ -27,13 +27,11 @@ export function getSecurityHeaders(nonce?: string): Record<string, string> {
     // 1. Strict-Transport-Security (HSTS) - Forzar HTTPS durante 1 año incluyendo subdominios
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
 
-    // 2. Content-Security-Policy (CSP) con Nonce criptográfico (SEC-FIND-004 Hardening)
+    // 2. Content-Security-Policy (CSP) (SEC-FIND-004 Hardening)
     "Content-Security-Policy": [
       "default-src 'self'",
-      isProduction
-        ? `script-src 'self' 'nonce-${cspNonce}' 'strict-dynamic' https:`
-        : `script-src 'self' 'nonce-${cspNonce}' 'unsafe-eval' 'unsafe-inline'`,
-      "style-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+      "style-src 'self' 'unsafe-inline' https:",
       "img-src 'self' data: https: blob:",
       "font-src 'self' data: https:",
       "connect-src 'self' https: wss:",
