@@ -6,6 +6,7 @@ import { applySecurityHeaders } from "@/lib/security/headers";
 import { formatErrorResponse } from "@/lib/api/response";
 import { SecurityFirewallService } from "@/lib/services/security-firewall.service";
 import { isTokenRevoked } from "@/lib/auth/session-revocation";
+import { validateCsrfOrigin } from "@/lib/security/csrf";
 
 /**
  * Fallback criptográfico seguro para desarrollo (256 bits garantizados)
@@ -308,10 +309,13 @@ export async function middleware(request: NextRequest) {
   const origin = request.headers.get("origin");
   const corsHeaders = getCorsHeaders(origin);
 
+  // Generación de Nonce Criptográfico por Petición para CSP (SEC-FIND-004)
+  const cspNonce = Buffer.from(crypto.randomUUID()).toString("base64");
+
   // 1. Manejo de Preflight CORS (OPTIONS)
   if (request.method === "OPTIONS") {
     const preflightRes = handleCorsPreflight(request);
-    return applySecurityHeaders(preflightRes);
+    return applySecurityHeaders(preflightRes, cspNonce);
   }
 
   const { pathname } = request.nextUrl;
@@ -342,7 +346,7 @@ export async function middleware(request: NextRequest) {
     Object.entries(corsHeaders).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
-    return applySecurityHeaders(response);
+    return applySecurityHeaders(response, cspNonce);
   }
 
   // 4. Inspección de Seguridad Perimetral WAF (Autor: Frank M.)
@@ -358,7 +362,27 @@ export async function middleware(request: NextRequest) {
     Object.entries(corsHeaders).forEach(([key, value]) => {
       blockedRes.headers.set(key, value);
     });
-    return applySecurityHeaders(blockedRes);
+    return applySecurityHeaders(blockedRes, cspNonce);
+  }
+
+  // 4.1 Generación y Propagación de Request ID para Trazabilidad y Auditoría (Section 27)
+  const requestId = request.headers.get("x-request-id") || crypto.randomUUID();
+
+  // 4.2 Validación Estricta Anti-CSRF para Métodos Mutantes en APIs (Section 10)
+  if (pathname.startsWith("/api/")) {
+    const csrfCheck = validateCsrfOrigin(request);
+    if (!csrfCheck.valid) {
+      const csrfRes = NextResponse.json(
+        formatErrorResponse(
+          csrfCheck.reason || "Operación bloqueada por validación de origen CSRF.",
+          "CSRF_VALIDATION_FAILED"
+        ),
+        { status: 403 }
+      );
+      Object.entries(corsHeaders).forEach(([k, v]) => csrfRes.headers.set(k, v));
+      csrfRes.headers.set("x-request-id", requestId);
+      return applySecurityHeaders(csrfRes, cspNonce);
+    }
   }
 
   // 5. Validación Criptográfica Centralizada de Sesión (Backend-Only)
@@ -366,6 +390,8 @@ export async function middleware(request: NextRequest) {
 
   // 6. Saneamiento Zero-Trust de Cabeceras
   const requestHeaders = sanitizeAndInjectHeaders(request, session);
+  requestHeaders.set("x-request-id", requestId);
+  requestHeaders.set("x-nonce", cspNonce);
 
   // 7. Aislamiento Estricto para Rutas Web UI /[schoolSlug]/* (Bypass de estado cliente)
   const firstPathSegment = pathname.split("/")[1] || "";
@@ -385,7 +411,7 @@ export async function middleware(request: NextRequest) {
     });
 
     if (tenantBlock) {
-      return applySecurityHeaders(tenantBlock);
+      return applySecurityHeaders(tenantBlock, cspNonce);
     }
   }
 
@@ -404,7 +430,7 @@ export async function middleware(request: NextRequest) {
       });
 
       if (apiTenantBlock) {
-        return applySecurityHeaders(apiTenantBlock);
+        return applySecurityHeaders(apiTenantBlock, cspNonce);
       }
     }
   }
@@ -475,7 +501,7 @@ export async function middleware(request: NextRequest) {
     response.headers.set(key, value);
   });
 
-  return applySecurityHeaders(response);
+  return applySecurityHeaders(response, cspNonce);
 }
 
 export const config = {

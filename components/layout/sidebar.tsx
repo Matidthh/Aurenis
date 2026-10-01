@@ -13,6 +13,7 @@ import {
   ChevronRight,
   X,
 } from "lucide-react";
+import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import { NavItem, SchoolContextInfo } from "./types";
 import { isRouteActive, filterNavItemsByRole } from "@/lib/navigation/routes";
 import { cn } from "@/lib/utils/cn";
@@ -61,17 +62,17 @@ export function Sidebar({
         <div className="flex items-center gap-3 min-w-0">
           <div
             className={cn(
-              "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow-md shrink-0 transition-all",
+              "w-10 h-10 rounded-xl flex items-center justify-center p-1.5 shadow-md shrink-0 transition-all overflow-hidden",
               isSystemAdmin
                 ? "bg-slate-900 dark:bg-slate-800 shadow-slate-900/20"
-                : "bg-brand-600 shadow-brand-500/20"
+                : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-brand-500/10"
             )}
           >
-            {isSystemAdmin ? (
-              <Shield className="w-5 h-5 shrink-0" strokeWidth={2} />
-            ) : (
-              <School className="w-5 h-5 shrink-0" strokeWidth={2} />
-            )}
+            <AurenisLogo
+              showText={false}
+              className="w-full h-full"
+              imageClassName="object-contain"
+            />
           </div>
 
           <AnimatePresence initial={false}>

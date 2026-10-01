@@ -23,7 +23,7 @@ export function StudentDirectoryManager({
   schoolSlug: propSchoolSlug,
 }: StudentDirectoryManagerProps) {
   const { user, token } = useAuth();
-  const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "colegio-san-jose";
+  const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "lpmm";
 
   const [students, setStudents] = useState<StudentMockupData[]>(() => {
     if (initialStudents && initialStudents.length > 0) return initialStudents;

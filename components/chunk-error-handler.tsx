@@ -99,18 +99,25 @@ export function isChunkLoadError(error: unknown): boolean {
       ? error
       : (error as any)?.message || (error as any)?.name || (error as any)?.toString?.() || "";
 
-  const lower = msg.toLowerCase();
+  const stack = typeof (error as any)?.stack === "string" ? (error as any).stack : "";
+  const combined = `${msg} ${stack}`.toLowerCase();
+
   return (
-    lower.includes("loading chunk") ||
-    lower.includes("chunkloaderror") ||
-    lower.includes("failed to fetch dynamically imported module") ||
-    lower.includes("error loading dynamically imported module") ||
-    lower.includes("failed to load script") ||
-    lower.includes("missing chunk") ||
-    lower.includes("cannot find module") ||
-    lower.includes("encodeuripath") ||
-    lower.includes("__webpack_modules__") ||
-    (lower.includes("cannot read properties of undefined") && lower.includes("split")) ||
+    combined.includes("loading chunk") ||
+    combined.includes("chunkloaderror") ||
+    combined.includes("failed to fetch dynamically imported module") ||
+    combined.includes("error loading dynamically imported module") ||
+    combined.includes("failed to load script") ||
+    combined.includes("missing chunk") ||
+    combined.includes("cannot find module") ||
+    combined.includes("timeout") ||
+    combined.includes("encodeuripath") ||
+    combined.includes("__webpack_modules__") ||
+    combined.includes("options.factory") ||
+    (combined.includes("cannot read properties of undefined") &&
+      (combined.includes("reading 'call'") ||
+        combined.includes("reading 'split'") ||
+        combined.includes("webpack"))) ||
     (error as any)?.name === "ChunkLoadError"
   );
 }

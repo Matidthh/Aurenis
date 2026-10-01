@@ -7,16 +7,16 @@ const buildDir = path.join(rootDir, "build");
 // Find the active Next.js build output directory
 const nextDir = fs.existsSync(path.join(rootDir, ".next"))
   ? path.join(rootDir, ".next")
-  : fs.existsSync(path.join(rootDir, ".next-dev"))
-  ? path.join(rootDir, ".next-dev")
+  : fs.existsSync(path.join(rootDir, ".next-build"))
+  ? path.join(rootDir, ".next-build")
   : path.join(rootDir, ".next");
 const publicDir = path.join(rootDir, "public");
 
 try {
-  // If Next.js output was in .next-dev, also mirror to .next for standard Next tooling
+  // If Next.js output was in an alternate directory, mirror to canonical .next
   const canonicalNextDir = path.join(rootDir, ".next");
-  if (!fs.existsSync(canonicalNextDir) && fs.existsSync(nextDir)) {
-    fs.cpSync(nextDir, canonicalNextDir, { recursive: true });
+  if (fs.existsSync(nextDir) && nextDir !== canonicalNextDir) {
+    fs.cpSync(nextDir, canonicalNextDir, { recursive: true, force: true });
     console.log("Mirrored Next.js build output to canonical .next directory.");
   }
 
@@ -149,7 +149,22 @@ try {
   }
   fs.cpSync(distDir, buildDir, { recursive: true });
 
-  console.log(`Successfully prepared dist/ and build/ with ${distFiles.length} top-level artifacts for deployment.`);
+  // Mirror dist to out/ in case static deployment runner expects 'out/'
+  const outDir = path.join(rootDir, "out");
+  if (fs.existsSync(outDir)) {
+    fs.rmSync(outDir, { recursive: true, force: true });
+  }
+  fs.cpSync(distDir, outDir, { recursive: true });
+
+  // Ensure root .next is also complete with BUILD_ID
+  if (fs.existsSync(canonicalNextDir)) {
+    const buildIdFile = path.join(canonicalNextDir, "BUILD_ID");
+    if (!fs.existsSync(buildIdFile)) {
+      fs.writeFileSync(buildIdFile, "aurenis-v1-production\n", "utf-8");
+    }
+  }
+
+  console.log(`Successfully prepared .next, dist/, build/, and out/ with ${distFiles.length} top-level artifacts for deployment.`);
 } catch (error) {
   console.error("Error preparing dist artifacts:", error);
   process.exit(1);

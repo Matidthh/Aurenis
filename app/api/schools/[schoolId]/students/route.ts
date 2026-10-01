@@ -34,12 +34,74 @@ export async function GET(
       return NextResponse.json({ error: "Institución no encontrada" }, { status: 404 });
     }
 
+    // Comprobar permisos RBAC (SEC-FIND-002 Remediation)
+    if (!session.isSystemAdmin) {
+      const membership = await prisma.membership.findUnique({
+        where: {
+          userId_schoolId: {
+            userId: session.userId,
+            schoolId: school.id,
+          },
+        },
+        include: {
+          role: {
+            include: {
+              permissions: {
+                include: { permission: true },
+              },
+            },
+          },
+        },
+      });
+
+      if (!membership || !membership.isActive) {
+        return NextResponse.json({ error: "Acceso denegado a esta institución" }, { status: 403 });
+      }
+
+      const hasPermission = membership.role.permissions.some(
+        (rp) =>
+          rp.permission.code === PERMISSIONS.PEOPLE_STUDENTS_MANAGE ||
+          rp.permission.code === PERMISSIONS.PEOPLE_ENROLLMENT_MANAGE ||
+          rp.permission.code === PERMISSIONS.GRADES_VIEW ||
+          rp.permission.code === "*"
+      );
+
+      if (!hasPermission) {
+        return NextResponse.json(
+          { error: "No tienes permiso para ver el directorio de estudiantes de esta institución." },
+          { status: 403 }
+        );
+      }
+    }
+
+    const searchParams = req.nextUrl.searchParams;
+    const page = parseInt(searchParams.get("page") || "1", 10) || 1;
+    const pageSize = parseInt(searchParams.get("pageSize") || "50", 10) || 50;
+    const courseId = searchParams.get("courseId") || undefined;
+    const search = searchParams.get("search") || undefined;
+    const year = searchParams.get("year") ? parseInt(searchParams.get("year")!, 10) : undefined;
+
     const tenantDb = createTenantPrisma(school.id);
-    const students = await listStudentsBySchool(tenantDb, school.id);
+    const result = await listStudentsBySchool(tenantDb, school.id, {
+      page,
+      pageSize,
+      courseId,
+      search,
+      year,
+    });
+
+    const studentList = Array.isArray(result) ? result : result.students;
+    const pagination = result.pagination || {
+      total: studentList.length,
+      page,
+      pageSize,
+      totalPages: Math.ceil(studentList.length / pageSize) || 1,
+    };
 
     return NextResponse.json({
       success: true,
-      students,
+      students: studentList,
+      pagination,
     });
   } catch (error: any) {
     return NextResponse.json(

@@ -5,6 +5,7 @@ import { getSession } from "@/lib/auth/session";
 import { getUserSchools } from "@/lib/services/user.service";
 import { SchoolSelectorList } from "./school-selector-list";
 import { Building2 } from "lucide-react";
+import { AurenisLogo } from "@/components/ui/aurenis-logo";
 
 export default async function SelectSchoolPage() {
   const session = await getSession();
@@ -45,11 +46,11 @@ export default async function SelectSchoolPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
       <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 space-y-6">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white shadow-md shadow-brand-500/20">
-            <Building2 className="w-6 h-6" />
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <AurenisLogo className="w-12 h-12" textClassName="text-2xl font-black text-slate-900 dark:text-white" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
             Selecciona tu Institución
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">

@@ -23,7 +23,17 @@ export function FinalCtaSection({ onOpenQuoteModal }: FinalCtaSectionProps = {})
   }
 
   return (
-    <section className="py-24 bg-[#F8F8F5] relative overflow-hidden">
+    <section
+      id="contacto"
+      suppressHydrationWarning
+      className="py-20 sm:py-28 bg-[#F8F8F5] relative overflow-hidden"
+    >
+      {/* Elemento de iluminación ambiental de fondo */}
+      <div
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-100/40 rounded-full blur-3xl -z-10"
+        aria-hidden="true"
+      />
+
       <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
         
         <div className="bg-blue-900 text-white rounded-3xl p-10 sm:p-16 relative overflow-hidden shadow-2xl">
@@ -54,30 +64,44 @@ export function FinalCtaSection({ onOpenQuoteModal }: FinalCtaSectionProps = {})
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto pt-4">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Ingresa tu correo institucional..."
-                  className="w-full sm:flex-1 px-5 py-4 rounded-full bg-white/10 border border-blue-400/30 text-white placeholder:text-blue-200 text-sm focus:outline-none focus:bg-white/20 focus:border-white transition"
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-sm bg-white text-blue-900 hover:bg-blue-50 transition shadow-lg shrink-0"
-                >
-                  {loading ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-blue-900" />
-                  ) : (
-                    <>
-                      <span>Agendar Demo</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
+              <div className="space-y-4 max-w-xl mx-auto pt-2">
+                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Ingresa tu correo institucional..."
+                    className="w-full sm:flex-1 px-5 py-4 rounded-full bg-white/10 border border-blue-400/30 text-white placeholder:text-blue-200 text-sm focus:outline-none focus:bg-white/20 focus:border-white transition"
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-sm bg-white text-blue-900 hover:bg-blue-50 transition shadow-lg shrink-0 cursor-pointer"
+                  >
+                    {loading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-blue-900" />
+                    ) : (
+                      <>
+                        <span>Agendar Demo</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                {onOpenQuoteModal && (
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={onOpenQuoteModal}
+                      className="text-xs text-blue-200 hover:text-white underline underline-offset-4 font-semibold transition cursor-pointer"
+                    >
+                      ¿Prefieres una cotización comercial formal? Solicítala aquí
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-blue-200">

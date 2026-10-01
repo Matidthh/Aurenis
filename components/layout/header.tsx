@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { UserSessionInfo, SchoolContextInfo } from "./types";
 import { Breadcrumbs } from "./breadcrumbs";
+import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import { cn } from "@/lib/utils/cn";
 import { DEMO_ROLES, DemoRoleAccount, executeRoleSwitch, findMatchingDemoRole } from "@/lib/auth/demo-roles";
 
@@ -220,6 +221,14 @@ export function Header({
           >
             <Menu className="w-5 h-5" />
           </button>
+
+          {/* Logo Aurenis en Móvil */}
+          <div className="flex md:hidden items-center">
+            <AurenisLogo
+              showText={false}
+              className="w-7 h-7"
+            />
+          </div>
 
           {/* Botón Colapsar Desktop y Tablet */}
           <button

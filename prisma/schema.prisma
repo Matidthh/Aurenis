@@ -146,6 +146,7 @@ model Membership {
   @@unique([userId, schoolId])
   @@index([schoolId])
   @@index([userId])
+  @@index([schoolId, isActive])
 }
 
 model Role {
@@ -453,6 +454,8 @@ model AttendanceRecord {
 
   @@unique([schoolId, courseId, studentProfileId, date])
   @@index([schoolId, courseId, date])
+  @@index([schoolId, studentProfileId, date])
+  @@index([studentProfileId, date])
 }
 
 model ScheduleBlock {
@@ -496,6 +499,7 @@ model AuditLog {
 
   @@index([schoolId, timestamp])
   @@index([schoolId, entityType])
+  @@index([schoolId, entityType, timestamp])
   @@index([userId])
 }
 
@@ -561,5 +565,6 @@ model RevokedToken {
 
   @@index([jti])
   @@index([userId])
+  @@index([expiresAt])
 }
 

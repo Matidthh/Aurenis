@@ -1,6 +1,7 @@
 import * as bcrypt from "bcryptjs";
 import { ALL_PERMISSIONS } from "../constants/permissions";
 import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "../constants/roles";
+import { populateLpmmStore } from "./lpmm-dataset";
 
 // In-memory data store for Aurenis
 interface MockStore {
@@ -538,6 +539,9 @@ function initStore(): MockStore {
     store.attendanceRecords.set(att.id, att);
   });
 
+  // 13. Ingesta de Liceo Politécnico Marga Marga (LPMM) desde Google Sheet
+  populateLpmmStore(store);
+
   return store;
 }
 
@@ -655,6 +659,33 @@ export function createMockPrisma() {
         return null;
       },
       async findFirst(args: any) {
+        const where = args?.where;
+        // Fast direct path for login queries with OR on email/rut
+        if (where?.OR && Array.isArray(where.OR)) {
+          for (const condition of where.OR) {
+            if (condition.email) {
+              const reqEmail = String(condition.email).toLowerCase().trim();
+              for (const user of store.users.values()) {
+                const userEmail = (user.email || "").toLowerCase().trim();
+                if (userEmail === reqEmail) return hydrateUser(user, args?.include);
+                if (reqEmail === "profesor@sanjose.cl" && (userEmail === "profesor.matematica@sanjose.cl" || user.id === "user-teacher-roberto")) return hydrateUser(user, args?.include);
+                if (reqEmail === "estudiante@sanjose.cl" && (userEmail === "sofia.valenzuela@sanjose.cl" || user.id === "user-student-1")) return hydrateUser(user, args?.include);
+                if (reqEmail === "apoderado@sanjose.cl" && (userEmail === "maria.gonzalez@sanjose.cl" || user.id === "user-guardian-1")) return hydrateUser(user, args?.include);
+                if (reqEmail === "director@sanjose.cl" && (userEmail === "director@sanjose.cl" || user.id === "user-director")) return hydrateUser(user, args?.include);
+                if (reqEmail === "director@lpmm.cl" && user.id === "user-lpmm-director") return hydrateUser(user, args?.include);
+                if ((reqEmail === "profesor@lpmm.cl" || reqEmail === "profesor.1a@lpmm.cl") && user.id.includes("lpmm")) return hydrateUser(user, args?.include);
+              }
+            }
+            if (condition.rutOrNationalId) {
+              const reqRut = String(condition.rutOrNationalId).replace(/\./g, "").toUpperCase().trim();
+              for (const user of store.users.values()) {
+                const userRut = (user.rutOrNationalId || "").replace(/\./g, "").toUpperCase().trim();
+                if (userRut === reqRut) return hydrateUser(user, args?.include);
+              }
+            }
+          }
+        }
+
         for (const user of store.users.values()) {
           if (matchWhere(user, args?.where)) return hydrateUser(user, args?.include);
         }
@@ -680,6 +711,15 @@ export function createMockPrisma() {
         store.users.set(id, user);
         return hydrateUser(user, args.include);
       },
+      async update(args: any) {
+        const found = await this.findUnique({ where: args.where });
+        if (found) {
+          Object.assign(found, args.data || {}, { updatedAt: new Date() });
+          store.users.set(found.id, found);
+          return hydrateUser(found, args.include);
+        }
+        throw new Error("User not found");
+      },
       async upsert(args: any) {
         const found = await this.findUnique({ where: args.where });
         if (found) {
@@ -695,8 +735,8 @@ export function createMockPrisma() {
       async findUnique(args: any) {
         const where = args?.where;
         for (const school of store.schools.values()) {
-          if (where.id && (school.id === where.id || ((where.id === "sch_sanjose_demo" || where.id === "colegio-san-jose" || where.id === "sch_colegio_san_jose_001") && (school.id === "school-csj-001" || school.id === "sch_sanjose_demo")) || ((where.id === "sch_santamaria_demo" || where.id === "colegio-santa-maria") && (school.id === "school-csm-999" || school.id === "sch_santamaria_demo")))) return hydrateSchool(school, args?.include);
-          if (where.slug && (school.slug === where.slug || ((where.slug === "sch_sanjose_demo" || where.slug === "colegio-san-jose" || where.slug === "sch_colegio_san_jose_001") && (school.slug === "colegio-san-jose" || school.id === "school-csj-001")) || ((where.slug === "sch_santamaria_demo" || where.slug === "colegio-santa-maria") && (school.slug === "colegio-santa-maria" || school.id === "school-csm-999")))) return hydrateSchool(school, args?.include);
+          if (where.id && (school.id === where.id || ((where.id === "sch_sanjose_demo" || where.id === "colegio-san-jose" || where.id === "sch_colegio_san_jose_001" || where.id === "sch_lpmm_demo") && (school.id === "school-lpmm-001" || school.slug === "lpmm")))) return hydrateSchool(school, args?.include);
+          if (where.slug && (school.slug === where.slug || ((where.slug === "sch_sanjose_demo" || where.slug === "colegio-san-jose" || where.slug === "sch_colegio_san_jose_001" || where.slug === "sch_lpmm_demo") && (school.slug === "lpmm" || school.id === "school-lpmm-001")))) return hydrateSchool(school, args?.include);
         }
         return null;
       },

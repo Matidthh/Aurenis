@@ -28,7 +28,7 @@ export function TeacherDirectoryManager({
   schoolSlug: propSchoolSlug,
 }: TeacherDirectoryManagerProps) {
   const { user, token } = useAuth();
-  const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "colegio-san-jose";
+  const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "lpmm";
 
   const [teachers, setTeachers] = useState<TeacherData[]>(() => {
     if (initialTeachers && initialTeachers.length > 0) return initialTeachers;

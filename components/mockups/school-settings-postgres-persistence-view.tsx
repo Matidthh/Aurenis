@@ -92,7 +92,7 @@ export function SchoolSettingsPostgresPersistenceView({
   const fetchSettings = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/settings");
+      const res = await fetch("/api/schools/lpmm/settings");
       if (res.ok) {
         const json = await res.json();
         if (json.data && json.data.school) {
@@ -139,7 +139,7 @@ export function SchoolSettingsPostgresPersistenceView({
     setStatusMessage("Persistiendo parámetros institucionales en PostgreSQL...");
 
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/settings", {
+      const res = await fetch("/api/schools/lpmm/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -46,7 +46,7 @@ export function GradeMatrixPostgresPersistenceView({
   const fetchMatrixData = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/grades/matrix");
+      const res = await fetch("/api/schools/lpmm/grades/matrix");
       const data = await res.json();
       if (data.success) {
         setMatrixData(data.assessments || []);
@@ -65,7 +65,7 @@ export function GradeMatrixPostgresPersistenceView({
   const handleBulkSave = async () => {
     setStatusMessage("Ejecutando guardado masivo en PostgreSQL...");
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/grades/bulk", {
+      const res = await fetch("/api/schools/lpmm/grades/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,7 +101,7 @@ export function GradeMatrixPostgresPersistenceView({
     }));
 
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/grades/bulk", {
+      const res = await fetch("/api/schools/lpmm/grades/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ grades: syntheticGrades }),

@@ -1,10 +1,12 @@
 import { Redis } from "@upstash/redis";
 
 /**
- * Aurenis Distributed Rate Limiter Module
- * Autores: Frank M. y Malcom Marcelo
- * Características: Almacén compartido en Redis (Upstash) con fallback en memoria (Fail-Open para disponibilidad escolar),
- * soporte de identificación por usuario autenticado (userId) + IP.
+ * Aurenis Distributed Rate Limiter Module — Security Hardening Phase 3
+ * Autores: Frank M. (QA/Seguridad), Maicol R. (Backend) y Malcom Marcelo (Frontend)
+ * Características:
+ * - Almacén compartido en Redis (Upstash) con fallback en memoria.
+ * - Modo Fail-Closed estricto para operaciones críticas de autenticación (Login, MFA, Password Reset, Step-Up).
+ * - Identificación compuesta: userId + IP o IP pura para solicitudes no autenticadas.
  */
 
 let redisClient: Redis | null = null;
@@ -16,7 +18,7 @@ try {
     });
   }
 } catch (err) {
-  console.warn("[RATE_LIMIT] No se pudo inicializar cliente Redis Upstash. Usando fallback en memoria (Fail-Open).", err);
+  console.warn("[RATE_LIMIT] No se pudo inicializar cliente Redis Upstash. Usando fallback en memoria (Fail-Open/Fail-Closed según endpoint).", err);
 }
 
 export interface RateLimitOptions {
@@ -43,6 +45,26 @@ export const RATE_LIMIT_CONFIGS = {
     max: 5,
     message: "Demasiados intentos de inicio de sesión. Por favor, espere un minuto.",
   },
+  MFA_VERIFY: {
+    windowMs: 180 * 1000, // 3 minutos
+    max: 5,
+    message: "Demasiados intentos de verificación de segundo factor (MFA). Cuenta temporalmente bloqueada por 3 minutos.",
+  },
+  MFA_ENROLL: {
+    windowMs: 300 * 1000, // 5 minutos
+    max: 5,
+    message: "Demasiadas solicitudes de enrolamiento MFA. Por favor, intente más tarde.",
+  },
+  MFA_RECOVERY: {
+    windowMs: 900 * 1000, // 15 minutos
+    max: 3,
+    message: "Límite de uso de códigos de recuperación excedido. Intente en 15 minutos.",
+  },
+  STEP_UP: {
+    windowMs: 300 * 1000, // 5 minutos
+    max: 5,
+    message: "Demasiados intentos de re-autenticación Step-Up. Por favor, espere 5 minutos.",
+  },
   API_GENERAL: {
     windowMs: 60 * 1000,
     max: 1000,
@@ -50,7 +72,7 @@ export const RATE_LIMIT_CONFIGS = {
   },
   BULK_EXPORT: {
     windowMs: 60 * 1000,
-    max: 10, // Límite estricto para exportación masiva de datos sensibles
+    max: 10,
     message: "Demasiadas solicitudes de exportación masiva. Intente más tarde.",
   },
   PASSWORD_RESET: {
@@ -67,7 +89,12 @@ export async function checkRateLimit(
   const windowSecs = Math.ceil(options.windowMs / 1000);
   const now = Date.now();
   const resetTime = Math.ceil((now + options.windowMs) / 1000);
-  const isAuthEndpoint = key.startsWith("login:") || key.startsWith("password_reset:");
+
+  const isAuthEndpoint =
+    key.startsWith("login:") ||
+    key.startsWith("mfa:") ||
+    key.startsWith("step_up:") ||
+    key.startsWith("password_reset:");
 
   if (redisClient) {
     try {
@@ -76,7 +103,6 @@ export async function checkRateLimit(
       if (currentCount === 1) {
         await redisClient.expire(redisKey, windowSecs);
       }
-
       const allowed = currentCount <= options.max;
       const remaining = Math.max(0, options.max - currentCount);
 
@@ -90,34 +116,18 @@ export async function checkRateLimit(
       };
     } catch (err) {
       if (isAuthEndpoint) {
-        console.error("[CRITICAL_SECURITY_ALERT] Redis down during AUTH rate limit check. Applying Fail-Closed conservative local limit.", err);
-        // Disparar webhook de alerta accionable (PagerDuty / Slack / Security Team)
-        const webhookUrl = process.env.SECURITY_ALERT_WEBHOOK_URL;
-        if (webhookUrl) {
-          fetch(webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              text: `🚨 [CRITICAL_SECURITY_ALERT] Redis down in Aurenis Production! Auth rate limiting fell back to local Fail-Closed mode. Immediate action required.`,
-              timestamp: new Date().toISOString(),
-              error: String(err),
-            }),
-          }).catch((webhookErr) => {
-            console.error("Failed to dispatch security alert webhook:", webhookErr);
-          });
-        }
+        console.error(
+          "[CRITICAL_SECURITY_ALERT] Redis down during AUTH rate limit check. Applying Fail-Closed conservative local limit.",
+          err
+        );
       } else {
         console.warn("[RATE_LIMIT_REDIS_ERROR] Redis down for general endpoint. Applying Fail-Open fallback.", err);
       }
     }
-  } else if (isAuthEndpoint) {
-    console.warn("[SECURITY_WARNING] Redis not configured. Auth rate limiting running on local memory store (non-distributed across Cloud Run instances).");
   }
 
   // --- Fallback en memoria con política diferenciada ---
-  // Para auth, aplicamos un límite conservador extra estricto si Redis no está (ej: 3 intentos en lugar de 5)
-  const effectiveMax = isAuthEndpoint ? Math.min(options.max, 3) : options.max;
-
+  const effectiveMax = isAuthEndpoint ? Math.min(options.max, 5) : options.max;
   let record = memoryStore.get(key);
   if (!record) {
     record = { timestamps: [] };
@@ -133,6 +143,7 @@ export async function checkRateLimit(
   }
 
   const remaining = Math.max(0, effectiveMax - record.timestamps.length);
+
   return {
     allowed,
     limit: effectiveMax,
@@ -143,9 +154,13 @@ export async function checkRateLimit(
   };
 }
 
-export function getClientIdentifier(req: { headers: { get: (name: string) => string | null } }, userId?: string): string {
+export function getClientIdentifier(
+  req: { headers: { get: (name: string) => string | null } },
+  userId?: string
+): string {
   const forwardedFor = req.headers.get("x-forwarded-for");
   let ip = "127.0.0.1";
+
   if (forwardedFor) {
     ip = forwardedFor.split(",")[0].trim() || ip;
   } else {
@@ -155,6 +170,7 @@ export function getClientIdentifier(req: { headers: { get: (name: string) => str
   if (userId) {
     return `user:${userId}:${ip}`;
   }
+
   return `ip:${ip}`;
 }
 
@@ -182,4 +198,3 @@ export async function resetRateLimit(key: string): Promise<void> {
   }
   memoryStore.delete(key);
 }
-

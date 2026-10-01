@@ -1,19 +1,38 @@
 import type { NextConfig } from "next";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
-const buildId = process.env.BUILD_ID || process.env.NEXT_PUBLIC_BUILD_ID || "aurenis-build-v1";
+const buildId = process.env.BUILD_ID || process.env.NEXT_PUBLIC_BUILD_ID || "aurenis-v1-production";
 
 export default function (phase: string): NextConfig {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER;
 
   return {
-    reactStrictMode: true,
+    distDir: isDev ? ".next-dev" : ".next",
+    output: isDev ? undefined : "standalone",
     poweredByHeader: false,
+    reactStrictMode: true,
+    devIndicators: false,
+    allowedDevOrigins: [
+      "*.run.app",
+      "*.aistudio.google.com",
+      "localhost:3000",
+      "127.0.0.1:3000",
+    ],
+    transpilePackages: ["motion"],
     eslint: {
       ignoreDuringBuilds: true,
     },
     env: {
       NEXT_PUBLIC_BUILD_ID: buildId,
+    },
+    generateBuildId: async () => {
+      return buildId;
+    },
+    webpack: (config, { dev }) => {
+      if (dev) {
+        config.cache = false;
+      }
+      return config;
     },
     async headers() {
       return [
@@ -44,7 +63,10 @@ export default function (phase: string): NextConfig {
         {
           source: "/_next/static/:path*",
           headers: [
-            { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+            {
+              key: "Cache-Control",
+              value: isDev ? "no-cache, no-store, max-age=0, must-revalidate" : "public, max-age=31536000, immutable",
+            },
           ],
         },
         {

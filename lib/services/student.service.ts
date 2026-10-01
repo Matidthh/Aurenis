@@ -1,74 +1,114 @@
 import { TenantPrismaClient } from "@/lib/db/tenant-extension";
 import { isDatabaseConfigured } from "@/lib/db/prisma";
 
+export interface ListStudentsOptions {
+  courseId?: string;
+  year?: number;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface PaginatedStudentsResult {
+  students: any[];
+  pagination: {
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
+}
+
 export async function listStudentsBySchool(
   tenantDb: TenantPrismaClient,
   schoolId: string,
-  options?: { courseId?: string; year?: number }
-) {
+  options?: ListStudentsOptions
+): Promise<any> {
   const currentYear = options?.year || new Date().getFullYear();
+  const page = Math.max(1, options?.page || 1);
+  const pageSize = Math.min(100, Math.max(1, options?.pageSize || 50));
+  const skip = (page - 1) * pageSize;
 
   if (isDatabaseConfigured()) {
     try {
-      const enrollments = await tenantDb.enrollment.findMany({
-        where: {
-          schoolId,
-          year: currentYear,
-          deletedAt: null,
-          ...(options?.courseId ? { courseId: options.courseId } : {}),
-        },
-        include: {
-          course: {
-            include: { educationLevel: true },
-          },
-          student: {
-            include: {
+      const searchFilter = options?.search
+        ? {
+            student: {
               membership: {
-                include: { user: true },
+                user: {
+                  OR: [
+                    { firstName: { contains: options.search, mode: "insensitive" as const } },
+                    { lastName: { contains: options.search, mode: "insensitive" as const } },
+                    { rutOrNationalId: { contains: options.search, mode: "insensitive" as const } },
+                  ],
+                },
               },
-              guardians: {
-                include: {
-                  guardian: {
-                    include: {
-                      membership: {
-                        include: { user: true },
+            },
+          }
+        : {};
+
+      const whereClause = {
+        schoolId,
+        year: currentYear,
+        deletedAt: null,
+        ...(options?.courseId ? { courseId: options.courseId } : {}),
+        ...searchFilter,
+      };
+
+      const [total, enrollments] = await Promise.all([
+        tenantDb.enrollment.count({ where: whereClause }),
+        tenantDb.enrollment.findMany({
+          where: whereClause,
+          include: {
+            course: {
+              include: { educationLevel: true },
+            },
+            student: {
+              include: {
+                membership: {
+                  include: { user: true },
+                },
+                guardians: {
+                  include: {
+                    guardian: {
+                      include: {
+                        membership: {
+                          include: { user: true },
+                        },
                       },
                     },
                   },
                 },
               },
-              attendances: {
-                where: { schoolId },
-                orderBy: { date: "desc" },
-                take: 15,
-              },
-              enrollments: {
-                where: { schoolId },
-                include: {
-                  course: true,
-                  grades: {
-                    where: { schoolId },
-                    include: { assessment: true },
-                    take: 10,
-                  },
-                },
-              },
             },
           },
-        },
-        orderBy: [
-          { course: { gradeNumber: "asc" } },
-          { course: { letter: "asc" } },
-          { student: { membership: { user: { lastName: "asc" } } } },
-        ],
-      });
-      if (enrollments.length > 0) return enrollments;
+          orderBy: [
+            { course: { gradeNumber: "asc" } },
+            { course: { letter: "asc" } },
+            { student: { membership: { user: { lastName: "asc" } } } },
+          ],
+          skip,
+          take: pageSize,
+        }),
+      ]);
+
+      if (enrollments.length > 0 || total > 0) {
+        return {
+          students: enrollments,
+          pagination: {
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize) || 1,
+          },
+        };
+      }
     } catch {
       // Fallback a demo si la DB falla
     }
   }
 
-  return [
+  const demoStudents = [
     {
       id: "enr_1_demo",
       schoolId,
@@ -163,8 +203,6 @@ export async function listStudentsBySchool(
             },
           },
         ],
-        attendances: [],
-        enrollments: [],
       },
     },
     {
@@ -261,11 +299,19 @@ export async function listStudentsBySchool(
             },
           },
         ],
-        attendances: [],
-        enrollments: [],
       },
     },
   ];
+
+  return {
+    students: demoStudents,
+    pagination: {
+      total: demoStudents.length,
+      page: 1,
+      pageSize: 50,
+      totalPages: 1,
+    },
+  };
 }
 
 export async function getStudentDetails(
@@ -328,4 +374,3 @@ export async function getStudentDetails(
     attendances: [],
   };
 }
-

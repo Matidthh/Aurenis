@@ -69,7 +69,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
         "sticky top-0 z-50 w-full transition-all duration-300",
         isScrolled
           ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 dark:border-slate-800/90 py-3"
-          : "bg-[#F8F8F5]/85 dark:bg-slate-950/85 backdrop-blur-sm border-b border-transparent py-4"
+          : "bg-[#f2f4f8]/85 dark:bg-slate-950/85 backdrop-blur-sm border-b border-transparent py-4"
       )}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-between">

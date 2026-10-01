@@ -88,9 +88,11 @@
   scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
 }
 
-/* Clases utilitarias de Neumorfismo (Soft UI) con efecto sobresaliente táctil */
+/* Clases utilitarias Glassy Neumorfismo (Graphy Style Reference) */
 .neumo-card {
-  background: #f0f4f8;
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: 10px 10px 22px #cbd5e1, -10px -10px 22px #ffffff;
   border-radius: 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.9);
@@ -102,7 +104,9 @@
 }
 
 .neumo-card-flat {
-  background: #f0f4f8;
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: 5px 5px 12px #cbd5e1, -5px -5px 12px #ffffff;
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.75);
@@ -133,7 +137,9 @@
 
 /* Soporte modo oscuro para elementos Neumórficos */
 .dark .neumo-card {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: 8px 8px 20px #090d16, -8px -8px 20px #2d3d52;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -143,7 +149,9 @@
 }
 
 .dark .neumo-card-flat {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: 5px 5px 12px #090d16, -5px -5px 12px #2d3d52;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }

@@ -70,7 +70,7 @@ export function DashboardPreviewSection() {
                 <div className="w-3 h-3 rounded-full bg-amber-500" />
                 <div className="w-3 h-3 rounded-full bg-emerald-500" />
                 <span className="text-xs text-slate-400 font-mono ml-4">
-                  aurenis.cl/{activeTab === "director" ? "colegio-san-jose/dashboard" : activeTab === "docente" ? "profesor/libro-clases" : "estudiante/calificaciones"}
+                  aurenis.cl/{activeTab === "director" ? "lpmm/dashboard" : activeTab === "docente" ? "profesor/libro-clases" : "estudiante/calificaciones"}
                 </span>
               </div>
               <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ export function DashboardPreviewSection() {
                 </div>
 
                 <Link
-                  href="/colegio-san-jose/dashboard"
+                  href="/lpmm/dashboard"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition shadow-md shadow-blue-500/20 w-fit"
                 >
                   <span>Abrir App Completa</span>

@@ -86,7 +86,7 @@ export function PortalsByRole() {
         { label: "Cobertura Curricular", value: "94.2%", status: "Objetivos Mineduc", color: "text-blue-600 dark:text-blue-400" },
       ],
       ctaText: "Ver Dashboard Ejecutivo",
-      ctaHref: "/colegio-san-jose/dashboard",
+      ctaHref: "/lpmm/dashboard",
     },
     apoderado: {
       title: "Portal de Apoderados y Familias",
@@ -230,7 +230,7 @@ export function PortalsByRole() {
             </Link>
 
             <Link
-              href="/colegio-san-jose/dashboard"
+              href="/lpmm/dashboard"
               className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl font-bold text-xs text-slate-600 hover:bg-slate-100 transition"
             >
               <Eye className="w-3.5 h-3.5" />

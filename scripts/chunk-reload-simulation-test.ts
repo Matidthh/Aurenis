@@ -43,6 +43,7 @@ async function runSimulation() {
     { err: { name: "ChunkLoadError", message: "Loading chunk 842 failed." }, expected: true },
     { err: new Error("Failed to fetch dynamically imported module: https://domain.com/chunk-xyz.js"), expected: true },
     { err: "error loading dynamically imported module", expected: true },
+    { err: new Error("TypeError: Cannot read properties of undefined (reading 'call')\n    at options.factory (webpack.js:704:31)"), expected: true },
     { err: new Error("TypeError: Cannot read properties of undefined"), expected: false },
     { err: new Error("Network timeout on /api/schools"), expected: false },
   ];

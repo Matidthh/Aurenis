@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({
         success: true,
+        token,
         redirectUrl: "/system/dashboard",
         user: {
           id: user.id,
@@ -119,6 +120,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({
         success: true,
+        token,
         redirectUrl: `/${mem.school.slug}/dashboard`,
         user: {
           id: user.id,
@@ -148,6 +150,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      token,
       redirectUrl: "/select-school",
       user: {
         id: user.id,

@@ -25,7 +25,11 @@ async function main() {
     { name: "schoolId, courseId", pattern: /@@index\(\[schoolId, courseId\]\)/ },
     { name: "subjectId", pattern: /@@index\(\[schoolId, subjectId, date\]\)/ },
     { name: "courseId", pattern: /@@index\(\[courseId, studentProfileId\]\)/ },
-    { name: "assessmentId, enrollmentId", pattern: /@@index\(\[assessmentId, enrollmentId\]\)/ }
+    { name: "assessmentId, enrollmentId", pattern: /@@index\(\[assessmentId, enrollmentId\]\)/ },
+    { name: "schoolId, isActive", pattern: /@@index\(\[schoolId, isActive\]\)/ },
+    { name: "schoolId, studentProfileId, date", pattern: /@@index\(\[schoolId, studentProfileId, date\]\)/ },
+    { name: "schoolId, entityType, timestamp", pattern: /@@index\(\[schoolId, entityType, timestamp\]\)/ },
+    { name: "expiresAt (RevokedToken)", pattern: /@@index\(\[expiresAt\]\)/ }
   ];
 
   let missing = false;

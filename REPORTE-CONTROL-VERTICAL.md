@@ -1,11 +1,11 @@
 # INFORME DE CONTROL VERTICAL Y AUDITORÍA RBAC
 **Plataforma Educativa Aurenis — Control de Acceso Basado en Roles**
-**Fecha de Auditoría:** 2026-09-29T11:44:26.536Z
-**Estado:** APROBADO (100% Criterios de Aceptación Cumplidos)
+**Fecha de Auditoría:** 2026-09-28T15:47:17.394Z
+**Estado:** FALLIDO
 **Total de Pruebas Evaluadas:** 22
-**Pruebas Aprobadas:** 22
-**Pruebas Fallidas:** 0
-**Tasa de Éxito:** 100.0%
+**Pruebas Aprobadas:** 0
+**Pruebas Fallidas:** 22
+**Tasa de Éxito:** 0.0%
 
 ---
 
@@ -57,56 +57,51 @@ Se ejecutó una auditoría exhaustiva de **Control de Acceso Vertical (RBAC Enfo
 ## 4. Registro Detallado de Pruebas Ejecutadas
 
 ### Criterio 1: Intentos de llamado a APIs de configuración por docentes rechazados
-- **[CFG-DOC-01]** `PASSED` (HTTP 403/403): Docente intenta modificar ajustes institucionales (PATCH /settings)
-  - *Resultado:* Bloqueado con HTTP 403: "No posees el permiso para modificar la configuración del colegio."
-- **[CFG-DOC-02]** `PASSED` (HTTP 403/403): Docente intenta consultar configuración administrativa (GET /settings)
-  - *Resultado:* Bloqueado con HTTP 403: "No posees el permiso para ver la configuración del colegio."
-- **[CFG-DOC-03]** `PASSED` (HTTP 403/403): Docente intenta crear un periodo académico institucional (POST /academic-periods)
-  - *Resultado:* Bloqueado con HTTP 403: "No tienes permisos para crear periodos académicos"
-- **[CFG-DOC-04]** `PASSED` (HTTP 403/403): Docente intenta modificar un periodo académico institucional (PATCH /academic-periods/[id])
-  - *Resultado:* Bloqueado con HTTP 403: "No tienes permisos para modificar periodos académicos"
-- **[CFG-DOC-05]** `PASSED` (HTTP 403/403): Docente intenta eliminar un periodo académico institucional (DELETE /academic-periods/[id])
-  - *Resultado:* Bloqueado con HTTP 403: "No tienes permisos para eliminar periodos académicos"
-- **[CFG-DOC-06]** `PASSED` (HTTP 403/403): Docente intenta crear cursos en la escuela (POST /courses)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de administración de cursos."
-- **[CFG-DOC-07]** `PASSED` (HTTP 403/403): Docente intenta crear nuevas instituciones en SaaS (POST /api/system/schools)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de SuperAdmin."
+- **[CFG-DOC-01]** `FAILED` (HTTP 500/403): Docente intenta modificar ajustes institucionales (PATCH /settings)
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
+- **[CFG-DOC-02]** `FAILED` (HTTP 500/403): Docente intenta consultar configuración administrativa (GET /settings)
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
+- **[CFG-DOC-03]** `FAILED` (HTTP 500/403): Docente intenta crear un periodo académico institucional (POST /academic-periods)
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
+- **[CFG-DOC-04]** `FAILED` (HTTP 500/403): Docente intenta modificar un periodo académico institucional (PATCH /academic-periods/[id])
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
+- **[CFG-DOC-05]** `FAILED` (HTTP 500/403): Docente intenta eliminar un periodo académico institucional (DELETE /academic-periods/[id])
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
+- **[CFG-DOC-06]** `FAILED` (HTTP 500/403): Docente intenta crear cursos en la escuela (POST /courses)
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
+- **[CFG-DOC-07]** `FAILED` (HTTP 500/403): Docente intenta crear nuevas instituciones en SaaS (POST /api/system/schools)
+  - *Resultado:* Error de ejecución: Login failed for profesor@sanjose.cl: 500 Internal Server Error
 
 ### Criterio 2: Creación de usuarios por alumnos denegada
-- **[USR-ALU-01]** `PASSED` (HTTP 403/403): Alumno intenta matricular / crear estudiante (POST /students)
-  - *Resultado:* Bloqueado con HTTP 403: "No tienes permiso para matricular estudiantes en esta institución."
-- **[USR-ALU-02]** `PASSED` (HTTP 403/403): Alumno intenta crear / registrar docente en la escuela (POST /teachers)
-  - *Resultado:* Bloqueado con HTTP 403: "No tienes permiso para gestionar profesores en esta institución."
-- **[USR-ALU-03]** `PASSED` (HTTP 403/403): Alumno intenta registrar institución y nuevo administrador en SaaS (POST /api/system/schools)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de SuperAdmin."
-- **[USR-ALU-04]** `PASSED` (HTTP 403/403): Alumno intenta crear cursos académicos (POST /courses)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de administración de cursos."
-- **[USR-ALU-05]** `PASSED` (HTTP 403/403): Alumno intenta ingresar o alterar notas académicas (POST /grades)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Permisos insuficientes para ingresar o crear calificaciones."
-- **[USR-ALU-06]** `PASSED` (HTTP 403/403): Alumno intenta modificar ajustes de calificación del colegio (PATCH /settings)
-  - *Resultado:* Bloqueado con HTTP 403: "No posees el permiso para modificar la configuración del colegio."
-- **[USR-ALU-07]** `PASSED` (HTTP 403/403): Alumno intenta consultar configuración administrativa (GET /settings)
-  - *Resultado:* Bloqueado con HTTP 403: "No posees el permiso para ver la configuración del colegio."
+- **[USR-ALU-01]** `FAILED` (HTTP 500/403): Alumno intenta matricular / crear estudiante (POST /students)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
+- **[USR-ALU-02]** `FAILED` (HTTP 500/403): Alumno intenta crear / registrar docente en la escuela (POST /teachers)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
+- **[USR-ALU-03]** `FAILED` (HTTP 500/403): Alumno intenta registrar institución y nuevo administrador en SaaS (POST /api/system/schools)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
+- **[USR-ALU-04]** `FAILED` (HTTP 500/403): Alumno intenta crear cursos académicos (POST /courses)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
+- **[USR-ALU-05]** `FAILED` (HTTP 500/403): Alumno intenta ingresar o alterar notas académicas (POST /grades)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
+- **[USR-ALU-06]** `FAILED` (HTTP 500/403): Alumno intenta modificar ajustes de calificación del colegio (PATCH /settings)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
+- **[USR-ALU-07]** `FAILED` (HTTP 500/403): Alumno intenta consultar configuración administrativa (GET /settings)
+  - *Resultado:* Error de ejecución: Login failed for estudiante@sanjose.cl: 500 Internal Server Error
 
 ### Control Vertical Adicional y Límites Multi-Tenant
-- **[RBAC-APOD-01]** `PASSED` (HTTP 403/403): Apoderado intenta ingresar o crear calificaciones (POST /grades)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Permisos insuficientes para ingresar o crear calificaciones."
-- **[RBAC-APOD-02]** `PASSED` (HTTP 403/403): Apoderado intenta crear cursos en la institución (POST /courses)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de administración de cursos."
-- **[RBAC-APOD-03]** `PASSED` (HTTP 403/403): Apoderado intenta alterar configuración escolar (PATCH /settings)
-  - *Resultado:* Bloqueado con HTTP 403: "No posees el permiso para modificar la configuración del colegio."
-- **[RBAC-DIR-01]** `PASSED` (HTTP 403/403): Director intenta crear colegios globales (SuperAdmin)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado. Se requieren privilegios de SuperAdmin."
-- **[RBAC-DIR-02]** `PASSED` (HTTP 403/403): Director intenta gestionar recursos de otra institución escolar (Aislamiento Multi-Tenant)
-  - *Resultado:* Bloqueado con HTTP 403: "Acceso denegado: El token de sesión no autoriza operaciones en la institución especificada (Violación BOLA/IDOR)."
+- **[RBAC-APOD-01]** `FAILED` (HTTP 500/403): Apoderado intenta ingresar o crear calificaciones (POST /grades)
+  - *Resultado:* Error de ejecución: Login failed for apoderado@sanjose.cl: 500 Internal Server Error
+- **[RBAC-APOD-02]** `FAILED` (HTTP 500/403): Apoderado intenta crear cursos en la institución (POST /courses)
+  - *Resultado:* Error de ejecución: Login failed for apoderado@sanjose.cl: 500 Internal Server Error
+- **[RBAC-APOD-03]** `FAILED` (HTTP 500/403): Apoderado intenta alterar configuración escolar (PATCH /settings)
+  - *Resultado:* Error de ejecución: Login failed for apoderado@sanjose.cl: 500 Internal Server Error
+- **[RBAC-DIR-01]** `FAILED` (HTTP 500/403): Director intenta crear colegios globales (SuperAdmin)
+  - *Resultado:* Error de ejecución: Login failed for director@sanjose.cl: 500 Internal Server Error
+- **[RBAC-DIR-02]** `FAILED` (HTTP 500/403): Director intenta gestionar recursos de otra institución escolar (Aislamiento Multi-Tenant)
+  - *Resultado:* Error de ejecución: Login failed for director@sanjose.cl: 500 Internal Server Error
 
 ### Línea Base Positiva (Operaciones Autorizadas)
-- **[AUTH-DIR-01]** `PASSED` (HTTP 201/201): Director crea legítimamente un curso en su colegio
-  - *Resultado:* Acceso autorizado confirmado con HTTP 201 Created
-- **[AUTH-DIR-02]** `PASSED` (HTTP 200/200): Director consulta legítimamente los ajustes de su colegio
-  - *Resultado:* Acceso autorizado confirmado con HTTP 200 OK
-- **[AUTH-ADMIN-01]** `PASSED` (HTTP 200/200): SuperAdmin accede a la API global del sistema
-  - *Resultado:* Acceso autorizado confirmado con HTTP 200 OK
+
 
 ---
 
@@ -122,6 +117,6 @@ Los resultados de las 22 evaluaciones confirman que la plataforma Aurenis cuenta
 ## 6. Verificación Criptográfica de Integridad
 
 - **Algoritmo de Hash:** SHA-256
-- **Firma Digital del Reporte:** `86cf89cd77dee285bd4bd062580fe7d400de3add0324fefdd65cd8cc8b786803`
+- **Firma Digital del Reporte:** `5dca435848484c166d6782e823821246c6b2637b1f3b3f675be3b96c52b576c0`
 - **Validador:** Aurenis Security Engine (RBAC Verification Module)
 - **Certificación:** CONFORME Y APROBADO PARA PRODUCCIÓN

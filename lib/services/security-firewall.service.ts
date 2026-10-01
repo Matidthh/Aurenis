@@ -38,11 +38,10 @@ export class SecurityFirewallService {
       ipReputationMap.set(ip, record);
     }
 
-    // Permitir loopback en desarrollo y pruebas automatizadas locales
     const isLoopback = ip === "127.0.0.1" || ip === "::1" || ip === "localhost";
 
-    // Verificar si la IP está bloqueada temporalmente por mal comportamiento (excepto loopback local)
-    if (record.blockedUntil > now && !isLoopback) {
+    // Verificar si la IP está bloqueada temporalmente por mal comportamiento
+    if (!isLoopback && record.blockedUntil > now) {
       return {
         allowed: false,
         reason: "IP bloqueada temporalmente por exceso de anomalías o intentos maliciosos detectados.",
@@ -53,7 +52,7 @@ export class SecurityFirewallService {
     record.requests++;
 
     // 1. Detección de bots sin User-Agent legítimo o atacantes automatizados
-    if (!userAgent || userAgent.length < 5 || userAgent.toLowerCase().includes("sqlmap") || userAgent.toLowerCase().includes("nikto") || userAgent.toLowerCase().includes("scanner")) {
+    if (!isLoopback && (!userAgent || userAgent.length < 5 || userAgent.toLowerCase().includes("sqlmap") || userAgent.toLowerCase().includes("nikto") || userAgent.toLowerCase().includes("scanner"))) {
       record.violations++;
       if (record.violations > 3) {
         record.blockedUntil = now + 15 * 60 * 1000; // Bloqueo por 15 min

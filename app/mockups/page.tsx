@@ -896,10 +896,10 @@ export default function MockupsPage() {
             <span className="text-slate-700">•</span>
 
             <Link
-              href="/colegio-san-jose/students"
+              href="/lpmm/students"
               className="inline-flex items-center gap-1.5 text-brand-400 hover:text-brand-300 transition font-semibold"
             >
-              <span>Ver Directorio en Vivo (San José)</span>
+              <span>Ver Directorio en Vivo (LPMM)</span>
               <ExternalLink className="w-3 h-3" />
             </Link>
           </div>

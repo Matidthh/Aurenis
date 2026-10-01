@@ -1,10 +1,14 @@
 import { SignJWT, jwtVerify } from "jose";
+import crypto from "crypto";
 import { cookies, headers } from "next/headers";
 import { AuthCookiePayload, UserSession } from "@/types/auth";
 import { getValidatedJwtSecret } from "@/lib/security/crypto-keys";
 
 export const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || "aurenis_session";
 export const SESSION_EXPIRY = "7d"; // 7 días de duración de sesión
+
+export const JWT_ISSUER = "aurenis-auth";
+export const JWT_AUDIENCE = "aurenis-platform";
 
 export const SESSION_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -13,10 +17,15 @@ export const SESSION_COOKIE_OPTIONS = {
   path: "/",
 };
 
-export async function signSessionToken(payload: Omit<AuthCookiePayload, "iat" | "exp">): Promise<string> {
+export async function signSessionToken(payload: Omit<AuthCookiePayload, "iat" | "exp" | "iss" | "aud" | "jti">): Promise<string> {
   const secretKey = getValidatedJwtSecret();
+  const jti = crypto.randomUUID();
+
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
+    .setIssuer(JWT_ISSUER)
+    .setAudience(JWT_AUDIENCE)
+    .setJti(jti)
     .setIssuedAt()
     .setExpirationTime(SESSION_EXPIRY)
     .sign(secretKey);
@@ -27,12 +36,15 @@ export async function verifySessionToken(token: string): Promise<AuthCookiePaylo
     const secretKey = getValidatedJwtSecret();
     const { payload } = await jwtVerify(token, secretKey, {
       algorithms: ["HS256"],
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
     });
     return payload as unknown as AuthCookiePayload;
   } catch {
     return null;
   }
 }
+
 
 export async function setSessionCookie(token: string): Promise<void> {
   const cookieStore = await cookies();

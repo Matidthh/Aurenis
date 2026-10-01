@@ -186,7 +186,7 @@ export function GradeMatrixSpreadsheet({
   schoolSlug: propSchoolSlug,
 }: GradeMatrixSpreadsheetProps = {}) {
   const { user, token } = useAuth();
-  const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "colegio-san-jose";
+  const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "lpmm";
 
   // Monitoreo de Rendimiento < 16ms
   const { stats: perfStats, onRenderCallback } = useRenderPerformance("GradeMatrixSpreadsheet");
@@ -554,20 +554,31 @@ export function GradeMatrixSpreadsheet({
     setSaveStatus("saving");
     try {
       if (activeSchool) {
-        await apiClient.post(
-          `/api/schools/${activeSchool}/grades/bulk-save`,
-          {
-            schoolSlug: activeSchool,
-            students,
-            assessments,
-            calcMode,
-          },
-          { token: token || undefined }
-        );
+        // Mapear celdas con calificaciones a la estructura BulkSaveGradesSchema
+        const flatGrades: Array<{ assessmentId: string; enrollmentId: string; value: number }> = [];
+        students.forEach((st) => {
+          Object.entries(st.grades).forEach(([assId, val]) => {
+            if (val !== null && val !== undefined && !isNaN(val)) {
+              flatGrades.push({
+                assessmentId: assId,
+                enrollmentId: st.id,
+                value: Number(val),
+              });
+            }
+          });
+        });
+
+        if (flatGrades.length > 0) {
+          await apiClient.post(
+            `/api/schools/${activeSchool}/grades/bulk`,
+            { grades: flatGrades },
+            { token: token || undefined }
+          );
+        }
       }
       setSaveStatus("synced");
       setDirtyCells({});
-      setFeedbackMessage("¡Planilla guardada y sincronizada exitosamente!");
+      setFeedbackMessage("¡Planilla guardada y sincronizada exitosamente con el backend!");
       setTimeout(() => setFeedbackMessage(null), 3500);
     } catch {
       setTimeout(() => {
@@ -577,7 +588,7 @@ export function GradeMatrixSpreadsheet({
         setTimeout(() => setFeedbackMessage(null), 3500);
       }, 500);
     }
-  }, [activeSchool, students, assessments, calcMode, token]);
+  }, [activeSchool, students, token]);
 
   const handleToggleRapidTypeMode = useCallback(() => {
     setRapidTypeMode((prev) => !prev);

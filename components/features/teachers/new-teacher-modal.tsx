@@ -47,7 +47,7 @@ export function NewTeacherModal({
     setIsSubmitting(true);
 
     try {
-      const targetSchool = schoolId || "colegio-san-jose";
+      const targetSchool = schoolId || "lpmm";
       const parts = formData.name.trim().split(" ");
       const firstName = parts[0] || "Docente";
       const lastName = parts.slice(1).join(" ") || "Docente";

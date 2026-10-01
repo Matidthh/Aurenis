@@ -44,7 +44,7 @@ export function StudentPostgresPersistenceView({
   const fetchStudentsReal = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/students");
+      const res = await fetch("/api/schools/lpmm/students");
       const data = await res.json();
       if (data.success && Array.isArray(data.students)) {
         setStudents(data.students);
@@ -67,7 +67,7 @@ export function StudentPostgresPersistenceView({
     e.preventDefault();
     setCreateStatus("Registrando alumno en PostgreSQL...");
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/students", {
+      const res = await fetch("/api/schools/lpmm/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newStudentForm),

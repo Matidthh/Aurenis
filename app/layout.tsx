@@ -19,6 +19,13 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Aurenis",
   description: "Multi-tenant academic management platform for schools, teachers, students, and administrators.",
+  icons: {
+    icon: [
+      { url: "/logonuevo.png", type: "image/png" },
+      { url: "/aurenis-logo.svg", type: "image/svg+xml" }
+    ],
+    apple: "/logonuevo.png",
+  },
   openGraph: {
     title: "Aurenis",
     description: "Multi-tenant academic management platform for schools, teachers, students, and administrators.",

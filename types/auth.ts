@@ -26,6 +26,8 @@ export interface AuthCookiePayload {
   familyId?: string; // Token Family ID para rotación
   tokenType?: "access" | "refresh";
   tokenVersion?: number;
+  iss?: string;
+  aud?: string;
   iat?: number;
   exp?: number;
 }

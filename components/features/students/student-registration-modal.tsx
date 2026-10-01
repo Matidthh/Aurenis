@@ -87,7 +87,7 @@ export function StudentRegistrationModal({
     setErrorMessage(null);
 
     try {
-      const targetSchool = schoolId || "colegio-san-jose";
+      const targetSchool = schoolId || "lpmm";
       const payload = {
         firstName: formData.firstName,
         lastName: formData.lastName,

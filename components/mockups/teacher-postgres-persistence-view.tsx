@@ -50,7 +50,7 @@ export function TeacherPostgresPersistenceView({
   const fetchTeachersReal = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/teachers");
+      const res = await fetch("/api/schools/lpmm/teachers");
       const data = await res.json();
       if (data.success && Array.isArray(data.teachers)) {
         setTeachers(data.teachers);
@@ -76,7 +76,7 @@ export function TeacherPostgresPersistenceView({
     e.preventDefault();
     setStatusMessage("Registrando profesor en PostgreSQL...");
     try {
-      const res = await fetch("/api/schools/colegio-san-jose/teachers", {
+      const res = await fetch("/api/schools/lpmm/teachers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTeacherForm),
@@ -102,7 +102,7 @@ export function TeacherPostgresPersistenceView({
     }
     setStatusMessage("Guardando asignación académica en PostgreSQL...");
     try {
-      const res = await fetch(`/api/schools/colegio-san-jose/teachers/${assignmentForm.teacherId}/assign`, {
+      const res = await fetch(`/api/schools/lpmm/teachers/${assignmentForm.teacherId}/assign`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

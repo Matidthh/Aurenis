@@ -30,9 +30,9 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
   const subscriptionInfo = matchedCatalog.subscription;
   const isSuspended = matchedCatalog.status === "SUSPENDED" || subscriptionInfo.status === "SUSPENDED_PAYMENT";
 
-  // Si no hay sesión activa, rechazar acceso de forma estricta (Autor: Lucas P.)
+  // Si no hay sesión activa, redirigir limpiamente al inicio de sesión institucional
   if (!session) {
-    throw new UnauthorizedError("No autenticado. Debe iniciar sesión para acceder al contexto institucional.");
+    redirect(`/login?school=${encodeURIComponent(schoolSlug)}`);
   }
 
   // Si el usuario es SystemAdmin, tiene acceso irrestricto de inspección
@@ -111,8 +111,11 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
             subscription: subscriptionInfo,
           };
         } else {
-          // Bloqueo estricto multi-tenant: el colegio existe pero el usuario no pertenece a él
-          throw new TenantAccessError("No tienes acceso a esta institución (violación de aislamiento multi-tenant).");
+          // Bloqueo estricto multi-tenant: el colegio existe pero el usuario no pertenece a él -> redirigir
+          if (session.activeSchoolSlug) {
+            redirect(`/${session.activeSchoolSlug}/dashboard`);
+          }
+          redirect("/select-school");
         }
       }
     } catch (err) {
@@ -125,7 +128,7 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
 
   // Verificación estricta de aislamiento multi-tenant en fallback (Autor: Lucas P. & Maicol R.)
   if (!session.isSystemAdmin && session.activeSchoolSlug && session.activeSchoolSlug !== matchedCatalog.slug) {
-    throw new TenantAccessError("No tienes acceso a esta institución (violación de aislamiento multi-tenant).");
+    redirect(`/${session.activeSchoolSlug}/dashboard`);
   }
 
   // Fallback demo para la institución autorizada en la sesión
