@@ -25590,8 +25590,8 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
     {
       "num": 14,
       "fullName": "Pérez De Arce Alegría Joaquín Ignacio",
-      "firstName": "Arce Alegría Joaquín Ignacio",
-      "lastName": "Pérez De",
+      "firstName": "Joaquín Ignacio",
+      "lastName": "Pérez De Arce Alegría",
       "email": "estudiante.4e.14@lpmm.cl",
       "rut": "22.469.014-4",
       "notes": [
