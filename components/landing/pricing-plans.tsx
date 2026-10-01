@@ -1,212 +1,332 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Sparkles, ArrowRight, ShieldCheck, HelpCircle, PhoneCall, Building2 } from "lucide-react";
+import { Check, Minus, ArrowRight, ShieldCheck, HelpCircle, Layers, Award, Wrench } from "lucide-react";
+import {
+  AURENIS_PLANS,
+  INITIAL_IMPLEMENTATION_SERVICE,
+  COMPARISON_FEATURES,
+  PricingPlan,
+} from "@/lib/constants/pricing";
 
 interface PricingPlansProps {
   onSelectPlan: (planName: string) => void;
 }
 
 export function PricingPlans({ onSelectPlan }: PricingPlansProps) {
-  const [billingCycle, setBillingCycle] = useState<"anual" | "mensual">("anual");
-
-  const plans = [
-    {
-      id: "esencial",
-      name: "Plan Esencial Digital",
-      badge: "Iniciación Digital",
-      badgeColor: "bg-slate-100 text-slate-700",
-      description: "Ideal para colegios que buscan reemplazar planillas manuales y ordenar el registro de notas y asistencia.",
-      priceAnnual: "$990",
-      priceUnit: "CLP / alumno / mes (Anual)",
-      highlight: false,
-      features: [
-        "Libro de Clases Digital (Asistencia y Notas)",
-        "Pase de Asistencia en 1 Clic por Bloque",
-        "Registro de Calificaciones (1.0 a 7.0)",
-        "Generación de Certificados de Alumno Regular",
-        "Respaldo seguro en base de datos PostgreSQL",
-        "Mesa de ayuda y soporte por correo",
-      ],
-      notIncluded: [
-        "Portal móvil para apoderados",
-        "Sistema de Alerta Temprana (SAT)",
-        "Soporte prioritario por WhatsApp",
-      ],
-      ctaText: "Cotizar Plan Esencial ($990 CLP)",
-    },
-    {
-      id: "integral",
-      name: "Plan Integral Mineduc",
-      badge: "MÁS UTILIZADO",
-      badgeColor: "bg-blue-600 text-white font-extrabold shadow-xs",
-      description: "La solución completa orientada a colegios que requieren digitalización integral de libro de clases, asistencia y notas.",
-      priceAnnual: "Cotización a medida",
-      priceUnit: "Según matrícula y requerimientos de soporte",
-      highlight: true,
-      features: [
-        "Todo lo incluido en el Plan Esencial",
-        "Matriz de Notas con Promedio Simple o Ponderado (Decreto 67)",
-        "Portal Web para Estudiantes y Apoderados",
-        "Detección de Estudiantes con Inasistencia Crítica",
-        "Exportación estructurada de Actas y Matrícula",
-        "Auditoría y trazabilidad de registros de clase",
-        "Acompañamiento en la carga inicial de nóminas",
-        "Soporte técnico directo vía correo y canal prioritario",
-      ],
-      notIncluded: [],
-      ctaText: "Solicitar Cotización Plan Integral",
-    },
-    {
-      id: "red",
-      name: "Plan Red & Multi-Sede",
-      badge: "Sostenedores & SLEP",
-      badgeColor: "bg-purple-100 text-purple-800",
-      description: "Diseñado para fundaciones, corporaciones educacionales y redes de 2 o más recintos escolares.",
-      priceAnnual: "Propuesta Institucional",
-      priceUnit: "Especial por volumen de sedes y estudiantes",
-      highlight: false,
-      features: [
-        "Todo lo incluido en el Plan Integral",
-        "Panel de Control Consolidado Multi-Colegio",
-        "Visualización comparativa de asistencia entre sedes",
-        "Bases de datos aisladas e independientes por colegio",
-        "Capacitación inicial para administradores y coordinadores UTP",
-        "Atención técnica especializada para la red",
-      ],
-      notIncluded: [],
-      ctaText: "Solicitar Cotización Corporativa",
-    },
-  ];
+  const [showComparison, setShowComparison] = useState(true);
 
   return (
     <section id="planes" className="py-20 sm:py-28 bg-[#F8F8F5] text-slate-900 relative">
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14">
+      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-10">
         
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80 shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            Inversión Transparente y Rentable
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-            Planes adaptados a la realidad de tu colegio
+        {/* Header Institucional */}
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-14 sm:mb-18">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600">
+            <span>Propuesta de Valor Institucional</span>
+            <span aria-hidden="true">·</span>
+            <span>Pesos Chilenos (CLP)</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+            Planes y Estructura Comercial
           </h2>
-          <p className="text-base sm:text-lg text-slate-600 font-medium">
-            Facturación 100% elegible para Subvención Escolar Preferencial (SEP) y fondos de mantenimiento institucional.
+          
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+            Soluciones de gestión académica y libro de clases digital adaptadas al tamaño y a los requerimientos operacionales de cada establecimiento educacional.
           </p>
 
-          {/* Guarantee Pill */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mt-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Migración gratuita de tus datos en 48 hrs · Sin costo de instalación inicial</span>
+          <div className="pt-1 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-slate-500 font-medium">
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              Facturación institucional elegible SEP y Subvención General
+            </span>
+            <span className="hidden sm:inline" aria-hidden="true">·</span>
+            <span>Aislamiento seguro de datos por establecimiento</span>
           </div>
         </div>
 
-        {/* 3 Pricing Cards Grid */}
+        {/* 1. Las 3 Tarjetas de Planes Comerciales */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`rounded-3xl p-7 sm:p-9 flex flex-col justify-between transition-all duration-300 relative ${
-                plan.highlight
-                  ? "bg-white border-2 border-blue-600 shadow-2xl scale-[1.02] z-10"
-                  : "bg-white border border-slate-200 shadow-sm hover:shadow-md"
-              }`}
-            >
-              {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-black uppercase tracking-wider px-4 py-1.5 rounded-full shadow-md">
-                  Opción Más Recomendada
-                </div>
-              )}
+          {AURENIS_PLANS.map((plan: PricingPlan) => {
+            const isRec = plan.isPopular;
 
-              <div className="space-y-6">
-                {/* Plan Header */}
-                <div className="space-y-2">
-                  <span className={`text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full inline-block ${plan.badgeColor}`}>
-                    {plan.badge}
-                  </span>
-                  <h3 className="text-2xl font-black text-slate-900">{plan.name}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed min-h-[38px]">
+            return (
+              <div
+                key={plan.id}
+                className={`rounded-3xl p-7 sm:p-9 flex flex-col justify-between transition-all duration-300 relative ${
+                  isRec
+                    ? "bg-white border-2 border-blue-600 shadow-xl lg:-translate-y-2 z-10"
+                    : "bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 hover:shadow-md"
+                }`}
+              >
+                {/* Badge para el Plan Recomendado */}
+                {isRec && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-sm">
+                    {plan.badge || "Recomendado"}
+                  </div>
+                )}
+
+                <div className="space-y-6">
+                  {/* Título y Tagline */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
+                        {plan.name}
+                      </h3>
+                      {!isRec && plan.badge && (
+                        <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                          {plan.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-600 leading-relaxed font-medium min-h-[34px]">
+                      {plan.tagline}
+                    </p>
+                  </div>
+
+                  {/* Bloque de Precio */}
+                  <div className={`p-4 rounded-2xl border ${isRec ? "bg-blue-50/50 border-blue-100" : "bg-slate-50 border-slate-100"}`}>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                        {plan.priceDisplay}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-slate-500 mt-1 font-medium">
+                      <span>{plan.pricePeriod}</span>
+                      <span className="font-semibold text-slate-700">{plan.studentLimit}</span>
+                    </div>
+                  </div>
+
+                  {/* Descripción contextual */}
+                  <p className="text-xs text-slate-500 leading-relaxed">
                     {plan.description}
                   </p>
-                </div>
 
-                {/* Price Display */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                    {plan.priceAnnual}
-                  </div>
-                  <div className="text-xs font-medium text-slate-500 mt-0.5">
-                    {plan.priceUnit}
-                  </div>
-                </div>
-
-                {/* Features List */}
-                <div className="space-y-3 pt-2">
-                  <div className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                    Incluye en este plan:
-                  </div>
-                  <ul className="space-y-2.5 text-xs text-slate-600">
-                    {plan.features.map((feat, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {plan.notIncluded.length > 0 && (
-                    <div className="pt-3 border-t border-slate-100 space-y-2">
-                      <div className="text-[11px] font-semibold text-slate-400">
-                        No incluye:
-                      </div>
-                      <ul className="space-y-1 text-xs text-slate-400">
-                        {plan.notIncluded.map((feat, idx) => (
-                          <li key={idx} className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 shrink-0" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
+                  {/* Lista de Funcionalidades Reales */}
+                  <div className="space-y-3 pt-2">
+                    <div className="text-[11px] font-bold text-slate-900 uppercase tracking-wider">
+                      Funcionalidades incluidas:
                     </div>
-                  )}
+                    <ul className="space-y-2.5 text-xs text-slate-700">
+                      {plan.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5">
+                          <Check className={`w-4 h-4 shrink-0 mt-0.5 ${isRec ? "text-blue-600" : "text-emerald-600"}`} />
+                          <span className="leading-snug">{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Botón de Acción / CTA */}
+                <div className="pt-8">
+                  <button
+                    type="button"
+                    onClick={() => onSelectPlan(`${plan.name} (${plan.priceDisplay} ${plan.pricePeriod})`)}
+                    className={`w-full py-3.5 px-5 rounded-2xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 cursor-pointer ${
+                      isRec
+                        ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg shadow-blue-600/20"
+                        : "bg-slate-900 hover:bg-slate-800 text-white shadow-xs"
+                    }`}
+                  >
+                    <span>{plan.ctaText}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* 2. Sección Separada: Implementación Inicial y Puesta en Marcha */}
+        <div className="mt-14 sm:mt-18 max-w-6xl mx-auto">
+          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-7 sm:p-10 relative overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+              
+              {/* Información del Servicio de Implementación */}
+              <div className="space-y-4 max-w-2xl">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
+                  <Wrench className="w-4 h-4 text-blue-600" />
+                  <span>Servicio de Puesta en Marcha</span>
+                </div>
+
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  {INITIAL_IMPLEMENTATION_SERVICE.title}
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  {INITIAL_IMPLEMENTATION_SERVICE.description}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-slate-700">
+                  {INITIAL_IMPLEMENTATION_SERVICE.items.map((item, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <Check className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                      <span className="leading-tight">{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Action Button */}
-              <div className="pt-8">
+              {/* Tarjeta de Precio de Implementación y CTA */}
+              <div className="w-full lg:w-auto shrink-0 bg-slate-50 border border-slate-200/80 rounded-2xl p-6 sm:p-7 text-center lg:text-right space-y-3">
+                <div>
+                  <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                    {INITIAL_IMPLEMENTATION_SERVICE.priceDisplay}
+                  </div>
+                  <div className="text-xs font-medium text-slate-500 mt-0.5">
+                    {INITIAL_IMPLEMENTATION_SERVICE.priceNote}
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-slate-500 max-w-xs mx-auto lg:ml-auto">
+                  Ajustado a la matrícula, cantidad de sedes y volumen de registros históricos a migrar.
+                </p>
+
                 <button
-                  onClick={() => onSelectPlan(plan.name)}
-                  className={`w-full py-4 px-6 rounded-2xl font-bold text-xs sm:text-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
-                    plan.highlight
-                      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30"
-                      : "bg-slate-100 hover:bg-slate-200 text-slate-800"
-                  }`}
+                  type="button"
+                  onClick={() => onSelectPlan("Servicio de Implementación Inicial (Desde $500.000 CLP)")}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition cursor-pointer flex items-center justify-center gap-2 mx-auto lg:ml-auto shadow-xs"
                 >
-                  <span>{plan.ctaText}</span>
+                  <span>{INITIAL_IMPLEMENTATION_SERVICE.ctaText}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
+
             </div>
-          ))}
+          </div>
         </div>
 
-        {/* Support & SEP Financing Note */}
+        {/* 3. Tabla de Comparativa Detallada de Funcionalidades */}
+        <div className="mt-16 sm:mt-20 max-w-6xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                Comparativa de Funcionalidades por Plan
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Detalle transparente de las capacidades operativas incluidas en cada nivel de servicio.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowComparison(!showComparison)}
+              className="text-xs font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer self-start sm:self-auto"
+            >
+              {showComparison ? "Ocultar tabla comparativa" : "Ver tabla comparativa completa"}
+            </button>
+          </div>
+
+          {showComparison && (
+            <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-700">
+                      <th className="py-4 px-5 sm:px-6 font-bold uppercase tracking-wider text-[11px] w-2/5">
+                        Funcionalidad / Módulo Real
+                      </th>
+                      <th className="py-4 px-4 font-bold text-center w-1/5 text-slate-900">
+                        Aurenis Start
+                        <div className="text-[11px] font-normal text-slate-500 mt-0.5">$149.990 / mes</div>
+                      </th>
+                      <th className="py-4 px-4 font-bold text-center w-1/5 bg-blue-50/50 text-blue-900 border-x border-blue-100">
+                        Aurenis Professional
+                        <div className="text-[11px] font-normal text-blue-700 mt-0.5">$299.990 / mes</div>
+                      </th>
+                      <th className="py-4 px-4 font-bold text-center w-1/5 text-slate-900">
+                        Aurenis Enterprise
+                        <div className="text-[11px] font-normal text-slate-500 mt-0.5">Desde $499.990 / mes</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {/* Render grouped by category */}
+                    {(["Capacidad y Acceso", "Gestión Académica", "Dashboards y Portales", "Seguridad y Soporte"] as const).map((cat) => {
+                      const catFeatures = COMPARISON_FEATURES.filter((f) => f.category === cat);
+                      if (catFeatures.length === 0) return null;
+
+                      return (
+                        <React.Fragment key={cat}>
+                          <tr className="bg-slate-50/40">
+                            <td colSpan={4} className="py-2.5 px-5 sm:px-6 font-bold text-[11px] text-slate-600 uppercase tracking-wider">
+                              {cat}
+                            </td>
+                          </tr>
+                          {catFeatures.map((feat, fIdx) => (
+                            <tr key={fIdx} className="hover:bg-slate-50/60 transition-colors">
+                              <td className="py-3.5 px-5 sm:px-6 font-medium text-slate-900">
+                                {feat.name}
+                              </td>
+
+                              {/* Start */}
+                              <td className="py-3.5 px-4 text-center">
+                                {typeof feat.start === "boolean" ? (
+                                  feat.start ? (
+                                    <Check className="w-4 h-4 text-emerald-600 mx-auto" />
+                                  ) : (
+                                    <Minus className="w-4 h-4 text-slate-300 mx-auto" />
+                                  )
+                                ) : (
+                                  <span className="font-semibold text-slate-700">{feat.start}</span>
+                                )}
+                              </td>
+
+                              {/* Professional */}
+                              <td className="py-3.5 px-4 text-center bg-blue-50/20 border-x border-blue-100/60">
+                                {typeof feat.professional === "boolean" ? (
+                                  feat.professional ? (
+                                    <Check className="w-4 h-4 text-blue-600 mx-auto" />
+                                  ) : (
+                                    <Minus className="w-4 h-4 text-slate-300 mx-auto" />
+                                  )
+                                ) : (
+                                  <span className="font-bold text-blue-900">{feat.professional}</span>
+                                )}
+                              </td>
+
+                              {/* Enterprise */}
+                              <td className="py-3.5 px-4 text-center">
+                                {typeof feat.enterprise === "boolean" ? (
+                                  feat.enterprise ? (
+                                    <Check className="w-4 h-4 text-emerald-600 mx-auto" />
+                                  ) : (
+                                    <Minus className="w-4 h-4 text-slate-300 mx-auto" />
+                                  )
+                                ) : (
+                                  <span className="font-semibold text-slate-700">{feat.enterprise}</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </React.Fragment>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 4. Financiamiento SEP y Rendición Institucional */}
         <div className="mt-14 max-w-4xl mx-auto p-6 bg-white rounded-3xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="space-y-1">
             <h4 className="text-sm font-bold text-slate-900">
-              ¿Quieres financiar AURENIS con recursos SEP o Subvención General?
+              ¿Desea financiar AURENIS con recursos SEP o Subvención General?
             </h4>
             <p className="text-xs text-slate-500">
-              Te entregamos la documentación técnica y cotización estandarizada requerida para rendición ante la Superintendencia.
+              Proveemos la cotización técnica y formal requerida para rendición de cuentas ante la Superintendencia de Educación.
             </p>
           </div>
           <button
-            onClick={() => onSelectPlan("Consulta Financiamiento SEP")}
-            className="px-5 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs shrink-0 cursor-pointer transition"
+            type="button"
+            onClick={() => onSelectPlan("Consulta Financiamiento SEP / Subvención")}
+            className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs shrink-0 cursor-pointer transition"
           >
-            Consultar con Asesor SEP
+            Consultar Financiamiento SEP
           </button>
         </div>
 

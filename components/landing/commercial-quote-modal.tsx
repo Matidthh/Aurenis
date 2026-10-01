@@ -16,8 +16,8 @@ export function CommercialQuoteModal({ isOpen, onClose, defaultPlan }: Commercia
     phone: "",
     school: "",
     rbd: "",
-    role: "director",
-    studentsCount: "200 - 500 alumnos",
+    role: "Director / Equipo Directivo",
+    studentsCount: "151 a 500 estudiantes (Plan Professional)",
     notes: "",
   });
 
@@ -242,10 +242,9 @@ export function CommercialQuoteModal({ isOpen, onClose, defaultPlan }: Commercia
                     onChange={(e) => setFormData({ ...formData, studentsCount: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-blue-500 focus:outline-none text-sm transition"
                   >
-                    <option value="Menos de 200 alumnos">Menos de 200 alumnos</option>
-                    <option value="200 - 500 alumnos">200 - 500 alumnos</option>
-                    <option value="500 - 1.000 alumnos">500 - 1.000 alumnos</option>
-                    <option value="Más de 1.000 alumnos">Más de 1.000 alumnos (Multi-Sede / Red)</option>
+                    <option value="Hasta 150 estudiantes (Plan Start)">Hasta 150 estudiantes (Plan Start)</option>
+                    <option value="151 a 500 estudiantes (Plan Professional)">151 a 500 estudiantes (Plan Professional)</option>
+                    <option value="Más de 500 estudiantes (Plan Enterprise)">Más de 500 estudiantes (Plan Enterprise)</option>
                   </select>
                 </div>
               </div>
