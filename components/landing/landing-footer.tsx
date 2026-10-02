@@ -125,7 +125,7 @@ export function LandingFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/(auth)/login" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/login" className="text-slate-400 hover:text-white font-medium transition">
                   Ingreso Centralizado
                 </Link>
               </li>
