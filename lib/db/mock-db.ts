@@ -25,6 +25,7 @@ interface MockStore {
   assessments: Map<string, any>;
   grades: Map<string, any>;
   attendanceRecords: Map<string, any>;
+  attendanceSessions: Map<string, any>;
   dataSubjectRequests: Map<string, any>;
   auditLogs: any[];
 }
@@ -51,6 +52,7 @@ function initStore(): MockStore {
     assessments: new Map(),
     grades: new Map(),
     attendanceRecords: new Map(),
+    attendanceSessions: new Map(),
     dataSubjectRequests: new Map(),
     auditLogs: [],
   };

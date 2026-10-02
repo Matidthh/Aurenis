@@ -68,6 +68,7 @@ model User {
   dataConsents    DataConsent[]
   dataSubjectRequests DataSubjectRequest[]
   userPreference  UserPreference?
+  attendanceSessions AttendanceSession[]
 
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -117,6 +118,7 @@ model School {
   schedules         ScheduleBlock[]
   auditLogs         AuditLog[]
   files             FileRecord[]
+  attendanceSessions AttendanceSession[]
 
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -267,6 +269,7 @@ model Course {
   enrollments      Enrollment[]
   attendances      AttendanceRecord[]
   schedules        ScheduleBlock[]
+  attendanceSessions AttendanceSession[]
 
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -444,6 +447,10 @@ model AttendanceRecord {
   date             DateTime         @db.Date
   status           AttendanceStatus @default(PRESENT)
   justification    String?
+  method           String           @default("MANUAL") // "QR" | "MANUAL"
+  subjectId        String?
+  sessionId        String?
+  recordedByUserId String?
 
   school           School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   course           Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -456,6 +463,28 @@ model AttendanceRecord {
   @@index([schoolId, courseId, date])
   @@index([schoolId, studentProfileId, date])
   @@index([studentProfileId, date])
+  @@index([sessionId])
+}
+
+model AttendanceSession {
+  id               String      @id @default(cuid())
+  schoolId         String
+  courseId         String
+  subjectId        String?
+  teacherUserId    String
+  date             DateTime    @db.Date
+  status           String      @default("ACTIVE") // "ACTIVE", "CLOSED"
+  expiresAt        DateTime?
+
+  school           School      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course           Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher          User        @relation(fields: [teacherUserId], references: [id], onDelete: Cascade)
+
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([schoolId, courseId, status])
+  @@index([teacherUserId])
 }
 
 model ScheduleBlock {

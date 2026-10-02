@@ -1,7 +1,7 @@
 # ACTA OFICIAL DE RE-TESTING DE SEGURIDAD Y VERIFICACIÓN DE PARCHES
 **Plataforma Institucional Aurenis SaaS**
-**Documento de Certificación:** `AURENIS-SEC-CERT-MUPLF8R2-A9E3A784`
-**Fecha de Certificación:** 01-10-2026, 10:51:57 a. m. (2026-10-01T13:51:57.781Z)
+**Documento de Certificación:** `AURENIS-SEC-CERT-MUPMS50V-452712FA`
+**Fecha de Certificación:** 01-10-2026, 11:29:59 a. m. (2026-10-01T14:29:59.049Z)
 **Auditor Responsable:** Frank M — QA / Testing / Seguridad / Documentación
 **Destinatario:** Francho MC (`francho.mc14@gmail.com`)
 **Estado General de la Auditoría:** 🟢 **APROBADO PARA PRODUCCIÓN (100% PARCHES VERIFICADOS)**
@@ -14,7 +14,7 @@
 | :--- | :---: | :---: | :---: |
 | **1. 0 vulnerabilidades Críticas o Altas pendientes** | 0 pendientes | **0 Críticas / 0 Altas pendientes** (100% resueltas) | ✅ **CUMPLIDO** |
 | **2. Pruebas de re-testing exitosas** | 100% aprobación | **12/12 Pruebas de Re-Testing Aprobadas (100%)** | ✅ **CUMPLIDO** |
-| **3. Firma de verificación de parches** | Firma Criptográfica SHA-256 | **Certificado Digital `AURENIS-SEC-CERT-MUPLF8R2-A9E3A784` generado** | ✅ **CUMPLIDO** |
+| **3. Firma de verificación de parches** | Firma Criptográfica SHA-256 | **Certificado Digital `AURENIS-SEC-CERT-MUPMS50V-452712FA` generado** | ✅ **CUMPLIDO** |
 
 **Progreso Final Definition of Done:** **3/3 (100%)**
 
@@ -218,8 +218,8 @@ Por la presente, el equipo de Aseguramiento de Calidad y Seguridad Informática 
 ================================================================================
           CERTIFICADO DIGITAL DE VERIFICACIÓN DE PARCHES DE SEGURIDAD
 ================================================================================
-Identificador de Certificado : AURENIS-SEC-CERT-MUPLF8R2-A9E3A784
-Fecha y Hora de Firma        : 2026-10-01T13:51:57.781Z
+Identificador de Certificado : AURENIS-SEC-CERT-MUPMS50V-452712FA
+Fecha y Hora de Firma        : 2026-10-01T14:29:59.049Z
 Entidad Emisora              : Aurenis Security & Quality Assurance Authority
 Auditor Responsable          : Frank M — QA / Testing / Seguridad / Documentación
 Destinatario y Aprobador     : Francho MC (francho.mc14@gmail.com)
@@ -228,7 +228,7 @@ Hallazgos Parcheados y OK    : 12 (100%)
 Vulnerabilidades Críticas    : 0 PENDIENTES
 Vulnerabilidades Altas       : 0 PENDIENTES
 Firma Criptográfica SHA-256  :
-a9e3a784e85279a04c20a41faad5e9ca335c364c114944fe2754ecc37de59cc2
+452712fad420c1e24ce8af8c8ded2df698a1d7c711d9e29009ec081ebfe04a25
 ================================================================================
 ```
 

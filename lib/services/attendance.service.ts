@@ -1,6 +1,48 @@
 import { TenantPrismaClient } from "@/lib/db/tenant-extension";
 import { AttendanceStatus } from "@prisma/client";
-import { isDatabaseConfigured } from "@/lib/db/prisma";
+import { prisma, isDatabaseConfigured } from "@/lib/db/prisma";
+import { generateQRSessionToken, generateAttendanceHMAC, verifyAttendanceHMAC } from "@/lib/auth/qr-session";
+import { getMockStore } from "@/lib/db/mock-db";
+
+export { generateAttendanceHMAC, verifyAttendanceHMAC };
+
+export interface CheckAtrasoParams {
+  sessionStartTime: Date | string;
+  registrationTime?: Date | string;
+  toleranceMinutes?: number;
+}
+
+export interface CheckAtrasoResult {
+  isLate: boolean;
+  minutesElapsed: number;
+  toleranceMinutes: number;
+  status: AttendanceStatus;
+}
+
+/**
+ * Evalúa si el registro de asistencia excede los minutos de tolerancia institucional para marcar 'ATRASADO'.
+ * @param params Parámetros de tiempo de inicio de sesión y tiempo de marcado.
+ * @returns Resultado indicando si es atraso y el estado académico derivado (PRESENT o LATE).
+ * Autores: Maicol R. (Lead, Arquitectura & Backend)
+ */
+export function checkAtraso(params: CheckAtrasoParams): CheckAtrasoResult {
+  const toleranceMinutes = params.toleranceMinutes ?? 15; // 15 minutos de tolerancia configurable por defecto
+  const startTime = new Date(params.sessionStartTime).getTime();
+  const regTime = params.registrationTime ? new Date(params.registrationTime).getTime() : Date.now();
+
+  const diffMs = regTime - startTime;
+  const minutesElapsed = Math.max(0, Math.floor(diffMs / (1000 * 60)));
+
+  const isLate = minutesElapsed > toleranceMinutes;
+  const status: AttendanceStatus = isLate ? AttendanceStatus.LATE : AttendanceStatus.PRESENT;
+
+  return {
+    isLate,
+    minutesElapsed,
+    toleranceMinutes,
+    status,
+  };
+}
 
 export interface AttendanceRecordItem {
   id: string;
@@ -12,6 +54,106 @@ export interface AttendanceRecordItem {
     membership: {
       user: { firstName: string; lastName: string };
     };
+  };
+}
+
+export interface AttendanceSessionResult {
+  id: string;
+  sessionId: string;
+  schoolId: string;
+  courseId: string;
+  subjectId?: string | null;
+  teacherUserId: string;
+  date: string;
+  token: string;
+  status: string;
+  expiresAt: string;
+  ttlSeconds: number;
+}
+
+/**
+ * Crea una sesión de asistencia para una clase, generando un token temporal dinámico (jose JWT)
+ * y registrando la sesión activa con tiempo de expiración en la base de datos.
+ * Autores: Maicol R. (Backend & DB Architect)
+ */
+export async function createAttendanceSession(params: {
+  schoolId: string;
+  courseId: string;
+  subjectId?: string | null;
+  teacherUserId: string;
+  dateStr?: string;
+  ttlSeconds?: number;
+}): Promise<AttendanceSessionResult> {
+  const dateStr = params.dateStr || new Date().toISOString().split("T")[0];
+  const dateObj = new Date(dateStr + "T00:00:00.000Z");
+  const ttlSeconds = params.ttlSeconds || 30; // 30 segundos de vigencia por defecto
+  const expiresAtObj = new Date(Date.now() + ttlSeconds * 1000);
+  const expiresAtStr = expiresAtObj.toISOString();
+
+  let sessionId = `session_${params.courseId}_${Date.now()}`;
+  let status = "ACTIVE";
+
+  if (isDatabaseConfigured()) {
+    try {
+      // Buscar o crear la sesión activa en la base de datos
+      const session = await prisma.attendanceSession.create({
+        data: {
+          schoolId: params.schoolId,
+          courseId: params.courseId,
+          subjectId: params.subjectId || null,
+          teacherUserId: params.teacherUserId,
+          date: dateObj,
+          status: "ACTIVE",
+          expiresAt: expiresAtObj,
+        },
+      });
+
+      sessionId = session.id;
+      status = session.status;
+    } catch (err) {
+      console.warn("[AttendanceService] Error creando sesión en BD. Usando fallback:", err);
+    }
+  } else {
+    // Respaldo en almacén Mock
+    const store = getMockStore();
+    if (!(store as any).attendanceSessions) {
+      (store as any).attendanceSessions = new Map();
+    }
+    const mockSession = {
+      id: sessionId,
+      schoolId: params.schoolId,
+      courseId: params.courseId,
+      subjectId: params.subjectId || null,
+      teacherUserId: params.teacherUserId,
+      date: dateStr,
+      status: "ACTIVE",
+      expiresAt: expiresAtObj,
+    };
+    (store as any).attendanceSessions.set(sessionId, mockSession);
+  }
+
+  // Generar token JWT firmado con jose con tiempo de expiración dinámico
+  const token = await generateQRSessionToken({
+    sessionId,
+    schoolId: params.schoolId,
+    courseId: params.courseId,
+    subjectId: params.subjectId,
+    date: dateStr,
+    ttlSeconds,
+  });
+
+  return {
+    id: sessionId,
+    sessionId,
+    schoolId: params.schoolId,
+    courseId: params.courseId,
+    subjectId: params.subjectId || null,
+    teacherUserId: params.teacherUserId,
+    date: dateStr,
+    token,
+    status,
+    expiresAt: expiresAtStr,
+    ttlSeconds,
   };
 }
 

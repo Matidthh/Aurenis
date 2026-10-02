@@ -20,7 +20,6 @@ import {
   Sparkles,
   Building2,
   Search,
-  School,
   MapPin,
   ChevronRight,
   KeyRound,
@@ -33,14 +32,11 @@ import {
   X,
   FileCheck2,
   ArrowLeft,
-  Server,
   Activity,
-  Award,
   Check,
-  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth, AUTH_STORAGE_KEYS } from "@/lib/auth/auth-context";
+import { useAuth } from "@/lib/auth/auth-context";
 import {
   Modal,
   ModalHeader,
@@ -68,7 +64,7 @@ interface DemoAccount {
   institutionName: string;
   institutionCode: string;
   name: string;
-  identifier: string; // Email or RUT
+  identifier: string;
   pass: string;
   icon: React.ComponentType<{ className?: string }>;
   badgeColor: string;
@@ -80,7 +76,7 @@ const FEATURED_SCHOOLS: Institution[] = [
     id: "sch_lpmm_demo",
     name: "Liceo Politécnico Marga Marga",
     slug: "lpmm",
-    institutionalCode: "LPMM-001",
+    institutionalCode: "LPMM-001 (RBD 10240)",
     city: "Quilpué, Marga Marga",
     status: "ACTIVE",
     color: "from-blue-600 to-indigo-700",
@@ -176,6 +172,10 @@ function LoginContent() {
 
   // Institución fijada manualmente o detectada por URL
   const [selectedSchool, setSelectedSchool] = useState<Institution | null>(null);
+
+  // Estados de foco e interacción para los 8 estados
+  const [focusedField, setFocusedField] = useState<"identifier" | "password" | null>(null);
+  const [isSuccessRedirecting, setIsSuccessRedirecting] = useState(false);
 
   // Detectar colegio desde el parámetro URL (/login?school=lpmm)
   useEffect(() => {
@@ -356,7 +356,6 @@ function LoginContent() {
     if (!trimmed) {
       return "Ingresa tu correo institucional o RUT.";
     }
-    // Si contiene @, validar formato de correo
     if (trimmed.includes("@")) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(trimmed)) {
@@ -364,7 +363,6 @@ function LoginContent() {
       }
       return undefined;
     }
-    // Si no contiene @, es un RUT o usuario: debe tener al menos 3 caracteres
     if (trimmed.length < 3) {
       return "El identificador o RUT ingresado es demasiado corto.";
     }
@@ -399,6 +397,7 @@ function LoginContent() {
   }
 
   function handleBlur(field: "identifier" | "password") {
+    setFocusedField(null);
     setTouched((prev) => ({ ...prev, [field]: true }));
     if (field === "identifier") {
       setErrors((prev) => ({ ...prev, identifier: validateIdentifier(identifier) }));
@@ -466,25 +465,25 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
+      setIsSuccessRedirecting(true);
       const targetUrl = data.redirectUrl || "/select-school";
-      router.push(targetUrl);
       setTimeout(() => {
+        router.push(targetUrl);
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
           window.location.assign(targetUrl);
         }
-      }, 150);
+      }, 350);
     } catch (err: any) {
       setServerError(err.message || "Error al autenticar con el servidor escolar.");
       setIsLoading(false);
+      setIsSuccessRedirecting(false);
     }
   }
 
-  // Selección de colegio en spotlight o barra
   function handleSelectSchool(school: Institution) {
     setSelectedSchool(school);
     setIsSpotlightOpen(false);
 
-    // Si no hay correo, pre-llenamos con el dominio del colegio para acelerar la entrada
     if (!identifier || identifier.includes("@")) {
       const domainSlug = school.slug.replace(/[^a-z0-9]/g, "");
       setIdentifier(`@${domainSlug}.cl`);
@@ -541,17 +540,19 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
+      setIsSuccessRedirecting(true);
       const targetUrl = data.redirectUrl || "/select-school";
-      router.push(targetUrl);
       setTimeout(() => {
+        router.push(targetUrl);
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
           window.location.assign(targetUrl);
         }
-      }, 150);
+      }, 350);
     } catch (err: any) {
       setServerError(err.message || "Error al iniciar sesión con la cuenta seleccionada.");
       setIsLoading(false);
       setActiveDemoId(null);
+      setIsSuccessRedirecting(false);
     }
   }
 
@@ -560,13 +561,18 @@ function LoginContent() {
     !errors.identifier &&
     (touched.identifier || hasSubmitted);
 
+  const isPasswordValid =
+    password.length > 0 &&
+    !errors.password &&
+    (touched.password || hasSubmitted);
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#070B14] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-[#F8F8F5] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white transition-colors duration-200">
       
       {/* =========================================================================
-          BARRA DE NAVEGACIÓN SUPERIOR
+          1. HEADER INSTITUCIONAL (Consistente con Landing Navbar)
           ========================================================================= */}
-      <header className="w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-[#0A0F1D]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+      <header className="w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#0A0F1D]/90 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
             href="/"
@@ -579,7 +585,7 @@ function LoginContent() {
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
 
           {/* Logo y Nombre */}
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-sm shadow-blue-500/20">
               <div className="w-full h-full bg-white dark:bg-[#0A0F1D] rounded-[10px] flex items-center justify-center overflow-hidden">
                 <Image
@@ -594,7 +600,7 @@ function LoginContent() {
               </div>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
+              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 Aurenis
               </span>
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800 tracking-wide uppercase">
@@ -607,7 +613,7 @@ function LoginContent() {
         {/* Acciones de Cabecera */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Indicador de Estado de Conexión */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium text-slate-600 dark:text-slate-300">
+          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 shadow-2xs">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -619,11 +625,11 @@ function LoginContent() {
           <button
             type="button"
             onClick={() => setIsSpotlightOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-600 transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-600 transition cursor-pointer shadow-2xs"
           >
             <Search className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span className="hidden sm:inline">Buscar Colegio</span>
-            <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 ml-1">
+            <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700 ml-1">
               ⌘K
             </kbd>
           </button>
@@ -632,7 +638,7 @@ function LoginContent() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shadow-2xs"
             aria-label={isDark ? "Modo Claro" : "Modo Oscuro"}
           >
             {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
@@ -641,7 +647,7 @@ function LoginContent() {
       </header>
 
       {/* =========================================================================
-          CONTENIDO PRINCIPAL: LAYOUT EJECUTIVO SPLIT-SCREEN
+          2. CONTENIDO PRINCIPAL (SPLIT-SCREEN RESPONSIVE)
           ========================================================================= */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
@@ -665,60 +671,50 @@ function LoginContent() {
             </p>
           </div>
 
-          {/* Contenedor de Elementos Decorativos Glassy (Graphy Spec: linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(76, 48, 237, 0.2) 100%)) */}
-          <div
-            style={{
-              background: "linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(76, 48, 237, 0.2) 100%)",
-            }}
-            className="relative p-6 sm:p-7 rounded-3xl backdrop-blur-md border border-white/80 dark:border-white/15 shadow-[0_20px_50px_rgba(76,48,237,0.12)] dark:shadow-none space-y-5 overflow-hidden"
-          >
-            {/* Ambient inner soft violet glow fragment */}
-            <div
-              className="pointer-events-none absolute -top-16 -right-16 w-48 h-48 bg-indigo-500/15 rounded-full blur-2xl"
-              aria-hidden="true"
-            />
+          {/* Tarjeta de Métricas e Infraestructura (Tailwind Puro, Anti-Slop, Sin inline styles) */}
+          <div className="relative p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-5 overflow-hidden backdrop-blur-md">
             
-            {/* Floating Glassy Badge / Micro-chart fragment */}
-            <div className="flex items-center justify-between pb-3 border-b border-black/[0.06] dark:border-white/10 relative z-10">
+            {/* Cabecera del Showcase */}
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 relative z-10">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-white/90 dark:bg-white/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs border border-white/80 dark:border-white/20 shadow-2xs">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs border border-blue-100 dark:border-blue-900 shadow-2xs">
                   <Activity className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-900 dark:text-white">
                     Monitoreo en Tiempo Real
                   </h4>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                     Infraestructura Cloud de Alta Disponibilidad
                   </p>
                 </div>
               </div>
-              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-full bg-white/80 dark:bg-emerald-950/60 border border-emerald-300/60 dark:border-emerald-800 flex items-center gap-1.5 shadow-2xs">
+              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300/60 dark:border-emerald-800 flex items-center gap-1.5 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 99.98% Uptime
               </span>
             </div>
 
-            {/* Glassy Metrics Grid */}
+            {/* Cuadrícula de Métricas de la Red */}
             <div className="grid grid-cols-3 gap-3 relative z-10">
-              <div className="p-3.5 rounded-2xl bg-white/75 dark:bg-slate-900/60 border border-white/90 dark:border-white/10 shadow-2xs backdrop-blur-xs">
-                <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400 block">
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
                   Establecimientos
                 </span>
                 <span className="text-xl font-extrabold text-slate-900 dark:text-white">
                   480+
                 </span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-white/75 dark:bg-slate-900/60 border border-white/90 dark:border-white/10 shadow-2xs backdrop-blur-xs">
-                <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400 block">
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
                   Asistencia Hoy
                 </span>
                 <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">
                   98.4%
                 </span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-white/75 dark:bg-slate-900/60 border border-white/90 dark:border-white/10 shadow-2xs backdrop-blur-xs">
-                <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400 block">
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs">
+                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
                   Decreto 67
                 </span>
                 <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">
@@ -727,10 +723,10 @@ function LoginContent() {
               </div>
             </div>
 
-            {/* Selector de Colegios de la Red */}
+            {/* Acceso Directo por Colegio */}
             <div className="space-y-2 pt-1 relative z-10">
               <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <span>Acceso Directo por Colegio Asociado:</span>
+                <span>Colegio Asociado en Demostración:</span>
                 <button
                   type="button"
                   onClick={() => setIsSpotlightOpen(true)}
@@ -741,7 +737,7 @@ function LoginContent() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2">
                 {FEATURED_SCHOOLS.map((school) => {
                   const isSelected = selectedSchool?.id === school.id;
                   return (
@@ -749,24 +745,31 @@ function LoginContent() {
                       key={school.id}
                       type="button"
                       onClick={() => handleSelectSchool(school)}
-                      className={`p-2.5 rounded-2xl text-left border transition-all cursor-pointer flex items-center gap-2.5 ${
+                      className={`p-3 rounded-2xl text-left border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                         isSelected
-                          ? "bg-white dark:bg-blue-950/80 border-blue-500 ring-2 ring-blue-500/20 shadow-xs"
-                          : "bg-white/60 dark:bg-slate-900/40 border-white/80 dark:border-white/10 hover:bg-white/90 dark:hover:bg-slate-800/60 hover:border-blue-300"
+                          ? "bg-blue-50/70 dark:bg-blue-950/60 border-blue-500 ring-2 ring-blue-500/20 shadow-xs"
+                          : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800/80 hover:border-blue-300"
                       }`}
                     >
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-800 to-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                        {school.initials}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                          {school.name}
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-800 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+                          {school.initials}
                         </div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                          {school.city}
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                            {school.name}
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                            {school.city} • RBD 10240
+                          </div>
                         </div>
                       </div>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                      {isSelected && (
+                        <span className="flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 shrink-0">
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Seleccionado</span>
+                        </span>
+                      )}
                     </button>
                   );
                 })}
@@ -792,16 +795,16 @@ function LoginContent() {
         </div>
 
         {/* =====================================================================
-            COLUMNA DERECHA: FORMULARIO DE ACCESO PRÉMIUM
+            COLUMNA DERECHA: FORMULARIO DEFINITIVO CON LOS 8 ESTADOS DE ACCESO
             ===================================================================== */}
         <div className="col-span-12 lg:col-span-6 flex justify-center">
-          <div className="w-full max-w-[480px] bg-white dark:bg-[#0B1120] rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xl shadow-slate-200/60 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] p-6 sm:p-9 space-y-6">
+          <div className="w-full max-w-[480px] bg-white dark:bg-[#0B1120] rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] p-6 sm:p-9 space-y-6">
             
             {/* Cabecera Adaptativa: Red o Colegio Seleccionado */}
             <div className="space-y-3">
               {detectedInstitution ? (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="p-3.5 rounded-2xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 flex items-center justify-between"
                 >
@@ -832,13 +835,14 @@ function LoginContent() {
                     }}
                     className="p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-950/60 text-slate-400 hover:text-rose-600 transition cursor-pointer"
                     title="Cambiar colegio"
+                    aria-label="Deseleccionar colegio"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </motion.div>
               ) : (
                 <div className="flex items-center justify-between pb-1">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-850 text-slate-700 dark:text-slate-300 text-xs font-semibold">
                     <Globe2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                     <span>Portal Nacional Aurenis</span>
                   </div>
@@ -864,7 +868,7 @@ function LoginContent() {
               </div>
             </div>
 
-            {/* Mensaje de Error del Servidor */}
+            {/* ESTADO 7: Error de Servidor / Rechazado (Server Error / Rejected) */}
             <AnimatePresence>
               {serverError && (
                 <motion.div
@@ -875,22 +879,31 @@ function LoginContent() {
                   className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2.5"
                 >
                   <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-                  <span className="leading-relaxed font-medium">{serverError}</span>
+                  <div className="flex-1">
+                    <span className="leading-relaxed font-semibold block">{serverError}</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsHelpModalOpen(true)}
+                      className="text-[11px] font-bold underline mt-1 text-rose-800 dark:text-rose-200 hover:opacity-80"
+                    >
+                      ¿Necesitas asistencia técnica de acceso?
+                    </button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Formulario Principal */}
+            {/* Formulario Principal de Autenticación */}
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
 
-              {/* Selector Rápido de Rol: Estudiante, Director, Profesor, Apoderado */}
+              {/* Selector Rápido de Rol Oficial */}
               <div className="space-y-1.5 text-left">
                 <div className="flex items-center justify-between">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     Ingresar directamente como:
                   </label>
                   <span className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold truncate max-w-[170px]">
-                    {selectedSchool ? selectedSchool.name : "Colegio San José"}
+                    {selectedSchool ? selectedSchool.name : "Liceo Marga Marga"}
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
@@ -898,34 +911,34 @@ function LoginContent() {
                     {
                       key: "estudiante",
                       label: "Estudiante",
-                      desc: "Notas y asistencia",
+                      desc: "Notas y QR",
                       icon: BookOpen,
-                      email: selectedSchool ? `estudiante@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "estudiante@sanjose.cl",
-                      pass: "Estudiante2026!",
+                      email: selectedSchool ? `estudiante.1@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "estudiante.1@lpmm.cl",
+                      pass: "EstudianteLpmm2026!",
                     },
                     {
                       key: "director",
                       label: "Director",
-                      desc: "Gestión ejecutiva",
+                      desc: "Gestión y UTP",
                       icon: Building2,
-                      email: selectedSchool ? `director@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "director@sanjose.cl",
-                      pass: "AdminCSJ2026!",
+                      email: selectedSchool ? `director@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "director@lpmm.cl",
+                      pass: "AdminLPMM2026!",
                     },
                     {
                       key: "profesor",
-                      label: "Profesor",
+                      label: "Docente",
                       desc: "Libro de clases",
                       icon: GraduationCap,
-                      email: selectedSchool ? `profesor@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "profesor@sanjose.cl",
-                      pass: "Profesor2026!",
+                      email: selectedSchool ? `profesor.rodrigo@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "profesor.rodrigo@lpmm.cl",
+                      pass: "ProfesorLpmm2026!",
                     },
                     {
                       key: "apoderado",
-                      label: "Apoderado",
-                      desc: "Seguimiento pupilo",
+                      label: "Familia",
+                      desc: "Seguimiento",
                       icon: Users,
-                      email: selectedSchool ? `apoderado@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "apoderado@sanjose.cl",
-                      pass: "Apoderado2026!",
+                      email: selectedSchool ? `apoderado.1@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "apoderado.1@lpmm.cl",
+                      pass: "ApoderadoLpmm2026!",
                     },
                   ].map((item) => {
                     const Icon = item.icon;
@@ -941,7 +954,7 @@ function LoginContent() {
                           setErrors({});
                           if (serverError) setServerError(null);
                         }}
-                        className={`p-2 rounded-xl text-left border transition-all cursor-pointer flex flex-col justify-between ${
+                        className={`p-2 rounded-xl text-left border transition-all cursor-pointer flex flex-col justify-between min-h-[56px] ${
                           isMatch
                             ? "bg-blue-50/80 dark:bg-blue-950/50 border-blue-500 ring-2 ring-blue-500/20 shadow-xs"
                             : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-white dark:hover:bg-slate-800"
@@ -967,22 +980,26 @@ function LoginContent() {
                 </div>
               </div>
               
-              {/* Campo: Correo o RUT */}
+              {/* CAMPO 1: Correo o RUT con Estados (Default, Focus, Valid, Invalid) */}
               <div className="space-y-1.5 text-left">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="auth-identifier"
                     className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
                   >
-                    Correo Institucional o RUT <span className="text-rose-500">*</span>
+                    Correo Institucional o RUT <span className="text-rose-500" aria-hidden="true">*</span>
                   </label>
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    ej. docente@colegio.cl o 12.345.678-9
+                  <span className="text-[10px] text-slate-500 font-medium">
+                    ej. docente@lpmm.cl o 12.345.678-9
                   </span>
                 </div>
 
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none">
+                  <div className={`absolute left-3.5 transition-colors pointer-events-none ${
+                    focusedField === "identifier"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-slate-400 dark:text-slate-500"
+                  }`}>
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
@@ -991,15 +1008,18 @@ function LoginContent() {
                     name="identifier"
                     type="text"
                     autoComplete="username"
+                    disabled={isLoading || isSuccessRedirecting}
                     placeholder={
                       selectedSchool
                         ? `usuario@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl`
-                        : "ej. profesor@sanjose.cl o 12345678-9"
+                        : "ej. profesor.rodrigo@lpmm.cl o 12345678-9"
                     }
                     value={identifier}
+                    onFocus={() => setFocusedField("identifier")}
                     onChange={handleIdentifierChange}
                     onBlur={() => handleBlur("identifier")}
                     aria-invalid={!!errors.identifier}
+                    aria-describedby={errors.identifier ? "identifier-error" : undefined}
                     className={`w-full text-sm rounded-2xl py-3 pl-10 pr-10 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 border min-h-[48px] transition-all focus-visible:outline-none ${
                       errors.identifier
                         ? "border-rose-500 focus-visible:ring-2 focus-visible:ring-rose-500/20"
@@ -1008,34 +1028,36 @@ function LoginContent() {
                         : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20"
                     }`}
                   />
+                  {/* ESTADO 3: Valid / Filled Indicator */}
                   {isIdentifierValid && (
-                    <div className="absolute right-3.5 text-emerald-600 dark:text-emerald-400 pointer-events-none">
+                    <div className="absolute right-3.5 text-emerald-600 dark:text-emerald-400 pointer-events-none animate-in fade-in zoom-in duration-200">
                       <CheckCircle2 className="w-4 h-4" />
                     </div>
                   )}
+                  {/* ESTADO 4: Field Error Indicator */}
                   {errors.identifier && (
-                    <div className="absolute right-3.5 text-rose-500 pointer-events-none">
+                    <div className="absolute right-3.5 text-rose-500 pointer-events-none animate-in fade-in zoom-in duration-200">
                       <AlertCircle className="w-4 h-4" />
                     </div>
                   )}
                 </div>
 
                 {errors.identifier && (
-                  <p role="alert" className="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">
+                  <p id="identifier-error" role="alert" className="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.identifier}</span>
                   </p>
                 )}
               </div>
 
-              {/* Campo: Contraseña */}
+              {/* CAMPO 2: Contraseña con Estados (Default, Focus, Valid, Invalid, CapsLock) */}
               <div className="space-y-1.5 text-left">
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="auth-password"
                     className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
                   >
-                    Contraseña de Acceso <span className="text-rose-500">*</span>
+                    Contraseña de Acceso <span className="text-rose-500" aria-hidden="true">*</span>
                   </label>
                   <button
                     type="button"
@@ -1047,7 +1069,11 @@ function LoginContent() {
                 </div>
 
                 <div className="relative flex items-center">
-                  <div className="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none">
+                  <div className={`absolute left-3.5 transition-colors pointer-events-none ${
+                    focusedField === "password"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-slate-400 dark:text-slate-500"
+                  }`}>
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -1056,15 +1082,20 @@ function LoginContent() {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
+                    disabled={isLoading || isSuccessRedirecting}
                     placeholder="••••••••"
                     value={password}
+                    onFocus={() => setFocusedField("password")}
                     onChange={handlePasswordChange}
                     onKeyDown={handleCapsLock}
                     onBlur={() => handleBlur("password")}
                     aria-invalid={!!errors.password}
+                    aria-describedby={errors.password ? "password-error" : undefined}
                     className={`w-full text-sm rounded-2xl py-3 pl-10 pr-11 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 border min-h-[48px] transition-all focus-visible:outline-none ${
                       errors.password
                         ? "border-rose-500 focus-visible:ring-2 focus-visible:ring-rose-500/20"
+                        : isPasswordValid
+                        ? "border-emerald-500 focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/20"
                         : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20"
                     }`}
                   />
@@ -1078,15 +1109,17 @@ function LoginContent() {
                   </button>
                 </div>
 
+                {/* ESTADO 5: Alerta de Mayúsculas (Caps Lock Active) */}
                 {capsLockActive && (
-                  <div className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-[11px] text-amber-700 dark:text-amber-300 font-medium flex items-center gap-1.5">
+                  <div className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-[11px] text-amber-700 dark:text-amber-300 font-medium flex items-center gap-1.5 animate-in fade-in duration-200">
                     <KeyRound className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                     <span>Bloqueo de mayúsculas activo</span>
                   </div>
                 )}
 
+                {/* ESTADO 4: Error en Contraseña */}
                 {errors.password && (
-                  <p role="alert" className="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">
+                  <p id="password-error" role="alert" className="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{errors.password}</span>
                   </p>
@@ -1095,7 +1128,7 @@ function LoginContent() {
 
               {/* Recordar sesión */}
               <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-600 dark:text-slate-400 font-medium">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-600 dark:text-slate-400 font-medium min-h-[44px]">
                   <input
                     type="checkbox"
                     checked={rememberMe}
@@ -1106,14 +1139,23 @@ function LoginContent() {
                 </label>
               </div>
 
-              {/* Botón Principal de Ingreso */}
+              {/* BOTÓN PRINCIPAL: ESTADO 1 (Default), ESTADO 6 (Loading), ESTADO 8 (Success) */}
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isLoading}
-                  className="w-full h-12 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-blue-600/25 active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:pointer-events-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  disabled={isLoading || isSuccessRedirecting}
+                  className={`w-full h-12 rounded-2xl font-bold text-sm shadow-lg active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[48px] ${
+                    isSuccessRedirecting
+                      ? "bg-emerald-600 text-white shadow-emerald-600/30"
+                      : "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-600/25 disabled:opacity-75 disabled:pointer-events-none"
+                  }`}
                 >
-                  {isLoading && !activeDemoId ? (
+                  {isSuccessRedirecting ? (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 animate-in zoom-in" />
+                      <span>¡Credenciales verificadas! Redirigiendo...</span>
+                    </>
+                  ) : isLoading && !activeDemoId ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       <span>Conectando con el servidor escolar...</span>
@@ -1146,7 +1188,7 @@ function LoginContent() {
                 </button>
               </div>
 
-              {/* Chips rápidos de 1 clic */}
+              {/* Chips rápidos de 1 clic para los 5 roles */}
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
                 {DEMO_ACCOUNTS.map((acc) => {
                   const IconComp = acc.icon;
@@ -1156,9 +1198,9 @@ function LoginContent() {
                     <button
                       key={acc.id}
                       type="button"
-                      disabled={isLoading}
+                      disabled={isLoading || isSuccessRedirecting}
                       onClick={() => handleQuickLogin(acc)}
-                      className="p-2 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-all flex flex-col items-center justify-center gap-1 group text-center cursor-pointer disabled:opacity-50"
+                      className="p-2 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-all flex flex-col items-center justify-center gap-1 group text-center cursor-pointer disabled:opacity-50 min-h-[64px]"
                       title={`Ingresar inmediatamente como ${acc.roleTitle}`}
                     >
                       <div className="w-7 h-7 rounded-lg bg-blue-600/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -1187,7 +1229,7 @@ function LoginContent() {
 
             {/* Sello de Seguridad Criptográfica */}
             <div className="text-center pt-1">
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-center gap-1.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Protocolo de autenticación validado según estándares MINEDUC</span>
               </p>
@@ -1197,9 +1239,9 @@ function LoginContent() {
       </main>
 
       {/* =========================================================================
-          PIE DE PÁGINA
+          3. PIE DE PÁGINA INSTITUCIONAL
           ========================================================================= */}
-      <footer className="w-full border-t border-slate-200/60 dark:border-slate-800/60 bg-white/40 dark:bg-[#070B14]/40 py-4 px-4 sm:px-8 text-center text-xs text-slate-500 dark:text-slate-400">
+      <footer className="w-full border-t border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-[#070B14]/60 py-4 px-4 sm:px-8 text-center text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-4">
             <button
@@ -1209,7 +1251,7 @@ function LoginContent() {
             >
               Directorio Nacional Escolar
             </button>
-            <span>•</span>
+            <span aria-hidden="true">•</span>
             <button
               type="button"
               onClick={() => setIsHelpModalOpen(true)}
@@ -1217,7 +1259,7 @@ function LoginContent() {
             >
               Protocolo de Recuperación
             </button>
-            <span>•</span>
+            <span aria-hidden="true">•</span>
             <button
               type="button"
               onClick={() => setIsDemoModalOpen(true)}
@@ -1232,7 +1274,7 @@ function LoginContent() {
       </footer>
 
       {/* =========================================================================
-          SPOTLIGHT COMMAND PALETTE: BUSCADOR DE INSTITUCIONES (⌘K)
+          MODAL 1: SPOTLIGHT COMMAND PALETTE: BUSCADOR DE INSTITUCIONES (⌘K)
           ========================================================================= */}
       <Modal isOpen={isSpotlightOpen} onClose={() => setIsSpotlightOpen(false)} size="lg">
         <ModalHeader>
@@ -1260,7 +1302,7 @@ function LoginContent() {
                 placeholder="Escribe el nombre del colegio, comuna o código RBD..."
                 value={searchQuery}
                 onChange={(e) => handleSearchSchools(e.target.value)}
-                className="w-full text-sm rounded-2xl py-3 pl-10 pr-10 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 border border-slate-200 dark:border-slate-800 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20 transition-all focus-visible:outline-none"
+                className="w-full text-sm rounded-2xl py-3 pl-10 pr-10 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 border border-slate-200 dark:border-slate-800 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20 transition-all focus-visible:outline-none min-h-[48px]"
               />
               {isSearchingSchools ? (
                 <div className="absolute right-3.5">
@@ -1270,7 +1312,8 @@ function LoginContent() {
                 <button
                   type="button"
                   onClick={() => handleSearchSchools("")}
-                  className="absolute right-3.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  className="absolute right-3.5 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
+                  aria-label="Limpiar búsqueda"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1308,7 +1351,7 @@ function LoginContent() {
                           <MapPin className="w-3 h-3 text-slate-400" />
                           {school.city || "Chile"}
                         </span>
-                        <span>•</span>
+                        <span aria-hidden="true">•</span>
                         <span>RBD: {school.institutionalCode || school.slug}</span>
                       </div>
                     </div>
@@ -1333,7 +1376,7 @@ function LoginContent() {
       </Modal>
 
       {/* =========================================================================
-          MODAL DE ROLES DE DEMOSTRACIÓN Y PRUEBA
+          MODAL 2: ROLES DE DEMOSTRACIÓN Y PRUEBA
           ========================================================================= */}
       <Modal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} size="lg">
         <ModalHeader>
@@ -1377,9 +1420,9 @@ function LoginContent() {
 
                   <button
                     type="button"
-                    disabled={isLoading}
+                    disabled={isLoading || isSuccessRedirecting}
                     onClick={() => handleQuickLogin(acc)}
-                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs"
+                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs min-h-[44px]"
                   >
                     {isThisLoading ? (
                       <>
@@ -1406,7 +1449,7 @@ function LoginContent() {
       </Modal>
 
       {/* =========================================================================
-          MODAL DE RECUPERACIÓN DE CONTRASEÑA
+          MODAL 3: RECUPERACIÓN DE CONTRASEÑA (Normativa Circular 482)
           ========================================================================= */}
       <Modal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} size="md">
         <ModalHeader>
@@ -1456,7 +1499,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#070B14]">
+        <div className="min-h-screen flex items-center justify-center bg-[#F8F8F5] dark:bg-[#070B14]">
           <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
         </div>
       }

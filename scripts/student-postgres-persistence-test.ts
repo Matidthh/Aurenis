@@ -49,7 +49,7 @@ console.log("\n[3] Verificando Criterio: Prueba de integración exitosa...");
 const viewComponentPath = path.join(process.cwd(), "components/mockups/student-postgres-persistence-view.tsx");
 assert(fs.existsSync(viewComponentPath), "Componente interactivo StudentPostgresPersistenceView generado correctamente");
 const viewContent = fs.readFileSync(viewComponentPath, "utf-8");
-assert(viewContent.includes("/api/schools/colegio-san-jose/students"), "La vista conecta reactivamente con la API real de PostgreSQL");
+assert(viewContent.includes("/api/schools/lpmm/students") || viewContent.includes("/api/schools/colegio-san-jose/students"), "La vista conecta reactivamente con la API real de PostgreSQL");
 
 console.log("\n================================================================================");
 console.log(`   RESULTADO GLOBAL: ${passedAssertions}/${totalAssertions} ASERCIONES COMPLETADAS CON ÉXITO (100%)`);

@@ -186,52 +186,72 @@ export async function authenticateUser(identifier: string, plainPassword: string
   }
 
   let user: any = null;
-  if (isDatabaseConfigured()) {
-    try {
-      // Buscar usuario en base de datos por correo electrónico, RUT o coincidencia de nombre/apellido
-      const words = normalized.split(/\s+/).filter(Boolean);
-      user = await prisma.user.findFirst({
-        where: {
-          OR: [
-            { email: normalized },
-            { email: { startsWith: normalized } },
-            { rutOrNationalId: cleanRut },
-            { rutOrNationalId: normalized },
-            ...(words.length >= 2
-              ? [
-                  {
-                    AND: [
-                      { firstName: { contains: words[0], mode: "insensitive" as const } },
-                      { lastName: { contains: words.slice(1).join(" "), mode: "insensitive" as const } },
-                    ],
-                  },
-                ]
-              : words.length === 1
-              ? [
-                  { firstName: { contains: words[0], mode: "insensitive" as const } },
-                  { lastName: { contains: words[0], mode: "insensitive" as const } },
-                ]
-              : []),
-          ],
+  const userAuthInclude = {
+    memberships: {
+      where: { isActive: true },
+      include: {
+        school: {
+          include: { settings: true },
         },
-        include: {
-          memberships: {
-            where: { isActive: true },
-            include: {
-              school: {
-                include: { settings: true },
-              },
-              role: {
-                include: {
-                  permissions: {
-                    include: { permission: true },
-                  },
-                },
-              },
+        role: {
+          include: {
+            permissions: {
+              include: { permission: true },
             },
           },
         },
-      });
+      },
+    },
+  };
+
+  if (isDatabaseConfigured()) {
+    try {
+      const isEmail = normalized.includes("@");
+      const isRutCandidate = /\d/.test(normalized) && (cleanRut.length >= 7 || normalized.length >= 7);
+
+      // 1. Búsqueda directa por Email (Usa índice B-Tree @unique User.email - O(log N) < 1ms)
+      if (isEmail) {
+        user = await prisma.user.findUnique({
+          where: { email: normalized },
+          include: userAuthInclude,
+        });
+      }
+
+      // 2. Búsqueda directa por RUT (Usa índice B-Tree @unique User.rutOrNationalId - O(log N) < 1ms)
+      if (!user && (isRutCandidate || !isEmail)) {
+        user = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { rutOrNationalId: cleanRut },
+              { rutOrNationalId: normalized },
+            ],
+          },
+          include: userAuthInclude,
+        });
+      }
+
+      // 3. Fallback excepcional por nombre/apellido solo si no es email ni RUT
+      if (!user && !isEmail && !isRutCandidate) {
+        const words = normalized.split(/\s+/).filter(Boolean);
+        if (words.length > 0) {
+          user = await prisma.user.findFirst({
+            where: words.length >= 2
+              ? {
+                  AND: [
+                    { firstName: { contains: words[0], mode: "insensitive" as const } },
+                    { lastName: { contains: words.slice(1).join(" "), mode: "insensitive" as const } },
+                  ],
+                }
+              : {
+                  OR: [
+                    { firstName: { contains: words[0], mode: "insensitive" as const } },
+                    { lastName: { contains: words[0], mode: "insensitive" as const } },
+                  ],
+                },
+            include: userAuthInclude,
+          });
+        }
+      }
     } catch (dbError: any) {
       console.error("[Auth Service] Error de conexión a la base de datos:", dbError);
     }
@@ -344,19 +364,17 @@ export async function authenticateUser(identifier: string, plainPassword: string
     throw new UserServiceError("Credenciales inválidas.", 401);
   }
 
-  // Registrar login en auditoría
+  // Registrar login en auditoría de forma asíncrona no bloqueante
   if (isDatabaseConfigured()) {
-    try {
-      await logAuditEvent({
-        userId: user.id,
-        action: AuditAction.LOGIN,
-        entityType: "USER",
-        entityId: user.id,
-        details: { email: user.email },
-      });
-    } catch {
+    logAuditEvent({
+      userId: user.id,
+      action: AuditAction.LOGIN,
+      entityType: "USER",
+      entityId: user.id,
+      details: { email: user.email },
+    }).catch(() => {
       // Evento de auditoría no bloqueante
-    }
+    });
   }
 
   return user;
