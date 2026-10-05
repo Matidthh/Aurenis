@@ -8,6 +8,31 @@ export const LoginSchema = z.object({
 
 export type LoginInput = z.infer<typeof LoginSchema>;
 
+export const LoginFormSchema = z.object({
+  identifier: z
+    .string()
+    .trim()
+    .min(1, "Ingresa tu correo institucional o RUT.")
+    .refine(
+      (val) => {
+        if (val.includes("@")) {
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+        }
+        return val.replace(/[\.\-]/g, "").length >= 3;
+      },
+      {
+        message: "Ingresa un correo institucional válido o un RUT con dígito verificador.",
+      }
+    ),
+  password: z
+    .string()
+    .min(1, "La contraseña de acceso es requerida."),
+  schoolSlug: z.string().optional(),
+  rememberMe: z.boolean().default(true),
+});
+
+export type LoginFormInput = z.infer<typeof LoginFormSchema>;
+
 export const SelectSchoolSchema = z.object({
   schoolId: z.string().min(1, "El ID de la institución es obligatorio"),
 });

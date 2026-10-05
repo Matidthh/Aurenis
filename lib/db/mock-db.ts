@@ -64,13 +64,13 @@ function initStore(): MockStore {
   });
 
   // 2. SuperAdmin User
-  const adminPasswordHash = bcrypt.hashSync("AurenisSuperAdmin2026!", 10);
+  const STATIC_DEMO_HASH = "$2a$10$wN35rBdg2bFqY5p5gZkJ.eU7lY2U3KjW7uUeL1I7b2o0V9Fz6Q7aC";
   const superAdmin = {
     id: "user-super-admin",
     email: "admin@aurenis.com",
     firstName: "SuperAdmin",
     lastName: "Aurenis",
-    passwordHash: adminPasswordHash,
+    passwordHash: STATIC_DEMO_HASH,
     rutOrNationalId: "1-9",
     status: "ACTIVE",
     isSystemAdmin: true,
@@ -174,14 +174,13 @@ function initStore(): MockStore {
   }
 
   // 5. School Admin User: Carlos Mendoza
-  const directorPassword = bcrypt.hashSync("AdminCSJ2026!", 10);
   const director = {
     id: "user-director",
     email: "director@sanjose.cl",
     firstName: "Carlos",
     lastName: "Mendoza",
     rutOrNationalId: "12345678-9",
-    passwordHash: directorPassword,
+    passwordHash: STATIC_DEMO_HASH,
     status: "ACTIVE",
     isSystemAdmin: false,
     createdAt: new Date("2026-01-01"),
@@ -201,14 +200,13 @@ function initStore(): MockStore {
   store.memberships.set(directorMem.id, directorMem);
 
   // 6. Teacher User: Roberto Gómez
-  const teacherPassword = bcrypt.hashSync("Profesor2026!", 10);
   const teacher = {
     id: "user-teacher-roberto",
     email: "profesor.matematica@sanjose.cl",
     firstName: "Roberto",
     lastName: "Gómez",
     rutOrNationalId: "15432198-7",
-    passwordHash: teacherPassword,
+    passwordHash: STATIC_DEMO_HASH,
     status: "ACTIVE",
     isSystemAdmin: false,
     createdAt: new Date("2026-01-01"),
@@ -354,7 +352,7 @@ function initStore(): MockStore {
     firstName: "María",
     lastName: "González",
     phone: "+56 9 8765 4321",
-    passwordHash: bcrypt.hashSync("Apoderado2026!", 10),
+    passwordHash: STATIC_DEMO_HASH,
     status: "ACTIVE",
     isSystemAdmin: false,
     createdAt: new Date("2026-01-01"),
@@ -389,7 +387,7 @@ function initStore(): MockStore {
     firstName: "Carlos",
     lastName: "Silva",
     phone: "+56 9 8765 4322",
-    passwordHash: bcrypt.hashSync("Apoderado2026!", 10),
+    passwordHash: STATIC_DEMO_HASH,
     status: "ACTIVE",
     isSystemAdmin: false,
     createdAt: new Date("2026-01-01"),
@@ -426,7 +424,7 @@ function initStore(): MockStore {
       firstName: st.first,
       lastName: st.last,
       rutOrNationalId: st.rut,
-      passwordHash: bcrypt.hashSync("Estudiante2026!", 10),
+      passwordHash: STATIC_DEMO_HASH,
       status: "ACTIVE",
       isSystemAdmin: false,
       createdAt: new Date("2026-01-01"),

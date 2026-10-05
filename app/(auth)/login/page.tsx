@@ -1,42 +1,37 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import React, { useState, useEffect, useRef, useId, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Shield,
   Mail,
   Lock,
   Eye,
   EyeOff,
   ArrowRight,
   AlertCircle,
-  CheckCircle2,
   HelpCircle,
-  Sun,
-  Moon,
   Sparkles,
   Building2,
-  Search,
-  MapPin,
-  ChevronRight,
-  KeyRound,
-  Loader2,
   GraduationCap,
   BookOpen,
   UserCog,
   Users,
-  Globe2,
+  ShieldCheck,
+  TrendingUp,
   X,
-  FileCheck2,
-  ArrowLeft,
-  Activity,
-  Check,
+  Loader2,
+  KeyRound,
+  Phone,
+  School,
+  CheckCircle2,
 } from "lucide-react";
+import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth/auth-context";
+import { LoginFormSchema } from "@/lib/validations/auth.schema";
 import {
   Modal,
   ModalHeader,
@@ -45,17 +40,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@/components/ui/modal";
-
-interface Institution {
-  id: string;
-  name: string;
-  slug: string;
-  institutionalCode: string | null;
-  city: string | null;
-  status: string;
-  color: string;
-  initials: string;
-}
+import { cn } from "@/lib/utils/cn";
 
 interface DemoAccount {
   id: string;
@@ -71,19 +56,6 @@ interface DemoAccount {
   description: string;
 }
 
-const FEATURED_SCHOOLS: Institution[] = [
-  {
-    id: "sch_lpmm_demo",
-    name: "Liceo Politécnico Marga Marga",
-    slug: "lpmm",
-    institutionalCode: "LPMM-001 (RBD 10240)",
-    city: "Quilpué, Marga Marga",
-    status: "ACTIVE",
-    color: "from-blue-600 to-indigo-700",
-    initials: "LPMM",
-  },
-];
-
 const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     id: "demo-lpmm-director",
@@ -95,7 +67,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     identifier: "director@lpmm.cl",
     pass: "AdminLPMM2026!",
     icon: Building2,
-    badgeColor: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+    badgeColor: "bg-blue-500/10 text-blue-600 border-blue-500/20",
     description: "Gestión ejecutiva, libro digital de clases, supervisión y métricas ministeriales LPMM.",
   },
   {
@@ -108,7 +80,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     identifier: "profesor.rodrigo@lpmm.cl",
     pass: "ProfesorLpmm2026!",
     icon: BookOpen,
-    badgeColor: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    badgeColor: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
     description: "Libro de clases oficial LPMM, notas, asignaturas TP y control de asistencia mensual.",
   },
   {
@@ -121,7 +93,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     identifier: "estudiante.1@lpmm.cl",
     pass: "EstudianteLpmm2026!",
     icon: GraduationCap,
-    badgeColor: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
+    badgeColor: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20",
     description: "Portal de calificaciones y asistencia sincronizadas desde planilla ministerial.",
   },
   {
@@ -134,7 +106,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     identifier: "apoderado.1@lpmm.cl",
     pass: "ApoderadoLpmm2026!",
     icon: Users,
-    badgeColor: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
+    badgeColor: "bg-rose-500/10 text-rose-600 border-rose-500/20",
     description: "Seguimiento pedagógico del estudiante, citaciones, comunicaciones y reportes.",
   },
   {
@@ -147,15 +119,33 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     identifier: "admin@aurenis.com",
     pass: "AurenisSuperAdmin2026!",
     icon: UserCog,
-    badgeColor: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+    badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/20",
     description: "Gestión central de colegios, licenciamiento, auditoría general e integraciones.",
   },
 ];
 
-const DOMAIN_MAP: Record<string, { name: string; code: string; city: string; initials: string }> = {
-  "lpmm.cl": { name: "Liceo Politécnico Marga Marga", code: "LPMM-001 (RBD 10240)", city: "Quilpué, Marga Marga", initials: "LPMM" },
-  "aurenis.com": { name: "Aurenis Cloud Global", code: "PLATAFORMA CENTRAL", city: "Nacional", initials: "AUR" },
-};
+function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.04h3.88c2.28-2.09 3.665-5.17 3.665-9.14z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.04c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.25 21.37 7.32 24 12 24z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.28 14.28c-.25-.72-.38-1.49-.38-2.28s.13-1.56.38-2.28V6.59H1.26C.46 8.19 0 9.99 0 12s.46 3.81 1.26 5.41l4.02-3.13z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.32 0 3.25 2.63 1.26 6.59l4.02 3.13c.95-2.83 3.6-4.97 6.72-4.97z"
+      />
+    </svg>
+  );
+}
 
 function LoginContent() {
   const router = useRouter();
@@ -163,215 +153,52 @@ function LoginContent() {
   const { setSessionData } = useAuth();
   const schoolParam = searchParams.get("school") || searchParams.get("slug");
 
-  // Inputs
+  // Form states
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [capsLockActive, setCapsLockActive] = useState(false);
 
-  // Institución fijada manualmente o detectada por URL
-  const [selectedSchool, setSelectedSchool] = useState<Institution | null>(null);
-
-  // Estados de foco e interacción para los 8 estados
-  const [focusedField, setFocusedField] = useState<"identifier" | "password" | null>(null);
-  const [isSuccessRedirecting, setIsSuccessRedirecting] = useState(false);
-
-  // Detectar colegio desde el parámetro URL (/login?school=lpmm)
-  useEffect(() => {
-    if (schoolParam) {
-      const match = FEATURED_SCHOOLS.find(
-        (s) => s.slug.toLowerCase() === schoolParam.toLowerCase() || s.id === schoolParam
-      );
-      if (match) {
-        setSelectedSchool(match);
-      } else {
-        const formattedName = (schoolParam || "")
-          .split(/[-_]/)
-          .filter(Boolean)
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(" ");
-        setSelectedSchool({
-          id: `sch_${schoolParam}`,
-          name: formattedName.length > 2 ? formattedName : schoolParam.toUpperCase(),
-          slug: schoolParam.toLowerCase(),
-          institutionalCode: `RBD-${schoolParam.substring(0, 4).toUpperCase()}`,
-          city: "Chile",
-          status: "ACTIVE",
-          color: "from-blue-600 to-indigo-700",
-          initials: schoolParam.substring(0, 4).toUpperCase(),
-        });
-      }
-    }
-  }, [schoolParam]);
-
-  // Estados de validación
+  // Validation states
   const [touched, setTouched] = useState({ identifier: false, password: false });
   const [errors, setErrors] = useState<{ identifier?: string; password?: string }>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  // Estados de llamada
+  // Network and server call states
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [activeDemoId, setActiveDemoId] = useState<string | null>(null);
 
-  // Modales
-  const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  // Modals
   const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
-
-  // Búsqueda en el spotlight
-  const [searchQuery, setSearchQuery] = useState("");
-  const [schoolsList, setSchoolsList] = useState<Institution[]>(FEATURED_SCHOOLS);
-  const [isSearchingSchools, setIsSearchingSchools] = useState(false);
-
-  // Tema claro/oscuro
-  const [isDark, setIsDark] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
 
   const identifierInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const isDarkMode = document.documentElement.classList.contains("dark");
-    setIsDark(isDarkMode);
-  }, []);
-
-  // Shortcut ⌘K / Ctrl+K
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setIsSpotlightOpen((prev) => !prev);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  useEffect(() => {
-    if (isSpotlightOpen) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 100);
-    }
-  }, [isSpotlightOpen]);
-
-  function toggleTheme() {
-    const next = !isDark;
-    setIsDark(next);
-    if (next) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }
-
-  // Búsqueda de colegios en la API
-  async function handleSearchSchools(q: string) {
-    setSearchQuery(q);
-    if (!q.trim()) {
-      setSchoolsList(FEATURED_SCHOOLS);
-      return;
-    }
-    try {
-      setIsSearchingSchools(true);
-      const res = await fetch(`/api/schools/search?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
-      if (data.success && Array.isArray(data.schools)) {
-        setSchoolsList(
-          data.schools.map((s: any) => ({
-            id: s.id,
-            name: s.name,
-            slug: s.slug,
-            institutionalCode: s.institutionalCode,
-            city: s.city,
-            status: s.status,
-            color: "from-blue-600 to-indigo-700",
-            initials: s.name.substring(0, 3).toUpperCase(),
-          }))
-        );
-      }
-    } catch (err) {
-      console.warn("Error searching schools:", err);
-    } finally {
-      setIsSearchingSchools(false);
-    }
-  }
-
-  // Detección en tiempo real del colegio según correo o selección
-  const detectedInstitution = useMemo(() => {
-    if (selectedSchool) {
-      return {
-        name: selectedSchool.name,
-        code: selectedSchool.institutionalCode || selectedSchool.slug,
-        city: selectedSchool.city || "Chile",
-        initials: selectedSchool.initials,
-        isManual: true,
-      };
-    }
-
-    const trimmed = identifier.trim().toLowerCase();
-    if (!trimmed.includes("@")) return null;
-
-    const parts = trimmed.split("@");
-    const domain = parts[1];
-    if (!domain) return null;
-
-    if (DOMAIN_MAP[domain]) {
-      return {
-        ...DOMAIN_MAP[domain],
-        isManual: false,
-      };
-    }
-
-    if (
-      domain.includes(".cl") ||
-      domain.includes(".edu") ||
-      domain.includes(".org") ||
-      domain.includes(".com")
-    ) {
-      const schoolPart = (domain || "").split(".")[0] || "";
-      const prettyName = schoolPart ? schoolPart.charAt(0).toUpperCase() + schoolPart.slice(1) : "";
-      return {
-        name: `Colegio / Red ${prettyName}`,
-        code: "RED NACIONAL",
-        city: "Establecimiento Asociado",
-        initials: prettyName.substring(0, 3).toUpperCase(),
-        isManual: false,
-      };
-    }
-
-    return null;
-  }, [identifier, selectedSchool]);
-
+  // Detección de Bloqueo de Mayúsculas
   function handleCapsLock(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.getModifierState) {
       setCapsLockActive(e.getModifierState("CapsLock"));
     }
   }
 
+  // Validación con Zod Schema
   function validateIdentifier(val: string): string | undefined {
-    const trimmed = val.trim();
-    if (!trimmed) {
-      return "Ingresa tu correo institucional o RUT.";
-    }
-    if (trimmed.includes("@")) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(trimmed)) {
-        return "El formato del correo institucional es inválido.";
-      }
-      return undefined;
-    }
-    if (trimmed.length < 3) {
-      return "El identificador o RUT ingresado es demasiado corto.";
+    const res = LoginFormSchema.shape.identifier.safeParse(val);
+    if (!res.success) {
+      return res.error.issues[0]?.message || "El correo electrónico es obligatorio.";
     }
     return undefined;
   }
 
   function validatePassword(val: string): string | undefined {
-    if (!val) {
-      return "La contraseña de acceso es requerida.";
+    const res = LoginFormSchema.shape.password.safeParse(val);
+    if (!res.success) {
+      return res.error.issues[0]?.message || "La contraseña es requerida.";
     }
     return undefined;
   }
@@ -397,7 +224,6 @@ function LoginContent() {
   }
 
   function handleBlur(field: "identifier" | "password") {
-    setFocusedField(null);
     setTouched((prev) => ({ ...prev, [field]: true }));
     if (field === "identifier") {
       setErrors((prev) => ({ ...prev, identifier: validateIdentifier(identifier) }));
@@ -406,30 +232,48 @@ function LoginContent() {
     }
   }
 
-  // Envío tradicional del formulario
+  // Envío del formulario
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setHasSubmitted(true);
     setServerError(null);
 
-    const idErr = validateIdentifier(identifier);
-    const passErr = validatePassword(password);
-
-    setErrors({
-      identifier: idErr,
-      password: passErr,
+    // Validación completa con Zod
+    const validation = LoginFormSchema.safeParse({
+      identifier,
+      password,
+      schoolSlug: schoolParam || undefined,
+      rememberMe,
     });
 
-    if (idErr) {
-      identifierInputRef.current?.focus();
+    if (!validation.success) {
+      const fieldErrors: { identifier?: string; password?: string } = {};
+      for (const issue of validation.error.issues) {
+        if (issue.path[0] === "identifier" && !fieldErrors.identifier) {
+          fieldErrors.identifier = issue.message;
+        }
+        if (issue.path[0] === "password" && !fieldErrors.password) {
+          fieldErrors.password = issue.message;
+        }
+      }
+      setErrors(fieldErrors);
+      if (fieldErrors.identifier) {
+        identifierInputRef.current?.focus();
+      } else if (fieldErrors.password) {
+        passwordInputRef.current?.focus();
+      }
       return;
     }
-    if (passErr) {
-      passwordInputRef.current?.focus();
+
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setServerError("Sin conexión a Internet. Por favor verifica tu conectividad de red e intenta nuevamente.");
       return;
     }
 
     setIsLoading(true);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
       const res = await fetch("/api/auth/login", {
@@ -438,14 +282,34 @@ function LoginContent() {
         body: JSON.stringify({
           email: identifier.trim(),
           password,
-          schoolSlug: selectedSchool?.slug || schoolParam || undefined,
+          schoolSlug: schoolParam || undefined,
         }),
+        signal: controller.signal,
       });
 
-      const data = await res.json();
+      clearTimeout(timeoutId);
+
+      const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(data.error || "Credenciales incorrectas o usuario no registrado.");
+        if (res.status === 429) {
+          const retryMsg = data?.retryAfter ? ` en ${data.retryAfter} segundos` : " en unos instantes";
+          throw new Error(`Demasiados intentos fallidos. Por protección escolar reintenta${retryMsg}.`);
+        }
+        if (res.status === 401) {
+          throw new Error(data?.error || "Credenciales incorrectas o usuario no registrado en el establecimiento.");
+        }
+        if (res.status === 400) {
+          throw new Error(data?.error || "Los datos de acceso no cumplen con el formato institucional.");
+        }
+        if (res.status >= 500) {
+          throw new Error("El servidor institucional de Aurenis no se encuentra disponible momentáneamente. Intenta nuevamente.");
+        }
+        throw new Error(data?.error || "No fue posible iniciar sesión con las credenciales provistas.");
+      }
+
+      if (!data) {
+        throw new Error("Respuesta inválida o vacía del servidor.");
       }
 
       if (data.user) {
@@ -465,34 +329,25 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
-      setIsSuccessRedirecting(true);
       const targetUrl = data.redirectUrl || "/select-school";
+      router.push(targetUrl);
       setTimeout(() => {
-        router.push(targetUrl);
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
           window.location.assign(targetUrl);
         }
-      }, 350);
-    } catch (err: any) {
-      setServerError(err.message || "Error al autenticar con el servidor escolar.");
-      setIsLoading(false);
-      setIsSuccessRedirecting(false);
-    }
-  }
-
-  function handleSelectSchool(school: Institution) {
-    setSelectedSchool(school);
-    setIsSpotlightOpen(false);
-
-    if (!identifier || identifier.includes("@")) {
-      const domainSlug = school.slug.replace(/[^a-z0-9]/g, "");
-      setIdentifier(`@${domainSlug}.cl`);
-      setTimeout(() => {
-        if (identifierInputRef.current) {
-          identifierInputRef.current.focus();
-          identifierInputRef.current.setSelectionRange(0, 0);
+      }, 150);
+    } catch (err: unknown) {
+      clearTimeout(timeoutId);
+      let message = "Error al autenticar con el servidor escolar.";
+      if (err instanceof Error) {
+        if (err.name === "AbortError") {
+          message = "El servidor institucional tardó demasiado en responder (tiempo de espera agotado). Verifica tu conexión.";
+        } else {
+          message = err.message;
         }
-      }, 50);
+      }
+      setServerError(message);
+      setIsLoading(false);
     }
   }
 
@@ -506,6 +361,16 @@ function LoginContent() {
     setActiveDemoId(account.id);
     setIsDemoModalOpen(false);
 
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setServerError("Sin conexión a Internet para iniciar sesión de demostración.");
+      setIsLoading(false);
+      setActiveDemoId(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -513,17 +378,23 @@ function LoginContent() {
         body: JSON.stringify({
           email: account.identifier.trim(),
           password: account.pass,
-          schoolSlug: selectedSchool?.slug || schoolParam || undefined,
+          schoolSlug: schoolParam || undefined,
         }),
+        signal: controller.signal,
       });
 
-      const data = await res.json();
+      clearTimeout(timeoutId);
+
+      const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(data.error || "No fue posible iniciar sesión con la cuenta de prueba.");
+        if (res.status === 429) {
+          throw new Error("Límite de peticiones alcanzado. Por favor espera unos momentos antes de reintentar.");
+        }
+        throw new Error(data?.error || "No fue posible iniciar sesión con la cuenta de prueba.");
       }
 
-      if (data.user) {
+      if (data?.user) {
         const rawUser = data.user;
         const sessionUser: any = {
           userId: rawUser.id || rawUser.userId || "user-" + Date.now(),
@@ -540,849 +411,523 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
-      setIsSuccessRedirecting(true);
       const targetUrl = data.redirectUrl || "/select-school";
+      router.push(targetUrl);
       setTimeout(() => {
-        router.push(targetUrl);
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
           window.location.assign(targetUrl);
         }
-      }, 350);
-    } catch (err: any) {
-      setServerError(err.message || "Error al iniciar sesión con la cuenta seleccionada.");
+      }, 150);
+    } catch (err: unknown) {
+      clearTimeout(timeoutId);
+      let message = "Error al iniciar sesión con la cuenta seleccionada.";
+      if (err instanceof Error) {
+        if (err.name === "AbortError") {
+          message = "Tiempo de espera agotado al conectar con la cuenta demo. Intenta de nuevo.";
+        } else {
+          message = err.message;
+        }
+      }
+      setServerError(message);
       setIsLoading(false);
       setActiveDemoId(null);
-      setIsSuccessRedirecting(false);
     }
   }
 
-  const isIdentifierValid =
-    identifier.trim().length > 2 &&
-    !errors.identifier &&
-    (touched.identifier || hasSubmitted);
-
-  const isPasswordValid =
-    password.length > 0 &&
-    !errors.password &&
-    (touched.password || hasSubmitted);
+  function handleGoogleLogin() {
+    setIsGoogleModalOpen(true);
+  }
 
   return (
-    <div className="min-h-screen bg-[#F8F8F5] dark:bg-[#070B14] text-slate-900 dark:text-slate-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white transition-colors duration-200">
-      
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8FAFC] text-[#0F172A] selection:bg-[#3B82F6] selection:text-white font-sans antialiased">
       {/* =========================================================================
-          1. HEADER INSTITUCIONAL (Consistente con Landing Navbar)
+          COLUMNA IZQUIERDA: HERO PANEL INSTITUCIONAL (Desktop 1280px+ & Tablet 768px-1024px)
           ========================================================================= */}
-      <header className="w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#0A0F1D]/90 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <section className="hidden md:flex md:w-5/12 lg:w-1/2 xl:w-5/12 relative overflow-hidden bg-[#0A1128] text-white flex-col justify-between p-8 sm:p-10 lg:p-14 xl:p-16 select-none shrink-0">
+        {/* Imagen de fondo de campus moderno con gradiente azul nocturno */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Image
+            src="/campus-building.jpg"
+            alt="Campus Educativo Moderno Aurenis"
+            fill
+            className="object-cover object-center opacity-35"
+            priority
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#080E20]/95 via-[#0A1638]/90 to-[#060B1A]/98" />
+        </div>
+
+        {/* Cabecera Izquierda: Logotipo Aurenis Blanco */}
+        <header className="relative z-10">
           <Link
             href="/"
-            className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+            className="inline-flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded-xl"
+            aria-label="Volver a la página principal de Aurenis"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Portal Principal</span>
+            <AurenisLogo
+              className="w-9 h-9"
+              textClassName="text-white text-xl font-bold tracking-tight"
+              showText={true}
+              preferSvg={true}
+            />
           </Link>
+        </header>
 
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+        {/* Bloque Central de Contenido y Características */}
+        <div className="relative z-10 my-auto py-8">
+          <span className="block uppercase tracking-[0.2em] text-[11px] font-semibold text-[#93C5FD] mb-3">
+            Plataforma Académica
+          </span>
 
-          {/* Logo y Nombre */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-0.5 shadow-sm shadow-blue-500/20">
-              <div className="w-full h-full bg-white dark:bg-[#0A0F1D] rounded-[10px] flex items-center justify-center overflow-hidden">
-                <Image
-                  src="/logonuevo.png"
-                  alt="Aurenis"
-                  width={22}
-                  height={22}
-                  className="object-contain"
-                  referrerPolicy="no-referrer"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                Aurenis
-              </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800 tracking-wide uppercase">
-                Cloud
-              </span>
-            </div>
-          </Link>
-        </div>
+          <h1 className="text-3xl lg:text-4xl xl:text-[44px] font-bold tracking-tight text-white leading-[1.15]">
+            El futuro de la educación <br />
+            <span className="text-[#38BDF8]">comienza aquí</span>
+          </h1>
 
-        {/* Acciones de Cabecera */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Indicador de Estado de Conexión */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 shadow-2xs">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            <span>Servidores MINEDUC Sincronizados</span>
+          <p className="text-slate-300 text-sm lg:text-base leading-relaxed mt-4 max-w-md font-normal">
+            Gestiona, organiza y potencia el aprendizaje en un solo lugar. AURENIS te acompaña en cada paso del camino.
+          </p>
+
+          {/* Lista de Características con Iconografía Oficial */}
+          <div className="space-y-4 mt-8 lg:mt-10">
+            {[
+              {
+                icon: BookOpen,
+                text: "Gestión académica integral",
+              },
+              {
+                icon: Users,
+                text: "Seguimiento de estudiantes",
+              },
+              {
+                icon: TrendingUp,
+                text: "Reportes y estadísticas",
+              },
+              {
+                icon: ShieldCheck,
+                text: "Acceso seguro y personalizado",
+              },
+            ].map((feat, idx) => {
+              const IconComp = feat.icon;
+              return (
+                <div key={idx} className="flex items-center gap-3.5 group">
+                  <div className="w-10 h-10 rounded-xl bg-white/[0.08] border border-white/10 flex items-center justify-center text-blue-400 shrink-0 shadow-sm backdrop-blur-xs transition-colors group-hover:bg-white/[0.12] group-hover:border-blue-400/40">
+                    <IconComp className="w-5 h-5 text-[#38BDF8]" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-200">
+                    {feat.text}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-
-          {/* Botón Explorador de Colegios (⌘K) */}
-          <button
-            type="button"
-            onClick={() => setIsSpotlightOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-blue-400 dark:hover:border-blue-600 transition cursor-pointer shadow-2xs"
-          >
-            <Search className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span className="hidden sm:inline">Buscar Colegio</span>
-            <kbd className="hidden lg:inline text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700 ml-1">
-              ⌘K
-            </kbd>
-          </button>
-
-          {/* Selector de Modo Oscuro */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer shadow-2xs"
-            aria-label={isDark ? "Modo Claro" : "Modo Oscuro"}
-          >
-            {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
-          </button>
         </div>
-      </header>
+
+        {/* Pie de Página Izquierdo */}
+        <footer className="relative z-10 pt-4 border-t border-white/10">
+          <p className="text-xs text-slate-400/80 font-normal">
+            AURENIS • Innovación educativa para un mejor mañana
+          </p>
+        </footer>
+      </section>
 
       {/* =========================================================================
-          2. CONTENIDO PRINCIPAL (SPLIT-SCREEN RESPONSIVE)
+          COLUMNA DERECHA: FORMULARIO DE ACCESO (Móvil 320px-767px, Tablet & Desktop)
           ========================================================================= */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        
-        {/* =====================================================================
-            COLUMNA IZQUIERDA: SHOWCASE DE LA RED NACIONAL EDUCATIVA
-            ===================================================================== */}
-        <div className="hidden lg:flex lg:col-span-6 flex-col justify-between space-y-8 pr-4">
-          
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800/80 text-blue-700 dark:text-blue-300 text-xs font-semibold">
-              <Globe2 className="w-3.5 h-3.5" />
-              <span>Red Nacional de Establecimientos Conectados</span>
-            </div>
+      <main className="w-full md:w-7/12 lg:w-1/2 xl:w-7/12 flex flex-col justify-between min-h-screen bg-[#F8FAFC] p-6 sm:p-10 lg:p-12 xl:p-16 overflow-y-auto">
+        <div className="w-full max-w-[420px] mx-auto my-auto py-6">
+          {/* 1. Logotipo Superior (Centrado en Móvil y Desktop) */}
+          <div className="flex items-center justify-center mb-6">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] rounded-xl"
+              aria-label="Ir al portal principal de Aurenis"
+            >
+              <AurenisLogo
+                className="w-9 h-9"
+                textClassName="text-[#0F172A] text-2xl font-bold tracking-tight"
+                showText={true}
+              />
+            </Link>
+          </div>
 
-            <h1 className="text-4xl xl:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-              El entorno unificado de gestión escolar de Chile.
-            </h1>
-
-            <p className="text-base text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg">
-              Libro de clases digital, asistencia en tiempo real, decretos evaluativos y comunicación integral para directivos, docentes, estudiantes y familias.
+          {/* 2. Títulos de Bienvenida */}
+          <div className="text-left mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-[28px] font-bold text-[#0F172A] tracking-tight">
+              Iniciar sesión
+            </h2>
+            <p className="text-sm text-[#64748B] mt-1.5 font-normal">
+              Accede a tu cuenta para continuar
             </p>
           </div>
 
-          {/* Tarjeta de Métricas e Infraestructura (Tailwind Puro, Anti-Slop, Sin inline styles) */}
-          <div className="relative p-6 sm:p-7 rounded-3xl bg-white/90 dark:bg-slate-900/80 border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-5 overflow-hidden backdrop-blur-md">
-            
-            {/* Cabecera del Showcase */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 relative z-10">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs border border-blue-100 dark:border-blue-900 shadow-2xs">
-                  <Activity className="w-4 h-4" />
+          {/* 3. Mensaje de Error del Servidor o Red */}
+          <AnimatePresence>
+            {serverError && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                role="alert"
+                aria-live="assertive"
+                className="mb-5 p-3.5 rounded-xl bg-red-50 border border-[#EF4444]/30 text-xs text-[#EF4444] flex items-start gap-2.5"
+              >
+                <AlertCircle className="w-4 h-4 text-[#EF4444] shrink-0 mt-0.5" aria-hidden="true" />
+                <span className="leading-relaxed font-medium">{serverError}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* 4. Formulario de Credenciales */}
+          <form onSubmit={handleSubmit} noValidate className="space-y-4 sm:space-y-5">
+            {/* Campo: Correo electrónico */}
+            <div className="space-y-1.5 text-left">
+              <label
+                htmlFor="auth-email"
+                className="block text-xs sm:text-sm font-medium text-[#0F172A]"
+              >
+                Correo electrónico
+              </label>
+
+              <div className="relative flex items-center">
+                <div className="absolute left-3.5 text-[#64748B] pointer-events-none" aria-hidden="true">
+                  <Mail className="w-4 h-4" />
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                    Monitoreo en Tiempo Real
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                    Infraestructura Cloud de Alta Disponibilidad
-                  </p>
-                </div>
+                <input
+                  ref={identifierInputRef}
+                  id="auth-email"
+                  name="email"
+                  type="text"
+                  autoComplete="username"
+                  required
+                  aria-required="true"
+                  placeholder="usuario@ejemplo.com"
+                  value={identifier}
+                  onChange={handleIdentifierChange}
+                  onBlur={() => handleBlur("identifier")}
+                  aria-invalid={!!errors.identifier}
+                  aria-describedby={errors.identifier ? "auth-email-error" : undefined}
+                  className={cn(
+                    "w-full h-11 sm:h-12 rounded-xl border bg-white px-3.5 pl-10 text-sm text-[#0F172A] placeholder:text-[#94A3B8] transition-all focus:outline-none",
+                    errors.identifier
+                      ? "border-[#EF4444] text-[#0F172A] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20"
+                      : "border-[#E2E8F0] hover:border-slate-300 focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
+                  )}
+                />
               </div>
-              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300/60 dark:border-emerald-800 flex items-center gap-1.5 shadow-2xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                99.98% Uptime
-              </span>
+
+              {errors.identifier && (
+                <p id="auth-email-error" role="alert" className="text-xs text-[#EF4444] mt-1 font-normal flex items-center gap-1">
+                  <span>{errors.identifier}</span>
+                </p>
+              )}
             </div>
 
-            {/* Cuadrícula de Métricas de la Red */}
-            <div className="grid grid-cols-3 gap-3 relative z-10">
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
-                  Establecimientos
-                </span>
-                <span className="text-xl font-extrabold text-slate-900 dark:text-white">
-                  480+
-                </span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
-                  Asistencia Hoy
-                </span>
-                <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400">
-                  98.4%
-                </span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-850/60 border border-slate-200/80 dark:border-slate-800 shadow-2xs">
-                <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 block">
-                  Decreto 67
-                </span>
-                <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">
-                  100%
-                </span>
-              </div>
-            </div>
+            {/* Campo: Contraseña */}
+            <div className="space-y-1.5 text-left">
+              <label
+                htmlFor="auth-password"
+                className="block text-xs sm:text-sm font-medium text-[#0F172A]"
+              >
+                Contraseña
+              </label>
 
-            {/* Acceso Directo por Colegio */}
-            <div className="space-y-2 pt-1 relative z-10">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <span>Colegio Asociado en Demostración:</span>
+              <div className="relative flex items-center">
+                <div className="absolute left-3.5 text-[#64748B] pointer-events-none" aria-hidden="true">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <input
+                  ref={passwordInputRef}
+                  id="auth-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  aria-required="true"
+                  placeholder="Ingresa tu contraseña"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  onKeyDown={handleCapsLock}
+                  onBlur={() => handleBlur("password")}
+                  aria-invalid={!!errors.password}
+                  aria-describedby={
+                    errors.password
+                      ? "auth-password-error"
+                      : capsLockActive
+                      ? "auth-capslock-warning"
+                      : undefined
+                  }
+                  className={cn(
+                    "w-full h-11 sm:h-12 rounded-xl border bg-white px-3.5 pl-10 pr-10 text-sm text-[#0F172A] placeholder:text-[#94A3B8] transition-all focus:outline-none",
+                    errors.password
+                      ? "border-[#EF4444] text-[#0F172A] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20"
+                      : "border-[#E2E8F0] hover:border-slate-300 focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
+                  )}
+                />
                 <button
                   type="button"
-                  onClick={() => setIsSpotlightOpen(true)}
-                  className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5 cursor-pointer text-xs font-bold"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 p-1 text-[#64748B] hover:text-[#0F172A] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] rounded-md cursor-pointer"
+                  aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                  aria-pressed={showPassword}
                 >
-                  <span>Explorar red</span>
-                  <ChevronRight className="w-3 h-3" />
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 gap-2">
-                {FEATURED_SCHOOLS.map((school) => {
-                  const isSelected = selectedSchool?.id === school.id;
-                  return (
-                    <button
-                      key={school.id}
-                      type="button"
-                      onClick={() => handleSelectSchool(school)}
-                      className={`p-3 rounded-2xl text-left border transition-all cursor-pointer flex items-center justify-between gap-3 ${
-                        isSelected
-                          ? "bg-blue-50/70 dark:bg-blue-950/60 border-blue-500 ring-2 ring-blue-500/20 shadow-xs"
-                          : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800/80 hover:border-blue-300"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-800 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                          {school.initials}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                            {school.name}
-                          </div>
-                          <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                            {school.city} • RBD 10240
-                          </div>
-                        </div>
-                      </div>
-                      {isSelected && (
-                        <span className="flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 shrink-0">
-                          <Check className="w-3.5 h-3.5" />
-                          <span>Seleccionado</span>
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+              {capsLockActive && (
+                <div
+                  id="auth-capslock-warning"
+                  role="status"
+                  aria-live="polite"
+                  className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-700 font-medium flex items-center gap-1.5 mt-1"
+                >
+                  <KeyRound className="w-3.5 h-3.5 text-amber-600 shrink-0" aria-hidden="true" />
+                  <span>Bloqueo de mayúsculas activo</span>
+                </div>
+              )}
+
+              {errors.password && (
+                <p id="auth-password-error" role="alert" className="text-xs text-[#EF4444] mt-1 font-normal flex items-center gap-1">
+                  <span>{errors.password}</span>
+                </p>
+              )}
             </div>
+
+            {/* Opciones: Recordarme & ¿Olvidaste tu contraseña? */}
+            <div className="flex items-center justify-between pt-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none text-xs sm:text-sm text-[#64748B]">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-[#CBD5E1] text-[#3B82F6] focus:ring-[#3B82F6] transition cursor-pointer"
+                />
+                <span>Recordarme</span>
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setIsHelpModalOpen(true)}
+                className="text-xs sm:text-sm font-medium text-[#3B82F6] hover:text-[#2563EB] hover:underline transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] rounded"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
+
+            {/* Botón Primario: Iniciar sesión */}
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full h-11 sm:h-12 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] active:bg-[#1D4ED8] text-white font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] focus-visible:ring-offset-2"
+              >
+                {isLoading && !activeDemoId ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                    <span>Iniciando sesión...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Iniciar sesión</span>
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+
+          {/* Separador "o" */}
+          <div className="relative my-5 sm:my-6 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#E2E8F0]" />
+            </div>
+            <span className="relative bg-[#F8FAFC] px-3 text-xs text-[#94A3B8] font-normal">
+              o
+            </span>
           </div>
 
-          {/* Sellos de Confianza al Pie */}
-          <div className="flex items-center gap-6 text-xs text-slate-500 dark:text-slate-400">
-            <div className="flex items-center gap-1.5">
-              <Shield className="w-4 h-4 text-emerald-500" />
-              <span>Multi-Tenant Blindado</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <FileCheck2 className="w-4 h-4 text-blue-500" />
-              <span>Firma Electrónica MINEDUC</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Lock className="w-4 h-4 text-slate-400" />
-              <span>Cifrado AES-256</span>
-            </div>
+          {/* Botón SSO: Continuar con Google */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full h-11 sm:h-12 rounded-xl border border-[#E2E8F0] bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0F172A] font-medium text-sm transition-all flex items-center justify-center gap-2.5 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]"
+          >
+            <GoogleIcon className="w-4 h-4" />
+            <span>Continuar con Google</span>
+          </button>
+
+          {/* Enlace de Contacto Institucional */}
+          <p className="text-center text-xs sm:text-sm text-[#64748B] mt-6 sm:mt-8">
+            ¿No tienes una cuenta?{" "}
+            <button
+              type="button"
+              onClick={() => setIsContactModalOpen(true)}
+              className="font-medium text-[#3B82F6] hover:text-[#2563EB] hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6] rounded"
+            >
+              Contacta con tu institución
+            </button>
+          </p>
+
+          {/* Acceso Rápido de Evaluación para la Comisión / Pruebas */}
+          <div className="text-center mt-6 pt-5 border-t border-[#E2E8F0]">
+            <button
+              type="button"
+              onClick={() => setIsDemoModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-slate-500 hover:text-[#3B82F6] hover:bg-blue-50/80 transition-colors cursor-pointer border border-transparent hover:border-blue-200"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Modo Demostración y Cuentas de Prueba</span>
+            </button>
           </div>
         </div>
 
-        {/* =====================================================================
-            COLUMNA DERECHA: FORMULARIO DEFINITIVO CON LOS 8 ESTADOS DE ACCESO
-            ===================================================================== */}
-        <div className="col-span-12 lg:col-span-6 flex justify-center">
-          <div className="w-full max-w-[480px] bg-white dark:bg-[#0B1120] rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] p-6 sm:p-9 space-y-6">
-            
-            {/* Cabecera Adaptativa: Red o Colegio Seleccionado */}
-            <div className="space-y-3">
-              {detectedInstitution ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-3.5 rounded-2xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3 min-w-0 pr-2">
-                    <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-extrabold text-sm shadow-xs shrink-0">
-                      {detectedInstitution.initials || "COL"}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
-                          {detectedInstitution.name}
-                        </span>
-                        <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 font-bold shrink-0">
-                          {detectedInstitution.code}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                        {detectedInstitution.city} • Servidor Institucional Activo
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedSchool(null);
-                      setIdentifier("");
-                    }}
-                    className="p-1.5 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-950/60 text-slate-400 hover:text-rose-600 transition cursor-pointer"
-                    title="Cambiar colegio"
-                    aria-label="Deseleccionar colegio"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </motion.div>
-              ) : (
-                <div className="flex items-center justify-between pb-1">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-850 text-slate-700 dark:text-slate-300 text-xs font-semibold">
-                    <Globe2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                    <span>Portal Nacional Aurenis</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsSpotlightOpen(true)}
-                    className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Buscar mi colegio</span>
-                    <ChevronRight className="w-3 h-3" />
-                  </button>
-                </div>
-              )}
-
-              <div>
-                <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-                  Iniciar Sesión
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  Ingresa con tu correo institucional o tu RUT oficial chileno.
-                </p>
-              </div>
-            </div>
-
-            {/* ESTADO 7: Error de Servidor / Rechazado (Server Error / Rejected) */}
-            <AnimatePresence>
-              {serverError && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  role="alert"
-                  className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2.5"
-                >
-                  <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <span className="leading-relaxed font-semibold block">{serverError}</span>
-                    <button
-                      type="button"
-                      onClick={() => setIsHelpModalOpen(true)}
-                      className="text-[11px] font-bold underline mt-1 text-rose-800 dark:text-rose-200 hover:opacity-80"
-                    >
-                      ¿Necesitas asistencia técnica de acceso?
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Formulario Principal de Autenticación */}
-            <form onSubmit={handleSubmit} noValidate className="space-y-4">
-
-              {/* Selector Rápido de Rol Oficial */}
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Ingresar directamente como:
-                  </label>
-                  <span className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold truncate max-w-[170px]">
-                    {selectedSchool ? selectedSchool.name : "Liceo Marga Marga"}
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                  {[
-                    {
-                      key: "estudiante",
-                      label: "Estudiante",
-                      desc: "Notas y QR",
-                      icon: BookOpen,
-                      email: selectedSchool ? `estudiante.1@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "estudiante.1@lpmm.cl",
-                      pass: "EstudianteLpmm2026!",
-                    },
-                    {
-                      key: "director",
-                      label: "Director",
-                      desc: "Gestión y UTP",
-                      icon: Building2,
-                      email: selectedSchool ? `director@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "director@lpmm.cl",
-                      pass: "AdminLPMM2026!",
-                    },
-                    {
-                      key: "profesor",
-                      label: "Docente",
-                      desc: "Libro de clases",
-                      icon: GraduationCap,
-                      email: selectedSchool ? `profesor.rodrigo@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "profesor.rodrigo@lpmm.cl",
-                      pass: "ProfesorLpmm2026!",
-                    },
-                    {
-                      key: "apoderado",
-                      label: "Familia",
-                      desc: "Seguimiento",
-                      icon: Users,
-                      email: selectedSchool ? `apoderado.1@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl` : "apoderado.1@lpmm.cl",
-                      pass: "ApoderadoLpmm2026!",
-                    },
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    const isMatch = identifier.toLowerCase().includes(item.key) ||
-                      (item.key === "estudiante" && identifier.toLowerCase().includes("alumno"));
-                    return (
-                      <button
-                        key={item.key}
-                        type="button"
-                        onClick={() => {
-                          setIdentifier(item.email);
-                          setPassword(item.pass);
-                          setErrors({});
-                          if (serverError) setServerError(null);
-                        }}
-                        className={`p-2 rounded-xl text-left border transition-all cursor-pointer flex flex-col justify-between min-h-[56px] ${
-                          isMatch
-                            ? "bg-blue-50/80 dark:bg-blue-950/50 border-blue-500 ring-2 ring-blue-500/20 shadow-xs"
-                            : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-white dark:hover:bg-slate-800"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <Icon className={`w-3.5 h-3.5 ${isMatch ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`} />
-                          {isMatch && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
-                          )}
-                        </div>
-                        <div className="mt-1">
-                          <div className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">
-                            {item.label}
-                          </div>
-                          <div className="text-[9px] text-slate-400 truncate">
-                            {item.desc}
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              
-              {/* CAMPO 1: Correo o RUT con Estados (Default, Focus, Valid, Invalid) */}
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="auth-identifier"
-                    className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
-                  >
-                    Correo Institucional o RUT <span className="text-rose-500" aria-hidden="true">*</span>
-                  </label>
-                  <span className="text-[10px] text-slate-500 font-medium">
-                    ej. docente@lpmm.cl o 12.345.678-9
-                  </span>
-                </div>
-
-                <div className="relative flex items-center">
-                  <div className={`absolute left-3.5 transition-colors pointer-events-none ${
-                    focusedField === "identifier"
-                      ? "text-blue-600 dark:text-blue-400"
-                      : "text-slate-400 dark:text-slate-500"
-                  }`}>
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  <input
-                    ref={identifierInputRef}
-                    id="auth-identifier"
-                    name="identifier"
-                    type="text"
-                    autoComplete="username"
-                    disabled={isLoading || isSuccessRedirecting}
-                    placeholder={
-                      selectedSchool
-                        ? `usuario@${selectedSchool.slug.replace(/[^a-z0-9]/g, "")}.cl`
-                        : "ej. profesor.rodrigo@lpmm.cl o 12345678-9"
-                    }
-                    value={identifier}
-                    onFocus={() => setFocusedField("identifier")}
-                    onChange={handleIdentifierChange}
-                    onBlur={() => handleBlur("identifier")}
-                    aria-invalid={!!errors.identifier}
-                    aria-describedby={errors.identifier ? "identifier-error" : undefined}
-                    className={`w-full text-sm rounded-2xl py-3 pl-10 pr-10 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 border min-h-[48px] transition-all focus-visible:outline-none ${
-                      errors.identifier
-                        ? "border-rose-500 focus-visible:ring-2 focus-visible:ring-rose-500/20"
-                        : isIdentifierValid
-                        ? "border-emerald-500 focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/20"
-                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20"
-                    }`}
-                  />
-                  {/* ESTADO 3: Valid / Filled Indicator */}
-                  {isIdentifierValid && (
-                    <div className="absolute right-3.5 text-emerald-600 dark:text-emerald-400 pointer-events-none animate-in fade-in zoom-in duration-200">
-                      <CheckCircle2 className="w-4 h-4" />
-                    </div>
-                  )}
-                  {/* ESTADO 4: Field Error Indicator */}
-                  {errors.identifier && (
-                    <div className="absolute right-3.5 text-rose-500 pointer-events-none animate-in fade-in zoom-in duration-200">
-                      <AlertCircle className="w-4 h-4" />
-                    </div>
-                  )}
-                </div>
-
-                {errors.identifier && (
-                  <p id="identifier-error" role="alert" className="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    <span>{errors.identifier}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* CAMPO 2: Contraseña con Estados (Default, Focus, Valid, Invalid, CapsLock) */}
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="auth-password"
-                    className="block text-xs font-semibold text-slate-700 dark:text-slate-300"
-                  >
-                    Contraseña de Acceso <span className="text-rose-500" aria-hidden="true">*</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setIsHelpModalOpen(true)}
-                    className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </button>
-                </div>
-
-                <div className="relative flex items-center">
-                  <div className={`absolute left-3.5 transition-colors pointer-events-none ${
-                    focusedField === "password"
-                      ? "text-blue-600 dark:text-blue-400"
-                      : "text-slate-400 dark:text-slate-500"
-                  }`}>
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <input
-                    ref={passwordInputRef}
-                    id="auth-password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    disabled={isLoading || isSuccessRedirecting}
-                    placeholder="••••••••"
-                    value={password}
-                    onFocus={() => setFocusedField("password")}
-                    onChange={handlePasswordChange}
-                    onKeyDown={handleCapsLock}
-                    onBlur={() => handleBlur("password")}
-                    aria-invalid={!!errors.password}
-                    aria-describedby={errors.password ? "password-error" : undefined}
-                    className={`w-full text-sm rounded-2xl py-3 pl-10 pr-11 bg-slate-50/70 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 border min-h-[48px] transition-all focus-visible:outline-none ${
-                      errors.password
-                        ? "border-rose-500 focus-visible:ring-2 focus-visible:ring-rose-500/20"
-                        : isPasswordValid
-                        ? "border-emerald-500 focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/20"
-                        : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20"
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-3 p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
-                    aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-
-                {/* ESTADO 5: Alerta de Mayúsculas (Caps Lock Active) */}
-                {capsLockActive && (
-                  <div className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-[11px] text-amber-700 dark:text-amber-300 font-medium flex items-center gap-1.5 animate-in fade-in duration-200">
-                    <KeyRound className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                    <span>Bloqueo de mayúsculas activo</span>
-                  </div>
-                )}
-
-                {/* ESTADO 4: Error en Contraseña */}
-                {errors.password && (
-                  <p id="password-error" role="alert" className="text-xs text-rose-600 dark:text-rose-400 font-medium flex items-center gap-1 pt-0.5">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    <span>{errors.password}</span>
-                  </p>
-                )}
-              </div>
-
-              {/* Recordar sesión */}
-              <div className="flex items-center justify-between pt-1">
-                <label className="flex items-center gap-2 cursor-pointer select-none text-xs text-slate-600 dark:text-slate-400 font-medium min-h-[44px]">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 dark:bg-slate-800 transition cursor-pointer"
-                  />
-                  <span>Recordar sesión en este equipo</span>
-                </label>
-              </div>
-
-              {/* BOTÓN PRINCIPAL: ESTADO 1 (Default), ESTADO 6 (Loading), ESTADO 8 (Success) */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isLoading || isSuccessRedirecting}
-                  className={`w-full h-12 rounded-2xl font-bold text-sm shadow-lg active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[48px] ${
-                    isSuccessRedirecting
-                      ? "bg-emerald-600 text-white shadow-emerald-600/30"
-                      : "bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-blue-600/25 disabled:opacity-75 disabled:pointer-events-none"
-                  }`}
-                >
-                  {isSuccessRedirecting ? (
-                    <>
-                      <CheckCircle2 className="w-5 h-5 animate-in zoom-in" />
-                      <span>¡Credenciales verificadas! Redirigiendo...</span>
-                    </>
-                  ) : isLoading && !activeDemoId ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Conectando con el servidor escolar...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Ingresar a la Plataforma</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-
-            {/* =========================================================================
-                ACCESO RÁPIDO DE EVALUACIÓN MULTI-ROL (ELEGIBLE & MODAL)
-                ========================================================================= */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Acceso de Evaluación y Pruebas</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsDemoModalOpen(true)}
-                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                >
-                  Ver todos los roles
-                </button>
-              </div>
-
-              {/* Chips rápidos de 1 clic para los 5 roles */}
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
-                {DEMO_ACCOUNTS.map((acc) => {
-                  const IconComp = acc.icon;
-                  const isThisLoading = isLoading && activeDemoId === acc.id;
-
-                  return (
-                    <button
-                      key={acc.id}
-                      type="button"
-                      disabled={isLoading || isSuccessRedirecting}
-                      onClick={() => handleQuickLogin(acc)}
-                      className="p-2 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-all flex flex-col items-center justify-center gap-1 group text-center cursor-pointer disabled:opacity-50 min-h-[64px]"
-                      title={`Ingresar inmediatamente como ${acc.roleTitle}`}
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-blue-600/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                        {isThisLoading ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        ) : (
-                          <IconComp className="w-3.5 h-3.5" />
-                        )}
-                      </div>
-                      <span className="text-[10px] font-bold text-slate-800 dark:text-slate-200 block truncate w-full">
-                        {acc.roleKey === "director"
-                          ? "Director"
-                          : acc.roleKey === "profesor"
-                          ? "Docente"
-                          : acc.roleKey === "alumno"
-                          ? "Alumno"
-                          : acc.roleKey === "apoderado"
-                          ? "Familia"
-                          : "SuperAdmin"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Sello de Seguridad Criptográfica */}
-            <div className="text-center pt-1">
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Protocolo de autenticación validado según estándares MINEDUC</span>
-              </p>
-            </div>
-          </div>
+        {/* Pie Móvil Discreto */}
+        <div className="md:hidden text-center text-xs text-slate-400 py-2">
+          © 2026 Aurenis Cloud Education
         </div>
       </main>
 
       {/* =========================================================================
-          3. PIE DE PÁGINA INSTITUCIONAL
+          MODAL: RECUPERACIÓN DE CONTRASEÑA (MINEDUC PROTOCOL)
           ========================================================================= */}
-      <footer className="w-full border-t border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-[#070B14]/60 py-4 px-4 sm:px-8 text-center text-xs text-slate-500 dark:text-slate-400">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setIsSpotlightOpen(true)}
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
-            >
-              Directorio Nacional Escolar
-            </button>
-            <span aria-hidden="true">•</span>
-            <button
-              type="button"
-              onClick={() => setIsHelpModalOpen(true)}
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
-            >
-              Protocolo de Recuperación
-            </button>
-            <span aria-hidden="true">•</span>
-            <button
-              type="button"
-              onClick={() => setIsDemoModalOpen(true)}
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
-            >
-              Cuentas Demostrativas
-            </button>
-          </div>
-
-          <p>© 2026 Aurenis Cloud Education. Plataforma Educativa Nacional de Chile.</p>
-        </div>
-      </footer>
-
-      {/* =========================================================================
-          MODAL 1: SPOTLIGHT COMMAND PALETTE: BUSCADOR DE INSTITUCIONES (⌘K)
-          ========================================================================= */}
-      <Modal isOpen={isSpotlightOpen} onClose={() => setIsSpotlightOpen(false)} size="lg">
+      <Modal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} size="md">
         <ModalHeader>
-          <div className="flex items-center justify-between w-full pr-6">
-            <div>
-              <ModalTitle>Directorio Nacional de Colegios e Instituciones</ModalTitle>
-              <ModalDescription>
-                Localiza tu colegio por nombre, comuna o código oficial RBD para ingresar a su servidor.
-              </ModalDescription>
-            </div>
-            <kbd className="hidden sm:inline-block text-[11px] font-mono px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
-              ESC
-            </kbd>
-          </div>
+          <ModalTitle>Recuperación de Contraseña y Acceso</ModalTitle>
+          <ModalDescription>
+            Protocolo de seguridad escolar para resguardo del Libro de Clases Digital.
+          </ModalDescription>
         </ModalHeader>
         <ModalBody>
-          <div className="space-y-4">
-            <div className="relative flex items-center">
-              <div className="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none">
-                <Search className="w-4 h-4" />
-              </div>
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Escribe el nombre del colegio, comuna o código RBD..."
-                value={searchQuery}
-                onChange={(e) => handleSearchSchools(e.target.value)}
-                className="w-full text-sm rounded-2xl py-3 pl-10 pr-10 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white placeholder:text-slate-400 border border-slate-200 dark:border-slate-800 focus-visible:border-blue-600 focus-visible:ring-2 focus-visible:ring-blue-600/20 transition-all focus-visible:outline-none min-h-[48px]"
-              />
-              {isSearchingSchools ? (
-                <div className="absolute right-3.5">
-                  <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
-                </div>
-              ) : searchQuery ? (
-                <button
-                  type="button"
-                  onClick={() => handleSearchSchools("")}
-                  className="absolute right-3.5 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
-                  aria-label="Limpiar búsqueda"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              ) : null}
+          <div className="space-y-4 text-xs sm:text-sm text-slate-600">
+            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 flex items-start gap-2.5">
+              <HelpCircle className="w-5 h-5 text-[#3B82F6] shrink-0 mt-0.5" />
+              <p className="leading-relaxed text-xs">
+                Por normativa del Ministerio de Educación de Chile (Circular 482) y estándares de resguardo de datos de estudiantes, la regeneración de credenciales se realiza de forma presencial o validada institucionalmente.
+              </p>
             </div>
 
-            <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1">
-              {schoolsList.length === 0 && !isSearchingSchools && (
-                <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400 rounded-2xl bg-slate-50 dark:bg-slate-950/40 border border-dashed border-slate-200 dark:border-slate-800">
-                  No se encontraron colegios registrados con el término &quot;{searchQuery}&quot;.
-                </div>
-              )}
-
-              {schoolsList.map((school) => (
-                <div
-                  key={school.id}
-                  onClick={() => handleSelectSchool(school)}
-                  className="group p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:bg-blue-50/70 dark:hover:bg-blue-950/40 hover:border-blue-400 dark:hover:border-blue-700 cursor-pointer transition-all flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3 min-w-0 pr-2">
-                    <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0 font-bold text-xs shadow-2xs">
-                      {school.initials || "COL"}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                          {school.name}
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 font-semibold shrink-0">
-                          En línea
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {school.city || "Chile"}
-                        </span>
-                        <span aria-hidden="true">•</span>
-                        <span>RBD: {school.institutionalCode || school.slug}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="px-3 py-1.5 rounded-xl text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0 shadow-2xs"
-                  >
-                    Seleccionar
-                  </button>
-                </div>
-              ))}
+            <div className="space-y-2.5">
+              <h4 className="font-semibold text-[#0F172A] text-xs uppercase tracking-wide">
+                Canales de Atención según tu rol:
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-600 list-disc list-inside">
+                <li>
+                  <strong className="text-slate-800">Docentes y Profesores:</strong> Acércate a Inspectoría General o al Administrador Escolar de tu colegio para recibir tu clave temporal.
+                </li>
+                <li>
+                  <strong className="text-slate-800">Estudiantes y Familias:</strong> Solicita la reconfiguración en la Secretaría del colegio presentando el RUT del alumno.
+                </li>
+                <li>
+                  <strong className="text-slate-800">Directivos y Soporte:</strong> Contacta directamente a la mesa de ayuda central de Aurenis.
+                </li>
+              </ul>
             </div>
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button variant="secondary" onClick={() => setIsSpotlightOpen(false)}>
+          <Button variant="primary" onClick={() => setIsHelpModalOpen(false)}>
+            Entendido
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* =========================================================================
+          MODAL: CONTACTA CON TU INSTITUCIÓN
+          ========================================================================= */}
+      <Modal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} size="md">
+        <ModalHeader>
+          <ModalTitle>Afiliación y Contacto Institucional</ModalTitle>
+          <ModalDescription>
+            Información para establecimientos y nuevos usuarios escolares.
+          </ModalDescription>
+        </ModalHeader>
+        <ModalBody>
+          <div className="space-y-4 text-xs sm:text-sm text-slate-600">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#0F172A]">
+                <School className="w-4 h-4 text-[#3B82F6]" />
+                <span>¿Tu colegio ya utiliza Aurenis?</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Si tu establecimiento educativo cuenta con convenio activo, tu cuenta es creada de forma automática con la matrícula oficial del MINEDUC. Solicita tu acceso en secretaría o con tu profesor jefe.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[#0F172A]">
+                <Phone className="w-4 h-4 text-[#3B82F6]" />
+                <span>¿Deseas incorporar Aurenis a tu colegio?</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Los equipos directivos pueden solicitar una demostración guiada o cotización institucional compatible con financiamiento SEP.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href="/#planes"
+                  onClick={() => setIsContactModalOpen(false)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#3B82F6] hover:underline"
+                >
+                  <span>Ver Planes y Financiamiento SEP</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="secondary" onClick={() => setIsContactModalOpen(false)}>
             Cerrar
           </Button>
         </ModalFooter>
       </Modal>
 
       {/* =========================================================================
-          MODAL 2: ROLES DE DEMOSTRACIÓN Y PRUEBA
+          MODAL: ACCESO GOOGLE WORKSPACE SSO
+          ========================================================================= */}
+      <Modal isOpen={isGoogleModalOpen} onClose={() => setIsGoogleModalOpen(false)} size="md">
+        <ModalHeader>
+          <ModalTitle>Acceso Google Workspace for Education</ModalTitle>
+          <ModalDescription>
+            Autenticación federada para establecimientos asociados.
+          </ModalDescription>
+        </ModalHeader>
+        <ModalBody>
+          <div className="space-y-4 text-xs sm:text-sm text-slate-600">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+              <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs shrink-0">
+                <GoogleIcon className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-[#0F172A] text-sm">
+                  Inicio de sesión unificado SSO
+                </p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Para ingresar mediante Google Workspace, tu establecimiento debe haber habilitado la federación de identidad para el dominio de tu colegio (ej. @lpmm.cl o @colegio.cl).
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-500">
+              Si perteneces a una institución asociada, asegúrate de utilizar tu correo institucional provisto por el colegio en el campo de acceso principal.
+            </p>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="primary" onClick={() => setIsGoogleModalOpen(false)}>
+            Entendido
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      {/* =========================================================================
+          MODAL: CUENTAS DEMOSTRATIVAS PARA EVALUACIÓN
           ========================================================================= */}
       <Modal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} size="lg">
         <ModalHeader>
-          <ModalTitle>Cuentas Demostrativas de la Red Aurenis</ModalTitle>
+          <ModalTitle>Cuentas de Prueba y Evaluación Multi-Rol</ModalTitle>
           <ModalDescription>
-            Explora la plataforma desde la perspectiva de cada perfil escolar con 1 solo clic.
+            Prueba la plataforma seleccionando cualquier perfil escolar con 1 solo clic.
           </ModalDescription>
         </ModalHeader>
         <ModalBody>
@@ -1394,35 +939,35 @@ function LoginContent() {
               return (
                 <div
                   key={acc.id}
-                  className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-blue-400 dark:hover:border-blue-700 transition flex items-center justify-between gap-3"
+                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#3B82F6] hover:shadow-xs transition-all flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                    <div className="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 border border-blue-100 text-[#3B82F6] flex items-center justify-center shrink-0">
                       <IconComp className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">
+                        <span className="text-sm font-bold text-[#0F172A] truncate">
                           {acc.name}
                         </span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${acc.badgeColor}`}>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${acc.badgeColor} shrink-0`}>
                           {acc.roleTitle}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      <p className="text-xs text-[#64748B] mt-0.5 line-clamp-1 sm:line-clamp-none">
                         {acc.description}
                       </p>
                       <p className="text-[11px] font-mono text-slate-400 mt-1">
-                        {acc.identifier} • {acc.institutionName}
+                        {acc.identifier}
                       </p>
                     </div>
                   </div>
 
                   <button
                     type="button"
-                    disabled={isLoading || isSuccessRedirecting}
+                    disabled={isLoading}
                     onClick={() => handleQuickLogin(acc)}
-                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs min-h-[44px]"
+                    className="px-3.5 sm:px-4 py-2 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold transition flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs"
                   >
                     {isThisLoading ? (
                       <>
@@ -1447,50 +992,6 @@ function LoginContent() {
           </Button>
         </ModalFooter>
       </Modal>
-
-      {/* =========================================================================
-          MODAL 3: RECUPERACIÓN DE CONTRASEÑA (Normativa Circular 482)
-          ========================================================================= */}
-      <Modal isOpen={isHelpModalOpen} onClose={() => setIsHelpModalOpen(false)} size="md">
-        <ModalHeader>
-          <ModalTitle>Recuperación de Contraseña y Acceso</ModalTitle>
-          <ModalDescription>
-            Protocolo de seguridad escolar para resguardo del Libro de Clases Digital.
-          </ModalDescription>
-        </ModalHeader>
-        <ModalBody>
-          <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300">
-            <div className="p-3.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 flex items-start gap-2.5">
-              <HelpCircle className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-              <p className="leading-relaxed">
-                Por normativa del Ministerio de Educación de Chile (MINEDUC) y seguridad del Libro Digital, las contraseñas son custodiadas y administradas internamente por la dirección de cada establecimiento.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <h4 className="font-bold text-slate-900 dark:text-white">
-                ¿A quién debes contactar según tu perfil?
-              </h4>
-              <ul className="space-y-2 list-disc list-inside text-slate-600 dark:text-slate-400 pl-1">
-                <li>
-                  <strong>Docentes y Profesores:</strong> Acércate a la Inspectoría General o al Administrador Escolar de tu colegio para regenerar tu clave temporal.
-                </li>
-                <li>
-                  <strong>Alumnos y Familias:</strong> Solicita la reconfiguración en la Secretaría Docente presentando el RUT del estudiante.
-                </li>
-                <li>
-                  <strong>Equipos Directivos:</strong> Comunícate a través de la mesa de ayuda oficial de Aurenis Cloud.
-                </li>
-              </ul>
-            </div>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="primary" onClick={() => setIsHelpModalOpen(false)}>
-            Entendido
-          </Button>
-        </ModalFooter>
-      </Modal>
     </div>
   );
 }
@@ -1499,8 +1000,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#F8F8F5] dark:bg-[#070B14]">
-          <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+          <div className="w-8 h-8 border-3 border-[#3B82F6] border-t-transparent rounded-full animate-spin" />
         </div>
       }
     >

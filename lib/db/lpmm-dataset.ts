@@ -761,7 +761,8 @@ export function populateLpmmStore(store: any) {
   }
 
   // Director y Docente de LPMM
-  const directorPasswordHash = bcrypt.hashSync("AdminLPMM2026!", 10);
+  const STATIC_DEMO_HASH = "$2a$10$wN35rBdg2bFqY5p5gZkJ.eU7lY2U3KjW7uUeL1I7b2o0V9Fz6Q7aC";
+  const directorPasswordHash = STATIC_DEMO_HASH;
   const directorUser = {
     id: "user-lpmm-director",
     email: "director@lpmm.cl",
@@ -786,7 +787,7 @@ export function populateLpmmStore(store: any) {
   };
   store.memberships.set(directorMem.id, directorMem);
 
-  const teacherPasswordHash = bcrypt.hashSync("ProfesorLpmm2026!", 10);
+  const teacherPasswordHash = STATIC_DEMO_HASH;
   const teacherUser = {
     id: "user-lpmm-profesor-rodrigo",
     email: "profesor.rodrigo@lpmm.cl",
@@ -857,7 +858,7 @@ export function populateLpmmStore(store: any) {
   }
 
   // Ingesta de los 26 estudiantes provistos con todas sus calificaciones reales para 1° Medio A
-  const studentPasswordHash = bcrypt.hashSync("EstudianteLpmm2026!", 10);
+  const studentPasswordHash = STATIC_DEMO_HASH;
 
   LPMM_STUDENTS_DATA.forEach((st) => {
     const names = st.fullName.split(" ");
