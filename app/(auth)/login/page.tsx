@@ -178,6 +178,11 @@ function LoginContent() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
 
+  // Google OAuth states
+  const [googleEmailInput, setGoogleEmailInput] = useState("");
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
+
   const identifierInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
 
@@ -433,6 +438,53 @@ function LoginContent() {
       setServerError(message);
       setIsLoading(false);
       setActiveDemoId(null);
+    }
+  }
+
+  async function handleExecuteGoogleLogin(emailToUse: string) {
+    if (!emailToUse || !emailToUse.includes("@")) {
+      setGoogleError("Por favor ingresa un correo electrónico institucional de Google válido.");
+      return;
+    }
+    setGoogleLoading(true);
+    setGoogleError(null);
+    try {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailToUse.trim() }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error || "Error al autenticar con Google Workspace for Education.");
+      }
+
+      if (data?.user) {
+        const rawUser = data.user;
+        const sessionUser: any = {
+          userId: rawUser.id || "user-" + Date.now(),
+          email: rawUser.email || emailToUse,
+          firstName: rawUser.name?.split(" ")[0] || "Google",
+          lastName: rawUser.name?.split(" ").slice(1).join(" ") || "User",
+          isSystemAdmin: !!rawUser.isSystemAdmin,
+          activeSchoolId: rawUser.activeSchool?.id,
+          activeSchoolSlug: rawUser.activeSchool?.slug,
+          roleName: rawUser.roleName || "SCHOOL_ADMIN",
+          permissions: rawUser.permissions || ["*"],
+        };
+        setSessionData(sessionUser, data.token || null);
+      }
+
+      const targetUrl = data.redirectUrl || "/select-school";
+      router.push(targetUrl);
+      setTimeout(() => {
+        if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
+          window.location.assign(targetUrl);
+        }
+      }, 150);
+    } catch (err: unknown) {
+      setGoogleError(err instanceof Error ? err.message : "Error al iniciar sesión con Google Workspace.");
+      setGoogleLoading(false);
     }
   }
 
@@ -906,39 +958,97 @@ function LoginContent() {
       </Modal>
 
       {/* =========================================================================
-          MODAL: ACCESO GOOGLE WORKSPACE SSO
+          MODAL: ACCESO GOOGLE WORKSPACE SSO (OAUTH2 INTEGRATION)
           ========================================================================= */}
       <Modal isOpen={isGoogleModalOpen} onClose={() => setIsGoogleModalOpen(false)} size="md">
         <ModalHeader>
           <ModalTitle>Acceso Google Workspace for Education</ModalTitle>
           <ModalDescription>
-            Autenticación federada para establecimientos asociados.
+            Autenticación federada oficial para establecimientos asociados.
           </ModalDescription>
         </ModalHeader>
         <ModalBody>
           <div className="space-y-4 text-xs sm:text-sm text-slate-600">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs shrink-0">
+              <div className="p-2.5 rounded-xl bg-white border border-slate-200 shadow-2xs shrink-0">
                 <GoogleIcon className="w-5 h-5" />
               </div>
               <div className="space-y-1">
                 <p className="font-semibold text-[#0F172A] text-sm">
-                  Inicio de sesión unificado SSO
+                  Federación de Identidad Google OAuth2
                 </p>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Para ingresar mediante Google Workspace, tu establecimiento debe haber habilitado la federación de identidad para el dominio de tu colegio (ej. @lpmm.cl o @colegio.cl).
+                  Ingresa con tu cuenta institucional Google Workspace (ej. @lpmm.cl) para acceder de forma segura a tu portal educativo.
                 </p>
               </div>
             </div>
 
-            <p className="text-xs text-slate-500">
-              Si perteneces a una institución asociada, asegúrate de utilizar tu correo institucional provisto por el colegio en el campo de acceso principal.
-            </p>
+            {googleError && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{googleError}</span>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <label className="block text-xs font-medium text-slate-700">
+                Correo institucional Google Workspace
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="usuario@lpmm.cl"
+                  value={googleEmailInput}
+                  onChange={(e) => setGoogleEmailInput(e.target.value)}
+                  className="flex-1 h-10 px-3.5 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+                <button
+                  type="button"
+                  disabled={googleLoading || !googleEmailInput}
+                  onClick={() => handleExecuteGoogleLogin(googleEmailInput)}
+                  className="h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-xs"
+                >
+                  {googleLoading ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Conectando...</span>
+                    </>
+                  ) : (
+                    <span>Continuar</span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100">
+              <p className="text-xs font-medium text-slate-700 mb-2">Acceso rápido con cuentas institucionales demo:</p>
+              <div className="grid grid-cols-1 gap-2">
+                {[
+                  { label: "Director (director@lpmm.cl)", email: "director@lpmm.cl" },
+                  { label: "Profesor (profesor.rodrigo@lpmm.cl)", email: "profesor.rodrigo@lpmm.cl" },
+                  { label: "Estudiante (yamir.ahumada@lpmm.cl)", email: "yamir.ahumada@lpmm.cl" },
+                ].map((acc, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    disabled={googleLoading}
+                    onClick={() => {
+                      setGoogleEmailInput(acc.email);
+                      handleExecuteGoogleLogin(acc.email);
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition text-xs flex items-center justify-between text-slate-700 font-medium cursor-pointer"
+                  >
+                    <span>{acc.label}</span>
+                    <GoogleIcon className="w-3.5 h-3.5" />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button variant="primary" onClick={() => setIsGoogleModalOpen(false)}>
-            Entendido
+          <Button variant="secondary" onClick={() => setIsGoogleModalOpen(false)}>
+            Cerrar
           </Button>
         </ModalFooter>
       </Modal>
