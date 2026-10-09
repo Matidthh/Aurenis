@@ -15,6 +15,7 @@ export interface GradeMatrixCellProps {
   isFocused: boolean;
   isDirty: boolean;
   density: DensityMode;
+  readOnly?: boolean;
   inputRef?: RefObject<HTMLInputElement | null>;
   editingValue: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -25,28 +26,32 @@ export interface GradeMatrixCellProps {
 export function getGradeChromaticClasses(val: number | null | undefined, isBadge = false): string {
   if (val === null || val === undefined || isNaN(val)) {
     return isBadge
-      ? "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-      : "text-slate-300 dark:text-slate-600";
+      ? "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border border-slate-300 dark:border-slate-700"
+      : "text-slate-400 dark:text-slate-500";
   }
 
+  // Nivel 1: Insuficiente (< 4.0) - Rojo de alto contraste WCAG AA (ratio > 7:1)
   if (val < 4.0) {
     return isBadge
-      ? "bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 border border-red-200 dark:border-red-800 font-black"
-      : "text-red-600 dark:text-red-400 font-extrabold bg-red-50/40 dark:bg-red-950/20";
+      ? "bg-red-50 text-red-900 dark:bg-red-950/80 dark:text-red-100 border border-red-300 dark:border-red-700 font-black"
+      : "text-red-700 dark:text-red-300 font-extrabold bg-red-50/50 dark:bg-red-950/30";
   }
+  // Nivel 2: Elemental (4.0 a 4.9) - Ámbar de alto contraste WCAG AA (ratio > 5.3:1)
   if (val < 5.0) {
     return isBadge
-      ? "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
-      : "text-amber-600 dark:text-amber-400 font-bold bg-amber-50/20 dark:bg-amber-950/10";
+      ? "bg-amber-50 text-amber-950 dark:bg-amber-950/80 dark:text-amber-100 border border-amber-300 dark:border-amber-700 font-bold"
+      : "text-amber-800 dark:text-amber-300 font-bold bg-amber-50/40 dark:bg-amber-950/20";
   }
+  // Nivel 3: Adecuado (5.0 a 5.9) - Verde de alto contraste WCAG AA (ratio > 6.8:1)
   if (val < 6.0) {
     return isBadge
-      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
-      : "text-emerald-600 dark:text-emerald-400 font-bold";
+      ? "bg-emerald-50 text-emerald-950 dark:bg-emerald-950/80 dark:text-emerald-100 border border-emerald-300 dark:border-emerald-700 font-bold"
+      : "text-emerald-800 dark:text-emerald-300 font-bold bg-emerald-50/30 dark:bg-emerald-950/20";
   }
+  // Nivel 4: Destacado (6.0 a 7.0) - Azul de alto contraste WCAG AA (ratio > 8.4:1)
   return isBadge
-    ? "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-black"
-    : "text-blue-600 dark:text-blue-400 font-black";
+    ? "bg-blue-50 text-blue-950 dark:bg-blue-950/80 dark:text-blue-100 border border-blue-300 dark:border-blue-700 font-black"
+    : "text-blue-800 dark:text-blue-300 font-black bg-blue-50/30 dark:bg-blue-950/20";
 }
 
 export const GradeMatrixCell = memo(function GradeMatrixCell({
@@ -54,6 +59,7 @@ export const GradeMatrixCell = memo(function GradeMatrixCell({
   isFocused,
   isDirty,
   density,
+  readOnly = false,
   inputRef,
   editingValue,
   onInputChange,
@@ -70,14 +76,14 @@ export const GradeMatrixCell = memo(function GradeMatrixCell({
 
   return (
     <td
-      onClick={onClick}
-      className={`text-center p-0 border-r border-slate-200 dark:border-slate-800 relative cursor-pointer transition-all ${
-        isFocused
+      onClick={readOnly ? undefined : onClick}
+      className={`text-center p-0 border-r border-slate-200 dark:border-slate-800 relative ${readOnly ? "cursor-default select-text" : "cursor-pointer"} transition-all ${
+        isFocused && !readOnly
           ? "ring-2 ring-brand-500 dark:ring-brand-400 z-20 bg-white dark:bg-slate-850 shadow-md font-black"
           : ""
       }`}
     >
-      {isFocused ? (
+      {isFocused && !readOnly ? (
         <div className="relative w-full h-full flex items-center justify-center p-1">
           <input
             ref={inputRef}

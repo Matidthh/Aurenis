@@ -11,6 +11,7 @@ import { CreateGradeSchema } from "@/lib/validations/grade.schema";
 import { listAssessmentsWithGrades, createGrade } from "@/lib/services/grade.service";
 import { validateGradesAccess } from "@/lib/security/object-authorization";
 import { sanitizeErrorMessage } from "@/lib/api/response";
+import { executeGradeScaleMiddleware } from "@/lib/security/grade-scale-validator";
 
 const SchoolIdParamSchema = z
   .string()
@@ -145,8 +146,20 @@ export async function POST(
       );
     }
 
-    const tenantDb = createTenantPrisma(schoolId);
-    const grade = await createGrade(tenantDb, schoolId, validated.data, session.userId);
+    // Middleware de Validación Previa: Escala oficial [minGrade, maxGrade] antes de PostgreSQL
+    const scaleCheck = await executeGradeScaleMiddleware({
+      schoolId: targetSchoolId,
+      payload: { type: "single", value: validated.data.value },
+      userId: session.userId,
+      pathName: `POST /api/schools/${schoolId}/grades`,
+    });
+
+    if (!scaleCheck.allowed && scaleCheck.errorResponse) {
+      return scaleCheck.errorResponse;
+    }
+
+    const tenantDb = createTenantPrisma(targetSchoolId);
+    const grade = await createGrade(tenantDb, targetSchoolId, validated.data, session.userId);
 
     return NextResponse.json({ success: true, grade }, { status: 201 });
   } catch (error: any) {

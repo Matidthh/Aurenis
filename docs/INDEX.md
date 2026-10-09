@@ -40,9 +40,10 @@ Este centro de documentación consolida todas las especificaciones arquitectóni
 - Plan y prioridades para los próximos 30 días de desarrollo.
 - Reglas obligatorias para asistentes de IA y agentes en chats paralelos.
 
-### 1. 🏛️ [Arquitectura Técnica del Sistema](./ARCHITECTURE.md) | [Dossier de Entrega - Sección Arquitectura](./DOSSIER_ENTREGA_AURENIS_SECCION_ARQUITECTURA.md) | [Diccionario de Datos & Diagrama ER](./DICCIONARIO_DE_DATOS_Y_DIAGRAMA_ER.md)
-*Visión global, diseño en capas, modelo relacional, diccionario de 26 tablas, aislamiento multi-tenant y persistencia.*
+### 1. 🏛️ [Arquitectura Técnica del Sistema](./ARCHITECTURE.md) | [Dossier de Entrega - Sección Arquitectura](./DOSSIER_ENTREGA_AURENIS_SECCION_ARQUITECTURA.md) | [Flujo Autenticación Login ➔ Dashboard (Tarea #198)](./DOCUMENTACION_TECNICA_FLUJO_AUTENTICACION_LOGIN_A_DASHBOARD.md) | [Diccionario de Datos & Diagrama ER](./DICCIONARIO_DE_DATOS_Y_DIAGRAMA_ER.md)
+*Visión global, diseño en capas, modelo relacional, diccionario de 26 tablas, aislamiento multi-tenant, ciclo de vida de autenticación y persistencia.*
 - Principios de diseño (*Zero-Trust Multi-Tenancy*, Defensa en Profundidad).
+- **Ciclo de vida completo de autenticación (Login ➔ Token ➔ Middleware ➔ Dashboard)** con diagrama de secuencia formal y captura visual de arquitectura.
 - Diagrama de flujo de peticiones (Middleware ➔ RSC/API Handlers ➔ Dominio RBAC ➔ Scoped ORM).
 - Modelo de base de datos relacional y estrategia de discriminador lógico (`schoolId`).
 - **Diccionario de datos tabulado completo** (26 tablas, tipos PostgreSQL, restricciones y relaciones) y **Diagrama ER impreso**.

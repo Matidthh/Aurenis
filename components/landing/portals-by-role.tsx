@@ -3,284 +3,315 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  GraduationCap,
-  BookOpen,
-  School,
-  Users,
-  CheckCircle2,
-  ArrowRight,
-  TrendingUp,
+  Printer,
+  FileText,
   FileSpreadsheet,
-  AlertTriangle,
-  Clock,
+  Wrench,
+  ArrowRight,
+  Calculator,
+  CheckCircle2,
+  TrendingDown,
+  DollarSign,
   ShieldCheck,
-  Zap,
-  Sparkles,
-  Smartphone,
-  Eye,
-  Check,
 } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
 
 export function PortalsByRole() {
-  const [activeTab, setActiveTab] = useState<"estudiante" | "docente" | "directivo" | "apoderado">("estudiante");
+  const [studentCount, setStudentCount] = useState<number>(650);
 
-  const rolesContent = {
-    estudiante: {
-      title: "Portal del Estudiante",
-      tagline: "Todo tu rendimiento académico, calificaciones Decreto 67 y asistencia en un solo lugar.",
-      icon: GraduationCap,
-      color: "bg-emerald-600 text-white",
-      badge: "Para Alumnos",
-      features: [
-        "Planilla de calificaciones en tiempo real con ponderaciones y promedios oficiales.",
-        "Historial y porcentaje de asistencia por asignatura con semáforo de aprobación (mínimo 85%).",
-        "Acceso a rúbricas de evaluación, tareas y calendario de pruebas del curso.",
-        "Solicitud y descarga instantánea de certificados de alumno regular.",
-        "Visualización optimizada en smartphones sin necesidad de descargas pesadas.",
-      ],
-      previewStats: [
-        { label: "Promedio General", value: "6.4", status: "Destacado", color: "text-emerald-600 dark:text-emerald-400" },
-        { label: "Asistencia Total", value: "96.5%", status: "Aprobada", color: "text-blue-600 dark:text-blue-400" },
-        { label: "Asignaturas Cursadas", value: "11", status: "Al día", color: "text-slate-900 dark:text-white" },
-      ],
-      ctaText: "Ver Vista de Alumno en Prototipo",
-      ctaHref: "/mockups",
-    },
-    docente: {
-      title: "Suite para Docentes y Profesores Jefes",
-      tagline: "Libro de clases digital, planilla de notas de alta velocidad y gestión de jefatura.",
-      icon: BookOpen,
-      color: "bg-indigo-600 text-white",
-      badge: "Para Profesores",
-      features: [
-        "Planilla matricial de notas ultra rápida: tipeo con teclado numérico (ej: 65 = 6.5) y auto-avance.",
-        "Pase de asistencia 1-click con justificaciones médicas y registro de atrasos.",
-        "Control de leccionario digital estructurado con objetivos de aprendizaje (OA) Mineduc.",
-        "Ficha 360° del estudiante con historial socioemocional, notas y adecuaciones PIE.",
-        "Firma de registros de clase y cálculo automático de promedios sin doble digitación.",
-      ],
-      previewStats: [
-        { label: "Velocidad de Ingreso", value: "0.2s", status: "Por nota", color: "text-indigo-600 dark:text-indigo-400" },
-        { label: "Libro Digital", value: "100%", status: "Circular 30", color: "text-emerald-600 dark:text-emerald-400" },
-        { label: "Cursos Asignados", value: "6 Cursos", status: "32 hrs/sem", color: "text-slate-900 dark:text-white" },
-      ],
-      ctaText: "Probar Planilla de Notas",
-      ctaHref: "/mockups",
-    },
-    directivo: {
-      title: "Consola para Directivos, UTP y Sostenedores",
-      tagline: "Visión panorámica del colegio, sistema de alerta temprana SAT y cumplimiento ministerial.",
-      icon: School,
-      color: "bg-blue-600 text-white",
-      badge: "Para Equipos Directivos",
-      features: [
-        "Dashboard ejecutivo con semáforo de riesgo escolar y prevención de deserción temprana.",
-        "Auditoría de cobertura curricular por asignatura, nivel y docente en tiempo real.",
-        "Gestión multisede y soporte para redes de colegios o corporaciones municipales (SLEP).",
-        "Generación automática de actas finales, nóminas de matrícula y reportes oficiales SIGE.",
-        "Control de roles granulares (RBAC) con permisos específicos para inspectores, UTP y dirección.",
-      ],
-      previewStats: [
-        { label: "Retención Escolar", value: "98.8%", status: "+2.4% vs 2025", color: "text-emerald-600 dark:text-emerald-400" },
-        { label: "Casos en Alerta SAT", value: "14", status: "Bajo monitoreo", color: "text-amber-600 dark:text-amber-400" },
-        { label: "Cobertura Curricular", value: "94.2%", status: "Objetivos Mineduc", color: "text-blue-600 dark:text-blue-400" },
-      ],
-      ctaText: "Ver Dashboard Ejecutivo",
-      ctaHref: "/lpmm/dashboard",
-    },
-    apoderado: {
-      title: "Portal de Apoderados y Familias",
-      tagline: "Comunicación fluida y transparencia sobre el avance pedagógico de tus hijos.",
-      icon: Users,
-      color: "bg-purple-600 text-white",
-      badge: "Para Apoderados",
-      features: [
-        "Notificaciones instantáneas al celular cuando el alumno ingresa atrasado o falta a clases.",
-        "Visualización transparente de calificaciones, anotaciones positivas y observaciones de conducta.",
-        "Citaciones a reuniones de apoderados y entrevistas individuales con el profesor jefe.",
-        "Justificación de inasistencias en línea con carga de certificados médicos.",
-        "Comunicaciones institucionales y circulares del colegio con acuse de recibo.",
-      ],
-      previewStats: [
-        { label: "Notificaciones", value: "En Vivo", status: "WhatsApp / Email", color: "text-purple-600 dark:text-purple-400" },
-        { label: "Hijos Vinculados", value: "1 o más", status: "Mismo portal", color: "text-slate-900 dark:text-white" },
-        { label: "Satisfacción Familias", value: "97%", status: "Transparencia", color: "text-emerald-600 dark:text-emerald-400" },
-      ],
-      ctaText: "Explorar Portal de Familias",
-      ctaHref: "/mockups",
-    },
-  };
+  // Estimaciones conservadoras y reales de consumo anual de papelería en colegios de Chile (CLP):
+  // 1. Hojas de Oficio / Carta: resmas para guías, pruebas impresas y circulares (~$2.200 CLP por alumno/año)
+  // 2. Tinta de Impresoras: tóner, recargas de tinta y cuotas de fotocopiado en sala de profes (~$2.800 CLP por alumno/año)
+  // 3. Papel Continuo: talonarios, certificados y actas de notas históricas de secretaría (~$800 CLP por alumno/año)
+  // 4. Mantenimiento de Hardware: visitas de servicio técnico por atascos de papel y cambio de rodillos (~$700 CLP por alumno/año)
+  const costHojas = Math.round(studentCount * 2200);
+  const costTinta = Math.round(studentCount * 2800);
+  const costPapelContinuo = Math.round(studentCount * 800);
+  const costMantenimiento = Math.round(studentCount * 700);
 
-  const current = rolesContent[activeTab];
-  const Icon = current.icon;
+  const totalTraditionalCost = costHojas + costTinta + costPapelContinuo + costMantenimiento;
+  
+  // Ahorro operativo directo: al digitalizar el libro de clases, asistencia y notas,
+  // el colegio reduce en un 85% el gasto en estos 4 rubros físicos
+  const savingsPercent = 85;
+  const estimatedSavings = Math.round(totalTraditionalCost * (savingsPercent / 100));
+
+  function formatCLP(amount: number) {
+    return new Intl.NumberFormat("es-CL", {
+      style: "currency",
+      currency: "CLP",
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
+
+  const items = [
+    {
+      id: "hojas",
+      name: "Hojas de Oficio y Carta",
+      description: "Resmas para guías de estudio, pruebas bimestrales y circulares a apoderados.",
+      traditionalCost: costHojas,
+      aurenisSolution: "Digitalización directa: guías y notas visibles en la app y portal",
+      icon: FileText,
+      impact: "-85% de resmas",
+    },
+    {
+      id: "tinta",
+      name: "Tinta de Impresoras",
+      description: "Cartuchos, botellas de tinta y cuotas de fotocopiadoras en sala de profesores.",
+      traditionalCost: costTinta,
+      aurenisSolution: "Cero impresiones masivas de informes de notas y certificados",
+      icon: Printer,
+      impact: "-90% de recargas",
+    },
+    {
+      id: "papel_continuo",
+      name: "Papel Continuo",
+      description: "Hojas continuas para actas de notas matriciales y formularios de secretaría.",
+      traditionalCost: costPapelContinuo,
+      aurenisSolution: "Actas oficiales en PDF con validación QR y exportación a SIGE",
+      icon: FileSpreadsheet,
+      impact: "100% digitalizado",
+    },
+    {
+      id: "mantenimiento",
+      name: "Mantenimiento de Hardware",
+      description: "Visitas técnicas por atascos frecuentes de papel, recambio de rodillos y fusores.",
+      traditionalCost: costMantenimiento,
+      aurenisSolution: "Menor desgaste de equipos al eliminar la sobrecarga de copiado",
+      icon: Wrench,
+      impact: "Disminución técnica",
+    },
+  ];
 
   return (
-    <section id="portales" className="relative w-full pt-16 pb-24 bg-[#F8F8F5] overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-          <span className="text-xs font-black uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 shadow-2xs">
-            Una experiencia a la medida de cada persona
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-            Cada miembro del colegio ve exactamente lo que necesita
-          </h2>
-          <p className="text-base sm:text-lg text-slate-600 font-medium">
-            Sin menús confusos ni opciones de más: los profesores registran clases sin perder tiempo, los apoderados reciben avisos en su celular y la dirección tiene el control total del colegio.
-          </p>
-        </div>
+    <section
+      id="portales"
+      className="py-12 sm:py-16 bg-[#F4F4F0] border-y border-slate-200/90 relative"
+    >
+      {/* Anchors de navegación */}
+      <span id="ahorro-papel" className="absolute -top-24" aria-hidden="true" />
+      <span id="simulador" className="absolute -top-24" aria-hidden="true" />
+      <span id="gastos-operacionales" className="absolute -top-24" aria-hidden="true" />
 
-      {/* Tabs Selector */}
-      <div className="flex items-center justify-center gap-2.5 flex-wrap mb-10">
-        <button
-          type="button"
-          onClick={() => setActiveTab("estudiante")}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-            activeTab === "estudiante"
-              ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20"
-              : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 shadow-2xs"
-          }`}
-        >
-          <GraduationCap className="w-4 h-4" />
-          <span>Alumnos y Estudiantes</span>
-        </button>
+      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        {/* Cabecera Compacta */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 border border-rose-200 text-xs font-black text-rose-700">
+              <TrendingDown className="w-3.5 h-3.5" />
+              <span>Ahorro Operacional en Insumos Escolares</span>
+            </div>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab("docente")}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-            activeTab === "docente"
-              ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20"
-              : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 shadow-2xs"
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span>Docentes y Profesores Jefes</span>
-        </button>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+              ¿Cuánto gasta tu colegio en hojas, tinta e impresoras?
+            </h2>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab("directivo")}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-            activeTab === "directivo"
-              ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
-              : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 shadow-2xs"
-          }`}
-        >
-          <School className="w-4 h-4" />
-          <span>Directivos, UTP & Sostenedores</span>
-        </button>
+            <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+              Desglose en pesos chilenos de los gastos que un colegio elimina al digitalizar su gestión académica con <strong>AURENIS</strong>.
+            </p>
+          </div>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab("apoderado")}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-            activeTab === "apoderado"
-              ? "bg-purple-600 text-white shadow-md shadow-purple-500/20"
-              : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 shadow-2xs"
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          <span>Apoderados y Familias</span>
-        </button>
-      </div>
-
-      {/* Contenedor del Rol Activo */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 lg:p-12 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-        {/* Lado Izquierdo: Descripción y Lista de Beneficios */}
-        <div className="lg:col-span-7 space-y-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${current.color}`}>
-                <Icon className="w-5 h-5" />
-              </div>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700">
-                {current.badge}
+          {/* Controlador de Matrícula Compacto */}
+          <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xs space-y-2 shrink-0 w-full md:w-auto md:min-w-[320px]">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+              <span>Matrícula del Colegio:</span>
+              <span className="text-sm font-black text-indigo-600 font-mono bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-200">
+                {studentCount} alumnos
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              {current.title}
-            </h3>
+            <input
+              type="range"
+              min={150}
+              max={1500}
+              step={25}
+              value={studentCount}
+              onChange={(e) => setStudentCount(Number(e.target.value))}
+              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+            />
 
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              {current.tagline}
-            </p>
+            <div className="flex items-center justify-between text-[10px] text-slate-400 font-bold gap-2">
+              <button
+                type="button"
+                onClick={() => setStudentCount(350)}
+                className={cn(
+                  "hover:text-indigo-600 cursor-pointer transition",
+                  studentCount === 350 && "text-indigo-600 font-black underline"
+                )}
+              >
+                350 (Básica)
+              </button>
+              <span>·</span>
+              <button
+                type="button"
+                onClick={() => setStudentCount(650)}
+                className={cn(
+                  "hover:text-indigo-600 cursor-pointer transition",
+                  studentCount === 650 && "text-indigo-600 font-black underline"
+                )}
+              >
+                650 (Promedio)
+              </button>
+              <span>·</span>
+              <button
+                type="button"
+                onClick={() => setStudentCount(1200)}
+                className={cn(
+                  "hover:text-indigo-600 cursor-pointer transition",
+                  studentCount === 1200 && "text-indigo-600 font-black underline"
+                )}
+              >
+                1.200 (Complejo)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabla Comparativa Compacta de los 4 Rubros */}
+        <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+                  <th className="py-3.5 px-4 sm:px-6 w-1/3">Rubro Operacional Escolar</th>
+                  <th className="py-3.5 px-4 text-center w-1/4 text-rose-700">
+                    Gasto Tradicional (Sin Sistema)
+                  </th>
+                  <th className="py-3.5 px-4 text-center w-1/4 text-emerald-700">
+                    Con AURENIS (100% Digital)
+                  </th>
+                  <th className="py-3.5 px-4 sm:px-6 text-right w-1/6 text-slate-900">
+                    Impacto en Caja
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <tr key={item.id} className="hover:bg-slate-50/60 transition">
+                      {/* Rubro */}
+                      <td className="py-3.5 px-4 sm:px-6">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <span className="font-black text-slate-900 text-xs sm:text-sm block">
+                              {item.name}
+                            </span>
+                            <span className="text-[11px] text-slate-500 font-medium leading-tight line-clamp-1 sm:line-clamp-none">
+                              {item.description}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Gasto Tradicional */}
+                      <td className="py-3.5 px-4 text-center">
+                        <span className="font-mono font-black text-rose-700 text-xs sm:text-sm block">
+                          {formatCLP(item.traditionalCost)}
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-medium">al año lectivo</span>
+                      </td>
+
+                      {/* Solución AURENIS */}
+                      <td className="py-3.5 px-4 text-center">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>{item.aurenisSolution}</span>
+                        </div>
+                      </td>
+
+                      {/* Impacto */}
+                      <td className="py-3.5 px-4 sm:px-6 text-right">
+                        <span className="font-mono font-black text-emerald-600 text-xs sm:text-sm block">
+                          +{formatCLP(Math.round(item.traditionalCost * 0.85))}
+                        </span>
+                        <span className="text-[10px] font-extrabold text-emerald-700 uppercase tracking-wider">
+                          {item.impact}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
 
-          <div className="space-y-3">
-            {current.features.map((feat, idx) => (
-              <div key={idx} className="flex items-start gap-3">
-                <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <Check className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-xs sm:text-sm text-slate-700 leading-snug">
-                  {feat}
+          {/* Resumen Final en 3 Columnas Claras y Defendibles */}
+          <div className="bg-slate-50/70 p-4 sm:p-6 border-t border-slate-200">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-center">
+              
+              {/* Total Tradicional */}
+              <div className="p-3.5 rounded-2xl bg-white border border-rose-200 text-center space-y-0.5">
+                <span className="text-[10px] font-bold text-rose-700 uppercase tracking-wider block">
+                  Gasto Tradicional en Papelería
+                </span>
+                <span className="text-xl sm:text-2xl font-black text-rose-700 font-mono block">
+                  {formatCLP(totalTraditionalCost)}
+                </span>
+                <span className="text-[10px] text-slate-500 font-medium">Hojas, tinta, actas y servicio técnico</span>
+              </div>
+
+              {/* Reducción Operacional Directa */}
+              <div className="p-3.5 rounded-2xl bg-white border border-blue-200 text-center space-y-0.5">
+                <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block">
+                  Reducción con AURENIS
+                </span>
+                <span className="text-xl sm:text-2xl font-black text-blue-600 font-mono block">
+                  ~85% de Menor Consumo
+                </span>
+                <span className="text-[10px] text-slate-500 font-medium">Libro digital + notas y actas sin papel</span>
+              </div>
+
+              {/* Dinero Liberado */}
+              <div className="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-center space-y-0.5 shadow-2xs">
+                <span className="text-[10px] font-black text-emerald-800 uppercase tracking-wider block">
+                  Fondos Liberados para el Colegio
+                </span>
+                <span className="text-xl sm:text-2xl font-black text-emerald-600 font-mono block">
+                  +{formatCLP(estimatedSavings)}
+                </span>
+                <span className="text-[10px] font-bold text-emerald-700">
+                  Dinero que no se quema en impresiones
                 </span>
               </div>
-            ))}
-          </div>
-
-          <div className="pt-4 flex items-center gap-4 flex-wrap">
-            <Link
-              href={current.ctaHref}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-slate-900 hover:bg-blue-600 text-white transition shadow-md group"
-            >
-              <span>{current.ctaText}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </Link>
-
-            <Link
-              href="/lpmm/dashboard"
-              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl font-bold text-xs text-slate-600 hover:bg-slate-100 transition"
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>Ver Ejemplo en Vivo</span>
-            </Link>
-          </div>
-        </div>
-
-        {/* Lado Derecho: Tarjeta Interactiva de Métricas y Vista Previa */}
-        <div className="lg:col-span-5 bg-slate-50 rounded-2xl border border-slate-200 p-6 space-y-6">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              Métricas Clave del Rol
-            </span>
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
-              <Zap className="w-3 h-3" />
-              Sincronizado
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            {current.previewStats.map((stat, i) => (
-              <div
-                key={i}
-                className="p-3.5 rounded-xl bg-white border border-slate-200/80 flex items-center justify-between shadow-2xs"
-              >
-                <div>
-                  <div className="text-xs text-slate-500">{stat.label}</div>
-                  <div className={`text-xl font-black mt-0.5 ${stat.color}`}>{stat.value}</div>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs font-bold px-2 py-1 rounded bg-slate-100 text-slate-600">
-                    {stat.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="p-4 rounded-xl bg-blue-50/80 border border-blue-200/60 text-xs text-blue-800 space-y-1">
-            <div className="font-extrabold flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-blue-600" />
-              <span>Privacidad Aislada por Institución</span>
             </div>
-            <p className="text-[11px] leading-relaxed opacity-90">
-              Cada usuario accede únicamente a los datos de su propio establecimiento mediante aislamiento multi-tenant estricto.
-            </p>
+
+            {/* Fila de Acciones y Salida Directa */}
+            <div className="pt-4 mt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2 text-slate-500 font-medium text-center sm:text-left">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Transición digital progresiva con respaldo de actas en PDF según normativa MINEDUC.</span>
+              </div>
+
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <a
+                  href="#planes"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-2xs"
+                >
+                  <span>Ver Planes Comerciales</span>
+                </a>
+                <Link
+                  href="/login"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-2xs"
+                >
+                  <span>Ingresar al Sistema</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/select-school"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-bold text-xs transition flex items-center justify-center gap-1"
+                >
+                  <span>Explorar Instituciones</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
       </div>
     </section>
   );

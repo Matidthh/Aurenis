@@ -759,15 +759,28 @@ export async function seedLpmmSchool() {
     },
   });
 
-  // 6. Crear todos los Cursos desde 1°A hasta 4°E (20 cursos en total)
-  console.log("📚 Creando catálogo completo de cursos (1°A hasta 4°E)...");
-  const courseLetters = ["A", "B", "C", "D", "E"];
-  const gradeLevels = [1, 2, 3, 4];
+  // 6. Crear los 14 Cursos Oficiales Reales del LPMM
+  console.log("📚 Creando catálogo oficial de 14 cursos reales del LPMM...");
+  const OFFICIAL_LPMM_COURSES = [
+    { grade: 1, letter: "A" },
+    { grade: 1, letter: "B" },
+    { grade: 1, letter: "C" },
+    { grade: 2, letter: "A" },
+    { grade: 2, letter: "B" },
+    { grade: 2, letter: "C" },
+    { grade: 3, letter: "A" },
+    { grade: 3, letter: "C" },
+    { grade: 3, letter: "D" },
+    { grade: 3, letter: "E" },
+    { grade: 4, letter: "A" },
+    { grade: 4, letter: "C" },
+    { grade: 4, letter: "D" },
+    { grade: 4, letter: "E" },
+  ];
   const coursesMap = new Map<string, any>();
 
-  for (const grade of gradeLevels) {
-    for (const letter of courseLetters) {
-      const courseName = `${grade}° Medio ${letter}`;
+  for (const { grade, letter } of OFFICIAL_LPMM_COURSES) {
+    const courseName = `${grade}° Medio ${letter}`;
       const course = await prisma.course.upsert({
         where: {
           schoolId_year_name: {
@@ -894,13 +907,18 @@ export async function seedLpmmSchool() {
   });
   const subjectMap = new Map(subjects1A.map((s) => [s.code || s.name, s]));
 
-  const studentPassword = await bcrypt.hash("EstudianteLpmm2026!", 10);
+  const studentPassword = await bcrypt.hash("Estudiantelpmm2026", 10);
+
+  const sanitizeStr = (s: string) =>
+    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ñ/g, "n").replace(/[^a-z0-9]/g, "");
 
   for (const studentData of RAW_STUDENTS) {
     const names = studentData.fullName.split(" ");
     const firstName = names.slice(0, 2).join(" ");
     const lastName = names.slice(2).join(" ") || names[1] || "Estudiante";
-    const cleanEmail = `estudiante.${studentData.num}@lpmm.cl`;
+    const fName = sanitizeStr(firstName.trim().split(/\s+/)[0] || "alumno");
+    const lName = sanitizeStr(lastName.trim().split(/\s+/)[0] || "lpmm");
+    const cleanEmail = `${fName}.${lName}@lpmm.cl`;
     const rut = `22.${100 + studentData.num}.${studentData.num * 11}-K`;
 
     const user = await prisma.user.upsert({

@@ -11,6 +11,7 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
+  ArrowLeft,
   AlertCircle,
   HelpCircle,
   Sparkles,
@@ -41,6 +42,7 @@ import {
   ModalFooter,
 } from "@/components/ui/modal";
 import { cn } from "@/lib/utils/cn";
+import { PasswordStrengthMeter } from "@/components/auth/password-strength-meter";
 
 interface DemoAccount {
   id: string;
@@ -90,8 +92,8 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     institutionName: "Liceo Politécnico Marga Marga",
     institutionCode: "LPMM-001 (RBD 10240)",
     name: "Yamir Alonso Ahumada",
-    identifier: "estudiante.1@lpmm.cl",
-    pass: "EstudianteLpmm2026!",
+    identifier: "yamir.ahumada@lpmm.cl",
+    pass: "Estudiantelpmm2026",
     icon: GraduationCap,
     badgeColor: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20",
     description: "Portal de calificaciones y asistencia sincronizadas desde planilla ministerial.",
@@ -535,6 +537,24 @@ function LoginContent() {
           COLUMNA DERECHA: FORMULARIO DE ACCESO (Móvil 320px-767px, Tablet & Desktop)
           ========================================================================= */}
       <main className="w-full md:w-7/12 lg:w-1/2 xl:w-7/12 flex flex-col justify-between min-h-screen bg-[#F8FAFC] p-6 sm:p-10 lg:p-12 xl:p-16 overflow-y-auto">
+        {/* Barra Superior con Botón para Regresar al Inicio */}
+        <div className="w-full max-w-[420px] mx-auto flex items-center justify-between mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 text-xs font-semibold shadow-2xs transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <ArrowLeft className="w-4 h-4 text-slate-500" />
+            <span>Volver al inicio</span>
+          </Link>
+
+          <Link
+            href="/select-school"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#3B82F6] hover:underline"
+          >
+            <span>Ver Colegios</span>
+          </Link>
+        </div>
+
         <div className="w-full max-w-[420px] mx-auto my-auto py-6">
           {/* 1. Logotipo Superior (Centrado en Móvil y Desktop) */}
           <div className="flex items-center justify-center mb-6">
@@ -692,6 +712,9 @@ function LoginContent() {
                   <span>{errors.password}</span>
                 </p>
               )}
+
+              {/* Medidor de fortaleza de contraseña en tiempo real */}
+              <PasswordStrengthMeter password={password} />
             </div>
 
             {/* Opciones: Recordarme & ¿Olvidaste tu contraseña? */}

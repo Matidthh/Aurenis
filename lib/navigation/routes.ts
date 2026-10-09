@@ -49,6 +49,34 @@ export const PUBLIC_ROUTES: Record<string, RouteMetadata> = {
     isPublic: true,
     scope: "public",
   },
+  API_AUTH_FORGOT_PASSWORD: {
+    path: "/api/auth/forgot-password",
+    title: "API Recuperar Contraseña",
+    breadcrumbLabel: "API Forgot Password",
+    isPublic: true,
+    scope: "api",
+  },
+  RESET_PASSWORD: {
+    path: "/reset-password",
+    title: "Restablecer Contraseña",
+    breadcrumbLabel: "Restablecer Clave",
+    isPublic: true,
+    scope: "public",
+  },
+  API_AUTH_RESET_PASSWORD: {
+    path: "/api/auth/reset-password",
+    title: "API Restablecer Contraseña",
+    breadcrumbLabel: "API Reset Password",
+    isPublic: true,
+    scope: "api",
+  },
+  API_AUTH_RESET_PASSWORD_VERIFY: {
+    path: "/api/auth/reset-password/verify",
+    title: "API Verificar Token Restablecimiento",
+    breadcrumbLabel: "API Reset Password Verify",
+    isPublic: true,
+    scope: "api",
+  },
   API_AUTH_LOGIN: {
     path: "/api/auth/login",
     title: "API Login",
@@ -274,7 +302,16 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/") return true;
   if (pathname === "/login" || pathname.startsWith("/login/")) return true;
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
-  if (pathname === "/api/auth/login" || pathname === "/api/auth/logout" || pathname.startsWith("/api/schools/search")) return true;
+  if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) return true;
+  if (
+    pathname.startsWith("/api/auth/login") ||
+    pathname.startsWith("/api/auth/logout") ||
+    pathname.startsWith("/api/auth/forgot-password") ||
+    pathname.startsWith("/api/auth/reset-password") ||
+    pathname.startsWith("/api/schools/search")
+  ) {
+    return true;
+  }
   if (pathname === "/system/design-system" || pathname.startsWith("/system/design-system")) return true;
   if (pathname === "/_not-found" || pathname === "/404" || pathname === "/500" || pathname === "/_error") return true;
   return false;

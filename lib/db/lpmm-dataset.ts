@@ -1,6 +1,10 @@
 import * as bcrypt from "bcryptjs";
 import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "../constants/roles";
 import { LPMM_OFFICIAL_SHEETS_DATA } from "./lpmm-real-sheets";
+import {
+  LPMM_COURSE_SUBJECTS,
+  LPMM_STUDENTS_ACADEMIC_RECORDS,
+} from "./lpmm-curriculum-and-grades";
 
 export interface StudentDatasetItem {
   num: number;
@@ -718,39 +722,58 @@ export function populateLpmmStore(store: any) {
   };
   store.educationLevels.set(lpmmLevel.id, lpmmLevel);
 
-  // Crear los 20 cursos desde 1°A hasta 4°E
-  const courseLetters = ["A", "B", "C", "D", "E"];
-  const gradeLevels = [1, 2, 3, 4];
+  // Crear los 14 cursos oficiales reales del Liceo Politécnico Marga Marga (LPMM):
+  // 1° Medio: A, B, C
+  // 2° Medio: A, B, C
+  // 3° Medio: A, C, D, E
+  // 4° Medio: A, C, D, E
+  const OFFICIAL_LPMM_COURSES = [
+    { grade: 1, letter: "A" },
+    { grade: 1, letter: "B" },
+    { grade: 1, letter: "C" },
+    { grade: 2, letter: "A" },
+    { grade: 2, letter: "B" },
+    { grade: 2, letter: "C" },
+    { grade: 3, letter: "A" },
+    { grade: 3, letter: "C" },
+    { grade: 3, letter: "D" },
+    { grade: 3, letter: "E" },
+    { grade: 4, letter: "A" },
+    { grade: 4, letter: "C" },
+    { grade: 4, letter: "D" },
+    { grade: 4, letter: "E" },
+  ];
   const lpmmCourses: Record<string, any> = {};
 
-  for (const grade of gradeLevels) {
-    for (const letter of courseLetters) {
-      const courseName = `${grade}° Medio ${letter}`;
-      const courseId = `course-lpmm-${grade}m${letter.toLowerCase()}`;
-      const course = {
-        id: courseId,
-        schoolId: lpmmSchool.id,
-        educationLevelId: lpmmLevel.id,
-        name: courseName,
-        letter,
-        gradeNumber: grade,
-        year: currentYear,
-        createdAt: new Date("2026-01-01"),
-        updatedAt: new Date("2026-01-01"),
-      };
-      store.courses.set(course.id, course);
-      lpmmCourses[courseName] = course;
+  for (const { grade, letter } of OFFICIAL_LPMM_COURSES) {
+    const courseName = `${grade}° Medio ${letter}`;
+    const courseId = `course-lpmm-${grade}m${letter.toLowerCase()}`;
+    const course = {
+      id: courseId,
+      schoolId: lpmmSchool.id,
+      educationLevelId: lpmmLevel.id,
+      name: courseName,
+      letter,
+      gradeNumber: grade,
+      year: currentYear,
+      createdAt: new Date("2026-01-01"),
+      updatedAt: new Date("2026-01-01"),
+    };
+    store.courses.set(course.id, course);
+    lpmmCourses[courseName] = course;
 
-      // Crear asignaturas para este curso
-      for (const subjDef of LPMM_SUBJECTS_DEFINITIONS) {
-        const subjId = `subj-lpmm-${grade}${letter.toLowerCase()}-${subjDef.code.toLowerCase()}`;
+      // Crear asignaturas reales para este curso
+      const courseSubjs = LPMM_COURSE_SUBJECTS[courseName] || LPMM_SUBJECTS_DEFINITIONS;
+      for (const subjDef of courseSubjs) {
+        const subjCode = (subjDef.code || subjDef.name).toLowerCase().replace(/[^a-z0-9]/g, "");
+        const subjId = `subj-lpmm-${grade}${letter.toLowerCase()}-${subjCode}`;
         const subject = {
           id: subjId,
           schoolId: lpmmSchool.id,
           courseId: course.id,
           name: subjDef.name,
-          code: `${subjDef.code}-${grade}${letter}`,
-          hoursPerWeek: subjDef.hoursPerWeek,
+          code: subjDef.code || `${subjCode.toUpperCase()}-${grade}${letter}`,
+          hoursPerWeek: subjDef.weeklyHours || subjDef.hoursPerWeek || 4,
           teacherProfileId: null,
           createdAt: new Date("2026-01-01"),
           updatedAt: new Date("2026-01-01"),
@@ -758,7 +781,6 @@ export function populateLpmmStore(store: any) {
         store.subjects.set(subject.id, subject);
       }
     }
-  }
 
   // Director y Docente de LPMM
   const STATIC_DEMO_HASH = "$2a$10$wN35rBdg2bFqY5p5gZkJ.eU7lY2U3KjW7uUeL1I7b2o0V9Fz6Q7aC";
@@ -857,281 +879,151 @@ export function populateLpmmStore(store: any) {
     }
   }
 
-  // Ingesta de los 26 estudiantes provistos con todas sus calificaciones reales para 1° Medio A
-  const studentPasswordHash = STATIC_DEMO_HASH;
+function formatStudentEmail(firstName: string, lastName: string, domain = "lpmm.cl"): string {
+  const sanitize = (str: string) =>
+    str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ñ/g, "n")
+      .replace(/[^a-z0-9]/g, "");
 
-  LPMM_STUDENTS_DATA.forEach((st) => {
-    const names = st.fullName.split(" ");
-    const firstName = names.slice(0, 2).join(" ");
-    const lastName = names.slice(2).join(" ") || names[1] || "Estudiante";
-    const studentEmail = `estudiante.${st.num}@lpmm.cl`;
-    const rut = `22.${100 + st.num}.${st.num * 11}-K`;
+  const f = sanitize(firstName.trim().split(/\s+/)[0] || "alumno");
+  const l = sanitize(lastName.trim().split(/\s+/)[0] || "lpmm");
+  return `${f}.${l}@${domain}`;
+}
 
-    const user = {
-      id: `user-lpmm-std-${st.num}`,
-      email: studentEmail,
-      firstName,
-      lastName,
-      rutOrNationalId: rut,
-      passwordHash: studentPasswordHash,
+  // Ingesta de los 14 cursos oficiales del LPMM con sus 312 estudiantes reales
+  const studentPasswordHash = "$2b$10$XxLv1NgTdH/u00egvwnbGuhukOXft0/lZVjk3GyW4LlZ8yEi8hzbW"; // Bcrypt hash de "Estudiantelpmm2026"
+
+  for (const { grade, letter } of OFFICIAL_LPMM_COURSES) {
+    const courseName = `${grade}° Medio ${letter}`;
+    const course = lpmmCourses[courseName];
+    if (!course) continue;
+
+    const courseKey = `${grade}${letter.toLowerCase()}`;
+
+    // Crear profesor jefe de este curso
+    const teacherCourseUser = {
+      id: `user-lpmm-profesor-${courseKey}`,
+      email: `profesor.${courseKey}@lpmm.cl`,
+      firstName: `Profesor ${grade}°${letter}`,
+      lastName: `LPMM`,
+      passwordHash: teacherPasswordHash,
       status: "ACTIVE",
       isSystemAdmin: false,
       createdAt: new Date("2026-01-01"),
       updatedAt: new Date("2026-01-01"),
     };
-    store.users.set(user.id, user);
+    store.users.set(teacherCourseUser.id, teacherCourseUser);
 
-    const membership = {
-      id: `mem-lpmm-std-${st.num}`,
-      userId: user.id,
+    const teacherCourseMem = {
+      id: `mem-lpmm-profesor-${courseKey}`,
+      userId: teacherCourseUser.id,
       schoolId: lpmmSchool.id,
-      roleId: lpmmRoleMap[DEFAULT_SCHOOL_ROLES.STUDENT]?.id || "role-lpmm-student",
+      roleId: lpmmRoleMap[DEFAULT_SCHOOL_ROLES.TEACHER]?.id || "role-lpmm-teacher",
       isActive: true,
       createdAt: new Date("2026-01-01"),
       updatedAt: new Date("2026-01-01"),
     };
-    store.memberships.set(membership.id, membership);
+    store.memberships.set(teacherCourseMem.id, teacherCourseMem);
 
-    const studentProfile = {
-      id: `sp-lpmm-std-${st.num}`,
-      membershipId: membership.id,
-      enrollmentNumber: `LPMM-2026-${String(st.num).padStart(3, "0")}`,
+    const tpCourse = {
+      id: `tp-lpmm-${courseKey}`,
+      membershipId: teacherCourseMem.id,
+      specialty: `Docente Jefatura ${courseName}`,
       createdAt: new Date("2026-01-01"),
       updatedAt: new Date("2026-01-01"),
     };
-    store.studentProfiles.set(studentProfile.id, studentProfile);
+    store.teacherProfiles.set(tpCourse.id, tpCourse);
 
-    const enrollment = {
-      id: `enroll-lpmm-1a-${st.num}`,
-      schoolId: lpmmSchool.id,
-      courseId: course1A.id,
-      studentProfileId: studentProfile.id,
-      year: currentYear,
-      status: "ACTIVE",
-      createdAt: new Date("2026-01-01"),
-      updatedAt: new Date("2026-01-01"),
-    };
-    store.enrollments.set(enrollment.id, enrollment);
-
-    // Calificaciones por asignatura
-    const gradesMap: Array<{ code: string; notes: number[]; avg: number }> = [
-      { code: "LENG", notes: st.grades.lenguaje.notes, avg: st.grades.lenguaje.avg },
-      { code: "ING", notes: st.grades.ingles.notes, avg: st.grades.ingles.avg },
-      { code: "MAT", notes: st.grades.matematica.notes, avg: st.grades.matematica.avg },
-      { code: "HIST", notes: st.grades.historia.notes, avg: st.grades.historia.avg },
-      { code: "BIO", notes: st.grades.biologia.notes, avg: st.grades.biologia.avg },
-      { code: "QUIM", notes: st.grades.quimica.notes, avg: st.grades.quimica.avg },
-      { code: "FIS", notes: st.grades.fisica.notes, avg: st.grades.fisica.avg },
-      { code: "CNAT", notes: st.grades.cienciasNaturales.notes, avg: st.grades.cienciasNaturales.avg },
-      { code: "ART", notes: st.grades.artesVisuales.notes, avg: st.grades.artesVisuales.avg },
-      { code: "TEC", notes: st.grades.edTecnologica.notes, avg: st.grades.edTecnologica.avg },
-      { code: "EDF", notes: st.grades.edFisica.notes, avg: st.grades.edFisica.avg },
-      { code: "TP-PARV", notes: st.grades.parvulo.notes, avg: st.grades.parvulo.avg },
-      { code: "TP-ENF", notes: st.grades.enfermeria.notes, avg: st.grades.enfermeria.avg },
-      { code: "TP-PROG", notes: st.grades.programacion.notes, avg: st.grades.programacion.avg },
-      { code: "FORM-VAL", notes: st.grades.formacionValorica.notes, avg: st.grades.formacionValorica.avg },
-    ];
-
-    gradesMap.forEach((g) => {
-      const subjId = `subj-lpmm-1a-${g.code.toLowerCase()}`;
-      if (g.notes.length > 0) {
-        g.notes.forEach((noteVal, i) => {
-          const assessId = `assess-lpmm-1a-${g.code.toLowerCase()}-n${i + 1}`;
-          if (!store.assessments.has(assessId)) {
-            const assess = {
-              id: assessId,
-              schoolId: lpmmSchool.id,
-              subjectId: subjId,
-              academicPeriodId: lpmmPeriod.id,
-              title: `Evaluación N°${i + 1} (${g.code})`,
-              date: new Date("2026-05-10"),
-              weight: 1.0,
-              maxScore: 7.0,
-              createdAt: new Date("2026-01-01"),
-              updatedAt: new Date("2026-01-01"),
-            };
-            store.assessments.set(assess.id, assess);
-          }
-
-          const gradeId = `grade-lpmm-1a-${st.num}-${g.code.toLowerCase()}-n${i + 1}`;
-          const gradeRec = {
-            id: gradeId,
-            schoolId: lpmmSchool.id,
-            enrollmentId: enrollment.id,
-            assessmentId: assessId,
-            score: noteVal,
-            isPublished: true,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.grades.set(gradeRec.id, gradeRec);
-        });
+    // Vincular asignaturas de este curso a su profesor
+    const courseSubjsForTeacher = LPMM_COURSE_SUBJECTS[courseName] || LPMM_SUBJECTS_DEFINITIONS;
+    for (const subjDef of courseSubjsForTeacher) {
+      const subjCode = (subjDef.code || subjDef.name).toLowerCase().replace(/[^a-z0-9]/g, "");
+      const subjId = `subj-lpmm-${courseKey}-${subjCode}`;
+      const subj = store.subjects.get(subjId);
+      if (subj) {
+        subj.teacherProfileId = tpCourse.id;
       }
-    });
+    }
 
-    // Registros de Asistencia
-    const isPresent = st.attendance.pctReal >= 60;
-    const attRec = {
-      id: `att-lpmm-1a-${st.num}`,
-      schoolId: lpmmSchool.id,
-      courseId: course1A.id,
-      studentProfileId: studentProfile.id,
-      date: new Date("2026-09-30"),
-      status: isPresent ? "PRESENT" : "ABSENT_UNJUSTIFIED",
-      justification: isPresent ? null : "Inasistencia registrada en planilla mensual",
-      percentageReal: st.attendance.pctReal,
-      createdAt: new Date("2026-01-01"),
-      updatedAt: new Date("2026-01-01"),
-    };
-    store.attendanceRecords.set(attRec.id, attRec);
-  });
+    // Ingesta de estudiantes reales desde Google Sheets Oficiales
+    const officialCourseStudents = LPMM_OFFICIAL_SHEETS_DATA[courseName];
 
-  // Poblado masivo completo para el resto de los 19 cursos (1°B hasta 4°E)
-  const firstNamesPool = [
-    "Vicente", "Florencia", "Joaquín", "Isidora", "Benjamín", "Camila", "Lucas", "Valentina",
-    "Matías", "Sofía", "Martín", "Antonia", "Tomás", "Emilia", "Maximiliano", "Catalina",
-    "Diego", "Francisca", "Agustín", "Ignacia", "Nicolás", "Javiera", "Gabriel", "Constanza",
-    "Sebastián", "Fernanda", "Alonso", "Pía", "Cristóbal", "Daniela", "Esteban", "Bárbara",
-    "Felipe", "Trinidad", "Ignacio", "Monserrat", "Álvaro", "Paula", "Andrés", "Josefa",
-  ];
+    if (officialCourseStudents && officialCourseStudents.length > 0) {
+      officialCourseStudents.forEach((st) => {
+        const userId = (courseKey === "1a" && st.num === 1) ? "user-lpmm-std-1" : `user-lpmm-${courseKey}-std-${st.num}`;
+        const memId = (courseKey === "1a" && st.num === 1) ? "mem-lpmm-std-1" : `mem-lpmm-${courseKey}-std-${st.num}`;
 
-  const lastNamesPool = [
-    "González", "Muñoz", "Rojas", "Díaz", "Pérez", "Soto", "Contreras", "Silva",
-    "Martínez", "Sepúlveda", "Morales", "Rodríguez", "López", "Fuentes", "Hernández", "Torres",
-    "Araya", "Flores", "Espinoza", "Valenzuela", "Castillo", "Tapia", "Reyes", "Gutiérrez",
-    "Castro", "Pizarro", "Álvarez", "Vásquez", "Sánchez", "Fernández", "Carrasco", "Gómez",
-    "Cortés", "Herrera", "Núñez", "Jara", "Vergara", "Rivera", "Figueroa", "Miranda",
-    "Bravo", "Vera", "Molina", "Vega", "Campos", "Sandoval", "Orellana", "Cárdenas",
-  ];
-
-  let globalStudentCounter = 100;
-
-  for (const grade of gradeLevels) {
-    for (const letter of courseLetters) {
-      const courseName = `${grade}° Medio ${letter}`;
-      const course = lpmmCourses[courseName];
-      if (!course) continue;
-
-      const courseKey = `${grade}${letter.toLowerCase()}`;
-
-      // Crear profesor jefe de este curso
-      const teacherCourseUser = {
-        id: `user-lpmm-profesor-${courseKey}`,
-        email: `profesor.${courseKey}@lpmm.cl`,
-        firstName: `Profesor ${grade}°${letter}`,
-        lastName: `LPMM`,
-        passwordHash: teacherPasswordHash,
-        status: "ACTIVE",
-        isSystemAdmin: false,
-        createdAt: new Date("2026-01-01"),
-        updatedAt: new Date("2026-01-01"),
-      };
-      store.users.set(teacherCourseUser.id, teacherCourseUser);
-
-      const teacherCourseMem = {
-        id: `mem-lpmm-profesor-${courseKey}`,
-        userId: teacherCourseUser.id,
-        schoolId: lpmmSchool.id,
-        roleId: lpmmRoleMap[DEFAULT_SCHOOL_ROLES.TEACHER]?.id || "role-lpmm-teacher",
-        isActive: true,
-        createdAt: new Date("2026-01-01"),
-        updatedAt: new Date("2026-01-01"),
-      };
-      store.memberships.set(teacherCourseMem.id, teacherCourseMem);
-
-      const tpCourse = {
-        id: `tp-lpmm-${courseKey}`,
-        membershipId: teacherCourseMem.id,
-        specialty: `Docente Jefatura ${courseName}`,
-        createdAt: new Date("2026-01-01"),
-        updatedAt: new Date("2026-01-01"),
-      };
-      store.teacherProfiles.set(tpCourse.id, tpCourse);
-
-      // Vincular asignaturas de este curso a su profesor
-      for (const subjDef of LPMM_SUBJECTS_DEFINITIONS) {
-        const subjId = `subj-lpmm-${courseKey}-${subjDef.code.toLowerCase()}`;
-        const subj = store.subjects.get(subjId);
-        if (subj) {
-          subj.teacherProfileId = tpCourse.id;
+        const user = {
+          id: userId,
+          email: st.email,
+          firstName: st.firstName,
+          lastName: st.lastName,
+          rutOrNationalId: st.rut,
+          passwordHash: studentPasswordHash,
+          status: "ACTIVE",
+          isSystemAdmin: false,
+          createdAt: new Date("2026-01-01"),
+          updatedAt: new Date("2026-01-01"),
+        };
+        store.users.set(user.id, user);
+        if (userId === "user-lpmm-std-1") {
+          store.users.set("user-lpmm-1a-std-1", user);
         }
-      }
 
-      // Comprobar si existen datos oficiales de Google Sheets para este curso
-      const officialCourseStudents = LPMM_OFFICIAL_SHEETS_DATA[courseName];
+        const membership = {
+          id: memId,
+          userId: user.id,
+          schoolId: lpmmSchool.id,
+          roleId: lpmmRoleMap[DEFAULT_SCHOOL_ROLES.STUDENT]?.id || "role-lpmm-student",
+          isActive: true,
+          createdAt: new Date("2026-01-01"),
+          updatedAt: new Date("2026-01-01"),
+        };
+        store.memberships.set(membership.id, membership);
 
-      if (officialCourseStudents && officialCourseStudents.length > 0) {
-        // INGESTA DE ESTUDIANTES REALES DESDE GOOGLE SHEETS
-        officialCourseStudents.forEach((st) => {
-          globalStudentCounter++;
-          const sNum = globalStudentCounter;
+        const studentProfile = {
+          id: `sp-lpmm-${courseKey}-std-${st.num}`,
+          membershipId: membership.id,
+          enrollmentNumber: `LPMM-2026-${courseKey.toUpperCase()}-${String(st.num).padStart(3, "0")}`,
+          createdAt: new Date("2026-01-01"),
+          updatedAt: new Date("2026-01-01"),
+        };
+        store.studentProfiles.set(studentProfile.id, studentProfile);
 
-          const user = {
-            id: `user-lpmm-${courseKey}-std-${st.num}`,
-            email: st.email,
-            firstName: st.firstName,
-            lastName: st.lastName,
-            rutOrNationalId: st.rut,
-            passwordHash: studentPasswordHash,
-            status: "ACTIVE",
-            isSystemAdmin: false,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.users.set(user.id, user);
+        const enrollment = {
+          id: `enroll-lpmm-${courseKey}-${st.num}`,
+          schoolId: lpmmSchool.id,
+          courseId: course.id,
+          studentProfileId: studentProfile.id,
+          year: currentYear,
+          status: "ACTIVE",
+          createdAt: new Date("2026-01-01"),
+          updatedAt: new Date("2026-01-01"),
+        };
+        store.enrollments.set(enrollment.id, enrollment);
 
-          const membership = {
-            id: `mem-lpmm-${courseKey}-std-${st.num}`,
-            userId: user.id,
-            schoolId: lpmmSchool.id,
-            roleId: lpmmRoleMap[DEFAULT_SCHOOL_ROLES.STUDENT]?.id || "role-lpmm-student",
-            isActive: true,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.memberships.set(membership.id, membership);
-
-          const studentProfile = {
-            id: `sp-lpmm-${courseKey}-std-${st.num}`,
-            membershipId: membership.id,
-            enrollmentNumber: `LPMM-2026-${courseKey.toUpperCase()}-${String(st.num).padStart(3, "0")}`,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.studentProfiles.set(studentProfile.id, studentProfile);
-
-          const enrollment = {
-            id: `enroll-lpmm-${courseKey}-${st.num}`,
-            schoolId: lpmmSchool.id,
-            courseId: course.id,
-            studentProfileId: studentProfile.id,
-            year: currentYear,
-            status: "ACTIVE",
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.enrollments.set(enrollment.id, enrollment);
-
-          // Calificaciones reales extraídas de la planilla Google Sheets
-          const coreSubjects = ["LENG", "ING", "MAT", "HIST", "BIO", "QUIM", "FIS", "ART", "EDF", "TP-PROG", "FORM-VAL"];
-          const notesPerSubject = Math.max(1, Math.floor(st.notes.length / coreSubjects.length));
-
-          coreSubjects.forEach((subCode, cIdx) => {
-            const subjId = `subj-lpmm-${courseKey}-${subCode.toLowerCase()}`;
-            const studentSubNotes = st.notes.slice(cIdx * notesPerSubject, (cIdx + 1) * notesPerSubject);
-            const notesToAssign = studentSubNotes.length > 0 ? studentSubNotes : [st.notes[cIdx % st.notes.length] || 6.0];
-
-            notesToAssign.forEach((scoreVal, aIdx) => {
-              const assessId = `assess-lpmm-${courseKey}-${subCode.toLowerCase()}-n${aIdx + 1}`;
+        // Calificaciones reales extraídas de las planillas oficiales por asignatura
+        const studentRecord = LPMM_STUDENTS_ACADEMIC_RECORDS[st.email];
+        if (studentRecord && studentRecord.subjects.length > 0) {
+          studentRecord.subjects.forEach((sub) => {
+            const subjCode = (sub.code || sub.name).toLowerCase().replace(/[^a-z0-9]/g, "");
+            const subjId = `subj-lpmm-${courseKey}-${subjCode}`;
+            
+            sub.grades.forEach((g, gIdx) => {
+              if (g.value === null || g.value === undefined) return;
+              const assessId = `assess-lpmm-${courseKey}-${subjCode}-n${gIdx + 1}`;
               if (!store.assessments.has(assessId)) {
                 const assess = {
                   id: assessId,
                   schoolId: lpmmSchool.id,
                   subjectId: subjId,
                   academicPeriodId: lpmmPeriod.id,
-                  title: `Evaluación N°${aIdx + 1} (${subCode})`,
+                  title: `${g.label || `Evaluación N°${gIdx + 1}`} (${sub.code})`,
                   date: new Date("2026-05-15"),
-                  weight: 1.0,
+                  weight: (g.weightPct || 25) / 100,
                   maxScore: 7.0,
                   createdAt: new Date("2026-01-01"),
                   updatedAt: new Date("2026-01-01"),
@@ -1139,13 +1031,13 @@ export function populateLpmmStore(store: any) {
                 store.assessments.set(assess.id, assess);
               }
 
-              const gradeId = `grade-lpmm-${courseKey}-${st.num}-${subCode.toLowerCase()}-n${aIdx + 1}`;
+              const gradeId = `grade-lpmm-${courseKey}-${st.num}-${subjCode}-n${gIdx + 1}`;
               const gradeRec = {
                 id: gradeId,
                 schoolId: lpmmSchool.id,
                 enrollmentId: enrollment.id,
                 assessmentId: assessId,
-                score: scoreVal,
+                score: g.value,
                 isPublished: true,
                 createdAt: new Date("2026-01-01"),
                 updatedAt: new Date("2026-01-01"),
@@ -1153,141 +1045,23 @@ export function populateLpmmStore(store: any) {
               store.grades.set(gradeRec.id, gradeRec);
             });
           });
-
-          // Asistencia Real
-          const attRec = {
-            id: `att-lpmm-${courseKey}-${st.num}`,
-            schoolId: lpmmSchool.id,
-            courseId: course.id,
-            studentProfileId: studentProfile.id,
-            date: new Date("2026-09-30"),
-            status: "PRESENT",
-            justification: null,
-            percentageReal: 88.5,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.attendanceRecords.set(attRec.id, attRec);
-        });
-      } else {
-        // Poblado complementario de cursos para los cuales aún no se tiene sábana oficial
-        const studentsInCourse = 18;
-        for (let sIdx = 1; sIdx <= studentsInCourse; sIdx++) {
-          globalStudentCounter++;
-          const sNum = globalStudentCounter;
-
-          const fn = firstNamesPool[(sNum * 7 + sIdx) % firstNamesPool.length];
-          const ln1 = lastNamesPool[(sNum * 11 + sIdx) % lastNamesPool.length];
-          const ln2 = lastNamesPool[(sNum * 13 + sIdx + 5) % lastNamesPool.length];
-
-          const studentEmail = `estudiante.${courseKey}.${sIdx}@lpmm.cl`;
-          const rutNum = 20000000 + (grade * 100000) + (letter.charCodeAt(0) * 1000) + sIdx;
-          const rut = `22.${Math.floor(rutNum / 1000) % 1000}.${String(rutNum % 1000).padStart(3, "0")}-${sIdx % 10}`;
-
-          const user = {
-            id: `user-lpmm-std-${sNum}`,
-            email: studentEmail,
-            firstName: fn,
-            lastName: `${ln1} ${ln2}`,
-            rutOrNationalId: rut,
-            passwordHash: studentPasswordHash,
-            status: "ACTIVE",
-            isSystemAdmin: false,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.users.set(user.id, user);
-
-          const membership = {
-            id: `mem-lpmm-std-${sNum}`,
-            userId: user.id,
-            schoolId: lpmmSchool.id,
-            roleId: lpmmRoleMap[DEFAULT_SCHOOL_ROLES.STUDENT]?.id || "role-lpmm-student",
-            isActive: true,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.memberships.set(membership.id, membership);
-
-          const studentProfile = {
-            id: `sp-lpmm-std-${sNum}`,
-            membershipId: membership.id,
-            enrollmentNumber: `LPMM-2026-${String(sNum).padStart(4, "0")}`,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.studentProfiles.set(studentProfile.id, studentProfile);
-
-          const enrollment = {
-            id: `enroll-lpmm-${courseKey}-${sIdx}`,
-            schoolId: lpmmSchool.id,
-            courseId: course.id,
-            studentProfileId: studentProfile.id,
-            year: currentYear,
-            status: "ACTIVE",
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.enrollments.set(enrollment.id, enrollment);
-
-          // Calificaciones
-          const coreSubjects = ["LENG", "MAT", "ING", "HIST", "BIO", "EDF", "TP-PROG", "FORM-VAL"];
-          coreSubjects.forEach((subCode, cIdx) => {
-            const subjId = `subj-lpmm-${courseKey}-${subCode.toLowerCase()}`;
-            const numAssessments = 3;
-            for (let aIdx = 1; aIdx <= numAssessments; aIdx++) {
-              const assessId = `assess-lpmm-${courseKey}-${subCode.toLowerCase()}-n${aIdx}`;
-              if (!store.assessments.has(assessId)) {
-                const assess = {
-                  id: assessId,
-                  schoolId: lpmmSchool.id,
-                  subjectId: subjId,
-                  academicPeriodId: lpmmPeriod.id,
-                  title: `Evaluación Parcial N°${aIdx} (${subCode})`,
-                  date: new Date("2026-06-15"),
-                  weight: 1.0,
-                  maxScore: 7.0,
-                  createdAt: new Date("2026-01-01"),
-                  updatedAt: new Date("2026-01-01"),
-                };
-                store.assessments.set(assess.id, assess);
-              }
-
-              const baseNote = 4.2 + (((sNum + aIdx * 7 + cIdx * 3) % 28) / 10);
-              const finalScore = Math.min(7.0, Math.max(2.5, Math.round(baseNote * 10) / 10));
-
-              const gradeId = `grade-lpmm-${sNum}-${subCode.toLowerCase()}-n${aIdx}`;
-              const gradeRec = {
-                id: gradeId,
-                schoolId: lpmmSchool.id,
-                enrollmentId: enrollment.id,
-                assessmentId: assessId,
-                score: finalScore,
-                isPublished: true,
-                createdAt: new Date("2026-01-01"),
-                updatedAt: new Date("2026-01-01"),
-              };
-              store.grades.set(gradeRec.id, gradeRec);
-            }
-          });
-
-          // Registro de Asistencia
-          const attPct = 75 + ((sNum * 13) % 24);
-          const attRec = {
-            id: `att-lpmm-${sNum}`,
-            schoolId: lpmmSchool.id,
-            courseId: course.id,
-            studentProfileId: studentProfile.id,
-            date: new Date("2026-09-30"),
-            status: attPct >= 80 ? "PRESENT" : "ABSENT_UNJUSTIFIED",
-            justification: null,
-            percentageReal: attPct,
-            createdAt: new Date("2026-01-01"),
-            updatedAt: new Date("2026-01-01"),
-          };
-          store.attendanceRecords.set(attRec.id, attRec);
         }
-      }
+
+        // Asistencia Real
+        const attRec = {
+          id: `att-lpmm-${courseKey}-${st.num}`,
+          schoolId: lpmmSchool.id,
+          courseId: course.id,
+          studentProfileId: studentProfile.id,
+          date: new Date("2026-09-30"),
+          status: "PRESENT",
+          justification: null,
+          percentageReal: 88.5,
+          createdAt: new Date("2026-01-01"),
+          updatedAt: new Date("2026-01-01"),
+        };
+        store.attendanceRecords.set(attRec.id, attRec);
+      });
     }
   }
 }

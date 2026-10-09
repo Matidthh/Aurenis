@@ -124,7 +124,11 @@ async function run() {
         .map((v) => parseFloat(v))
         .filter((v) => !isNaN(v) && v >= 1.0 && v <= 7.0);
 
-      const email = `estudiante.${f.key}.${num}@lpmm.cl`;
+      const sanitize = (s: string) =>
+        s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ñ/g, "n").replace(/[^a-z0-9]/g, "");
+      const fName = sanitize(firstName.trim().split(/\s+/)[0] || "alumno");
+      const lName = sanitize(lastName.trim().split(/\s+/)[0] || "lpmm");
+      const email = `${fName}.${lName}@lpmm.cl`;
       const rutNum = 21000000 + (f.grade * 100000) + (f.letter.charCodeAt(0) * 1000) + num;
       const rut = `22.${Math.floor(rutNum / 1000) % 1000}.${String(rutNum % 1000).padStart(3, "0")}-${num % 10}`;
 

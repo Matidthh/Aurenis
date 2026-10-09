@@ -9,6 +9,7 @@ import { PERMISSIONS } from "@/lib/constants/permissions";
 import { UpdateGradeSchema } from "@/lib/validations/grade.schema";
 import { updateGrade, deleteGrade } from "@/lib/services/grade.service";
 import { validateSingleGradeAccess } from "@/lib/security/object-authorization";
+import { executeGradeScaleMiddleware } from "@/lib/security/grade-scale-validator";
 
 export async function GET(
   _req: NextRequest,
@@ -51,11 +52,17 @@ export async function PATCH(
 
     const { schoolId, gradeId } = await params;
 
+    // Resolver identificador institucional (UUID / slug)
+    const school = await prisma.school.findFirst({
+      where: { OR: [{ id: schoolId }, { slug: schoolId }] },
+    });
+    const targetSchoolId = school?.id || schoolId;
+
     // Verificar permisos para modificar notas (GRADES_MODIFY)
     if (!session.isSystemAdmin) {
       const membership = await prisma.membership.findUnique({
         where: {
-          userId_schoolId: { userId: session.userId, schoolId },
+          userId_schoolId: { userId: session.userId, schoolId: targetSchoolId },
         },
         include: {
           role: {
@@ -90,8 +97,22 @@ export async function PATCH(
       );
     }
 
-    const tenantDb = createTenantPrisma(schoolId);
-    const updated = await updateGrade(tenantDb, schoolId, gradeId, validated.data, session.userId);
+    // Middleware de Validación Previa: Escala oficial [minGrade, maxGrade] antes de PostgreSQL
+    if (validated.data.value !== undefined) {
+      const scaleCheck = await executeGradeScaleMiddleware({
+        schoolId: targetSchoolId,
+        payload: { type: "patch", value: validated.data.value },
+        userId: session.userId,
+        pathName: `PATCH /api/schools/${schoolId}/grades/${gradeId}`,
+      });
+
+      if (!scaleCheck.allowed && scaleCheck.errorResponse) {
+        return scaleCheck.errorResponse;
+      }
+    }
+
+    const tenantDb = createTenantPrisma(targetSchoolId);
+    const updated = await updateGrade(tenantDb, targetSchoolId, gradeId, validated.data, session.userId);
 
     return NextResponse.json({ success: true, grade: updated });
   } catch (error: any) {
@@ -111,11 +132,17 @@ export async function DELETE(
 
     const { schoolId, gradeId } = await params;
 
+    // Resolver identificador institucional (UUID / slug)
+    const school = await prisma.school.findFirst({
+      where: { OR: [{ id: schoolId }, { slug: schoolId }] },
+    });
+    const targetSchoolId = school?.id || schoolId;
+
     // Verificar permisos para borrar notas (GRADES_MODIFY)
     if (!session.isSystemAdmin) {
       const membership = await prisma.membership.findUnique({
         where: {
-          userId_schoolId: { userId: session.userId, schoolId },
+          userId_schoolId: { userId: session.userId, schoolId: targetSchoolId },
         },
         include: {
           role: {
@@ -140,8 +167,8 @@ export async function DELETE(
       }
     }
 
-    const tenantDb = createTenantPrisma(schoolId);
-    await deleteGrade(tenantDb, schoolId, gradeId, session.userId);
+    const tenantDb = createTenantPrisma(targetSchoolId);
+    await deleteGrade(tenantDb, targetSchoolId, gradeId, session.userId);
 
     return NextResponse.json({ success: true, message: "Calificación eliminada" });
   } catch (error: any) {

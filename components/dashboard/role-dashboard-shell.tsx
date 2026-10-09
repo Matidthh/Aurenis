@@ -25,6 +25,8 @@ interface RoleDashboardShellProps {
   schoolSlug: string;
   defaultRole?: RoleType;
   userName?: string;
+  userEmail?: string;
+  userRole?: string;
   schoolName?: string;
 }
 
@@ -84,6 +86,8 @@ export function RoleDashboardShell({
   schoolSlug,
   defaultRole = "DIRECTIVO",
   userName,
+  userEmail,
+  userRole,
   schoolName = "Liceo Politécnico Marga Marga",
 }: RoleDashboardShellProps) {
   const [selectedRole, setSelectedRole] = useState<RoleType>(defaultRole);
@@ -95,32 +99,39 @@ export function RoleDashboardShell({
       {/* =========================================================================
           BARRA DE CONMUTACIÓN DE ROLES ACADÉMICOS (MODO OSCURO PREMIUM)
           ========================================================================= */}
-      <div className="rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white dark:bg-[#0B1120] p-3 sm:p-4 shadow-xs space-y-3">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-500/20 shrink-0">
-              <SlidersHorizontal className="w-4 h-4" />
+      <div className="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#0C1425]/90 backdrop-blur-md p-4 sm:p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-500/30 shrink-0 shadow-xs">
+              <SlidersHorizontal className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-xs font-bold text-slate-900 dark:text-white block">
-                Selector de Roles del Ecosistema Escolar
-              </span>
-              <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                Visualiza el sistema según los 5 estamentos oficiales de la comunidad educativa
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-black text-slate-900 dark:text-white block">
+                  Estamento & Perfil de Visualización
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-500 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-900">
+                  <Sparkles className="w-3 h-3" />
+                  Multi-Rol
+                </span>
+              </div>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Selecciona la perspectiva del ecosistema escolar (Directivo, Docente, Convivencia, Familia o Alumno)
               </span>
             </div>
           </div>
 
-          <div className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 hidden lg:block">
-            {schoolName} · RBD 10240
+          <div className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5 self-start sm:self-auto">
+            <Building2 className="w-3.5 h-3.5 text-blue-500" />
+            <span>{schoolName}</span>
           </div>
         </div>
 
-        {/* Botones de Selección Segmentada de Rol */}
+        {/* Botones de Selección Segmentada de Rol con Estética Luminosa */}
         <div
           role="tablist"
           aria-label="Vistas de rol escolar"
-          className="flex items-center gap-1.5 overflow-x-auto pb-1.5 md:pb-0 scrollbar-none"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
         >
           {ROLE_TABS.map((tab) => {
             const Icon = tab.icon;
@@ -133,19 +144,39 @@ export function RoleDashboardShell({
                 aria-selected={isSelected}
                 onClick={() => setSelectedRole(tab.id)}
                 className={cn(
-                  "px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer min-h-[44px] select-none",
+                  "p-3 rounded-2xl text-xs font-bold transition-all duration-200 flex flex-col items-start gap-1.5 cursor-pointer min-h-[56px] select-none text-left relative overflow-hidden border",
                   isSelected
-                    ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-sm"
-                    : "bg-slate-50 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 border border-slate-200/80 dark:border-slate-800 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                    ? "bg-gradient-to-br from-blue-600 to-indigo-700 text-white border-blue-500 shadow-md shadow-blue-500/20"
+                    : "bg-slate-50 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-slate-800/90 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
                 )}
               >
-                <Icon
-                  className={cn(
-                    "w-4 h-4 shrink-0",
-                    isSelected ? "text-blue-400 dark:text-blue-600" : "text-slate-400"
+                <div className="flex items-center justify-between w-full">
+                  <div
+                    className={cn(
+                      "w-7 h-7 rounded-xl flex items-center justify-center",
+                      isSelected
+                        ? "bg-white/20 text-white"
+                        : "bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                    )}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  {isSelected && (
+                    <span className="w-2 h-2 rounded-full bg-cyan-300 animate-pulse" />
                   )}
-                />
-                <span>{tab.label}</span>
+                </div>
+                <div>
+                  <span className={cn("block font-extrabold text-xs", isSelected ? "text-white" : "text-slate-900 dark:text-white")}>
+                    {tab.label.split("&")[0].trim()}
+                  </span>
+                  <span className={cn("text-[10px] truncate block", isSelected ? "text-blue-100" : "text-slate-400 dark:text-slate-500")}>
+                    {tab.id === "DIRECTIVO" && "UTP y Gestión"}
+                    {tab.id === "DOCENTE" && "Libro y Notas"}
+                    {tab.id === "CONVIVENCIA" && "Circular 482"}
+                    {tab.id === "APODERADO" && "Familia y Pupilo"}
+                    {tab.id === "ESTUDIANTE" && "Asistencia y Notas"}
+                  </span>
+                </div>
               </button>
             );
           })}
@@ -153,8 +184,8 @@ export function RoleDashboardShell({
 
         {/* Guía Explicativa del Rol Activo */}
         <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-          <Info className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-          <span>{currentTabConfig.description}</span>
+          <Info className="w-4 h-4 text-blue-500 shrink-0" />
+          <span className="font-medium">{currentTabConfig.description}</span>
         </div>
       </div>
 
@@ -194,6 +225,8 @@ export function RoleDashboardShell({
             <EstudianteDashboard
               schoolSlug={schoolSlug}
               studentName={userName || currentTabConfig.userDefaultName}
+              studentEmail={userEmail}
+              isStudentSelf={userRole === "STUDENT"}
             />
           )}
         </motion.div>

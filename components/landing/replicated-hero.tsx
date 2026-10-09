@@ -27,6 +27,7 @@ import {
   UserPlus,
   FileCheck,
   School,
+  Building2,
   X,
   Sparkles,
 } from "lucide-react";
@@ -114,30 +115,23 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3.5 pt-1">
-              <button
-                onClick={() => {
-                  if (onOpenDemoModal) onOpenDemoModal();
-                  else setShowDemoModal(true);
-                }}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[#5046e5] hover:bg-[#4338ca] text-white shadow-[0_10px_25px_rgba(79,70,229,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[#5046e5] hover:bg-[#4338ca] text-white shadow-[0_10px_25px_rgba(79,70,229,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <span>Comenzar ahora</span>
+                <span>Ingresar al Sistema</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </Link>
 
-              <button
-                onClick={() => {
-                  if (onOpenQuoteModal) onOpenQuoteModal();
-                  else if (onOpenDemoModal) onOpenDemoModal();
-                  else setShowDemoModal(true);
-                }}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-white border border-[#c7d2fe] hover:border-[#a5b4fc] text-[#0f172a] shadow-xs transition-all hover:bg-slate-50 cursor-pointer"
+              <Link
+                href="/select-school"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-white border border-[#c7d2fe] hover:border-[#a5b4fc] text-[#0f172a] shadow-xs transition-all hover:bg-slate-50"
               >
                 <div className="w-5 h-5 rounded-full bg-[#eeeffe] flex items-center justify-center text-[#5046e5]">
-                  <Play className="w-2.5 h-2.5 fill-[#5046e5] ml-0.5" />
+                  <Building2 className="w-3.5 h-3.5 text-[#5046e5]" />
                 </div>
-                <span>Ver demostración</span>
-              </button>
+                <span>Explorar Instituciones</span>
+              </Link>
             </div>
 
             {/* 3 Pillar Features */}

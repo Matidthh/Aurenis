@@ -1,6 +1,7 @@
 import { TenantPrismaClient } from "@/lib/db/tenant-extension";
 import { isDatabaseConfigured } from "@/lib/db/prisma";
 import { SELECT_ASSESSMENT_WITH_GRADES } from "@/lib/db/query-projections";
+import { logAuditEvent } from "@/lib/services/audit.service";
 
 export class GradeServiceError extends Error {
   constructor(message: string) {
@@ -214,7 +215,7 @@ export async function createGrade(
       throw new GradeServiceError("La matrícula del estudiante no existe o no pertenece a esta institución.");
     }
 
-    return await tenantDb.grade.upsert({
+    const savedGrade = await tenantDb.grade.upsert({
       where: {
         assessmentId_enrollmentId: {
           assessmentId: data.assessmentId,
@@ -231,9 +232,27 @@ export async function createGrade(
         value: roundedValue,
       },
     });
+
+    // Pista de auditoría inmutable obligatoria (Circular N.º 30 y Circular N.º 482)
+    await logAuditEvent({
+      schoolId,
+      userId: userId || null,
+      action: "CREATE",
+      entityType: "GRADE",
+      entityId: savedGrade.id,
+      details: {
+        assessmentId: data.assessmentId,
+        enrollmentId: data.enrollmentId,
+        newValue: roundedValue,
+        comment: data.comment || data.feedback || null,
+        legalBasis: "Circular N.º 30 / Circular N.º 482 - Registro de Calificación Oficial",
+      },
+    });
+
+    return savedGrade;
   }
 
-  return {
+  const demoGrade = {
     id: `gr_demo_${Date.now()}`,
     schoolId,
     assessmentId: data.assessmentId,
@@ -242,6 +261,23 @@ export async function createGrade(
     createdAt: new Date(),
     updatedAt: new Date(),
   };
+
+  await logAuditEvent({
+    schoolId,
+    userId: userId || null,
+    action: "CREATE",
+    entityType: "GRADE",
+    entityId: demoGrade.id,
+    details: {
+      assessmentId: data.assessmentId,
+      enrollmentId: data.enrollmentId,
+      newValue: roundedValue,
+      comment: data.comment || data.feedback || null,
+      legalBasis: "Circular N.º 30 / Circular N.º 482 - Registro de Calificación Oficial",
+    },
+  });
+
+  return demoGrade;
 }
 
 export interface UpdateGradeData {
@@ -272,20 +308,66 @@ export async function updateGrade(
   }
 
   if (isDatabaseConfigured()) {
-    return await tenantDb.grade.update({
+    const currentGrade = await tenantDb.grade.findFirst({
       where: { id: gradeId, schoolId },
+    });
+
+    if (!currentGrade) {
+      throw new GradeServiceError("La calificación especificada no existe o no pertenece a esta institución.");
+    }
+
+    const updated = await tenantDb.grade.update({
+      where: { id: gradeId },
       data: {
         ...(roundedValue !== undefined ? { value: roundedValue } : {}),
+        ...(data.comment !== undefined || data.feedback !== undefined
+          ? { feedback: data.comment || data.feedback }
+          : {}),
       },
     });
+
+    // Pista de auditoría inmutable obligatoria (Circular N.º 30 y Circular N.º 482)
+    await logAuditEvent({
+      schoolId,
+      userId: userId || null,
+      action: "UPDATE",
+      entityType: "GRADE",
+      entityId: gradeId,
+      details: {
+        oldValue: Number(currentGrade.value),
+        newValue: roundedValue ?? Number(currentGrade.value),
+        comment: data.comment || data.feedback || "Modificación registrada en libro de clases",
+        assessmentId: currentGrade.assessmentId,
+        enrollmentId: currentGrade.enrollmentId,
+        legalBasis: "Circular N.º 30 / Circular N.º 482 - Modificación / Enmienda de Calificación Oficial",
+      },
+    });
+
+    return updated;
   }
 
-  return {
+  const updatedDemo = {
     id: gradeId,
     schoolId,
     value: roundedValue ?? 6.0,
     updatedAt: new Date(),
   };
+
+  await logAuditEvent({
+    schoolId,
+    userId: userId || null,
+    action: "UPDATE",
+    entityType: "GRADE",
+    entityId: gradeId,
+    details: {
+      oldValue: 5.0,
+      newValue: roundedValue ?? 6.0,
+      comment: data.comment || data.feedback || null,
+      legalBasis: "Circular N.º 30 / Circular N.º 482 - Modificación / Enmienda de Calificación Oficial",
+    },
+  });
+
+  return updatedDemo;
 }
 
 export async function deleteGrade(
@@ -295,11 +377,48 @@ export async function deleteGrade(
   userId: string
 ) {
   if (isDatabaseConfigured()) {
-    const deleted = await tenantDb.grade.delete({
+    const currentGrade = await tenantDb.grade.findFirst({
       where: { id: gradeId, schoolId },
     });
+
+    if (!currentGrade) {
+      throw new GradeServiceError("La calificación especificada no existe o no pertenece a esta institución.");
+    }
+
+    const deleted = await tenantDb.grade.delete({
+      where: { id: gradeId },
+    });
+
+    // Pista de auditoría inmutable obligatoria (Circular N.º 30 y Circular N.º 482)
+    await logAuditEvent({
+      schoolId,
+      userId: userId || null,
+      action: "DELETE",
+      entityType: "GRADE",
+      entityId: gradeId,
+      details: {
+        deletedValue: currentGrade ? Number(currentGrade.value) : undefined,
+        assessmentId: currentGrade?.assessmentId,
+        enrollmentId: currentGrade?.enrollmentId,
+        legalBasis: "Circular N.º 30 / Circular N.º 482 - Anulación / Eliminación de Calificación Oficial",
+      },
+    });
+
     return { ...deleted, success: true };
   }
+
+  await logAuditEvent({
+    schoolId,
+    userId: userId || null,
+    action: "DELETE",
+    entityType: "GRADE",
+    entityId: gradeId,
+    details: {
+      deletedValue: 6.0,
+      legalBasis: "Circular N.º 30 / Circular N.º 482 - Anulación / Eliminación de Calificación Oficial",
+    },
+  });
+
   return { id: gradeId, deleted: true, success: true };
 }
 
@@ -904,6 +1023,23 @@ export async function saveBulkMatrixGrades(
       });
     }
     savedCount++;
+  }
+
+  // Pista de auditoría inmutable obligatoria (Circular N.º 30 y Circular N.º 482)
+  if (savedCount > 0) {
+    await logAuditEvent({
+      schoolId,
+      userId: userId || null,
+      action: "UPDATE",
+      entityType: "GRADE",
+      entityId: "BULK_MATRIX_SAVE",
+      details: {
+        totalReceived: grades.length,
+        savedCount,
+        skippedCount: skipped.length,
+        legalBasis: "Circular N.º 30 / Circular N.º 482 - Guardado Masivo de Planilla Matricial Oficial",
+      },
+    });
   }
 
   return {

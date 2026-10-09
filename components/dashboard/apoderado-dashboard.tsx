@@ -23,6 +23,7 @@ import { ContextualHeader } from "./contextual-header";
 import { AcademicSummaryCard } from "./academic-summary-card";
 import { AdaptiveTable } from "./adaptive-table";
 import { DashboardEmptyState } from "./dashboard-empty-state";
+import { cn } from "@/lib/utils/cn";
 
 interface ApoderadoDashboardProps {
   schoolSlug: string;
@@ -97,18 +98,18 @@ export function ApoderadoDashboard({
         academicYear="2026"
         term="1er Semestre"
         roleTitle="Portal de la Familia & Apoderados"
-        roleBadgeColor="text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+        roleBadgeColor="text-amber-400 bg-amber-500/10 border-amber-500/30"
         userName={guardianName}
         greeting={`Ficha de Seguimiento Escolar de ${studentName}`}
         quickActions={
           <>
             <button
               type="button"
-              onClick={() => alert("Abriendo canal de comunicación oficial con Inspectoría General...")}
-              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm min-h-[44px] cursor-pointer"
+              onClick={() => alert("Abriendo canal oficial de comunicación con Jefatura e Inspectoría...")}
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-md shadow-amber-500/20 min-h-[44px] cursor-pointer"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>Contactar al Profesor Jefe</span>
+              <MessageCircle className="w-4 h-4" />
+              <span>Contactar a Jefatura</span>
             </button>
           </>
         }
@@ -165,10 +166,10 @@ export function ApoderadoDashboard({
 
       {/* 3. Módulo de Justificación de Inasistencia si existe pendiente */}
       {!hasJustified ? (
-        <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
           <div className="space-y-1">
-            <span className="font-bold text-xs uppercase tracking-wider text-amber-700 dark:text-amber-400 block">
-              Inasistencia Registrada por el Docente
+            <span className="font-extrabold text-xs uppercase tracking-wider text-amber-700 dark:text-amber-400 block">
+              Inasistencia Registrada en Libro de Clases
             </span>
             <p className="text-xs text-slate-700 dark:text-slate-300">
               {studentName} registró inasistencia el <strong>Martes 24 de Septiembre</strong> en jornada completa.
@@ -180,9 +181,9 @@ export function ApoderadoDashboard({
               setHasJustified(true);
               alert("¡Certificado médico recepcionado con éxito en Inspectoría General!");
             }}
-            className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 shadow-xs cursor-pointer min-h-[44px]"
+            className="px-4 py-2.5 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shrink-0 shadow-sm cursor-pointer min-h-[44px]"
           >
-            <FileCheck2 className="w-3.5 h-3.5" />
+            <FileCheck2 className="w-4 h-4" />
             <span>Adjuntar Justificación Médica</span>
           </button>
         </div>
@@ -213,7 +214,7 @@ export function ApoderadoDashboard({
             header: "Asignatura",
             render: (item) => (
               <div>
-                <span className="font-bold text-slate-900 dark:text-white block">{item.subject}</span>
+                <span className="font-bold text-slate-900 dark:text-white block text-xs sm:text-sm">{item.subject}</span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400">{item.teacher}</span>
               </div>
             ),
@@ -234,13 +235,14 @@ export function ApoderadoDashboard({
             align: "center",
             render: (item) => (
               <span
-                className={`font-mono font-bold text-xs ${
+                className={cn(
+                  "font-mono font-extrabold text-xs px-2.5 py-0.5 rounded-lg border",
                   item.avgGrade >= 6.0
-                    ? "text-emerald-600 dark:text-emerald-400"
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
                     : item.avgGrade >= 4.0
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-rose-600 dark:text-rose-400"
-                }`}
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20"
+                    : "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20"
+                )}
               >
                 {item.avgGrade.toFixed(1)}
               </span>
@@ -251,7 +253,7 @@ export function ApoderadoDashboard({
             header: "Asistencia en Ramo",
             align: "center",
             render: (item) => (
-              <span className="font-mono text-xs text-slate-700 dark:text-slate-300">
+              <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300">
                 {item.attendancePercent.toFixed(1)}%
               </span>
             ),
@@ -262,11 +264,12 @@ export function ApoderadoDashboard({
             align: "right",
             render: (item) => (
               <span
-                className={`text-[11px] font-bold ${
+                className={cn(
+                  "text-xs font-extrabold px-2 py-0.5 rounded-md",
                   item.status === "SOBRESALIENTE"
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-blue-600 dark:text-blue-400"
-                }`}
+                    ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800"
+                    : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800"
+                )}
               >
                 {item.status}
               </span>

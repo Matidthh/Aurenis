@@ -105,7 +105,7 @@ export function AdaptiveTable<T>({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white dark:bg-[#0B1120] shadow-xs overflow-hidden",
+        "rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#0C1425]/90 backdrop-blur-md shadow-sm overflow-hidden",
         className
       )}
     >
@@ -114,12 +114,12 @@ export function AdaptiveTable<T>({
         <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             {title && (
-              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight">
+              <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
                 {description}
               </p>
             )}
@@ -134,7 +134,7 @@ export function AdaptiveTable<T>({
                   placeholder={searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full text-xs rounded-xl py-2 pl-9 pr-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/20"
+                  className="w-full text-xs rounded-xl py-2 pl-9 pr-3 bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700/80 text-slate-900 dark:text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/30"
                 />
               </div>
             )}

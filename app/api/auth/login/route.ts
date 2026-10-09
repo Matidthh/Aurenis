@@ -12,8 +12,15 @@ import {
   getRateLimitHeaders,
   RATE_LIMIT_CONFIGS,
 } from "@/lib/security/rate-limiter";
+import { enforceAuthRateLimit } from "@/lib/security/upstash-ratelimit";
 
 export async function POST(req: NextRequest) {
+  // 1. Upstash Ratelimit middleware enforcement
+  const upstashLimitResponse = await enforceAuthRateLimit(req);
+  if (upstashLimitResponse) {
+    return upstashLimitResponse;
+  }
+
   const clientIp = getClientIdentifier(req);
   const rateLimitKey = `login:${clientIp}`;
 

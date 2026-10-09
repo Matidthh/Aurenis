@@ -21,6 +21,12 @@ export default async function GradesPage({
     getSchoolGradingConfig(tenantDb, tenantCtx.schoolId),
   ]);
 
+  const isReadOnly =
+    tenantCtx.roleName === "STUDENT" ||
+    tenantCtx.roleName === "GUARDIAN" ||
+    tenantCtx.roleName === "ESTUDIANTE" ||
+    tenantCtx.roleName === "APODERADO";
+
   return (
     <Page>
       <PageHeader
@@ -34,7 +40,11 @@ export default async function GradesPage({
         }
       />
 
-      <GradesPageClient gradeConfig={gradeConfig} assessments={assessments} />
+      <GradesPageClient
+        gradeConfig={gradeConfig}
+        assessments={assessments}
+        readOnly={isReadOnly}
+      />
     </Page>
   );
 }

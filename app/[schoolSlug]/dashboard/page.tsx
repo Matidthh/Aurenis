@@ -1,4 +1,5 @@
 import { requireTenantContext } from "@/lib/tenant/context";
+import { getSession } from "@/lib/auth/session";
 import { Page } from "@/components/layout/page";
 import { PageHeader } from "@/components/ui/page-header";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
@@ -11,13 +12,20 @@ export default async function TenantDashboardPage({
 }) {
   const { schoolSlug } = await params;
   const tenantCtx = await requireTenantContext(schoolSlug);
+  const session = await getSession();
 
   // Determinar rol por defecto para la primera carga
+  const activeRoleName = session?.roleName || tenantCtx.roleName;
   let defaultRole: RoleType = "DIRECTIVO";
-  if (tenantCtx.roleName === "TEACHER") defaultRole = "DOCENTE";
-  else if (tenantCtx.roleName === "STUDENT") defaultRole = "ESTUDIANTE";
-  else if (tenantCtx.roleName === "GUARDIAN") defaultRole = "APODERADO";
-  else if (tenantCtx.roleName === "CONVIVENCIA") defaultRole = "CONVIVENCIA";
+  if (activeRoleName === "TEACHER") defaultRole = "DOCENTE";
+  else if (activeRoleName === "STUDENT") defaultRole = "ESTUDIANTE";
+  else if (activeRoleName === "GUARDIAN") defaultRole = "APODERADO";
+  else if (activeRoleName === "CONVIVENCIA") defaultRole = "CONVIVENCIA";
+
+  const resolvedUserName =
+    session?.firstName && session?.lastName
+      ? `${session.firstName} ${session.lastName}`
+      : session?.email?.split("@")[0] || "Usuario Institucional";
 
   return (
     <Page title="Paneles de Gestión Académica & Roles">
@@ -30,7 +38,9 @@ export default async function TenantDashboardPage({
         <RoleDashboardShell
           schoolSlug={schoolSlug}
           defaultRole={defaultRole}
-          userName={`${tenantCtx.firstName} ${tenantCtx.lastName}`}
+          userName={resolvedUserName}
+          userEmail={session?.email}
+          userRole={activeRoleName}
           schoolName={tenantCtx.schoolName}
         />
       </div>

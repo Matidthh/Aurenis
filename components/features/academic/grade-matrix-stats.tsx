@@ -89,43 +89,66 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
         <div className="text-[10px] text-slate-400 mt-0.5">Dispersión de notas</div>
       </div>
 
-      {/* 5 y 6. Distribución de Notas Cromática */}
+      {/* 5 y 6. Distribución de Notas Cromática — Decreto 67 */}
       <div className="col-span-2 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
         <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          <span>Distribución Cromática</span>
-          <span className="text-[10px] lowercase text-slate-400">según rendimiento</span>
+          <span>Semáforo Decreto 67</span>
+          <span className="text-[10px] text-slate-500 font-mono font-semibold">WCAG AA</span>
         </div>
 
         <div className="grid grid-cols-4 gap-1.5 pt-2 text-center">
-          <div className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200/50">
-            <span className="text-[10px] font-bold text-red-600 dark:text-red-400 block">
-              &lt; 4.0
+          {/* Rojo: Insuficiente */}
+          <div
+            role="status"
+            aria-label={`Insuficiente (< 4.0): ${stats.distUnder4} alumnos en riesgo`}
+            className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-800"
+          >
+            <span className="text-[9px] font-extrabold text-red-900 dark:text-red-200 block truncate" title="Insuficiente (< 4.0)">
+              Insuf. (&lt;4.0)
             </span>
-            <span className="text-xs font-extrabold text-red-700 dark:text-red-300">
+            <span className="text-sm font-black text-red-700 dark:text-red-300">
               {stats.distUnder4}
             </span>
           </div>
-          <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200/50">
-            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 block">
-              4.0-4.9
+
+          {/* Ámbar: Elemental */}
+          <div
+            role="status"
+            aria-label={`Elemental (4.0 a 4.9): ${stats.dist4to5} alumnos en alerta`}
+            className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800"
+          >
+            <span className="text-[9px] font-bold text-amber-950 dark:text-amber-200 block truncate" title="Elemental (4.0 a 4.9)">
+              Elem. (4-4.9)
             </span>
-            <span className="text-xs font-extrabold text-amber-700 dark:text-amber-300">
+            <span className="text-sm font-black text-amber-800 dark:text-amber-300">
               {stats.dist4to5}
             </span>
           </div>
-          <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/50">
-            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 block">
-              5.0-5.9
+
+          {/* Verde: Adecuado */}
+          <div
+            role="status"
+            aria-label={`Adecuado (5.0 a 5.9): ${stats.dist5to6} alumnos satisfactorios`}
+            className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800"
+          >
+            <span className="text-[9px] font-bold text-emerald-950 dark:text-emerald-200 block truncate" title="Adecuado (5.0 a 5.9)">
+              Adec. (5-5.9)
             </span>
-            <span className="text-xs font-extrabold text-emerald-700 dark:text-emerald-300">
+            <span className="text-sm font-black text-emerald-800 dark:text-emerald-300">
               {stats.dist5to6}
             </span>
           </div>
-          <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200/50">
-            <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 block">
-              6.0-7.0
+
+          {/* Azul: Destacado */}
+          <div
+            role="status"
+            aria-label={`Destacado (6.0 a 7.0): ${stats.dist6to7} alumnos sobresalientes`}
+            className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800"
+          >
+            <span className="text-[9px] font-black text-blue-950 dark:text-blue-200 block truncate" title="Destacado (6.0 a 7.0)">
+              Dest. (6-7.0)
             </span>
-            <span className="text-xs font-extrabold text-blue-700 dark:text-blue-300">
+            <span className="text-sm font-black text-blue-800 dark:text-blue-300">
               {stats.dist6to7}
             </span>
           </div>

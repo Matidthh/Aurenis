@@ -63,7 +63,7 @@ export function sanitizeObject<T>(obj: T): T {
 }
 
 /**
- * Valida si un texto contiene patrones altamente anómalos o sospechosos.
+ * Valida si un texto contiene patrones altamente anómalos o sospechosos (SQLi, Tautologías, XSS, Traversal).
  */
 export function isAnomalousPayload(text: string): boolean {
   if (!text || typeof text !== "string") return false;
@@ -76,6 +76,24 @@ export function isAnomalousPayload(text: string): boolean {
 
   // 3. Intento de evasión de directorios crítico
   if (text.includes("../../../") || text.includes("..\\..\\..\\")) return true;
+
+  // 4. Patrones explícitos de inyección SQL y tautologías (' OR '1'='1', ' OR 1=1 --, admin==1, UNION SELECT)
+  const sqliPatterns = [
+    /'\s*OR\s*'?1'?\s*=\s*'?1/i,
+    /'\s*OR\s*'?[a-z0-9]+'?\s*=\s*'?[a-z0-9]+/i,
+    /UNION\s+ALL\s+SELECT/i,
+    /UNION\s+SELECT/i,
+    /;\s*DROP\s+TABLE/i,
+    /;\s*DELETE\s+FROM/i,
+    /admin'\s*--/i,
+    /admin"\s*--/i,
+    /'\s*HAVING\s+1=1/i,
+    /'\s*GROUP\s+BY\s+/i,
+  ];
+
+  if (sqliPatterns.some((pattern) => pattern.test(text))) {
+    return true;
+  }
 
   return false;
 }

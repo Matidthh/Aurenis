@@ -99,10 +99,10 @@ export function DashboardPreviewSection() {
                 </div>
 
                 <Link
-                  href="/lpmm/dashboard"
+                  href="/select-school"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition shadow-md shadow-blue-500/20 w-fit"
                 >
-                  <span>Abrir App Completa</span>
+                  <span>Seleccionar Colegio</span>
                   <Sparkles className="w-4 h-4" />
                 </Link>
               </div>

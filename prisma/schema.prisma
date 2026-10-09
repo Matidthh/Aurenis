@@ -38,6 +38,22 @@ enum AcademicTermType {
   ANNUAL
 }
 
+enum AssessmentType {
+  DIAGNOSTIC
+  FORMATIVE
+  SUMMATIVE
+}
+
+enum PromotionStatus {
+  PROMOTED_REGULAR
+  PROMOTED_ONE_FAILED
+  PROMOTED_TWO_FAILED
+  PROMOTED_COMMITTEE_DECISION
+  REPEATING_GRADES
+  REPEATING_ATTENDANCE
+  PENDING_COMMITTEE_REVIEW
+}
+
 enum AuditAction {
   CREATE
   UPDATE
@@ -69,6 +85,8 @@ model User {
   dataSubjectRequests DataSubjectRequest[]
   userPreference  UserPreference?
   attendanceSessions AttendanceSession[]
+  promotionEvaluations PromotionRecord[]
+  resetTokens     PasswordResetToken[]
 
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -119,6 +137,8 @@ model School {
   auditLogs         AuditLog[]
   files             FileRecord[]
   attendanceSessions AttendanceSession[]
+  promotionRecords  PromotionRecord[]
+  committeeRecords  EvaluationCommitteeRecord[]
 
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
@@ -270,6 +290,8 @@ model Course {
   attendances      AttendanceRecord[]
   schedules        ScheduleBlock[]
   attendanceSessions AttendanceSession[]
+  promotionRecords PromotionRecord[]
+  committeeRecords EvaluationCommitteeRecord[]
 
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -379,6 +401,8 @@ model Enrollment {
   student          StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
 
   grades           Grade[]
+  promotionRecord  PromotionRecord?
+  committeeRecords EvaluationCommitteeRecord[]
 
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
@@ -398,6 +422,7 @@ model Assessment {
   academicPeriodId String
   title            String
   description      String?
+  type             AssessmentType @default(SUMMATIVE)
   date             DateTime
   weightPercentage Decimal        @default(100.0) @db.Decimal(5, 2)
   isPublished      Boolean        @default(false)
@@ -595,5 +620,76 @@ model RevokedToken {
   @@index([jti])
   @@index([userId])
   @@index([expiresAt])
+}
+
+// -------------------------------------------------------------
+// 7. CUMPLIMIENTO DECRETO 67/2018 (PROMOCIÓN Y COMITÉ EVALUACIÓN)
+// -------------------------------------------------------------
+
+model PromotionRecord {
+  id                   String          @id @default(cuid())
+  schoolId             String
+  courseId             String
+  enrollmentId         String          @unique
+  year                 Int
+  finalAverage         Decimal         @db.Decimal(3, 1)
+  attendancePercentage Decimal         @db.Decimal(5, 2)
+  failedSubjectsCount  Int             @default(0)
+  failedSubjectsNames  String[]
+  status               PromotionStatus
+  isPromoted           Boolean
+  legalBasis           String          // Ej: "Decreto 67/2018 Art. 10 letra a"
+  committeeResolution  String?         // Acta fundada si aplica Art. 11
+  evaluatedAt          DateTime        @default(now())
+  evaluatedByUserId    String?
+
+  school               School          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course               Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollment           Enrollment      @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  evaluatedBy          User?           @relation(fields: [evaluatedByUserId], references: [id], onDelete: SetNull)
+
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  @@index([schoolId, year])
+  @@index([schoolId, courseId, year])
+  @@index([enrollmentId])
+}
+
+model EvaluationCommitteeRecord {
+  id                String   @id @default(cuid())
+  schoolId          String
+  courseId          String
+  enrollmentId      String
+  sessionDate       DateTime @default(now())
+  reason            String   // Motivo de revisión colegiada según Art. 11
+  decision          String   // "PROMOTED", "REPEATED"
+  justification     String   // Fundamentación pedagógica fundada
+  directorApproved  Boolean  @default(false)
+  directorUserId    String?
+  committeeMembers  String[] // Nombres de profesores integrantes
+
+  school            School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  course            Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollment        Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([schoolId, courseId])
+  @@index([enrollmentId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([tokenHash])
+  @@index([userId])
 }
 

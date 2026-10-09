@@ -118,6 +118,85 @@ export const GradeMatrixDecretoModal = memo(function GradeMatrixDecretoModal({
           </div>
         </div>
 
+        {/* Escala Semafórica Oficial Decreto 67 y WCAG AA */}
+        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider">
+              2. Escala Semafórica de Logro Oficial (Decreto 67 y WCAG 2.1 AA)
+            </h4>
+            <span className="text-[10px] font-extrabold text-slate-500 font-mono">
+              Contraste ≥ 4.5:1
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-600 dark:text-slate-400">
+            Conforme al Decreto Supremo 67/2018, la plataforma AURENIS implementa 4 rangos semafóricos
+            con alto contraste visual y etiquetas accesibles para no depender únicamente del color:
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-1">
+            {/* Insuficiente */}
+            <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-800 text-left space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-extrabold text-red-900 dark:text-red-200">
+                  🔴 Insuficiente
+                </span>
+                <span className="text-[10px] font-mono font-bold text-red-700 dark:text-red-300 px-1.5 py-0.2 rounded bg-white/80 dark:bg-red-900/60">
+                  1.0 - 3.9
+                </span>
+              </div>
+              <p className="text-[10px] text-red-950 dark:text-red-200 leading-tight">
+                Riesgo de reprobación académica. Requiere intervención pedagógica y apoyo.
+              </p>
+            </div>
+
+            {/* Elemental */}
+            <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-left space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-amber-950 dark:text-amber-200">
+                  🟡 Elemental
+                </span>
+                <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-300 px-1.5 py-0.2 rounded bg-white/80 dark:bg-amber-900/60">
+                  4.0 - 4.9
+                </span>
+              </div>
+              <p className="text-[10px] text-amber-950 dark:text-amber-200 leading-tight">
+                Aprobación mínima básica. Nivel en alerta preventiva ante retrocesos.
+              </p>
+            </div>
+
+            {/* Adecuado */}
+            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-left space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-emerald-950 dark:text-emerald-200">
+                  🟢 Adecuado
+                </span>
+                <span className="text-[10px] font-mono font-bold text-emerald-800 dark:text-emerald-300 px-1.5 py-0.2 rounded bg-white/80 dark:bg-emerald-900/60">
+                  5.0 - 5.9
+                </span>
+              </div>
+              <p className="text-[10px] text-emerald-950 dark:text-emerald-200 leading-tight">
+                Logro curricular satisfactorio. Desempeño esperado para el nivel.
+              </p>
+            </div>
+
+            {/* Destacado */}
+            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800 text-left space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-blue-950 dark:text-blue-200">
+                  🔵 Destacado
+                </span>
+                <span className="text-[10px] font-mono font-bold text-blue-800 dark:text-blue-300 px-1.5 py-0.2 rounded bg-white/80 dark:bg-blue-900/60">
+                  6.0 - 7.0
+                </span>
+              </div>
+              <p className="text-[10px] text-blue-950 dark:text-blue-200 leading-tight">
+                Alto nivel de logro. Domina con autonomía los aprendizajes esperados.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Artículos Clave del Decreto 67 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">

@@ -13,15 +13,17 @@ export interface GradesPageClientProps {
     termType?: string;
   };
   assessments?: any[];
+  readOnly?: boolean;
 }
 
 export function GradesPageClient({
   gradeConfig,
   assessments,
+  readOnly,
 }: GradesPageClientProps) {
   return (
     <div className="space-y-6">
-      <GradeMatrixSpreadsheet />
+      <GradeMatrixSpreadsheet readOnly={readOnly} />
     </div>
   );
 }

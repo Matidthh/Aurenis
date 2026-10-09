@@ -21,11 +21,17 @@ export async function GET(
 
     const { schoolId } = await params;
 
+    // Resolver identificador institucional (UUID / slug)
+    const school = await prisma.school.findFirst({
+      where: { OR: [{ id: schoolId }, { slug: schoolId }] },
+    });
+    const targetSchoolId = school?.id || schoolId;
+
     // Verificar pertenencia y permisos
     if (!session.isSystemAdmin) {
       const membership = await prisma.membership.findUnique({
         where: {
-          userId_schoolId: { userId: session.userId, schoolId },
+          userId_schoolId: { userId: session.userId, schoolId: targetSchoolId },
         },
         include: {
           role: {
@@ -53,8 +59,8 @@ export async function GET(
     const subjectId = searchParams.get("subjectId") || undefined;
     const periodId = searchParams.get("periodId") || undefined;
 
-    const tenantDb = createTenantPrisma(schoolId);
-    const matrixData = await getGradeMatrixData(tenantDb, schoolId, {
+    const tenantDb = createTenantPrisma(targetSchoolId);
+    const matrixData = await getGradeMatrixData(tenantDb, targetSchoolId, {
       courseId,
       subjectId,
       periodId,

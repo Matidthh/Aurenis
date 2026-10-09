@@ -41,22 +41,22 @@ export function LandingFooter() {
             </h4>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/lpmm/dashboard" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/login" className="text-slate-400 hover:text-white font-medium transition">
                   Portal de Alumnos
                 </Link>
               </li>
               <li>
-                <Link href="/lpmm/grades" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/login" className="text-slate-400 hover:text-white font-medium transition">
                   Planilla para Docentes
                 </Link>
               </li>
               <li>
-                <Link href="/lpmm/dashboard" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/login" className="text-slate-400 hover:text-white font-medium transition">
                   Consola Directiva & UTP
                 </Link>
               </li>
               <li>
-                <Link href="/mockups" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/login" className="text-slate-400 hover:text-white font-medium transition">
                   Portal de Apoderados
                 </Link>
               </li>
@@ -75,27 +75,27 @@ export function LandingFooter() {
             </h4>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/lpmm/grades" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/select-school" className="text-slate-400 hover:text-white font-medium transition">
                   Planilla Matricial Decreto 67
                 </Link>
               </li>
               <li>
-                <Link href="/lpmm/attendance" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/select-school" className="text-slate-400 hover:text-white font-medium transition">
                   Libro de Asistencia 1-Click
                 </Link>
               </li>
               <li>
-                <Link href="/lpmm/students" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/select-school" className="text-slate-400 hover:text-white font-medium transition">
                   Ficha del Estudiante 360°
                 </Link>
               </li>
               <li>
-                <Link href="/lpmm/teachers" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/select-school" className="text-slate-400 hover:text-white font-medium transition">
                   Directorio de Docentes
                 </Link>
               </li>
               <li>
-                <Link href="/mockups" className="text-slate-400 hover:text-white font-medium transition">
+                <Link href="/select-school" className="text-slate-400 hover:text-white font-medium transition">
                   Sistema de Alerta Temprana (SAT)
                 </Link>
               </li>
@@ -109,14 +109,14 @@ export function LandingFooter() {
             </h4>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/lpmm/dashboard" className="text-slate-400 hover:text-white font-medium transition flex items-center gap-1">
-                  <span>Liceo Politécnico Marga Marga</span>
+                <Link href="/select-school" className="text-slate-400 hover:text-white font-medium transition flex items-center gap-1">
+                  <span>Directorio de Colegios</span>
                   <ArrowUpRight className="w-3 h-3 text-blue-400" />
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-slate-400 hover:text-white font-medium transition">
-                  Portal Directivo Central
+                <Link href="/login" className="text-slate-400 hover:text-white font-medium transition">
+                  Acceso Institucional
                 </Link>
               </li>
               <li>

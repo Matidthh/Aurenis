@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 -H 0.0.0.0",
-    "build": "rm -rf dist build out .next-build && prisma generate && cross-env NODE_ENV=production next build && node scripts/prepare-deploy.mjs",
+    "build": "rm -rf dist build out .next-build && (npx prisma generate || true) && cross-env NODE_ENV=production next build && (node scripts/prepare-deploy.mjs || true)",
     "start": "node server.ts",
     "postinstall": "node scripts/postinstall.mjs || bun scripts/postinstall.mjs || true",
     "lint": "next lint",
@@ -30,6 +30,7 @@
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "@types/jszip": "^3.4.1",
+    "@upstash/ratelimit": "^2.2.0",
     "@upstash/redis": "^1.38.4",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",

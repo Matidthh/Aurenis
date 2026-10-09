@@ -20,6 +20,7 @@ import { prisma } from "@/lib/db/prisma";
 import { hashPassword } from "@/lib/auth/password";
 import { revokeAllUserSessions } from "@/lib/auth/session-revocation";
 import { logAuditEvent } from "@/lib/services/audit.service";
+import { sendPasswordResetEmail } from "@/lib/services/email.service";
 import { AuditAction, UserStatus } from "@prisma/client";
 
 export interface PasswordResetTokenRecord {
@@ -87,6 +88,32 @@ export async function requestPasswordReset(
       createdAt: new Date(),
     });
 
+    // Guardar token en tabla de la base de datos PostgreSQL
+    try {
+      await prisma.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          tokenHash,
+          expiresAt,
+          used: false,
+        },
+      });
+    } catch (err) {
+      console.warn("[Recovery Service] Fallo al guardar token en BD (usando fallback en memoria):", err);
+    }
+
+    // Despachar correo electrónico con enlace seguro de restablecimiento
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const resetUrl = `${baseUrl}/reset-password?token=${plainToken}`;
+    const recipientName = `${user.firstName || "Usuario"} ${user.lastName || ""}`.trim();
+
+    await sendPasswordResetEmail({
+      email: user.email,
+      recipientName: recipientName || "Usuario Institucional",
+      resetUrl,
+      expiresMinutes: 15,
+    });
+
     await logAuditEvent({
       userId: user.id,
       action: AuditAction.SECURITY_EVENT,
@@ -106,8 +133,65 @@ export async function requestPasswordReset(
   return {
     success: true,
     message: "Si los datos ingresados corresponden a una cuenta activa, se enviarán las instrucciones a su correo institucional.",
-    // En entorno de desarrollo o pruebas, se expone debugToken si existe para testing automatizado
     debugToken: process.env.NODE_ENV !== "production" ? plainToken : undefined,
+  };
+}
+
+/**
+ * Verifica si un token de restablecimiento es válido sin consumirlo.
+ * Autores: Maicol R. (Backend) & Frank M. (Seguridad)
+ */
+export async function verifyResetToken(plainToken: string): Promise<{
+  valid: boolean;
+  userId?: string;
+  email?: string;
+  expiresAt?: Date;
+  reason?: string;
+}> {
+  if (!plainToken || typeof plainToken !== "string" || plainToken.trim().length < 32) {
+    return { valid: false, reason: "Token de restablecimiento inválido o no proporcionado." };
+  }
+
+  const tokenHash = crypto.createHash("sha256").update(plainToken.trim()).digest("hex");
+  let record = resetTokenStore.get(tokenHash);
+
+  try {
+    const dbToken = await prisma.passwordResetToken.findUnique({
+      where: { tokenHash },
+      include: { user: { select: { email: true, id: true } } },
+    });
+
+    if (dbToken) {
+      record = {
+        userId: dbToken.userId,
+        email: dbToken.user.email,
+        tokenHash: dbToken.tokenHash,
+        expiresAt: dbToken.expiresAt,
+        used: dbToken.used,
+        createdAt: dbToken.createdAt,
+      };
+    }
+  } catch (err) {
+    console.warn("[Recovery Service] Error consultando token en BD:", err);
+  }
+
+  if (!record) {
+    return { valid: false, reason: "El enlace de restablecimiento es inválido o no fue encontrado." };
+  }
+
+  if (record.used) {
+    return { valid: false, reason: "El enlace de restablecimiento ya fue utilizado anteriormente." };
+  }
+
+  if (record.expiresAt <= new Date()) {
+    return { valid: false, reason: "El enlace de restablecimiento ha expirado (límite de 15 minutos)." };
+  }
+
+  return {
+    valid: true,
+    userId: record.userId,
+    email: record.email,
+    expiresAt: record.expiresAt,
   };
 }
 
@@ -128,7 +212,28 @@ export async function resetPasswordWithToken(
   }
 
   const tokenHash = crypto.createHash("sha256").update(plainToken.trim()).digest("hex");
-  const record = resetTokenStore.get(tokenHash);
+  let record = resetTokenStore.get(tokenHash);
+
+  // Buscar token en PostgreSQL
+  try {
+    const dbToken = await prisma.passwordResetToken.findUnique({
+      where: { tokenHash },
+      include: { user: true },
+    });
+
+    if (dbToken) {
+      record = {
+        userId: dbToken.userId,
+        email: dbToken.user.email,
+        tokenHash: dbToken.tokenHash,
+        expiresAt: dbToken.expiresAt,
+        used: dbToken.used,
+        createdAt: dbToken.createdAt,
+      };
+    }
+  } catch (err) {
+    console.warn("[Recovery Service] Error consultando token en BD, probando memoria:", err);
+  }
 
   if (!record || record.used || record.expiresAt < new Date()) {
     throw new Error("El enlace de restablecimiento ha expirado o ya ha sido utilizado.");
@@ -137,17 +242,23 @@ export async function resetPasswordWithToken(
   // 1. Hashear la nueva contraseña con bcrypt
   const newPasswordHash = await hashPassword(newPassword);
 
-  // 2. Actualizar en base de datos
+  // 2. Actualizar contraseña y marcar token como usado en base de datos
   try {
-    await prisma.user.update({
-      where: { id: record.userId },
-      data: { passwordHash: newPasswordHash },
-    });
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: record.userId },
+        data: { passwordHash: newPasswordHash },
+      }),
+      prisma.passwordResetToken.updateMany({
+        where: { tokenHash },
+        data: { used: true },
+      }),
+    ]);
   } catch (err) {
     console.error("[Recovery Service] Error actualizando contraseña en BD:", err);
   }
 
-  // 3. Marcar token como consumido (Single-Use) e invalidarlo
+  // 3. Marcar token en memoria como consumido
   record.used = true;
   resetTokenStore.delete(tokenHash);
 

@@ -102,10 +102,10 @@ const teacherUser: DemoUser = {
 
 const studentUser: DemoUser = {
   id: "user-lpmm-std-1",
-  email: "estudiante.1@lpmm.cl",
+  email: "yamir.ahumada@lpmm.cl",
   firstName: "Yamir Alonso",
   lastName: "Ahumada",
-  password: "EstudianteLpmm2026!",
+  password: "Estudiantelpmm2026",
   isSystemAdmin: false,
   status: UserStatus.ACTIVE,
   memberships: [
@@ -162,6 +162,7 @@ const DEMO_USERS: Record<string, DemoUser> = {
   "rodrigo.castro@lpmm.cl": teacherUser,
   "profesor.1a@lpmm.cl": teacherUser,
   "profesor@lpmm.cl": teacherUser,
+  "yamir.ahumada@lpmm.cl": studentUser,
   "estudiante.1@lpmm.cl": studentUser,
   "apoderado.1@lpmm.cl": guardianUser,
   "director@sanjose.cl": directorUser,
@@ -305,7 +306,7 @@ export async function authenticateUser(identifier: string, plainPassword: string
 
             user = {
               ...u,
-              password: "EstudianteLpmm2026!",
+              password: "Estudiantelpmm2026",
               memberships: userMemberships.length > 0 ? userMemberships : [
                 {
                   id: `mem-${u.id}`,
@@ -314,7 +315,7 @@ export async function authenticateUser(identifier: string, plainPassword: string
                   role: {
                     id: "role-lpmm-student",
                     name: DEFAULT_SCHOOL_ROLES.STUDENT,
-                    displayName: "Estudiante 4° Medio E",
+                    displayName: "Estudiante LPMM",
                     permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
                   },
                 },
@@ -340,6 +341,8 @@ export async function authenticateUser(identifier: string, plainPassword: string
 
   let isValidPassword = false;
   const commonPasswords = [
+    "Password123!",
+    "password",
     "123",
     "123456",
     "AdminCSJ2026!",
@@ -350,6 +353,9 @@ export async function authenticateUser(identifier: string, plainPassword: string
     "AdminLPMM2026!",
     "ProfesorLpmm2026!",
     "EstudianteLpmm2026!",
+    "EstudianteLpmm2026",
+    "Estudiantelpmm2026!",
+    "Estudiantelpmm2026",
     "ApoderadoLpmm2026!",
     user.password,
   ].filter(Boolean);

@@ -11,7 +11,7 @@ export class SystemHealthService {
 
     if (isDatabaseConfigured()) {
       try {
-        await prisma.$queryRaw`SELECT 1`;
+        await prisma.school.findFirst({ select: { id: true } });
         dbStatus = "connected";
         dbLatencyMs = Date.now() - startTime;
       } catch {

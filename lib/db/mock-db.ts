@@ -27,6 +27,9 @@ interface MockStore {
   attendanceRecords: Map<string, any>;
   attendanceSessions: Map<string, any>;
   dataSubjectRequests: Map<string, any>;
+  promotionRecords: Map<string, any>;
+  evaluationCommitteeRecords: Map<string, any>;
+  passwordResetTokens: Map<string, any>;
   auditLogs: any[];
 }
 
@@ -54,6 +57,9 @@ function initStore(): MockStore {
     attendanceRecords: new Map(),
     attendanceSessions: new Map(),
     dataSubjectRequests: new Map(),
+    promotionRecords: new Map(),
+    evaluationCommitteeRecords: new Map(),
+    passwordResetTokens: new Map(),
     auditLogs: [],
   };
 
@@ -641,6 +647,32 @@ export function createMockPrisma() {
 
   // Model implementations
   return {
+    passwordResetToken: {
+      async create(args: any) {
+        const data = args?.data || {};
+        const id = data.id || `prt_${Date.now()}`;
+        const record = { id, ...data };
+        store.passwordResetTokens.set(data.tokenHash, record);
+        return record;
+      },
+      async findUnique(args: any) {
+        const tokenHash = args?.where?.tokenHash;
+        if (!tokenHash) return null;
+        const record = store.passwordResetTokens.get(tokenHash);
+        if (!record) return null;
+        const user = store.users.get(record.userId);
+        return { ...record, user };
+      },
+      async updateMany(args: any) {
+        const tokenHash = args?.where?.tokenHash;
+        if (tokenHash && store.passwordResetTokens.has(tokenHash)) {
+          const record = store.passwordResetTokens.get(tokenHash);
+          Object.assign(record, args?.data || {});
+          return { count: 1 };
+        }
+        return { count: 0 };
+      },
+    },
     user: {
       async findUnique(args: any) {
         const where = args?.where;
@@ -915,10 +947,16 @@ export function createMockPrisma() {
             (reqUserId === "usr_student_demo" && mUserId === "user-student-1") ||
             (reqUserId === "user-student-1" && mUserId === "usr_student_demo") ||
             (reqUserId === "usr_guardian_demo" && mUserId === "user-guardian-1") ||
-            (reqUserId === "user-guardian-1" && mUserId === "usr_guardian_demo");
+            (reqUserId === "user-guardian-1" && mUserId === "usr_guardian_demo") ||
+            (reqUserId === "user-lpmm-director" && (mUserId === "user-lpmm-director" || mUserId === "usr_director_demo")) ||
+            (reqUserId === "user-lpmm-profesor-rodrigo" && mUserId === "user-lpmm-profesor-rodrigo") ||
+            (reqUserId === "user-lpmm-std-1" && mUserId === "user-lpmm-std-1") ||
+            (reqUserId === "user-lpmm-guardian-1" && mUserId === "user-lpmm-guardian-1");
 
           const isSchoolMatch = (mSchoolId: string) =>
             mSchoolId === reqSchoolId ||
+            ((reqSchoolId === "school-lpmm-001" || reqSchoolId === "lpmm") &&
+              (mSchoolId === "school-lpmm-001" || mSchoolId === "lpmm")) ||
             ((reqSchoolId === "sch_sanjose_demo" || reqSchoolId === "colegio-san-jose" || reqSchoolId === "sch_colegio_san_jose_001") &&
               (mSchoolId === "school-csj-001" || mSchoolId === "sch_sanjose_demo")) ||
             (reqSchoolId === "school-csj-001" &&
@@ -1555,9 +1593,73 @@ export function createMockPrisma() {
       },
     },
 
+    promotionRecord: {
+      async upsert(args: any) {
+        const where = args?.where;
+        let existing: any = null;
+        for (const p of store.promotionRecords.values()) {
+          if (where?.enrollmentId && p.enrollmentId === where.enrollmentId) {
+            existing = p;
+            break;
+          }
+        }
+        if (existing) {
+          Object.assign(existing, args.update, { updatedAt: new Date() });
+          return existing;
+        }
+        const created = {
+          id: args.create?.id || `prom_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          ...args.create,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        store.promotionRecords.set(created.id, created);
+        return created;
+      },
+      async findFirst(args?: any) {
+        for (const p of store.promotionRecords.values()) {
+          if (matchWhere(p, args?.where)) return p;
+        }
+        return null;
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const p of store.promotionRecords.values()) {
+          if (matchWhere(p, args?.where)) result.push(p);
+        }
+        return result;
+      },
+    },
+
+    evaluationCommitteeRecord: {
+      async create(args: any) {
+        const created = {
+          id: args.data?.id || `comm_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          ...args.data,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        store.evaluationCommitteeRecords.set(created.id, created);
+        return created;
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const c of store.evaluationCommitteeRecords.values()) {
+          if (matchWhere(c, args?.where)) result.push(c);
+        }
+        return result;
+      },
+    },
+
     // Transaction support
-    async $transaction(cb: (tx: any) => Promise<any>) {
-      return cb(this);
+    async $transaction(input: any) {
+      if (typeof input === "function") {
+        return input(this);
+      }
+      if (Array.isArray(input)) {
+        return Promise.all(input);
+      }
+      return input;
     },
 
     // Extension support
@@ -1674,7 +1776,13 @@ export function createMockPrisma() {
       const rps = Array.from(store.rolePermissions.values()).filter((rp) => rp.roleId === role.id);
       const perms: any[] = [];
       for (const rp of rps) {
-        const p = store.permissions.get(rp.permissionId);
+        let p = store.permissions.get(rp.permissionId);
+        if (!p) {
+          p = Array.from(store.permissions.values()).find((x) => x.code === rp.permissionId);
+        }
+        if (!p && typeof rp.permissionId === "string") {
+          p = { id: rp.permissionId, code: rp.permissionId, module: "ACADEMIC", description: rp.permissionId };
+        }
         if (p) {
           perms.push({ permission: p });
           if (p.code && p.code.includes(":")) {

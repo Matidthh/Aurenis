@@ -1,6 +1,7 @@
 /**
  * Datos Reales Ingestados de Google Sheets Oficiales del LPMM
  * Cursos: 1A, 1B, 1C, 2A, 2B, 2C, 3A, 3C, 3D, 3E, 4A, 4C, 4D, 4E
+ * Correos institucionales formateados como nombre.apellido@lpmm.cl
  */
 
 export const LPMM_OFFICIAL_SHEETS_DATA: Record<
@@ -21,7 +22,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ahumada Acuña Yamir Alonso",
       "firstName": "Yamir Alonso",
       "lastName": "Ahumada Acuña",
-      "email": "estudiante.1a.1@lpmm.cl",
+      "email": "yamir.ahumada@lpmm.cl",
       "rut": "22.165.001-1",
       "notes": [
         6.2,
@@ -102,7 +103,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ahumada Contreras Gianella Andrea",
       "firstName": "Gianella Andrea",
       "lastName": "Ahumada Contreras",
-      "email": "estudiante.1a.2@lpmm.cl",
+      "email": "gianella.ahumada@lpmm.cl",
       "rut": "22.165.002-2",
       "notes": [
         4.7,
@@ -187,7 +188,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Arancibia Carvajal Muriel Anaís",
       "firstName": "Muriel Anaís",
       "lastName": "Arancibia Carvajal",
-      "email": "estudiante.1a.3@lpmm.cl",
+      "email": "muriel.arancibia@lpmm.cl",
       "rut": "22.165.003-3",
       "notes": [
         6,
@@ -272,7 +273,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Arancibia Cortés Constanza Ignacia",
       "firstName": "Constanza Ignacia",
       "lastName": "Arancibia Cortés",
-      "email": "estudiante.1a.4@lpmm.cl",
+      "email": "constanza.arancibia@lpmm.cl",
       "rut": "22.165.004-4",
       "notes": [
         4,
@@ -357,7 +358,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Araya Canto Klaudia Jaquelinne",
       "firstName": "Klaudia Jaquelinne",
       "lastName": "Araya Canto",
-      "email": "estudiante.1a.5@lpmm.cl",
+      "email": "klaudia.araya@lpmm.cl",
       "rut": "22.165.005-5",
       "notes": [
         5.8,
@@ -432,7 +433,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Araya Hernández Fabiola Ankayra",
       "firstName": "Fabiola Ankayra",
       "lastName": "Araya Hernández",
-      "email": "estudiante.1a.7@lpmm.cl",
+      "email": "fabiola.araya@lpmm.cl",
       "rut": "22.165.007-7",
       "notes": [
         5,
@@ -514,7 +515,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Becerra Nova Trinidad Isabella",
       "firstName": "Trinidad Isabella",
       "lastName": "Becerra Nova",
-      "email": "estudiante.1a.9@lpmm.cl",
+      "email": "trinidad.becerra@lpmm.cl",
       "rut": "22.165.009-9",
       "notes": [
         4.5,
@@ -594,7 +595,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Brito Díaz Marthina Alejandra",
       "firstName": "Marthina Alejandra",
       "lastName": "Brito Díaz",
-      "email": "estudiante.1a.10@lpmm.cl",
+      "email": "marthina.brito@lpmm.cl",
       "rut": "22.165.010-0",
       "notes": [
         5.4,
@@ -680,7 +681,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Campos Ocaranza Esteban Ariel",
       "firstName": "Esteban Ariel",
       "lastName": "Campos Ocaranza",
-      "email": "estudiante.1a.11@lpmm.cl",
+      "email": "esteban.campos@lpmm.cl",
       "rut": "22.165.011-1",
       "notes": [
         4.5,
@@ -766,7 +767,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Carrasquero Araya Reiker Gabriel",
       "firstName": "Reiker Gabriel",
       "lastName": "Carrasquero Araya",
-      "email": "estudiante.1a.12@lpmm.cl",
+      "email": "reiker.carrasquero@lpmm.cl",
       "rut": "22.165.012-2",
       "notes": [
         3.5,
@@ -851,7 +852,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cerda Robles Maximiliano Giuliano",
       "firstName": "Maximiliano Giuliano",
       "lastName": "Cerda Robles",
-      "email": "estudiante.1a.13@lpmm.cl",
+      "email": "maximiliano.cerda@lpmm.cl",
       "rut": "22.165.013-3",
       "notes": [
         6.4,
@@ -937,7 +938,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Espinoza Poveda Rayen Yasmin",
       "firstName": "Rayen Yasmin",
       "lastName": "Espinoza Poveda",
-      "email": "estudiante.1a.15@lpmm.cl",
+      "email": "rayen.espinoza@lpmm.cl",
       "rut": "22.165.015-5",
       "notes": [
         3.5,
@@ -1007,7 +1008,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fuenzalida Abarca Cristóbal Eduardo",
       "firstName": "Cristóbal Eduardo",
       "lastName": "Fuenzalida Abarca",
-      "email": "estudiante.1a.16@lpmm.cl",
+      "email": "cristobal.fuenzalida@lpmm.cl",
       "rut": "22.165.016-6",
       "notes": [
         7,
@@ -1082,7 +1083,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Galdames Pérez Isidora Abigail",
       "firstName": "Isidora Abigail",
       "lastName": "Galdames Pérez",
-      "email": "estudiante.1a.17@lpmm.cl",
+      "email": "isidora.galdames@lpmm.cl",
       "rut": "22.165.017-7",
       "notes": [
         5,
@@ -1167,7 +1168,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jara Fuenzalida Ylitia Magdalena",
       "firstName": "Ylitia Magdalena",
       "lastName": "Jara Fuenzalida",
-      "email": "estudiante.1a.18@lpmm.cl",
+      "email": "ylitia.jara@lpmm.cl",
       "rut": "22.165.018-8",
       "notes": [
         3.2,
@@ -1237,7 +1238,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Ramírez Paz Yeraldi",
       "firstName": "Paz Yeraldi",
       "lastName": "Martínez Ramírez",
-      "email": "estudiante.1a.20@lpmm.cl",
+      "email": "paz.martinez@lpmm.cl",
       "rut": "22.165.020-0",
       "notes": [
         4,
@@ -1322,7 +1323,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Morales Martínez Florencia Victoria",
       "firstName": "Florencia Victoria",
       "lastName": "Morales Martínez",
-      "email": "estudiante.1a.21@lpmm.cl",
+      "email": "florencia.morales@lpmm.cl",
       "rut": "22.165.021-1",
       "notes": [
         5.2,
@@ -1407,7 +1408,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Morales Ponce Naomí Akira",
       "firstName": "Naomí Akira",
       "lastName": "Morales Ponce",
-      "email": "estudiante.1a.22@lpmm.cl",
+      "email": "naomi.morales@lpmm.cl",
       "rut": "22.165.022-2",
       "notes": [
         4.2,
@@ -1487,7 +1488,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Oyanadel Vergara Catalina Leticia",
       "firstName": "Catalina Leticia",
       "lastName": "Oyanadel Vergara",
-      "email": "estudiante.1a.24@lpmm.cl",
+      "email": "catalina.oyanadel@lpmm.cl",
       "rut": "22.165.024-4",
       "notes": [
         4,
@@ -1569,7 +1570,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Paternina Ruiz Winyelber Andres",
       "firstName": "Winyelber Andres",
       "lastName": "Paternina Ruiz",
-      "email": "estudiante.1a.25@lpmm.cl",
+      "email": "winyelber.paternina@lpmm.cl",
       "rut": "22.165.025-5",
       "notes": [
         4.1,
@@ -1655,7 +1656,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Piña Riquelme Antonia Paz",
       "firstName": "Antonia Paz",
       "lastName": "Piña Riquelme",
-      "email": "estudiante.1a.26@lpmm.cl",
+      "email": "antonia.pina@lpmm.cl",
       "rut": "22.165.026-6",
       "notes": [
         3.5,
@@ -1736,7 +1737,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Theodule Jeurlande",
       "firstName": "Theodule",
       "lastName": "Jeurlande",
-      "email": "estudiante.1a.30@lpmm.cl",
+      "email": "theodule.jeurlande@lpmm.cl",
       "rut": "22.165.030-0",
       "notes": [
         6.1,
@@ -1821,7 +1822,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vega Fernández Antonia Maleny",
       "firstName": "Antonia Maleny",
       "lastName": "Vega Fernández",
-      "email": "estudiante.1a.31@lpmm.cl",
+      "email": "antonia.vega@lpmm.cl",
       "rut": "22.165.031-1",
       "notes": [
         6,
@@ -1904,7 +1905,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fernández Bravo Francisca Alexandra",
       "firstName": "Francisca Alexandra",
       "lastName": "Fernández Bravo",
-      "email": "estudiante.1a.34@lpmm.cl",
+      "email": "francisca.fernandez@lpmm.cl",
       "rut": "22.165.034-4",
       "notes": [
         5.4,
@@ -1987,7 +1988,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jiménez Carrizo Allison Belén",
       "firstName": "Allison Belén",
       "lastName": "Jiménez Carrizo",
-      "email": "estudiante.1a.35@lpmm.cl",
+      "email": "allison.jimenez@lpmm.cl",
       "rut": "22.165.035-5",
       "notes": [
         6.5,
@@ -2015,7 +2016,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Porras Arévalo Branco Heidan Eletelier",
       "firstName": "Branco Heidan Eletelier",
       "lastName": "Porras Arévalo",
-      "email": "estudiante.1a.36@lpmm.cl",
+      "email": "branco.porras@lpmm.cl",
       "rut": "22.165.036-6",
       "notes": [
         5.5,
@@ -2031,7 +2032,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Alvarez Mejias Jail Yavier",
       "firstName": "Jail Yavier",
       "lastName": "Alvarez Mejias",
-      "email": "estudiante.1b.2@lpmm.cl",
+      "email": "jail.alvarez@lpmm.cl",
       "rut": "22.166.002-2",
       "notes": [
         4.4,
@@ -2117,7 +2118,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Arias Soto Millenka Katiuzka",
       "firstName": "Millenka Katiuzka",
       "lastName": "Arias Soto",
-      "email": "estudiante.1b.4@lpmm.cl",
+      "email": "millenka.arias@lpmm.cl",
       "rut": "22.166.004-4",
       "notes": [
         3,
@@ -2196,7 +2197,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Gorlitz Parra Javiera Constanza",
       "firstName": "Javiera Constanza",
       "lastName": "Gorlitz Parra",
-      "email": "estudiante.1b.8@lpmm.cl",
+      "email": "javiera.gorlitz@lpmm.cl",
       "rut": "22.166.008-8",
       "notes": [
         4,
@@ -2281,7 +2282,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Herrera Bastías Catalina Anaís",
       "firstName": "Catalina Anaís",
       "lastName": "Herrera Bastías",
-      "email": "estudiante.1b.9@lpmm.cl",
+      "email": "catalina.herrera@lpmm.cl",
       "rut": "22.166.009-9",
       "notes": [
         3.3,
@@ -2365,7 +2366,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lanas Lobos Axel Patricio",
       "firstName": "Axel Patricio",
       "lastName": "Lanas Lobos",
-      "email": "estudiante.1b.10@lpmm.cl",
+      "email": "axel.lanas@lpmm.cl",
       "rut": "22.166.010-0",
       "notes": [
         3,
@@ -2448,7 +2449,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Madrid Rozas Alejandra Carolina",
       "firstName": "Alejandra Carolina",
       "lastName": "Madrid Rozas",
-      "email": "estudiante.1b.12@lpmm.cl",
+      "email": "alejandra.madrid@lpmm.cl",
       "rut": "22.166.012-2",
       "notes": [
         3.5,
@@ -2529,7 +2530,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Marín González Ricardo Andrés",
       "firstName": "Ricardo Andrés",
       "lastName": "Marín González",
-      "email": "estudiante.1b.13@lpmm.cl",
+      "email": "ricardo.marin@lpmm.cl",
       "rut": "22.166.013-3",
       "notes": [
         3.5,
@@ -2608,7 +2609,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Carrasco Martín Enrique",
       "firstName": "Martín Enrique",
       "lastName": "Núñez Carrasco",
-      "email": "estudiante.1b.14@lpmm.cl",
+      "email": "martin.nunez@lpmm.cl",
       "rut": "22.166.014-4",
       "notes": [
         6.7,
@@ -2694,7 +2695,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Ponce Yendeli Esmeralda",
       "firstName": "Yendeli Esmeralda",
       "lastName": "Núñez Ponce",
-      "email": "estudiante.1b.15@lpmm.cl",
+      "email": "yendeli.nunez@lpmm.cl",
       "rut": "22.166.015-5",
       "notes": [
         6.1,
@@ -2781,7 +2782,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Olguín Hernández Iker Yamil Darius",
       "firstName": "Iker Yamil Darius",
       "lastName": "Olguín Hernández",
-      "email": "estudiante.1b.16@lpmm.cl",
+      "email": "iker.olguin@lpmm.cl",
       "rut": "22.166.016-6",
       "notes": [
         3.2,
@@ -2866,7 +2867,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Oyaneder Brante Danae Estefanía",
       "firstName": "Danae Estefanía",
       "lastName": "Oyaneder Brante",
-      "email": "estudiante.1b.17@lpmm.cl",
+      "email": "danae.oyaneder@lpmm.cl",
       "rut": "22.166.017-7",
       "notes": [
         6,
@@ -2945,7 +2946,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ríos Cerda Sebastián Lionel",
       "firstName": "Sebastián Lionel",
       "lastName": "Ríos Cerda",
-      "email": "estudiante.1b.22@lpmm.cl",
+      "email": "sebastian.rios@lpmm.cl",
       "rut": "22.166.022-2",
       "notes": [
         5.8,
@@ -3029,7 +3030,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Roca Ribera Moises Eduardo",
       "firstName": "Moises Eduardo",
       "lastName": "Roca Ribera",
-      "email": "estudiante.1b.23@lpmm.cl",
+      "email": "moises.roca@lpmm.cl",
       "rut": "22.166.023-3",
       "notes": [
         5.8,
@@ -3108,7 +3109,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sepúlveda Bustamante Katia Marcela",
       "firstName": "Katia Marcela",
       "lastName": "Sepúlveda Bustamante",
-      "email": "estudiante.1b.24@lpmm.cl",
+      "email": "katia.sepulveda@lpmm.cl",
       "rut": "22.166.024-4",
       "notes": [
         6,
@@ -3193,7 +3194,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sepúlveda Rojo Isidora Valentina",
       "firstName": "Isidora Valentina",
       "lastName": "Sepúlveda Rojo",
-      "email": "estudiante.1b.25@lpmm.cl",
+      "email": "isidora.sepulveda@lpmm.cl",
       "rut": "22.166.025-5",
       "notes": [
         5,
@@ -3276,7 +3277,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Serón Casas Franco Facundo",
       "firstName": "Franco Facundo",
       "lastName": "Serón Casas",
-      "email": "estudiante.1b.26@lpmm.cl",
+      "email": "franco.seron@lpmm.cl",
       "rut": "22.166.026-6",
       "notes": [
         7,
@@ -3362,7 +3363,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Urbina Almendares Pascale Antonella",
       "firstName": "Pascale Antonella",
       "lastName": "Urbina Almendares",
-      "email": "estudiante.1b.29@lpmm.cl",
+      "email": "pascale.urbina@lpmm.cl",
       "rut": "22.166.029-9",
       "notes": [
         5.5,
@@ -3447,7 +3448,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Silva Rodríguez Daniela Isabel",
       "firstName": "Daniela Isabel",
       "lastName": "Silva Rodríguez",
-      "email": "estudiante.1b.33@lpmm.cl",
+      "email": "daniela.silva@lpmm.cl",
       "rut": "22.166.033-3",
       "notes": [
         4.8,
@@ -3518,7 +3519,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Madrid Rozas Sigrid Antonia",
       "firstName": "Sigrid Antonia",
       "lastName": "Madrid Rozas",
-      "email": "estudiante.1b.34@lpmm.cl",
+      "email": "sigrid.madrid@lpmm.cl",
       "rut": "22.166.034-4",
       "notes": [
         6.3,
@@ -3584,7 +3585,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Neira Pía Constanza Antonella",
       "firstName": "Pía Constanza Antonella",
       "lastName": "Núñez Neira",
-      "email": "estudiante.1b.36@lpmm.cl",
+      "email": "pia.nunez@lpmm.cl",
       "rut": "22.166.036-6",
       "notes": [
         4.2,
@@ -3654,7 +3655,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mora Hidalgo Tomás Eduardo",
       "firstName": "Tomás Eduardo",
       "lastName": "Mora Hidalgo",
-      "email": "estudiante.1b.37@lpmm.cl",
+      "email": "tomas.mora@lpmm.cl",
       "rut": "22.166.037-7",
       "notes": [
         5,
@@ -3722,7 +3723,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mancilla Gallardo Isidora Emilia",
       "firstName": "Isidora Emilia",
       "lastName": "Mancilla Gallardo",
-      "email": "estudiante.1b.38@lpmm.cl",
+      "email": "isidora.mancilla@lpmm.cl",
       "rut": "22.166.038-8",
       "notes": [
         6,
@@ -3799,7 +3800,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Montecinos Ponce Martina Belén",
       "firstName": "Martina Belén",
       "lastName": "Montecinos Ponce",
-      "email": "estudiante.1b.39@lpmm.cl",
+      "email": "martina.montecinos@lpmm.cl",
       "rut": "22.166.039-9",
       "notes": [
         5,
@@ -3865,7 +3866,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valdivia Tobar Florencia Ines",
       "firstName": "Florencia Ines",
       "lastName": "Valdivia Tobar",
-      "email": "estudiante.1b.40@lpmm.cl",
+      "email": "florencia.valdivia@lpmm.cl",
       "rut": "22.166.040-0",
       "notes": [
         6.5,
@@ -3938,7 +3939,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Barraza Barraza Ricardo Esteban",
       "firstName": "Ricardo Esteban",
       "lastName": "Barraza Barraza",
-      "email": "estudiante.1c.2@lpmm.cl",
+      "email": "ricardo.barraza@lpmm.cl",
       "rut": "22.167.002-2",
       "notes": [
         4.9,
@@ -4018,7 +4019,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cayún Reyes Antonella Elianett",
       "firstName": "Antonella Elianett",
       "lastName": "Cayún Reyes",
-      "email": "estudiante.1c.3@lpmm.cl",
+      "email": "antonella.cayun@lpmm.cl",
       "rut": "22.167.003-3",
       "notes": [
         5.5,
@@ -4084,7 +4085,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fernández Muñoz Cristóbal Andrés",
       "firstName": "Cristóbal Andrés",
       "lastName": "Fernández Muñoz",
-      "email": "estudiante.1c.9@lpmm.cl",
+      "email": "cristobal.fernandez@lpmm.cl",
       "rut": "22.167.009-9",
       "notes": [
         7,
@@ -4163,7 +4164,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fuenzalida Olivo Sofía Rosita",
       "firstName": "Sofía Rosita",
       "lastName": "Fuenzalida Olivo",
-      "email": "estudiante.1c.10@lpmm.cl",
+      "email": "sofia.fuenzalida@lpmm.cl",
       "rut": "22.167.010-0",
       "notes": [
         5,
@@ -4245,7 +4246,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Godoy Riffo Mia Pascalle",
       "firstName": "Mia Pascalle",
       "lastName": "Godoy Riffo",
-      "email": "estudiante.1c.11@lpmm.cl",
+      "email": "mia.godoy@lpmm.cl",
       "rut": "22.167.011-1",
       "notes": [
         5,
@@ -4311,7 +4312,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jaure Rapilloso Justin Williams",
       "firstName": "Justin Williams",
       "lastName": "Jaure Rapilloso",
-      "email": "estudiante.1c.14@lpmm.cl",
+      "email": "justin.jaure@lpmm.cl",
       "rut": "22.167.014-4",
       "notes": [
         4.2,
@@ -4396,7 +4397,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "López Aillapán Brailyn Jazmin",
       "firstName": "Brailyn Jazmin",
       "lastName": "López Aillapán",
-      "email": "estudiante.1c.16@lpmm.cl",
+      "email": "brailyn.lopez@lpmm.cl",
       "rut": "22.167.016-6",
       "notes": [
         4.2,
@@ -4474,7 +4475,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lopez Diaz Hector Vicente",
       "firstName": "Hector Vicente",
       "lastName": "Lopez Diaz",
-      "email": "estudiante.1c.17@lpmm.cl",
+      "email": "hector.lopez@lpmm.cl",
       "rut": "22.167.017-7",
       "notes": [
         4.8,
@@ -4553,7 +4554,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Loreto Saavedra Agatha Medelein",
       "firstName": "Agatha Medelein",
       "lastName": "Loreto Saavedra",
-      "email": "estudiante.1c.18@lpmm.cl",
+      "email": "agatha.loreto@lpmm.cl",
       "rut": "22.167.018-8",
       "notes": [
         4,
@@ -4634,7 +4635,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martinez Galdona Samir Alejandro",
       "firstName": "Samir Alejandro",
       "lastName": "Martinez Galdona",
-      "email": "estudiante.1c.20@lpmm.cl",
+      "email": "samir.martinez@lpmm.cl",
       "rut": "22.167.020-0",
       "notes": [
         6,
@@ -4718,7 +4719,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martinez Morales Dave Dario",
       "firstName": "Dave Dario",
       "lastName": "Martinez Morales",
-      "email": "estudiante.1c.21@lpmm.cl",
+      "email": "dave.martinez@lpmm.cl",
       "rut": "22.167.021-1",
       "notes": [
         3.6,
@@ -4800,7 +4801,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Minio Narváez Gabriel Uziel",
       "firstName": "Gabriel Uziel",
       "lastName": "Minio Narváez",
-      "email": "estudiante.1c.22@lpmm.cl",
+      "email": "gabriel.minio@lpmm.cl",
       "rut": "22.167.022-2",
       "notes": [
         3.4,
@@ -4878,7 +4879,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Muñoz Olave Joaquín Alexis",
       "firstName": "Joaquín Alexis",
       "lastName": "Muñoz Olave",
-      "email": "estudiante.1c.24@lpmm.cl",
+      "email": "joaquin.munoz@lpmm.cl",
       "rut": "22.167.024-4",
       "notes": [
         3,
@@ -4958,7 +4959,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Nanjari Gallardo Elena Carolina",
       "firstName": "Elena Carolina",
       "lastName": "Nanjari Gallardo",
-      "email": "estudiante.1c.25@lpmm.cl",
+      "email": "elena.nanjari@lpmm.cl",
       "rut": "22.167.025-5",
       "notes": [
         2.5,
@@ -5016,7 +5017,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Porras Delgado Milena Alessandra",
       "firstName": "Milena Alessandra",
       "lastName": "Porras Delgado",
-      "email": "estudiante.1c.26@lpmm.cl",
+      "email": "milena.porras@lpmm.cl",
       "rut": "22.167.026-6",
       "notes": [
         3.8,
@@ -5097,7 +5098,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Reyes Miller Sebastián Felipe",
       "firstName": "Sebastián Felipe",
       "lastName": "Reyes Miller",
-      "email": "estudiante.1c.27@lpmm.cl",
+      "email": "sebastian.reyes@lpmm.cl",
       "rut": "22.167.027-7",
       "notes": [
         2.5,
@@ -5176,7 +5177,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vidal Cuellar Belén Anaís",
       "firstName": "Belén Anaís",
       "lastName": "Vidal Cuellar",
-      "email": "estudiante.1c.30@lpmm.cl",
+      "email": "belen.vidal@lpmm.cl",
       "rut": "22.167.030-0",
       "notes": [
         6.6,
@@ -5258,7 +5259,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jara Álvarez Ignacia Pascal",
       "firstName": "Ignacia Pascal",
       "lastName": "Jara Álvarez",
-      "email": "estudiante.1c.32@lpmm.cl",
+      "email": "ignacia.jara@lpmm.cl",
       "rut": "22.167.032-2",
       "notes": [
         2.5,
@@ -5340,7 +5341,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pérez Varela Alexander Andrés",
       "firstName": "Alexander Andrés",
       "lastName": "Pérez Varela",
-      "email": "estudiante.1c.33@lpmm.cl",
+      "email": "alexander.perez@lpmm.cl",
       "rut": "22.167.033-3",
       "notes": [
         7,
@@ -5391,7 +5392,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Estacio Castillo Aaron Yardel",
       "firstName": "Aaron Yardel",
       "lastName": "Estacio Castillo",
-      "email": "estudiante.1c.34@lpmm.cl",
+      "email": "aaron.estacio@lpmm.cl",
       "rut": "22.167.034-4",
       "notes": [
         3.5,
@@ -5422,7 +5423,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Echeverría Salinas Anthonella Amaranza",
       "firstName": "Anthonella Amaranza",
       "lastName": "Echeverría Salinas",
-      "email": "estudiante.1c.35@lpmm.cl",
+      "email": "anthonella.echeverria@lpmm.cl",
       "rut": "22.167.035-5",
       "notes": [
         5.3,
@@ -5490,7 +5491,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Quilodrán Rojas Aylin Belén",
       "firstName": "Aylin Belén",
       "lastName": "Quilodrán Rojas",
-      "email": "estudiante.1c.36@lpmm.cl",
+      "email": "aylin.quilodran@lpmm.cl",
       "rut": "22.167.036-6",
       "notes": [
         5.5,
@@ -5506,7 +5507,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Alvarez Mejias Javily Javier",
       "firstName": "Javily Javier",
       "lastName": "Alvarez Mejias",
-      "email": "estudiante.2a.1@lpmm.cl",
+      "email": "javily.alvarez@lpmm.cl",
       "rut": "22.265.001-1",
       "notes": [
         6.6,
@@ -5590,7 +5591,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Armijo Jerez Ariadna Naiala",
       "firstName": "Ariadna Naiala",
       "lastName": "Armijo Jerez",
-      "email": "estudiante.2a.3@lpmm.cl",
+      "email": "ariadna.armijo@lpmm.cl",
       "rut": "22.265.003-3",
       "notes": [
         6.8,
@@ -5673,7 +5674,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Bahamondes Poblete Alexander",
       "firstName": "Alexander",
       "lastName": "Bahamondes Poblete",
-      "email": "estudiante.2a.4@lpmm.cl",
+      "email": "alexander.bahamondes@lpmm.cl",
       "rut": "22.265.004-4",
       "notes": [
         6.5,
@@ -5757,7 +5758,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Bernal Labra Marcela Alejandra",
       "firstName": "Marcela Alejandra",
       "lastName": "Bernal Labra",
-      "email": "estudiante.2a.6@lpmm.cl",
+      "email": "marcela.bernal@lpmm.cl",
       "rut": "22.265.006-6",
       "notes": [
         4.5,
@@ -5838,7 +5839,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Castro Almonacid Claudia Carolina",
       "firstName": "Claudia Carolina",
       "lastName": "Castro Almonacid",
-      "email": "estudiante.2a.8@lpmm.cl",
+      "email": "claudia.castro@lpmm.cl",
       "rut": "22.265.008-8",
       "notes": [
         6,
@@ -5921,7 +5922,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Chamorro Palazzi Randy Daniel",
       "firstName": "Randy Daniel",
       "lastName": "Chamorro Palazzi",
-      "email": "estudiante.2a.10@lpmm.cl",
+      "email": "randy.chamorro@lpmm.cl",
       "rut": "22.265.010-0",
       "notes": [
         3,
@@ -6002,7 +6003,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Colmenares Peña Evan",
       "firstName": "Evan",
       "lastName": "Colmenares Peña",
-      "email": "estudiante.2a.11@lpmm.cl",
+      "email": "evan.colmenares@lpmm.cl",
       "rut": "22.265.011-1",
       "notes": [
         5.5,
@@ -6087,7 +6088,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Eceheverria Vera Jesus Javier",
       "firstName": "Jesus Javier",
       "lastName": "Eceheverria Vera",
-      "email": "estudiante.2a.12@lpmm.cl",
+      "email": "jesus.eceheverria@lpmm.cl",
       "rut": "22.265.012-2",
       "notes": [
         3.5,
@@ -6171,7 +6172,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Elgueta Sanhueza Allison Aylin",
       "firstName": "Allison Aylin",
       "lastName": "Elgueta Sanhueza",
-      "email": "estudiante.2a.13@lpmm.cl",
+      "email": "allison.elgueta@lpmm.cl",
       "rut": "22.265.013-3",
       "notes": [
         4.8,
@@ -6255,7 +6256,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Gómez Fredes Marina Adriana",
       "firstName": "Marina Adriana",
       "lastName": "Gómez Fredes",
-      "email": "estudiante.2a.14@lpmm.cl",
+      "email": "marina.gomez@lpmm.cl",
       "rut": "22.265.014-4",
       "notes": [
         3,
@@ -6334,7 +6335,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Guerra Cabello Alexia Catalina",
       "firstName": "Alexia Catalina",
       "lastName": "Guerra Cabello",
-      "email": "estudiante.2a.15@lpmm.cl",
+      "email": "alexia.guerra@lpmm.cl",
       "rut": "22.265.015-5",
       "notes": [
         3,
@@ -6414,7 +6415,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Herrera Alfaro Stefany Elena",
       "firstName": "Stefany Elena",
       "lastName": "Herrera Alfaro",
-      "email": "estudiante.2a.16@lpmm.cl",
+      "email": "stefany.herrera@lpmm.cl",
       "rut": "22.265.016-6",
       "notes": [
         4,
@@ -6497,7 +6498,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Alvarado César Antonio Marcelo",
       "firstName": "César Antonio Marcelo",
       "lastName": "Martínez Alvarado",
-      "email": "estudiante.2a.18@lpmm.cl",
+      "email": "cesar.martinez@lpmm.cl",
       "rut": "22.265.018-8",
       "notes": [
         3.3,
@@ -6579,7 +6580,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Montolivo Agustín Javier",
       "firstName": "Agustín Javier",
       "lastName": "Núñez Montolivo",
-      "email": "estudiante.2a.19@lpmm.cl",
+      "email": "agustin.nunez@lpmm.cl",
       "rut": "22.265.019-9",
       "notes": [
         4,
@@ -6662,7 +6663,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Olave Ferbol Crisny Catalina",
       "firstName": "Crisny Catalina",
       "lastName": "Olave Ferbol",
-      "email": "estudiante.2a.20@lpmm.cl",
+      "email": "crisny.olave@lpmm.cl",
       "rut": "22.265.020-0",
       "notes": [
         3,
@@ -6744,7 +6745,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Orrego Chacana Antonella Daé",
       "firstName": "Antonella Daé",
       "lastName": "Orrego Chacana",
-      "email": "estudiante.2a.22@lpmm.cl",
+      "email": "antonella.orrego@lpmm.cl",
       "rut": "22.265.022-2",
       "notes": [
         7,
@@ -6828,7 +6829,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ortiz Laferte Amanda Paola",
       "firstName": "Amanda Paola",
       "lastName": "Ortiz Laferte",
-      "email": "estudiante.2a.23@lpmm.cl",
+      "email": "amanda.ortiz@lpmm.cl",
       "rut": "22.265.023-3",
       "notes": [
         4.3,
@@ -6912,7 +6913,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sanhueza Aravena Sayen Sullay",
       "firstName": "Sayen Sullay",
       "lastName": "Sanhueza Aravena",
-      "email": "estudiante.2a.27@lpmm.cl",
+      "email": "sayen.sanhueza@lpmm.cl",
       "rut": "22.265.027-7",
       "notes": [
         6,
@@ -6996,7 +6997,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Uribe Melipillán Martina Ignacia",
       "firstName": "Martina Ignacia",
       "lastName": "Uribe Melipillán",
-      "email": "estudiante.2a.28@lpmm.cl",
+      "email": "martina.uribe@lpmm.cl",
       "rut": "22.265.028-8",
       "notes": [
         4,
@@ -7079,7 +7080,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Zamora Baquedano Millaray Emilia Arllets",
       "firstName": "Millaray Emilia Arllets",
       "lastName": "Zamora Baquedano",
-      "email": "estudiante.2a.30@lpmm.cl",
+      "email": "millaray.zamora@lpmm.cl",
       "rut": "22.265.030-0",
       "notes": [
         5,
@@ -7161,7 +7162,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Marambio Marques Ignacio Tomás",
       "firstName": "Ignacio Tomás",
       "lastName": "Marambio Marques",
-      "email": "estudiante.2a.31@lpmm.cl",
+      "email": "ignacio.marambio@lpmm.cl",
       "rut": "22.265.031-1",
       "notes": [
         6.8,
@@ -7239,7 +7240,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Barahona Valentina Belén",
       "firstName": "Valentina Belén",
       "lastName": "Martínez Barahona",
-      "email": "estudiante.2a.32@lpmm.cl",
+      "email": "valentina.martinez@lpmm.cl",
       "rut": "22.265.032-2",
       "notes": [
         5.5,
@@ -7284,7 +7285,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Carrillo Falcon Shantal De Los Angeles",
       "firstName": "Shantal De Los Angeles",
       "lastName": "Carrillo Falcon",
-      "email": "estudiante.2a.33@lpmm.cl",
+      "email": "shantal.carrillo@lpmm.cl",
       "rut": "22.265.033-3",
       "notes": [
         6.3,
@@ -7314,7 +7315,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Orquera Lopez Luciano Valentin",
       "firstName": "Luciano Valentin",
       "lastName": "Orquera Lopez",
-      "email": "estudiante.2a.34@lpmm.cl",
+      "email": "luciano.orquera@lpmm.cl",
       "rut": "22.265.034-4",
       "notes": [
         6.8,
@@ -7361,7 +7362,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Toro Soto Fernando Alonso",
       "firstName": "Fernando Alonso",
       "lastName": "Toro Soto",
-      "email": "estudiante.2a.35@lpmm.cl",
+      "email": "fernando.toro@lpmm.cl",
       "rut": "22.265.035-5",
       "notes": [
         5,
@@ -7405,7 +7406,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Allendes Ibarra Benjamín David",
       "firstName": "Benjamín David",
       "lastName": "Allendes Ibarra",
-      "email": "estudiante.2b.1@lpmm.cl",
+      "email": "benjamin.allendes@lpmm.cl",
       "rut": "22.266.001-1",
       "notes": [
         6.2,
@@ -7488,7 +7489,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Bermudez Escalante Brithany Valentina",
       "firstName": "Brithany Valentina",
       "lastName": "Bermudez Escalante",
-      "email": "estudiante.2b.2@lpmm.cl",
+      "email": "brithany.bermudez@lpmm.cl",
       "rut": "22.266.002-2",
       "notes": [
         6.3,
@@ -7571,7 +7572,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cambero Sanchez Yosdeimerlin Del Carmen",
       "firstName": "Yosdeimerlin Del Carmen",
       "lastName": "Cambero Sanchez",
-      "email": "estudiante.2b.3@lpmm.cl",
+      "email": "yosdeimerlin.cambero@lpmm.cl",
       "rut": "22.266.003-3",
       "notes": [
         6.4,
@@ -7646,7 +7647,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Castillo Rodriguez Christopher Wanniel",
       "firstName": "Christopher Wanniel",
       "lastName": "Castillo Rodriguez",
-      "email": "estudiante.2b.5@lpmm.cl",
+      "email": "christopher.castillo@lpmm.cl",
       "rut": "22.266.005-5",
       "notes": [
         5.3,
@@ -7731,7 +7732,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cisternas Muñoz Sigrid Alondra",
       "firstName": "Sigrid Alondra",
       "lastName": "Cisternas Muñoz",
-      "email": "estudiante.2b.6@lpmm.cl",
+      "email": "sigrid.cisternas@lpmm.cl",
       "rut": "22.266.006-6",
       "notes": [
         6.5,
@@ -7804,7 +7805,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Contreras Vilches Maximiliano Joaquín",
       "firstName": "Maximiliano Joaquín",
       "lastName": "Contreras Vilches",
-      "email": "estudiante.2b.7@lpmm.cl",
+      "email": "maximiliano.contreras@lpmm.cl",
       "rut": "22.266.007-7",
       "notes": [
         4.6,
@@ -7886,7 +7887,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Córdova Leyton Catalina Del Carmen",
       "firstName": "Catalina Del Carmen",
       "lastName": "Córdova Leyton",
-      "email": "estudiante.2b.8@lpmm.cl",
+      "email": "catalina.cordova@lpmm.cl",
       "rut": "22.266.008-8",
       "notes": [
         6.8,
@@ -7953,7 +7954,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Hernández Garrido Diego Benjamín",
       "firstName": "Diego Benjamín",
       "lastName": "Hernández Garrido",
-      "email": "estudiante.2b.9@lpmm.cl",
+      "email": "diego.hernandez@lpmm.cl",
       "rut": "22.266.009-9",
       "notes": [
         3.6,
@@ -8033,7 +8034,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jiménez Vilches Maximiliano Isaac",
       "firstName": "Maximiliano Isaac",
       "lastName": "Jiménez Vilches",
-      "email": "estudiante.2b.11@lpmm.cl",
+      "email": "maximiliano.jimenez@lpmm.cl",
       "rut": "22.266.011-1",
       "notes": [
         6.7,
@@ -8118,7 +8119,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lara Arancibia Fabián Giovanni",
       "firstName": "Fabián Giovanni",
       "lastName": "Lara Arancibia",
-      "email": "estudiante.2b.12@lpmm.cl",
+      "email": "fabian.lara@lpmm.cl",
       "rut": "22.266.012-2",
       "notes": [
         6.8,
@@ -8202,7 +8203,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "León Riquelme Fernanda Rocío",
       "firstName": "Fernanda Rocío",
       "lastName": "León Riquelme",
-      "email": "estudiante.2b.13@lpmm.cl",
+      "email": "fernanda.leon@lpmm.cl",
       "rut": "22.266.013-3",
       "notes": [
         6.8,
@@ -8287,7 +8288,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mayora Moreno Karla Weslangely",
       "firstName": "Karla Weslangely",
       "lastName": "Mayora Moreno",
-      "email": "estudiante.2b.14@lpmm.cl",
+      "email": "karla.mayora@lpmm.cl",
       "rut": "22.266.014-4",
       "notes": [
         7,
@@ -8372,7 +8373,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Moreno Campos Wladimir Elías",
       "firstName": "Wladimir Elías",
       "lastName": "Moreno Campos",
-      "email": "estudiante.2b.16@lpmm.cl",
+      "email": "wladimir.moreno@lpmm.cl",
       "rut": "22.266.016-6",
       "notes": [
         6,
@@ -8454,7 +8455,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Portilla Muñoz Isidora Ignacia",
       "firstName": "Isidora Ignacia",
       "lastName": "Portilla Muñoz",
-      "email": "estudiante.2b.19@lpmm.cl",
+      "email": "isidora.portilla@lpmm.cl",
       "rut": "22.266.019-9",
       "notes": [
         4.7,
@@ -8534,7 +8535,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Reyes Varas Daira Belén",
       "firstName": "Daira Belén",
       "lastName": "Reyes Varas",
-      "email": "estudiante.2b.20@lpmm.cl",
+      "email": "daira.reyes@lpmm.cl",
       "rut": "22.266.020-0",
       "notes": [
         4,
@@ -8617,7 +8618,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Riascos Rivas Maicol Jose",
       "firstName": "Maicol Jose",
       "lastName": "Riascos Rivas",
-      "email": "estudiante.2b.21@lpmm.cl",
+      "email": "maicol.riascos@lpmm.cl",
       "rut": "22.266.021-1",
       "notes": [
         5.6,
@@ -8701,7 +8702,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rosas Córdova Ricardo Gabriel",
       "firstName": "Ricardo Gabriel",
       "lastName": "Rosas Córdova",
-      "email": "estudiante.2b.22@lpmm.cl",
+      "email": "ricardo.rosas@lpmm.cl",
       "rut": "22.266.022-2",
       "notes": [
         7,
@@ -8786,7 +8787,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rubilar Rodríguez Isidora Belén",
       "firstName": "Isidora Belén",
       "lastName": "Rubilar Rodríguez",
-      "email": "estudiante.2b.23@lpmm.cl",
+      "email": "isidora.rubilar@lpmm.cl",
       "rut": "22.266.023-3",
       "notes": [
         6.8,
@@ -8870,7 +8871,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rujano Montilla Jairo De Jesus",
       "firstName": "Jairo De Jesus",
       "lastName": "Rujano Montilla",
-      "email": "estudiante.2b.24@lpmm.cl",
+      "email": "jairo.rujano@lpmm.cl",
       "rut": "22.266.024-4",
       "notes": [
         6.7,
@@ -8952,7 +8953,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Salazar Almeida Martina Danae",
       "firstName": "Martina Danae",
       "lastName": "Salazar Almeida",
-      "email": "estudiante.2b.25@lpmm.cl",
+      "email": "martina.salazar@lpmm.cl",
       "rut": "22.266.025-5",
       "notes": [
         7,
@@ -9017,7 +9018,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ugarte Walton Alexander Benjamín",
       "firstName": "Alexander Benjamín",
       "lastName": "Ugarte Walton",
-      "email": "estudiante.2b.26@lpmm.cl",
+      "email": "alexander.ugarte@lpmm.cl",
       "rut": "22.266.026-6",
       "notes": [
         5.3,
@@ -9093,7 +9094,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valdebenito Fleming Tomás Bastián",
       "firstName": "Tomás Bastián",
       "lastName": "Valdebenito Fleming",
-      "email": "estudiante.2b.27@lpmm.cl",
+      "email": "tomas.valdebenito@lpmm.cl",
       "rut": "22.266.027-7",
       "notes": [
         7,
@@ -9176,7 +9177,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valdivia Fernández Agustina Trinidad",
       "firstName": "Agustina Trinidad",
       "lastName": "Valdivia Fernández",
-      "email": "estudiante.2b.28@lpmm.cl",
+      "email": "agustina.valdivia@lpmm.cl",
       "rut": "22.266.028-8",
       "notes": [
         5.5,
@@ -9261,7 +9262,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valenzuela Ferrada Eduardo Javier",
       "firstName": "Eduardo Javier",
       "lastName": "Valenzuela Ferrada",
-      "email": "estudiante.2b.29@lpmm.cl",
+      "email": "eduardo.valenzuela@lpmm.cl",
       "rut": "22.266.029-9",
       "notes": [
         7,
@@ -9344,7 +9345,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vega Fonseca Antonella Belén",
       "firstName": "Antonella Belén",
       "lastName": "Vega Fonseca",
-      "email": "estudiante.2b.30@lpmm.cl",
+      "email": "antonella.vega@lpmm.cl",
       "rut": "22.266.030-0",
       "notes": [
         7,
@@ -9426,7 +9427,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Zambrano Mejias Yerixon Antonio",
       "firstName": "Yerixon Antonio",
       "lastName": "Zambrano Mejias",
-      "email": "estudiante.2b.31@lpmm.cl",
+      "email": "yerixon.zambrano@lpmm.cl",
       "rut": "22.266.031-1",
       "notes": [
         7,
@@ -9508,7 +9509,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mujica Mujica Cristóbal Alexis",
       "firstName": "Cristóbal Alexis",
       "lastName": "Mujica Mujica",
-      "email": "estudiante.2b.32@lpmm.cl",
+      "email": "cristobal.mujica@lpmm.cl",
       "rut": "22.266.032-2",
       "notes": [
         3,
@@ -9554,7 +9555,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Aguilera González Mateo Ignacio",
       "firstName": "Mateo Ignacio",
       "lastName": "Aguilera González",
-      "email": "estudiante.2c.1@lpmm.cl",
+      "email": "mateo.aguilera@lpmm.cl",
       "rut": "22.267.001-1",
       "notes": [
         5.9,
@@ -9644,7 +9645,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Alvarez Huaiquilaf Fernando Koyan",
       "firstName": "Fernando Koyan",
       "lastName": "Alvarez Huaiquilaf",
-      "email": "estudiante.2c.2@lpmm.cl",
+      "email": "fernando.alvarez@lpmm.cl",
       "rut": "22.267.002-2",
       "notes": [
         6.7,
@@ -9736,7 +9737,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cabrera Díaz Vicente Tomás",
       "firstName": "Vicente Tomás",
       "lastName": "Cabrera Díaz",
-      "email": "estudiante.2c.3@lpmm.cl",
+      "email": "vicente.cabrera@lpmm.cl",
       "rut": "22.267.003-3",
       "notes": [
         5.3,
@@ -9825,7 +9826,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cortés Godoy Jhendelyn Alexandra",
       "firstName": "Jhendelyn Alexandra",
       "lastName": "Cortés Godoy",
-      "email": "estudiante.2c.4@lpmm.cl",
+      "email": "jhendelyn.cortes@lpmm.cl",
       "rut": "22.267.004-4",
       "notes": [
         4.6,
@@ -9915,7 +9916,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cortés Zamora Diego Andrés",
       "firstName": "Diego Andrés",
       "lastName": "Cortés Zamora",
-      "email": "estudiante.2c.5@lpmm.cl",
+      "email": "diego.cortes@lpmm.cl",
       "rut": "22.267.005-5",
       "notes": [
         7,
@@ -10005,7 +10006,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cortés Zamora Sofía Antonella",
       "firstName": "Sofía Antonella",
       "lastName": "Cortés Zamora",
-      "email": "estudiante.2c.6@lpmm.cl",
+      "email": "sofia.cortes@lpmm.cl",
       "rut": "22.267.006-6",
       "notes": [
         5.8,
@@ -10096,7 +10097,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Covarrubias Flores Bárbara Belén",
       "firstName": "Bárbara Belén",
       "lastName": "Covarrubias Flores",
-      "email": "estudiante.2c.7@lpmm.cl",
+      "email": "barbara.covarrubias@lpmm.cl",
       "rut": "22.267.007-7",
       "notes": [
         6.2,
@@ -10186,7 +10187,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Farias Ponce Alessandro Antonio",
       "firstName": "Alessandro Antonio",
       "lastName": "Farias Ponce",
-      "email": "estudiante.2c.8@lpmm.cl",
+      "email": "alessandro.farias@lpmm.cl",
       "rut": "22.267.008-8",
       "notes": [
         2.6,
@@ -10270,7 +10271,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Francois Anne Cloe Emmanuella",
       "firstName": "Cloe Emmanuella",
       "lastName": "Francois Anne",
-      "email": "estudiante.2c.9@lpmm.cl",
+      "email": "cloe.francois@lpmm.cl",
       "rut": "22.267.009-9",
       "notes": [
         6.3,
@@ -10357,7 +10358,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fuentes Riffo Maximiliano Andrés",
       "firstName": "Maximiliano Andrés",
       "lastName": "Fuentes Riffo",
-      "email": "estudiante.2c.10@lpmm.cl",
+      "email": "maximiliano.fuentes@lpmm.cl",
       "rut": "22.267.010-0",
       "notes": [
         5,
@@ -10436,7 +10437,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Gálvez Guerrero Ayanae Magda Rita",
       "firstName": "Ayanae Magda Rita",
       "lastName": "Gálvez Guerrero",
-      "email": "estudiante.2c.13@lpmm.cl",
+      "email": "ayanae.galvez@lpmm.cl",
       "rut": "22.267.013-3",
       "notes": [
         4,
@@ -10524,7 +10525,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "González Llanca Lisbeth Belén",
       "firstName": "Lisbeth Belén",
       "lastName": "González Llanca",
-      "email": "estudiante.2c.14@lpmm.cl",
+      "email": "lisbeth.gonzalez@lpmm.cl",
       "rut": "22.267.014-4",
       "notes": [
         4.8,
@@ -10610,7 +10611,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Labraña Olmos Dilan Francisco",
       "firstName": "Dilan Francisco",
       "lastName": "Labraña Olmos",
-      "email": "estudiante.2c.15@lpmm.cl",
+      "email": "dilan.labrana@lpmm.cl",
       "rut": "22.267.015-5",
       "notes": [
         3.7,
@@ -10692,7 +10693,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Latorre Espinoza Esteisy Paz",
       "firstName": "Esteisy Paz",
       "lastName": "Latorre Espinoza",
-      "email": "estudiante.2c.16@lpmm.cl",
+      "email": "esteisy.latorre@lpmm.cl",
       "rut": "22.267.016-6",
       "notes": [
         4.8,
@@ -10777,7 +10778,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lucero Mendoza Guslimar Salome",
       "firstName": "Guslimar Salome",
       "lastName": "Lucero Mendoza",
-      "email": "estudiante.2c.18@lpmm.cl",
+      "email": "guslimar.lucero@lpmm.cl",
       "rut": "22.267.018-8",
       "notes": [
         3.9,
@@ -10867,7 +10868,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Manríquez Valenzuela Maximiliano Antonio",
       "firstName": "Maximiliano Antonio",
       "lastName": "Manríquez Valenzuela",
-      "email": "estudiante.2c.19@lpmm.cl",
+      "email": "maximiliano.manriquez@lpmm.cl",
       "rut": "22.267.019-9",
       "notes": [
         6.8,
@@ -10957,7 +10958,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rocha Araya Gustavo Tyler",
       "firstName": "Gustavo Tyler",
       "lastName": "Rocha Araya",
-      "email": "estudiante.2c.22@lpmm.cl",
+      "email": "gustavo.rocha@lpmm.cl",
       "rut": "22.267.022-2",
       "notes": [
         7,
@@ -11048,7 +11049,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rodriguez Mendoza Jorhannys Claret",
       "firstName": "Jorhannys Claret",
       "lastName": "Rodriguez Mendoza",
-      "email": "estudiante.2c.23@lpmm.cl",
+      "email": "jorhannys.rodriguez@lpmm.cl",
       "rut": "22.267.023-3",
       "notes": [
         6,
@@ -11137,7 +11138,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rojas Vildoso Benjamín Eduardo",
       "firstName": "Benjamín Eduardo",
       "lastName": "Rojas Vildoso",
-      "email": "estudiante.2c.24@lpmm.cl",
+      "email": "benjamin.rojas@lpmm.cl",
       "rut": "22.267.024-4",
       "notes": [
         4.1,
@@ -11222,7 +11223,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Serrano Zumelzo Bruno Joaquín",
       "firstName": "Bruno Joaquín",
       "lastName": "Serrano Zumelzo",
-      "email": "estudiante.2c.25@lpmm.cl",
+      "email": "bruno.serrano@lpmm.cl",
       "rut": "22.267.025-5",
       "notes": [
         4.8,
@@ -11302,7 +11303,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Soto Figueroa Constanza Belén",
       "firstName": "Constanza Belén",
       "lastName": "Soto Figueroa",
-      "email": "estudiante.2c.26@lpmm.cl",
+      "email": "constanza.soto@lpmm.cl",
       "rut": "22.267.026-6",
       "notes": [
         6.8,
@@ -11392,7 +11393,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Tapia Véliz Antonella Belén",
       "firstName": "Antonella Belén",
       "lastName": "Tapia Véliz",
-      "email": "estudiante.2c.27@lpmm.cl",
+      "email": "antonella.tapia@lpmm.cl",
       "rut": "22.267.027-7",
       "notes": [
         6.1,
@@ -11482,7 +11483,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Troncoso Escobar Renata Ignacia",
       "firstName": "Renata Ignacia",
       "lastName": "Troncoso Escobar",
-      "email": "estudiante.2c.28@lpmm.cl",
+      "email": "renata.troncoso@lpmm.cl",
       "rut": "22.267.028-8",
       "notes": [
         5.1,
@@ -11568,7 +11569,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ureta Valenzuela Consthanza Catalina",
       "firstName": "Consthanza Catalina",
       "lastName": "Ureta Valenzuela",
-      "email": "estudiante.2c.29@lpmm.cl",
+      "email": "consthanza.ureta@lpmm.cl",
       "rut": "22.267.029-9",
       "notes": [
         6.3,
@@ -11656,7 +11657,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valenzuela Silva Darlyn Antonella",
       "firstName": "Darlyn Antonella",
       "lastName": "Valenzuela Silva",
-      "email": "estudiante.2c.30@lpmm.cl",
+      "email": "darlyn.valenzuela@lpmm.cl",
       "rut": "22.267.030-0",
       "notes": [
         5,
@@ -11744,7 +11745,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Yáñez Salinas Matías Alejandro",
       "firstName": "Matías Alejandro",
       "lastName": "Yáñez Salinas",
-      "email": "estudiante.2c.31@lpmm.cl",
+      "email": "matias.yanez@lpmm.cl",
       "rut": "22.267.031-1",
       "notes": [
         1.5,
@@ -11821,7 +11822,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lopez Lopez Mariana Yurubi",
       "firstName": "Mariana Yurubi",
       "lastName": "Lopez Lopez",
-      "email": "estudiante.2c.33@lpmm.cl",
+      "email": "mariana.lopez@lpmm.cl",
       "rut": "22.267.033-3",
       "notes": [
         5,
@@ -11885,7 +11886,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Baleizan Cerda Carmen Elizaber",
       "firstName": "Carmen Elizaber",
       "lastName": "Baleizan Cerda",
-      "email": "estudiante.3a.1@lpmm.cl",
+      "email": "carmen.baleizan@lpmm.cl",
       "rut": "22.365.001-1",
       "notes": [
         4.6,
@@ -11960,7 +11961,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Contreras Allende Mariafernanda",
       "firstName": "Mariafernanda",
       "lastName": "Contreras Allende",
-      "email": "estudiante.3a.2@lpmm.cl",
+      "email": "mariafernanda.contreras@lpmm.cl",
       "rut": "22.365.002-2",
       "notes": [
         6.3,
@@ -12038,7 +12039,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Díaz Acosta Maríapaz Antonia",
       "firstName": "Maríapaz Antonia",
       "lastName": "Díaz Acosta",
-      "email": "estudiante.3a.3@lpmm.cl",
+      "email": "mariapaz.diaz@lpmm.cl",
       "rut": "22.365.003-3",
       "notes": [
         4.1,
@@ -12126,7 +12127,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Donoso Suárez Scarlett Anahi",
       "firstName": "Scarlett Anahi",
       "lastName": "Donoso Suárez",
-      "email": "estudiante.3a.4@lpmm.cl",
+      "email": "scarlett.donoso@lpmm.cl",
       "rut": "22.365.004-4",
       "notes": [
         6,
@@ -12218,7 +12219,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jelves Cáceres Angela Anastasia",
       "firstName": "Angela Anastasia",
       "lastName": "Jelves Cáceres",
-      "email": "estudiante.3a.8@lpmm.cl",
+      "email": "angela.jelves@lpmm.cl",
       "rut": "22.365.008-8",
       "notes": [
         6,
@@ -12307,7 +12308,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "León Riquelme Emi",
       "firstName": "Emi",
       "lastName": "León Riquelme",
-      "email": "estudiante.3a.10@lpmm.cl",
+      "email": "emi.leon@lpmm.cl",
       "rut": "22.365.010-0",
       "notes": [
         5.3,
@@ -12401,7 +12402,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Loncomilla Presmitta Sofía Flor Estrella",
       "firstName": "Sofía Flor Estrella",
       "lastName": "Loncomilla Presmitta",
-      "email": "estudiante.3a.11@lpmm.cl",
+      "email": "sofia.loncomilla@lpmm.cl",
       "rut": "22.365.011-1",
       "notes": [
         7,
@@ -12496,7 +12497,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "López Meza Yarexa Paloma Lumide",
       "firstName": "Yarexa Paloma Lumide",
       "lastName": "López Meza",
-      "email": "estudiante.3a.12@lpmm.cl",
+      "email": "yarexa.lopez@lpmm.cl",
       "rut": "22.365.012-2",
       "notes": [
         2,
@@ -12584,7 +12585,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Madrid Contreras Antonella Paz",
       "firstName": "Antonella Paz",
       "lastName": "Madrid Contreras",
-      "email": "estudiante.3a.13@lpmm.cl",
+      "email": "antonella.madrid@lpmm.cl",
       "rut": "22.365.013-3",
       "notes": [
         6.8,
@@ -12679,7 +12680,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Manríquez Vergara Valentina Esperanza",
       "firstName": "Valentina Esperanza",
       "lastName": "Manríquez Vergara",
-      "email": "estudiante.3a.14@lpmm.cl",
+      "email": "valentina.manriquez@lpmm.cl",
       "rut": "22.365.014-4",
       "notes": [
         4.8,
@@ -12771,7 +12772,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mateluna Betancourt Isidora Andrea",
       "firstName": "Isidora Andrea",
       "lastName": "Mateluna Betancourt",
-      "email": "estudiante.3a.15@lpmm.cl",
+      "email": "isidora.mateluna@lpmm.cl",
       "rut": "22.365.015-5",
       "notes": [
         6.8,
@@ -12861,7 +12862,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ogalde Cataldo Valeria Ignacia",
       "firstName": "Valeria Ignacia",
       "lastName": "Ogalde Cataldo",
-      "email": "estudiante.3a.16@lpmm.cl",
+      "email": "valeria.ogalde@lpmm.cl",
       "rut": "22.365.016-6",
       "notes": [
         3.8,
@@ -12954,7 +12955,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pinochet Salvador Mauren Alexandra",
       "firstName": "Mauren Alexandra",
       "lastName": "Pinochet Salvador",
-      "email": "estudiante.3a.17@lpmm.cl",
+      "email": "mauren.pinochet@lpmm.cl",
       "rut": "22.365.017-7",
       "notes": [
         7,
@@ -13045,7 +13046,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rivero Lobos Alondra Trinidad",
       "firstName": "Alondra Trinidad",
       "lastName": "Rivero Lobos",
-      "email": "estudiante.3a.18@lpmm.cl",
+      "email": "alondra.rivero@lpmm.cl",
       "rut": "22.365.018-8",
       "notes": [
         3.6,
@@ -13133,7 +13134,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sepúlveda Rojas Cripzy Antonia",
       "firstName": "Cripzy Antonia",
       "lastName": "Sepúlveda Rojas",
-      "email": "estudiante.3a.20@lpmm.cl",
+      "email": "cripzy.sepulveda@lpmm.cl",
       "rut": "22.365.020-0",
       "notes": [
         2.8,
@@ -13222,7 +13223,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valdés Cavieres Antonia Paz",
       "firstName": "Antonia Paz",
       "lastName": "Valdés Cavieres",
-      "email": "estudiante.3a.22@lpmm.cl",
+      "email": "antonia.valdes@lpmm.cl",
       "rut": "22.365.022-2",
       "notes": [
         7,
@@ -13317,7 +13318,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valencia Leiva Monserrat Millaray",
       "firstName": "Monserrat Millaray",
       "lastName": "Valencia Leiva",
-      "email": "estudiante.3a.23@lpmm.cl",
+      "email": "monserrat.valencia@lpmm.cl",
       "rut": "22.365.023-3",
       "notes": [
         5,
@@ -13410,7 +13411,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rodriguez Caceres Genesis Carolina",
       "firstName": "Genesis Carolina",
       "lastName": "Rodriguez Caceres",
-      "email": "estudiante.3a.25@lpmm.cl",
+      "email": "genesis.rodriguez@lpmm.cl",
       "rut": "22.365.025-5",
       "notes": [
         2,
@@ -13462,7 +13463,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Camacho Bustos Ignacia Francisca Elianay",
       "firstName": "Ignacia Francisca Elianay",
       "lastName": "Camacho Bustos",
-      "email": "estudiante.3a.26@lpmm.cl",
+      "email": "ignacia.camacho@lpmm.cl",
       "rut": "22.365.026-6",
       "notes": [
         3.6,
@@ -13540,7 +13541,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rebolledo Moncada Florencia Antonia",
       "firstName": "Florencia Antonia",
       "lastName": "Rebolledo Moncada",
-      "email": "estudiante.3a.27@lpmm.cl",
+      "email": "florencia.rebolledo@lpmm.cl",
       "rut": "22.365.027-7",
       "notes": [
         4.2,
@@ -13624,7 +13625,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Arriagada Rodríguez Danitza Antonia",
       "firstName": "Danitza Antonia",
       "lastName": "Arriagada Rodríguez",
-      "email": "estudiante.3a.28@lpmm.cl",
+      "email": "danitza.arriagada@lpmm.cl",
       "rut": "22.365.028-8",
       "notes": [
         6,
@@ -13714,7 +13715,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Orellana Lillo Pola Thais Daylin",
       "firstName": "Pola Thais Daylin",
       "lastName": "Orellana Lillo",
-      "email": "estudiante.3a.29@lpmm.cl",
+      "email": "pola.orellana@lpmm.cl",
       "rut": "22.365.029-9",
       "notes": [
         4.5,
@@ -13802,7 +13803,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Miranda Paredes Sofía Amaral",
       "firstName": "Sofía Amaral",
       "lastName": "Miranda Paredes",
-      "email": "estudiante.3a.30@lpmm.cl",
+      "email": "sofia.miranda@lpmm.cl",
       "rut": "22.365.030-0",
       "notes": [
         6.3,
@@ -13895,7 +13896,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Caicea Hurtado Nallely Sherlyn",
       "firstName": "Nallely Sherlyn",
       "lastName": "Caicea Hurtado",
-      "email": "estudiante.3c.2@lpmm.cl",
+      "email": "nallely.caicea@lpmm.cl",
       "rut": "22.367.002-2",
       "notes": [
         6.7,
@@ -13990,7 +13991,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Camargo Figueroa Edicmar Dayanna",
       "firstName": "Edicmar Dayanna",
       "lastName": "Camargo Figueroa",
-      "email": "estudiante.3c.3@lpmm.cl",
+      "email": "edicmar.camargo@lpmm.cl",
       "rut": "22.367.003-3",
       "notes": [
         6.6,
@@ -14088,7 +14089,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cayupe Vivanco Vicente Andres",
       "firstName": "Vicente Andres",
       "lastName": "Cayupe Vivanco",
-      "email": "estudiante.3c.4@lpmm.cl",
+      "email": "vicente.cayupe@lpmm.cl",
       "rut": "22.367.004-4",
       "notes": [
         7,
@@ -14186,7 +14187,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Concha Villanueva Ander",
       "firstName": "Ander",
       "lastName": "Concha Villanueva",
-      "email": "estudiante.3c.5@lpmm.cl",
+      "email": "ander.concha@lpmm.cl",
       "rut": "22.367.005-5",
       "notes": [
         6.2,
@@ -14284,7 +14285,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Darius Maria Saindiana",
       "firstName": "Saindiana",
       "lastName": "Darius Maria",
-      "email": "estudiante.3c.6@lpmm.cl",
+      "email": "saindiana.darius@lpmm.cl",
       "rut": "22.367.006-6",
       "notes": [
         6.2,
@@ -14381,7 +14382,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Estay Pérez Kevin Eduardo",
       "firstName": "Kevin Eduardo",
       "lastName": "Estay Pérez",
-      "email": "estudiante.3c.7@lpmm.cl",
+      "email": "kevin.estay@lpmm.cl",
       "rut": "22.367.007-7",
       "notes": [
         6.3,
@@ -14472,7 +14473,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Gallardo Ruz Joaquín Ignacio",
       "firstName": "Joaquín Ignacio",
       "lastName": "Gallardo Ruz",
-      "email": "estudiante.3c.8@lpmm.cl",
+      "email": "joaquin.gallardo@lpmm.cl",
       "rut": "22.367.008-8",
       "notes": [
         2.3,
@@ -14570,7 +14571,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Guerra Muñoz Sara Denise",
       "firstName": "Sara Denise",
       "lastName": "Guerra Muñoz",
-      "email": "estudiante.3c.9@lpmm.cl",
+      "email": "sara.guerra@lpmm.cl",
       "rut": "22.367.009-9",
       "notes": [
         7,
@@ -14668,7 +14669,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Hernández Olivares Karla Antonia",
       "firstName": "Karla Antonia",
       "lastName": "Hernández Olivares",
-      "email": "estudiante.3c.10@lpmm.cl",
+      "email": "karla.hernandez@lpmm.cl",
       "rut": "22.367.010-0",
       "notes": [
         7,
@@ -14762,7 +14763,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Hevia Vera Sofía Fernanda",
       "firstName": "Sofía Fernanda",
       "lastName": "Hevia Vera",
-      "email": "estudiante.3c.11@lpmm.cl",
+      "email": "sofia.hevia@lpmm.cl",
       "rut": "22.367.011-1",
       "notes": [
         3,
@@ -14859,7 +14860,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Irarrázabal Carrillo Da-ívis Cristián Manuel",
       "firstName": "Da-ívis Cristián Manuel",
       "lastName": "Irarrázabal Carrillo",
-      "email": "estudiante.3c.12@lpmm.cl",
+      "email": "daivis.irarrazabal@lpmm.cl",
       "rut": "22.367.012-2",
       "notes": [
         2.8,
@@ -14955,7 +14956,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Laferte Zúñiga Catalina Belén",
       "firstName": "Catalina Belén",
       "lastName": "Laferte Zúñiga",
-      "email": "estudiante.3c.13@lpmm.cl",
+      "email": "catalina.laferte@lpmm.cl",
       "rut": "22.367.013-3",
       "notes": [
         6.7,
@@ -15051,7 +15052,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lizana Molina Martina Antonella",
       "firstName": "Martina Antonella",
       "lastName": "Lizana Molina",
-      "email": "estudiante.3c.14@lpmm.cl",
+      "email": "martina.lizana@lpmm.cl",
       "rut": "22.367.014-4",
       "notes": [
         5.2,
@@ -15148,7 +15149,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Oyanedel Paredes Belén Antonella",
       "firstName": "Belén Antonella",
       "lastName": "Oyanedel Paredes",
-      "email": "estudiante.3c.15@lpmm.cl",
+      "email": "belen.oyanedel@lpmm.cl",
       "rut": "22.367.015-5",
       "notes": [
         7,
@@ -15244,7 +15245,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Peña Millán Maythe Aylene",
       "firstName": "Maythe Aylene",
       "lastName": "Peña Millán",
-      "email": "estudiante.3c.16@lpmm.cl",
+      "email": "maythe.pena@lpmm.cl",
       "rut": "22.367.016-6",
       "notes": [
         6.3,
@@ -15341,7 +15342,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Peña Saravia Jeremy Raymon",
       "firstName": "Jeremy Raymon",
       "lastName": "Peña Saravia",
-      "email": "estudiante.3c.17@lpmm.cl",
+      "email": "jeremy.pena@lpmm.cl",
       "rut": "22.367.017-7",
       "notes": [
         6.6,
@@ -15438,7 +15439,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pérez Acuña Boris Alexander Fabián",
       "firstName": "Boris Alexander Fabián",
       "lastName": "Pérez Acuña",
-      "email": "estudiante.3c.18@lpmm.cl",
+      "email": "boris.perez@lpmm.cl",
       "rut": "22.367.018-8",
       "notes": [
         6.3,
@@ -15532,7 +15533,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pizarro Vásquez Vicente Maximiliano",
       "firstName": "Vicente Maximiliano",
       "lastName": "Pizarro Vásquez",
-      "email": "estudiante.3c.19@lpmm.cl",
+      "email": "vicente.pizarro@lpmm.cl",
       "rut": "22.367.019-9",
       "notes": [
         5.5,
@@ -15622,7 +15623,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ramírez Ortega Josthyn Alexander",
       "firstName": "Josthyn Alexander",
       "lastName": "Ramírez Ortega",
-      "email": "estudiante.3c.20@lpmm.cl",
+      "email": "josthyn.ramirez@lpmm.cl",
       "rut": "22.367.020-0",
       "notes": [
         4.1,
@@ -15715,7 +15716,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Reyes Gamboa Ashley Aracely",
       "firstName": "Ashley Aracely",
       "lastName": "Reyes Gamboa",
-      "email": "estudiante.3c.22@lpmm.cl",
+      "email": "ashley.reyes@lpmm.cl",
       "rut": "22.367.022-2",
       "notes": [
         4.2,
@@ -15812,7 +15813,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rojas Parra Angielina Ginette Alejandra",
       "firstName": "Angielina Ginette Alejandra",
       "lastName": "Rojas Parra",
-      "email": "estudiante.3c.24@lpmm.cl",
+      "email": "angielina.rojas@lpmm.cl",
       "rut": "22.367.024-4",
       "notes": [
         7,
@@ -15907,7 +15908,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Toledo Espinoza Stephanie Javiera",
       "firstName": "Stephanie Javiera",
       "lastName": "Toledo Espinoza",
-      "email": "estudiante.3c.26@lpmm.cl",
+      "email": "stephanie.toledo@lpmm.cl",
       "rut": "22.367.026-6",
       "notes": [
         6.3,
@@ -16001,7 +16002,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Urbina Aravena Melody Skarle",
       "firstName": "Melody Skarle",
       "lastName": "Urbina Aravena",
-      "email": "estudiante.3c.27@lpmm.cl",
+      "email": "melody.urbina@lpmm.cl",
       "rut": "22.367.027-7",
       "notes": [
         7,
@@ -16097,7 +16098,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Véliz Monasterio Antonia Angelina",
       "firstName": "Antonia Angelina",
       "lastName": "Véliz Monasterio",
-      "email": "estudiante.3c.28@lpmm.cl",
+      "email": "antonia.veliz@lpmm.cl",
       "rut": "22.367.028-8",
       "notes": [
         5.7,
@@ -16194,7 +16195,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Araya Cabello Darlyn Carolina",
       "firstName": "Darlyn Carolina",
       "lastName": "Araya Cabello",
-      "email": "estudiante.3c.29@lpmm.cl",
+      "email": "darlyn.araya@lpmm.cl",
       "rut": "22.367.029-9",
       "notes": [
         4.8,
@@ -16277,7 +16278,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Grondona González Benjamín Giovanni",
       "firstName": "Benjamín Giovanni",
       "lastName": "Grondona González",
-      "email": "estudiante.3c.30@lpmm.cl",
+      "email": "benjamin.grondona@lpmm.cl",
       "rut": "22.367.030-0",
       "notes": [
         2.7,
@@ -16364,7 +16365,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Acevedo Zúñiga Lorena Pascuala",
       "firstName": "Lorena Pascuala",
       "lastName": "Acevedo Zúñiga",
-      "email": "estudiante.3d.1@lpmm.cl",
+      "email": "lorena.acevedo@lpmm.cl",
       "rut": "22.368.001-1",
       "notes": [
         6.5,
@@ -16458,7 +16459,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Arancibia Celis Javiera Antonella",
       "firstName": "Javiera Antonella",
       "lastName": "Arancibia Celis",
-      "email": "estudiante.3d.2@lpmm.cl",
+      "email": "javiera.arancibia@lpmm.cl",
       "rut": "22.368.002-2",
       "notes": [
         7,
@@ -16558,7 +16559,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Bravo Morales Andrés Alfonso",
       "firstName": "Andrés Alfonso",
       "lastName": "Bravo Morales",
-      "email": "estudiante.3d.4@lpmm.cl",
+      "email": "andres.bravo@lpmm.cl",
       "rut": "22.368.004-4",
       "notes": [
         4.7,
@@ -16655,7 +16656,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cabrera Bassaletti Monserrath Kathalina Isidora",
       "firstName": "Monserrath Kathalina Isidora",
       "lastName": "Cabrera Bassaletti",
-      "email": "estudiante.3d.6@lpmm.cl",
+      "email": "monserrath.cabrera@lpmm.cl",
       "rut": "22.368.006-6",
       "notes": [
         5.5,
@@ -16753,7 +16754,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cepeda Delgado Vicente Tomás",
       "firstName": "Vicente Tomás",
       "lastName": "Cepeda Delgado",
-      "email": "estudiante.3d.8@lpmm.cl",
+      "email": "vicente.cepeda@lpmm.cl",
       "rut": "22.368.008-8",
       "notes": [
         3,
@@ -16846,7 +16847,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cortez Ponce Lyz Isabella",
       "firstName": "Lyz Isabella",
       "lastName": "Cortez Ponce",
-      "email": "estudiante.3d.9@lpmm.cl",
+      "email": "lyz.cortez@lpmm.cl",
       "rut": "22.368.009-9",
       "notes": [
         7,
@@ -16946,7 +16947,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Covarrubias Flores Ivan Lorenzo",
       "firstName": "Ivan Lorenzo",
       "lastName": "Covarrubias Flores",
-      "email": "estudiante.3d.10@lpmm.cl",
+      "email": "ivan.covarrubias@lpmm.cl",
       "rut": "22.368.010-0",
       "notes": [
         6.8,
@@ -17040,7 +17041,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fajardo Diego Alejandro",
       "firstName": "Alejandro",
       "lastName": "Fajardo Diego",
-      "email": "estudiante.3d.11@lpmm.cl",
+      "email": "alejandro.fajardo@lpmm.cl",
       "rut": "22.368.011-1",
       "notes": [
         7,
@@ -17140,7 +17141,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fernández Arancibia Maylene Valentina",
       "firstName": "Maylene Valentina",
       "lastName": "Fernández Arancibia",
-      "email": "estudiante.3d.12@lpmm.cl",
+      "email": "maylene.fernandez@lpmm.cl",
       "rut": "22.368.012-2",
       "notes": [
         6.3,
@@ -17239,7 +17240,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fernández Urbina Martina Antonia",
       "firstName": "Martina Antonia",
       "lastName": "Fernández Urbina",
-      "email": "estudiante.3d.13@lpmm.cl",
+      "email": "martina.fernandez@lpmm.cl",
       "rut": "22.368.013-3",
       "notes": [
         6.6,
@@ -17339,7 +17340,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Flores Díaz Valentina Belén",
       "firstName": "Valentina Belén",
       "lastName": "Flores Díaz",
-      "email": "estudiante.3d.14@lpmm.cl",
+      "email": "valentina.flores@lpmm.cl",
       "rut": "22.368.014-4",
       "notes": [
         6.5,
@@ -17438,7 +17439,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Folch Quincha Dominique Josefa",
       "firstName": "Dominique Josefa",
       "lastName": "Folch Quincha",
-      "email": "estudiante.3d.15@lpmm.cl",
+      "email": "dominique.folch@lpmm.cl",
       "rut": "22.368.015-5",
       "notes": [
         3.3,
@@ -17536,7 +17537,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Godoy Fuentes Ignacia Belén",
       "firstName": "Ignacia Belén",
       "lastName": "Godoy Fuentes",
-      "email": "estudiante.3d.16@lpmm.cl",
+      "email": "ignacia.godoy@lpmm.cl",
       "rut": "22.368.016-6",
       "notes": [
         7,
@@ -17636,7 +17637,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Guerra González Stephani Montserrat",
       "firstName": "Stephani Montserrat",
       "lastName": "Guerra González",
-      "email": "estudiante.3d.18@lpmm.cl",
+      "email": "stephani.guerra@lpmm.cl",
       "rut": "22.368.018-8",
       "notes": [
         3.3,
@@ -17734,7 +17735,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Herrera Jaque Oscar Fernando",
       "firstName": "Oscar Fernando",
       "lastName": "Herrera Jaque",
-      "email": "estudiante.3d.19@lpmm.cl",
+      "email": "oscar.herrera@lpmm.cl",
       "rut": "22.368.019-9",
       "notes": [
         6.5,
@@ -17835,7 +17836,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lagos Serrano León Francisco",
       "firstName": "León Francisco",
       "lastName": "Lagos Serrano",
-      "email": "estudiante.3d.20@lpmm.cl",
+      "email": "leon.lagos@lpmm.cl",
       "rut": "22.368.020-0",
       "notes": [
         1.7,
@@ -17936,7 +17937,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Leiva Araya Damari Anaís",
       "firstName": "Damari Anaís",
       "lastName": "Leiva Araya",
-      "email": "estudiante.3d.21@lpmm.cl",
+      "email": "damari.leiva@lpmm.cl",
       "rut": "22.368.021-1",
       "notes": [
         4.7,
@@ -18032,7 +18033,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Pino Javiera Fernanda",
       "firstName": "Javiera Fernanda",
       "lastName": "Martínez Pino",
-      "email": "estudiante.3d.22@lpmm.cl",
+      "email": "javiera.martinez@lpmm.cl",
       "rut": "22.368.022-2",
       "notes": [
         4.6,
@@ -18131,7 +18132,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Rivas Sofía Belén",
       "firstName": "Sofía Belén",
       "lastName": "Núñez Rivas",
-      "email": "estudiante.3d.23@lpmm.cl",
+      "email": "sofia.nunez@lpmm.cl",
       "rut": "22.368.023-3",
       "notes": [
         6.5,
@@ -18216,7 +18217,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sayen Carmona Dairyn Katalina",
       "firstName": "Dairyn Katalina",
       "lastName": "Sayen Carmona",
-      "email": "estudiante.3d.25@lpmm.cl",
+      "email": "dairyn.sayen@lpmm.cl",
       "rut": "22.368.025-5",
       "notes": [
         4.4,
@@ -18310,7 +18311,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Silva Valera Dayana Andrea",
       "firstName": "Dayana Andrea",
       "lastName": "Silva Valera",
-      "email": "estudiante.3d.26@lpmm.cl",
+      "email": "dayana.silva@lpmm.cl",
       "rut": "22.368.026-6",
       "notes": [
         6.3,
@@ -18407,7 +18408,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Yones Ortiz Mía Florencia",
       "firstName": "Mía Florencia",
       "lastName": "Yones Ortiz",
-      "email": "estudiante.3d.27@lpmm.cl",
+      "email": "mia.yones@lpmm.cl",
       "rut": "22.368.027-7",
       "notes": [
         7,
@@ -18504,7 +18505,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Esparza Ramírez Sergio Ignacio",
       "firstName": "Sergio Ignacio",
       "lastName": "Esparza Ramírez",
-      "email": "estudiante.3e.1@lpmm.cl",
+      "email": "sergio.esparza@lpmm.cl",
       "rut": "22.369.001-1",
       "notes": [
         4.6,
@@ -18579,7 +18580,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Labraña Olmos Jessy Ximena",
       "firstName": "Jessy Ximena",
       "lastName": "Labraña Olmos",
-      "email": "estudiante.3e.2@lpmm.cl",
+      "email": "jessy.labrana@lpmm.cl",
       "rut": "22.369.002-2",
       "notes": [
         6.4,
@@ -18653,7 +18654,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "López Añasco Alejandra Constanza",
       "firstName": "Alejandra Constanza",
       "lastName": "López Añasco",
-      "email": "estudiante.3e.3@lpmm.cl",
+      "email": "alejandra.lopez@lpmm.cl",
       "rut": "22.369.003-3",
       "notes": [
         6.7,
@@ -18729,7 +18730,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Valdebenito Jean Ignacio",
       "firstName": "Jean Ignacio",
       "lastName": "Martínez Valdebenito",
-      "email": "estudiante.3e.4@lpmm.cl",
+      "email": "jean.martinez@lpmm.cl",
       "rut": "22.369.004-4",
       "notes": [
         6,
@@ -18806,7 +18807,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Moya Reinoso María Ignacia",
       "firstName": "María Ignacia",
       "lastName": "Moya Reinoso",
-      "email": "estudiante.3e.5@lpmm.cl",
+      "email": "maria.moya@lpmm.cl",
       "rut": "22.369.005-5",
       "notes": [
         5.8,
@@ -18878,7 +18879,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Mardones Diego Ignacio",
       "firstName": "Diego Ignacio",
       "lastName": "Núñez Mardones",
-      "email": "estudiante.3e.6@lpmm.cl",
+      "email": "diego.nunez@lpmm.cl",
       "rut": "22.369.006-6",
       "notes": [
         4.3,
@@ -18955,7 +18956,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ponce Figueroa Vicente Andrés",
       "firstName": "Vicente Andrés",
       "lastName": "Ponce Figueroa",
-      "email": "estudiante.3e.7@lpmm.cl",
+      "email": "vicente.ponce@lpmm.cl",
       "rut": "22.369.007-7",
       "notes": [
         5.8,
@@ -19032,7 +19033,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ramírez Ibarra Benjamín Antonio",
       "firstName": "Benjamín Antonio",
       "lastName": "Ramírez Ibarra",
-      "email": "estudiante.3e.8@lpmm.cl",
+      "email": "benjamin.ramirez@lpmm.cl",
       "rut": "22.369.008-8",
       "notes": [
         5.7,
@@ -19107,7 +19108,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rivero Lobos Maitthe Belén",
       "firstName": "Maitthe Belén",
       "lastName": "Rivero Lobos",
-      "email": "estudiante.3e.9@lpmm.cl",
+      "email": "maitthe.rivero@lpmm.cl",
       "rut": "22.369.009-9",
       "notes": [
         5,
@@ -19184,7 +19185,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ruiz Espinoza Martín Adolfo",
       "firstName": "Martín Adolfo",
       "lastName": "Ruiz Espinoza",
-      "email": "estudiante.3e.10@lpmm.cl",
+      "email": "martin.ruiz@lpmm.cl",
       "rut": "22.369.010-0",
       "notes": [
         4.3,
@@ -19261,7 +19262,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ruiz Sáez Christopher Damián",
       "firstName": "Christopher Damián",
       "lastName": "Ruiz Sáez",
-      "email": "estudiante.3e.11@lpmm.cl",
+      "email": "christopher.ruiz@lpmm.cl",
       "rut": "22.369.011-1",
       "notes": [
         7,
@@ -19339,7 +19340,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sanhueza Cabello Miguel Jesus",
       "firstName": "Miguel Jesus",
       "lastName": "Sanhueza Cabello",
-      "email": "estudiante.3e.12@lpmm.cl",
+      "email": "miguel.sanhueza@lpmm.cl",
       "rut": "22.369.012-2",
       "notes": [
         7,
@@ -19417,7 +19418,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Schiller Pérez Elías Joel",
       "firstName": "Elías Joel",
       "lastName": "Schiller Pérez",
-      "email": "estudiante.3e.13@lpmm.cl",
+      "email": "elias.schiller@lpmm.cl",
       "rut": "22.369.013-3",
       "notes": [
         6.8,
@@ -19493,7 +19494,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vergara Olmos Matías Antonio",
       "firstName": "Matías Antonio",
       "lastName": "Vergara Olmos",
-      "email": "estudiante.3e.14@lpmm.cl",
+      "email": "matias.vergara@lpmm.cl",
       "rut": "22.369.014-4",
       "notes": [
         5.8,
@@ -19569,7 +19570,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vivanco Palacios Sergio Sebastián",
       "firstName": "Sergio Sebastián",
       "lastName": "Vivanco Palacios",
-      "email": "estudiante.3e.15@lpmm.cl",
+      "email": "sergio.vivanco@lpmm.cl",
       "rut": "22.369.015-5",
       "notes": [
         5,
@@ -19646,7 +19647,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Varas López Felipe Benjamín",
       "firstName": "Felipe Benjamín",
       "lastName": "Varas López",
-      "email": "estudiante.3e.16@lpmm.cl",
+      "email": "felipe.varas@lpmm.cl",
       "rut": "22.369.016-6",
       "notes": [
         4.1,
@@ -19722,7 +19723,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Brichetto Sandoval Giulianna Martina",
       "firstName": "Giulianna Martina",
       "lastName": "Brichetto Sandoval",
-      "email": "estudiante.3e.17@lpmm.cl",
+      "email": "giulianna.brichetto@lpmm.cl",
       "rut": "22.369.017-7",
       "notes": [
         5,
@@ -19799,7 +19800,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Santibáñez Elías Moisés",
       "firstName": "Elías Moisés",
       "lastName": "Núñez Santibáñez",
-      "email": "estudiante.3e.18@lpmm.cl",
+      "email": "elias.nunez@lpmm.cl",
       "rut": "22.369.018-8",
       "notes": [
         5.5,
@@ -19857,7 +19858,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Aceituno Flores Ledy Scarlett",
       "firstName": "Ledy Scarlett",
       "lastName": "Aceituno Flores",
-      "email": "estudiante.4a.1@lpmm.cl",
+      "email": "ledy.aceituno@lpmm.cl",
       "rut": "22.465.001-1",
       "notes": [
         5.6,
@@ -19952,7 +19953,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Aros Hernández Eimmylee Alina",
       "firstName": "Eimmylee Alina",
       "lastName": "Aros Hernández",
-      "email": "estudiante.4a.2@lpmm.cl",
+      "email": "eimmylee.aros@lpmm.cl",
       "rut": "22.465.002-2",
       "notes": [
         6.9,
@@ -20039,7 +20040,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Caileo Olivares Juan De Dios",
       "firstName": "Juan De Dios",
       "lastName": "Caileo Olivares",
-      "email": "estudiante.4a.3@lpmm.cl",
+      "email": "juan.caileo@lpmm.cl",
       "rut": "22.465.003-3",
       "notes": [
         5.5,
@@ -20134,7 +20135,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Donoso Venegas Javiera Andrea",
       "firstName": "Javiera Andrea",
       "lastName": "Donoso Venegas",
-      "email": "estudiante.4a.4@lpmm.cl",
+      "email": "javiera.donoso@lpmm.cl",
       "rut": "22.465.004-4",
       "notes": [
         5.6,
@@ -20221,7 +20222,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Flores Montes Ayelén Sonia Isabella",
       "firstName": "Ayelén Sonia Isabella",
       "lastName": "Flores Montes",
-      "email": "estudiante.4a.5@lpmm.cl",
+      "email": "ayelen.flores@lpmm.cl",
       "rut": "22.465.005-5",
       "notes": [
         5,
@@ -20310,7 +20311,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "León Valdés Antonia Paz",
       "firstName": "Antonia Paz",
       "lastName": "León Valdés",
-      "email": "estudiante.4a.6@lpmm.cl",
+      "email": "antonia.leon@lpmm.cl",
       "rut": "22.465.006-6",
       "notes": [
         2.8,
@@ -20396,7 +20397,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Hidalgo Tatiana Anaís",
       "firstName": "Tatiana Anaís",
       "lastName": "Martínez Hidalgo",
-      "email": "estudiante.4a.7@lpmm.cl",
+      "email": "tatiana.martinez@lpmm.cl",
       "rut": "22.465.007-7",
       "notes": [
         5.7,
@@ -20491,7 +20492,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Osses Mora Sofía Carolina",
       "firstName": "Sofía Carolina",
       "lastName": "Osses Mora",
-      "email": "estudiante.4a.8@lpmm.cl",
+      "email": "sofia.osses@lpmm.cl",
       "rut": "22.465.008-8",
       "notes": [
         6,
@@ -20586,7 +20587,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pajuelo Castillo Florencia Antonia",
       "firstName": "Florencia Antonia",
       "lastName": "Pajuelo Castillo",
-      "email": "estudiante.4a.9@lpmm.cl",
+      "email": "florencia.pajuelo@lpmm.cl",
       "rut": "22.465.009-9",
       "notes": [
         3,
@@ -20675,7 +20676,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pezoa Escobar Juliana Ashly Eva",
       "firstName": "Juliana Ashly Eva",
       "lastName": "Pezoa Escobar",
-      "email": "estudiante.4a.10@lpmm.cl",
+      "email": "juliana.pezoa@lpmm.cl",
       "rut": "22.465.010-0",
       "notes": [
         5,
@@ -20766,7 +20767,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pineda Ruiz Fernanda Millaray",
       "firstName": "Fernanda Millaray",
       "lastName": "Pineda Ruiz",
-      "email": "estudiante.4a.11@lpmm.cl",
+      "email": "fernanda.pineda@lpmm.cl",
       "rut": "22.465.011-1",
       "notes": [
         6.3,
@@ -20848,7 +20849,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Salas Sandoval Constanza Sofía",
       "firstName": "Constanza Sofía",
       "lastName": "Salas Sandoval",
-      "email": "estudiante.4a.12@lpmm.cl",
+      "email": "constanza.salas@lpmm.cl",
       "rut": "22.465.012-2",
       "notes": [
         5,
@@ -20940,7 +20941,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Tirado Vergara Zamira Antonella",
       "firstName": "Zamira Antonella",
       "lastName": "Tirado Vergara",
-      "email": "estudiante.4a.13@lpmm.cl",
+      "email": "zamira.tirado@lpmm.cl",
       "rut": "22.465.013-3",
       "notes": [
         4.2,
@@ -21026,7 +21027,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Zapata Funes Ana Pilar",
       "firstName": "Ana Pilar",
       "lastName": "Zapata Funes",
-      "email": "estudiante.4a.14@lpmm.cl",
+      "email": "ana.zapata@lpmm.cl",
       "rut": "22.465.014-4",
       "notes": [
         5,
@@ -21117,7 +21118,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Aranda Matus Consuelo Isabel",
       "firstName": "Consuelo Isabel",
       "lastName": "Aranda Matus",
-      "email": "estudiante.4c.1@lpmm.cl",
+      "email": "consuelo.aranda@lpmm.cl",
       "rut": "22.467.001-1",
       "notes": [
         5.8,
@@ -21203,7 +21204,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Astudillo Giudice Sophia Antonella",
       "firstName": "Sophia Antonella",
       "lastName": "Astudillo Giudice",
-      "email": "estudiante.4c.2@lpmm.cl",
+      "email": "sophia.astudillo@lpmm.cl",
       "rut": "22.467.002-2",
       "notes": [
         6.2,
@@ -21282,7 +21283,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Astudillo Valdivia Marthyna Ignacia",
       "firstName": "Marthyna Ignacia",
       "lastName": "Astudillo Valdivia",
-      "email": "estudiante.4c.3@lpmm.cl",
+      "email": "marthyna.astudillo@lpmm.cl",
       "rut": "22.467.003-3",
       "notes": [
         6.4,
@@ -21369,7 +21370,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Baeza Mena Aris Alessandra Franchesca",
       "firstName": "Aris Alessandra Franchesca",
       "lastName": "Baeza Mena",
-      "email": "estudiante.4c.4@lpmm.cl",
+      "email": "aris.baeza@lpmm.cl",
       "rut": "22.467.004-4",
       "notes": [
         4.6,
@@ -21455,7 +21456,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Benítez Martínez Fernanda Martina",
       "firstName": "Fernanda Martina",
       "lastName": "Benítez Martínez",
-      "email": "estudiante.4c.5@lpmm.cl",
+      "email": "fernanda.benitez@lpmm.cl",
       "rut": "22.467.005-5",
       "notes": [
         3.5,
@@ -21541,7 +21542,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cárdenas Valdebenito Catalina Belén",
       "firstName": "Catalina Belén",
       "lastName": "Cárdenas Valdebenito",
-      "email": "estudiante.4c.6@lpmm.cl",
+      "email": "catalina.cardenas@lpmm.cl",
       "rut": "22.467.006-6",
       "notes": [
         4.4,
@@ -21628,7 +21629,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Castro Cano Catalina Estefany",
       "firstName": "Catalina Estefany",
       "lastName": "Castro Cano",
-      "email": "estudiante.4c.7@lpmm.cl",
+      "email": "catalina.castro@lpmm.cl",
       "rut": "22.467.007-7",
       "notes": [
         5.4,
@@ -21715,7 +21716,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Chacon Granadino Juan Andres",
       "firstName": "Juan Andres",
       "lastName": "Chacon Granadino",
-      "email": "estudiante.4c.8@lpmm.cl",
+      "email": "juan.chacon@lpmm.cl",
       "rut": "22.467.008-8",
       "notes": [
         6.3,
@@ -21799,7 +21800,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Faúndez Díaz Martina Fernanda",
       "firstName": "Martina Fernanda",
       "lastName": "Faúndez Díaz",
-      "email": "estudiante.4c.10@lpmm.cl",
+      "email": "martina.faundez@lpmm.cl",
       "rut": "22.467.010-0",
       "notes": [
         4.2,
@@ -21883,7 +21884,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ferrada Bacian Benjamín Ignacio",
       "firstName": "Benjamín Ignacio",
       "lastName": "Ferrada Bacian",
-      "email": "estudiante.4c.11@lpmm.cl",
+      "email": "benjamin.ferrada@lpmm.cl",
       "rut": "22.467.011-1",
       "notes": [
         4.1,
@@ -21964,7 +21965,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Jeria Azúa Esperanza Sinaí",
       "firstName": "Esperanza Sinaí",
       "lastName": "Jeria Azúa",
-      "email": "estudiante.4c.12@lpmm.cl",
+      "email": "esperanza.jeria@lpmm.cl",
       "rut": "22.467.012-2",
       "notes": [
         6.5,
@@ -22051,7 +22052,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Lavín Cáceres Soraya Antonella Scarleth",
       "firstName": "Soraya Antonella Scarleth",
       "lastName": "Lavín Cáceres",
-      "email": "estudiante.4c.13@lpmm.cl",
+      "email": "soraya.lavin@lpmm.cl",
       "rut": "22.467.013-3",
       "notes": [
         5.4,
@@ -22134,7 +22135,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Muñoz Arias Madelaine Danae",
       "firstName": "Madelaine Danae",
       "lastName": "Muñoz Arias",
-      "email": "estudiante.4c.14@lpmm.cl",
+      "email": "madelaine.munoz@lpmm.cl",
       "rut": "22.467.014-4",
       "notes": [
         5,
@@ -22220,7 +22221,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Orellana Alarcón José",
       "firstName": "José",
       "lastName": "Orellana Alarcón",
-      "email": "estudiante.4c.15@lpmm.cl",
+      "email": "jose.orellana@lpmm.cl",
       "rut": "22.467.015-5",
       "notes": [
         4.1,
@@ -22302,7 +22303,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Piñones Rain Denisse Dayana",
       "firstName": "Denisse Dayana",
       "lastName": "Piñones Rain",
-      "email": "estudiante.4c.16@lpmm.cl",
+      "email": "denisse.pinones@lpmm.cl",
       "rut": "22.467.016-6",
       "notes": [
         5,
@@ -22386,7 +22387,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rosas Medina Valentina Antonia",
       "firstName": "Valentina Antonia",
       "lastName": "Rosas Medina",
-      "email": "estudiante.4c.17@lpmm.cl",
+      "email": "valentina.rosas@lpmm.cl",
       "rut": "22.467.017-7",
       "notes": [
         5.7,
@@ -22470,7 +22471,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sanchez Calle Sofia",
       "firstName": "Sofia",
       "lastName": "Sanchez Calle",
-      "email": "estudiante.4c.18@lpmm.cl",
+      "email": "sofia.sanchez@lpmm.cl",
       "rut": "22.467.018-8",
       "notes": [
         6,
@@ -22557,7 +22558,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Silva Figueroa Antonella Sofía",
       "firstName": "Antonella Sofía",
       "lastName": "Silva Figueroa",
-      "email": "estudiante.4c.19@lpmm.cl",
+      "email": "antonella.silva@lpmm.cl",
       "rut": "22.467.019-9",
       "notes": [
         3.7,
@@ -22644,7 +22645,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Tapia Fuchslocher Danae Darlyng Poulette",
       "firstName": "Danae Darlyng Poulette",
       "lastName": "Tapia Fuchslocher",
-      "email": "estudiante.4c.20@lpmm.cl",
+      "email": "danae.tapia@lpmm.cl",
       "rut": "22.467.020-0",
       "notes": [
         4.5,
@@ -22726,7 +22727,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Torres Morles Jesus Gregorio",
       "firstName": "Jesus Gregorio",
       "lastName": "Torres Morles",
-      "email": "estudiante.4c.21@lpmm.cl",
+      "email": "jesus.torres@lpmm.cl",
       "rut": "22.467.021-1",
       "notes": [
         6.3,
@@ -22810,7 +22811,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Valdés Huerta Marcela Andrea",
       "firstName": "Marcela Andrea",
       "lastName": "Valdés Huerta",
-      "email": "estudiante.4c.22@lpmm.cl",
+      "email": "marcela.valdes@lpmm.cl",
       "rut": "22.467.022-2",
       "notes": [
         5.1,
@@ -22894,7 +22895,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vilches Muñoz Isidora Paz Josefa",
       "firstName": "Isidora Paz Josefa",
       "lastName": "Vilches Muñoz",
-      "email": "estudiante.4c.23@lpmm.cl",
+      "email": "isidora.vilches@lpmm.cl",
       "rut": "22.467.023-3",
       "notes": [
         3.4,
@@ -22975,7 +22976,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Cabrera Contreras Benjamín Ignacio",
       "firstName": "Benjamín Ignacio",
       "lastName": "Cabrera Contreras",
-      "email": "estudiante.4d.1@lpmm.cl",
+      "email": "benjamin.cabrera@lpmm.cl",
       "rut": "22.468.001-1",
       "notes": [
         4.2,
@@ -23073,7 +23074,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Carvajal Flores Sophia Catalina",
       "firstName": "Sophia Catalina",
       "lastName": "Carvajal Flores",
-      "email": "estudiante.4d.2@lpmm.cl",
+      "email": "sophia.carvajal@lpmm.cl",
       "rut": "22.468.002-2",
       "notes": [
         6.4,
@@ -23174,7 +23175,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Castro Cubillos Javiera Antonia Belén",
       "firstName": "Javiera Antonia Belén",
       "lastName": "Castro Cubillos",
-      "email": "estudiante.4d.3@lpmm.cl",
+      "email": "javiera.castro@lpmm.cl",
       "rut": "22.468.003-3",
       "notes": [
         6.3,
@@ -23276,7 +23277,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Devia Troncoso Antonia Constanza",
       "firstName": "Antonia Constanza",
       "lastName": "Devia Troncoso",
-      "email": "estudiante.4d.4@lpmm.cl",
+      "email": "antonia.devia@lpmm.cl",
       "rut": "22.468.004-4",
       "notes": [
         6.6,
@@ -23371,7 +23372,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Fernández Cobos Valentina Nataly",
       "firstName": "Valentina Nataly",
       "lastName": "Fernández Cobos",
-      "email": "estudiante.4d.5@lpmm.cl",
+      "email": "valentina.fernandez@lpmm.cl",
       "rut": "22.468.005-5",
       "notes": [
         6.4,
@@ -23473,7 +23474,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Gomez Valencia Ana Sofia",
       "firstName": "Ana Sofia",
       "lastName": "Gomez Valencia",
-      "email": "estudiante.4d.7@lpmm.cl",
+      "email": "ana.gomez@lpmm.cl",
       "rut": "22.468.007-7",
       "notes": [
         7,
@@ -23577,7 +23578,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Henríquez Santibáñez Cristóbal Ignacio",
       "firstName": "Cristóbal Ignacio",
       "lastName": "Henríquez Santibáñez",
-      "email": "estudiante.4d.8@lpmm.cl",
+      "email": "cristobal.henriquez@lpmm.cl",
       "rut": "22.468.008-8",
       "notes": [
         6.4,
@@ -23676,7 +23677,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Hernández Barrera Andrea María Del Carmen",
       "firstName": "Andrea María Del Carmen",
       "lastName": "Hernández Barrera",
-      "email": "estudiante.4d.9@lpmm.cl",
+      "email": "andrea.hernandez@lpmm.cl",
       "rut": "22.468.009-9",
       "notes": [
         6,
@@ -23775,7 +23776,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "López Díaz Dominique Scarlet",
       "firstName": "Dominique Scarlet",
       "lastName": "López Díaz",
-      "email": "estudiante.4d.10@lpmm.cl",
+      "email": "dominique.lopez@lpmm.cl",
       "rut": "22.468.010-0",
       "notes": [
         6.6,
@@ -23875,7 +23876,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "López López Yara Bárbara Yuliana",
       "firstName": "Yara Bárbara Yuliana",
       "lastName": "López López",
-      "email": "estudiante.4d.11@lpmm.cl",
+      "email": "yara.lopez@lpmm.cl",
       "rut": "22.468.011-1",
       "notes": [
         6.8,
@@ -23977,7 +23978,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mardones Vicencio Antonela Anastasia Monserrat",
       "firstName": "Antonela Anastasia Monserrat",
       "lastName": "Mardones Vicencio",
-      "email": "estudiante.4d.12@lpmm.cl",
+      "email": "antonela.mardones@lpmm.cl",
       "rut": "22.468.012-2",
       "notes": [
         6.8,
@@ -24080,7 +24081,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Morales Castro Bárbara Nicole",
       "firstName": "Bárbara Nicole",
       "lastName": "Morales Castro",
-      "email": "estudiante.4d.15@lpmm.cl",
+      "email": "barbara.morales@lpmm.cl",
       "rut": "22.468.015-5",
       "notes": [
         6.4,
@@ -24185,7 +24186,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Moscozo Romero Alexandre",
       "firstName": "Alexandre",
       "lastName": "Moscozo Romero",
-      "email": "estudiante.4d.16@lpmm.cl",
+      "email": "alexandre.moscozo@lpmm.cl",
       "rut": "22.468.016-6",
       "notes": [
         6.6,
@@ -24284,7 +24285,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Painén Fernández Matías Alexis",
       "firstName": "Matías Alexis",
       "lastName": "Painén Fernández",
-      "email": "estudiante.4d.17@lpmm.cl",
+      "email": "matias.painen@lpmm.cl",
       "rut": "22.468.017-7",
       "notes": [
         6,
@@ -24382,7 +24383,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pérez Sandoval Sofía Magdalena",
       "firstName": "Sofía Magdalena",
       "lastName": "Pérez Sandoval",
-      "email": "estudiante.4d.18@lpmm.cl",
+      "email": "sofia.perez@lpmm.cl",
       "rut": "22.468.018-8",
       "notes": [
         7,
@@ -24394,7 +24395,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rincon Tello Iraidelyn Elizabeth",
       "firstName": "Iraidelyn Elizabeth",
       "lastName": "Rincon Tello",
-      "email": "estudiante.4d.19@lpmm.cl",
+      "email": "iraidelyn.rincon@lpmm.cl",
       "rut": "22.468.019-9",
       "notes": [
         7,
@@ -24493,7 +24494,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Risco Cerda Martina Anastasia",
       "firstName": "Martina Anastasia",
       "lastName": "Risco Cerda",
-      "email": "estudiante.4d.20@lpmm.cl",
+      "email": "martina.risco@lpmm.cl",
       "rut": "22.468.020-0",
       "notes": [
         7,
@@ -24571,7 +24572,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Véliz Román Ignacio Andrés",
       "firstName": "Ignacio Andrés",
       "lastName": "Véliz Román",
-      "email": "estudiante.4d.21@lpmm.cl",
+      "email": "ignacio.veliz@lpmm.cl",
       "rut": "22.468.021-1",
       "notes": [
         6.8,
@@ -24674,7 +24675,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Abarca Véliz Priscila Noemí",
       "firstName": "Priscila Noemí",
       "lastName": "Abarca Véliz",
-      "email": "estudiante.4e.1@lpmm.cl",
+      "email": "priscila.abarca@lpmm.cl",
       "rut": "22.469.001-1",
       "notes": [
         7,
@@ -24747,7 +24748,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Borges Brieva Kenyer Enrique",
       "firstName": "Kenyer Enrique",
       "lastName": "Borges Brieva",
-      "email": "estudiante.4e.2@lpmm.cl",
+      "email": "kenyer.borges@lpmm.cl",
       "rut": "22.469.002-2",
       "notes": [
         5.4,
@@ -24812,7 +24813,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Brousset Bernales Emilio Benjamín",
       "firstName": "Emilio Benjamín",
       "lastName": "Brousset Bernales",
-      "email": "estudiante.4e.3@lpmm.cl",
+      "email": "emilio.brousset@lpmm.cl",
       "rut": "22.469.003-3",
       "notes": [
         4.3,
@@ -24890,7 +24891,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Carrasco Guzmán Constanza Antonia",
       "firstName": "Constanza Antonia",
       "lastName": "Carrasco Guzmán",
-      "email": "estudiante.4e.4@lpmm.cl",
+      "email": "constanza.carrasco@lpmm.cl",
       "rut": "22.469.004-4",
       "notes": [
         5.5,
@@ -24967,7 +24968,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Contreras Farfán Brian Gabriel",
       "firstName": "Brian Gabriel",
       "lastName": "Contreras Farfán",
-      "email": "estudiante.4e.5@lpmm.cl",
+      "email": "brian.contreras@lpmm.cl",
       "rut": "22.469.005-5",
       "notes": [
         5,
@@ -25045,7 +25046,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Flores Astudillo Evan Mathias",
       "firstName": "Evan Mathias",
       "lastName": "Flores Astudillo",
-      "email": "estudiante.4e.6@lpmm.cl",
+      "email": "evan.flores@lpmm.cl",
       "rut": "22.469.006-6",
       "notes": [
         6.1,
@@ -25127,7 +25128,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Gallardo Altamirano Máximo Neftalí",
       "firstName": "Máximo Neftalí",
       "lastName": "Gallardo Altamirano",
-      "email": "estudiante.4e.7@lpmm.cl",
+      "email": "maximo.gallardo@lpmm.cl",
       "rut": "22.469.007-7",
       "notes": [
         4.5,
@@ -25204,7 +25205,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "González Martínez Cristóbal Alejandro",
       "firstName": "Cristóbal Alejandro",
       "lastName": "González Martínez",
-      "email": "estudiante.4e.8@lpmm.cl",
+      "email": "cristobal.gonzalez@lpmm.cl",
       "rut": "22.469.008-8",
       "notes": [
         4.9,
@@ -25282,7 +25283,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Loriancy Jhonky",
       "firstName": "Loriancy",
       "lastName": "Jhonky",
-      "email": "estudiante.4e.9@lpmm.cl",
+      "email": "loriancy.jhonky@lpmm.cl",
       "rut": "22.469.009-9",
       "notes": [
         5.5,
@@ -25360,7 +25361,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Laurent Jean Fetz Darlens Myson",
       "firstName": "Fetz Darlens Myson",
       "lastName": "Laurent Jean",
-      "email": "estudiante.4e.10@lpmm.cl",
+      "email": "fetz.laurent@lpmm.cl",
       "rut": "22.469.010-0",
       "notes": [
         4.9,
@@ -25438,7 +25439,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Mendez Cano Frank Sneijder",
       "firstName": "Frank Sneijder",
       "lastName": "Mendez Cano",
-      "email": "estudiante.4e.11@lpmm.cl",
+      "email": "frank.mendez@lpmm.cl",
       "rut": "22.469.011-1",
       "notes": [
         6,
@@ -25515,7 +25516,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Miranda Valenzuela Yovani Ernesto",
       "firstName": "Yovani Ernesto",
       "lastName": "Miranda Valenzuela",
-      "email": "estudiante.4e.12@lpmm.cl",
+      "email": "yovani.miranda@lpmm.cl",
       "rut": "22.469.012-2",
       "notes": [
         6.4,
@@ -25592,7 +25593,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Pérez De Arce Alegría Joaquín Ignacio",
       "firstName": "Joaquín Ignacio",
       "lastName": "Pérez De Arce Alegría",
-      "email": "estudiante.4e.14@lpmm.cl",
+      "email": "joaquin.perez@lpmm.cl",
       "rut": "22.469.014-4",
       "notes": [
         5.9,
@@ -25672,7 +25673,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Portilla Muñoz Lucas Ian Joseph",
       "firstName": "Lucas Ian Joseph",
       "lastName": "Portilla Muñoz",
-      "email": "estudiante.4e.15@lpmm.cl",
+      "email": "lucas.portilla@lpmm.cl",
       "rut": "22.469.015-5",
       "notes": [
         5.9,
@@ -25749,7 +25750,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Recabarren Cerda Maicol Matías",
       "firstName": "Maicol Matías",
       "lastName": "Recabarren Cerda",
-      "email": "estudiante.4e.16@lpmm.cl",
+      "email": "maicol.recabarren@lpmm.cl",
       "rut": "22.469.016-6",
       "notes": [
         4,
@@ -25826,7 +25827,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Segovia Rojas Felipe Andrés",
       "firstName": "Felipe Andrés",
       "lastName": "Segovia Rojas",
-      "email": "estudiante.4e.17@lpmm.cl",
+      "email": "felipe.segovia@lpmm.cl",
       "rut": "22.469.017-7",
       "notes": [
         3.6,
@@ -25907,7 +25908,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Soto Figueroa Malcom Marcelo",
       "firstName": "Malcom Marcelo",
       "lastName": "Soto Figueroa",
-      "email": "estudiante.4e.18@lpmm.cl",
+      "email": "malcom.soto@lpmm.cl",
       "rut": "22.469.018-8",
       "notes": [
         5.4,
@@ -25982,7 +25983,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vallejos Cardozo Patricio Alberto",
       "firstName": "Patricio Alberto",
       "lastName": "Vallejos Cardozo",
-      "email": "estudiante.4e.19@lpmm.cl",
+      "email": "patricio.vallejos@lpmm.cl",
       "rut": "22.469.019-9",
       "notes": [
         6.2,

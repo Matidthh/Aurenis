@@ -98,25 +98,25 @@ export function ConvivenciaDashboard({
         academicYear="2026"
         term="1er Semestre"
         roleTitle="Convivencia Escolar & Equipo Psicosocial"
-        roleBadgeColor="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+        roleBadgeColor="text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
         userName={officerName}
         greeting="Comunidad Escolar, Mediación & Resguardo Integral"
         quickActions={
           <>
             <button
               type="button"
-              onClick={() => alert("Abriendo protocolo Circular 482...")}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm min-h-[44px] cursor-pointer"
+              onClick={() => alert("Abriendo protocolo Circular 482 y mediación escolar...")}
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-md shadow-emerald-500/20 min-h-[44px] cursor-pointer"
             >
-              <Scale className="w-3.5 h-3.5" />
+              <Scale className="w-4 h-4" />
               <span>Nuevo Protocolo Circular 482</span>
             </button>
             <Link
               href={`/${schoolSlug}/students`}
-              className="px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition flex items-center gap-1.5 shadow-2xs min-h-[44px]"
+              className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition flex items-center gap-2 backdrop-blur-md min-h-[44px]"
             >
-              <Users className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Directorio Estudiantes</span>
+              <Users className="w-4 h-4 text-emerald-400" />
+              <span>Directorio Alumnos</span>
             </Link>
           </>
         }

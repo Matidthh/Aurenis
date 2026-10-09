@@ -5,12 +5,13 @@ import { Search, HelpCircle, Zap, ArrowDown, ArrowRight } from "lucide-react";
 
 export type DensityMode = "compact" | "normal" | "spacious";
 export type AutoAdvanceDirection = "down" | "right";
+export type RiskFilterType = "all" | "at_risk" | "passing" | "elemental" | "adecuado" | "destacado";
 
 interface GradeMatrixToolbarProps {
   searchQuery: string;
   onSearchChange: (val: string) => void;
-  riskFilter: "all" | "at_risk" | "passing";
-  onRiskFilterChange: (val: "all" | "at_risk" | "passing") => void;
+  riskFilter: RiskFilterType;
+  onRiskFilterChange: (val: RiskFilterType) => void;
   calcMode: "simple" | "weighted";
   onCalcModeChange: (mode: "simple" | "weighted") => void;
   onOpenDecretoModal: () => void;
@@ -56,9 +57,12 @@ export const GradeMatrixToolbar = memo(function GradeMatrixToolbar({
           onChange={(e) => onRiskFilterChange(e.target.value as any)}
           className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-hidden cursor-pointer"
         >
-          <option value="all">Todos los Estados</option>
-          <option value="at_risk">Solo en Riesgo (&lt; 4.0)</option>
-          <option value="passing">Solo Aprobados (≥ 4.0)</option>
+          <option value="all">Todos los Estados (D.67)</option>
+          <option value="at_risk">🔴 Insuficiente (&lt; 4.0)</option>
+          <option value="elemental">🟡 Elemental (4.0 - 4.9)</option>
+          <option value="adecuado">🟢 Adecuado (5.0 - 5.9)</option>
+          <option value="destacado">🔵 Destacado (6.0 - 7.0)</option>
+          <option value="passing">Aprobados Generales (≥ 4.0)</option>
         </select>
       </div>
 

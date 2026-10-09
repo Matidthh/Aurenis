@@ -1,17 +1,18 @@
 "use client";
 
 import React, { memo, RefObject } from "react";
-import { CheckCircle2, AlertCircle } from "lucide-react";
 import { StudentRow, AssessmentCol } from "./grade-matrix-spreadsheet";
-import { GradeMatrixCell, getGradeChromaticClasses } from "./grade-matrix-cell";
+import { GradeMatrixCell } from "./grade-matrix-cell";
 import { DensityMode } from "./grade-matrix-toolbar";
+import { GradeStatusSemaphoricIndicator } from "./grade-status-semaphoric-indicator";
 
 /**
  * Fila de Estudiante en Planilla Matricial con React.memo
- * Responsable de autoría: Frank M. (Gestión Curricular) & Malcom Marcelo (Optimización de Rendimiento)
+ * Responsable de autoría: Frank M. (Gestión Curricular y Decreto 67) & Malcom Marcelo (Optimización de Rendimiento)
  * 
  * Garantiza que cuando se edita la nota de un estudiante o celda,
  * las demás filas de la grilla NO se re-renderizan, manteniendo el frame rate en 60 FPS (<16ms).
+ * Incluye indicador semafórico oficial de 4 rangos (Rojo, Ámbar, Verde, Azul) según Decreto 67 y WCAG AA.
  */
 
 interface GradeMatrixRowProps {
@@ -23,6 +24,7 @@ interface GradeMatrixRowProps {
   dirtyCells: { [key: string]: boolean };
   density: DensityMode;
   calcMode: "simple" | "weighted";
+  readOnly?: boolean;
   inputRef?: RefObject<HTMLInputElement | null>;
   editingValue: string;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -40,6 +42,7 @@ export const GradeMatrixRow = memo(function GradeMatrixRow({
   dirtyCells,
   density,
   calcMode,
+  readOnly = false,
   inputRef,
   editingValue,
   onInputChange,
@@ -96,6 +99,7 @@ export const GradeMatrixRow = memo(function GradeMatrixRow({
             isFocused={isCellFocused}
             isDirty={isDirty}
             density={density}
+            readOnly={readOnly}
             inputRef={isCellFocused ? inputRef : undefined}
             editingValue={editingValue}
             onInputChange={onInputChange}
@@ -105,33 +109,25 @@ export const GradeMatrixRow = memo(function GradeMatrixRow({
         );
       })}
 
-      {/* Promedio Final del Alumno */}
+      {/* Promedio Final del Alumno (Decreto 67 y WCAG AA) */}
       <td className="text-center px-2 py-2 border-l-2 border-slate-300 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-850/60">
-        <div
-          className={`inline-block px-2.5 py-1 rounded-lg text-xs sm:text-sm font-black tracking-wide ${getGradeChromaticClasses(
-            studentAvg,
-            true
-          )}`}
-        >
-          {studentAvg !== null ? studentAvg.toFixed(1) : "S/N"}
-        </div>
+        <GradeStatusSemaphoricIndicator
+          grade={studentAvg}
+          variant="pill"
+          size="sm"
+          showLabel={false}
+          showValue={true}
+        />
       </td>
 
-      {/* Situación / Alerta */}
+      {/* Situación / Alerta Semafórica (Rojo, Ámbar, Verde, Azul - Decreto 67) */}
       <td className="text-center px-2 py-2">
-        {studentAvg === null ? (
-          <span className="text-[10px] text-slate-400 font-sans">Sin Datos</span>
-        ) : isPassing ? (
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full font-sans">
-            <CheckCircle2 className="w-3 h-3" />
-            Aprobado
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 px-2 py-0.5 rounded-full font-sans animate-pulse">
-            <AlertCircle className="w-3 h-3" />
-            Reprobando
-          </span>
-        )}
+        <GradeStatusSemaphoricIndicator
+          grade={studentAvg}
+          variant="status-label"
+          size="xs"
+          attendancePct={student.attendancePct}
+        />
       </td>
     </tr>
   );

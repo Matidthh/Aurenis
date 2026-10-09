@@ -17,11 +17,11 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Escuchar scroll para fondo sutil tras montaje en cliente
+  // Escuchar scroll para cambiar el estilo visual de la navbar fija
   useEffect(() => {
     setMounted(true);
     function handleScroll() {
-      setIsScrolled(window.scrollY > 15);
+      setIsScrolled(window.scrollY > 10);
     }
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
@@ -55,11 +55,19 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
 
   function handleScrollTo(id: string) {
     setIsMobileMenuOpen(false);
+    if (id === "inicio") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    } else if (id === "inicio") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const navOffset = 76;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - navOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
     }
   }
 
@@ -68,14 +76,14 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
       id="landing-navbar"
       suppressHydrationWarning
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300",
         mounted && isScrolled
-          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xs border-b border-slate-200/90 dark:border-slate-800/90 py-3"
-          : "bg-[#f2f4f8]/85 dark:bg-slate-950/85 backdrop-blur-sm border-b border-transparent py-4"
+          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm border-b border-slate-200/90 dark:border-slate-800/90 py-3.5"
+          : "bg-[#F8F8F5]/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/60 py-4"
       )}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-between">
-        {/* 1. Logotipo */}
+        {/* 1. Logotipo institucional con retorno fluido al top */}
         <div className="flex items-center gap-3">
           <Link
             href="/"
@@ -94,25 +102,31 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
           </Link>
         </div>
 
-        {/* 2. Navegación Principal Esencial Desktop */}
-        <nav className="hidden md:flex items-center gap-7 lg:gap-9" aria-label="Navegación principal">
+        {/* 2. Navegación Principal Desktop Enterprise */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Navegación principal">
           <button
-            onClick={() => handleScrollTo("simulador")}
+            onClick={() => handleScrollTo("portales")}
             className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
-            Simulador en Vivo
+            Ahorro Institucional
+          </button>
+          <button
+            onClick={() => handleScrollTo("problema-solucion")}
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+          >
+            Pilares Normativos
+          </button>
+          <button
+            onClick={() => handleScrollTo("migracion")}
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+          >
+            Migración 48h
           </button>
           <button
             onClick={() => handleScrollTo("planes")}
             className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Planes y Precios
-          </button>
-          <button
-            onClick={() => handleScrollTo("testimonios")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
-          >
-            Casos de Éxito
           </button>
           <button
             onClick={() => handleScrollTo("faq")}
@@ -142,7 +156,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             onClick={() => {
               if (onOpenQuoteModal) onOpenQuoteModal();
               else if (onOpenDemoModal) onOpenDemoModal();
-              else handleScrollTo("planes");
+              else handleScrollTo("contacto");
             }}
             className="rounded-xl text-xs font-bold px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white shadow-xs cursor-pointer"
           >
@@ -157,7 +171,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
             aria-expanded={mounted ? isMobileMenuOpen : false}
             aria-label="Abrir menú de navegación"
-            className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
           >
             {mounted && isMobileMenuOpen ? (
               <X className="w-5 h-5" aria-hidden="true" />
@@ -168,34 +182,40 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
         </div>
       </div>
 
-      {/* 4. Menú Móvil Simplificado */}
+      {/* 4. Menú Móvil Flotante */}
       {mounted && isMobileMenuOpen && (
         <div
           id="navbar-mobile-drawer"
-          className="md:hidden fixed inset-x-0 top-[60px] bottom-0 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 p-6 overflow-y-auto flex flex-col justify-between z-40 animate-in fade-in slide-in-from-top-4 duration-200"
+          className="md:hidden fixed inset-x-0 top-[65px] bottom-0 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 p-6 overflow-y-auto flex flex-col justify-between z-50 animate-in fade-in slide-in-from-top-4 duration-200"
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             <button
-              onClick={() => handleScrollTo("simulador")}
-              className="w-full text-left py-3 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+              onClick={() => handleScrollTo("portales")}
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
-              Simulador en Vivo
+              Ahorro Institucional
+            </button>
+            <button
+              onClick={() => handleScrollTo("problema-solucion")}
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
+            >
+              Pilares Normativos
+            </button>
+            <button
+              onClick={() => handleScrollTo("migracion")}
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
+            >
+              Migración 48h
             </button>
             <button
               onClick={() => handleScrollTo("planes")}
-              className="w-full text-left py-3 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               Planes y Precios
             </button>
             <button
-              onClick={() => handleScrollTo("testimonios")}
-              className="w-full text-left py-3 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
-            >
-              Casos de Éxito
-            </button>
-            <button
               onClick={() => handleScrollTo("faq")}
-              className="w-full text-left py-3 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               Preguntas Frecuentes
             </button>
@@ -213,7 +233,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
                 setIsMobileMenuOpen(false);
                 if (onOpenQuoteModal) onOpenQuoteModal();
                 else if (onOpenDemoModal) onOpenDemoModal();
-                else handleScrollTo("planes");
+                else handleScrollTo("contacto");
               }}
               className="w-full justify-center py-3 text-sm font-bold bg-blue-600 text-white"
             >

@@ -20,6 +20,7 @@ import {
   GradeMatrixToolbar,
   DensityMode,
   AutoAdvanceDirection,
+  RiskFilterType,
 } from "./grade-matrix-toolbar";
 import { GradeMatrixRow } from "./grade-matrix-row";
 import { GradeMatrixFooter } from "./grade-matrix-footer";
@@ -180,13 +181,21 @@ interface CellCoordinate {
 
 export interface GradeMatrixSpreadsheetProps {
   schoolSlug?: string;
+  readOnly?: boolean;
 }
 
 export function GradeMatrixSpreadsheet({
   schoolSlug: propSchoolSlug,
+  readOnly: propReadOnly,
 }: GradeMatrixSpreadsheetProps = {}) {
   const { user, token } = useAuth();
   const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "lpmm";
+  const isEffectiveReadOnly = Boolean(
+    propReadOnly ||
+    user?.role === "student" ||
+    user?.role === "ESTUDIANTE" ||
+    user?.activeRole === "ESTUDIANTE"
+  );
 
   // Monitoreo de Rendimiento < 16ms
   const { stats: perfStats, onRenderCallback } = useRenderPerformance("GradeMatrixSpreadsheet");
@@ -202,7 +211,7 @@ export function GradeMatrixSpreadsheet({
   const [advanceDirection, setAdvanceDirection] = useState<AutoAdvanceDirection>("down");
   const [rapidTypeMode, setRapidTypeMode] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [riskFilter, setRiskFilter] = useState<"all" | "at_risk" | "passing">("all");
+  const [riskFilter, setRiskFilter] = useState<RiskFilterType>("all");
 
   // Estado de foco y edición
   const [focusedCell, setFocusedCell] = useState<CellCoordinate | null>({
@@ -304,6 +313,15 @@ export function GradeMatrixSpreadsheet({
       const avg = calculateStudentAverage(st);
       if (riskFilter === "at_risk") {
         return avg !== null && avg < 4.0;
+      }
+      if (riskFilter === "elemental") {
+        return avg !== null && avg >= 4.0 && avg < 5.0;
+      }
+      if (riskFilter === "adecuado") {
+        return avg !== null && avg >= 5.0 && avg < 6.0;
+      }
+      if (riskFilter === "destacado") {
+        return avg !== null && avg >= 6.0;
       }
       if (riskFilter === "passing") {
         return avg !== null && avg >= 4.0;
@@ -608,6 +626,21 @@ export function GradeMatrixSpreadsheet({
   return (
     <Profiler id="GradeMatrixSpreadsheet" onRender={onRenderCallback}>
       <div className="space-y-6 w-full">
+        {/* Aviso de Modo Solo Lectura para Estudiantes */}
+        {isEffectiveReadOnly && (
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 flex items-center justify-between gap-3 text-xs font-semibold">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shrink-0" />
+              <span>
+                <strong>Modo Consulta Estudiantil (Solo Lectura):</strong> Según el Decreto Supremo 67/2018 del MINEDUC, las calificaciones son emitidas exclusivamente por el cuerpo docente. Los estudiantes no tienen permisos de modificación.
+              </span>
+            </div>
+            <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-900 dark:text-amber-200 text-[10px] font-black uppercase tracking-wider shrink-0">
+              Solo Lectura
+            </span>
+          </div>
+        )}
+
         {/* 1. Header Modular Memoizado */}
         <GradeMatrixHeader
           isLive={isLive}
@@ -724,9 +757,19 @@ export function GradeMatrixSpreadsheet({
                   </div>
                 </th>
 
-                {/* Columna de Situación */}
-                <th className="py-2.5 px-3 font-bold text-xs text-center bg-slate-100 dark:bg-slate-850 w-24">
-                  Situación
+                {/* Columna de Situación Semafórica (Decreto 67) */}
+                <th
+                  onClick={handleOpenDecretoModal}
+                  className="py-2.5 px-3 font-bold text-xs text-center bg-slate-100 dark:bg-slate-850 w-28 cursor-pointer hover:bg-slate-200/80 dark:hover:bg-slate-800 transition"
+                  title="Estado de Logro Semafórico según Decreto 67 (Rojo, Ámbar, Verde, Azul)"
+                >
+                  <div className="flex items-center justify-center gap-1">
+                    <span>Situación D.67</span>
+                    <HelpCircle className="w-3 h-3 text-slate-400" />
+                  </div>
+                  <div className="text-[9px] font-normal text-slate-500 font-sans mt-0.5">
+                    Semáforo AA
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -748,6 +791,7 @@ export function GradeMatrixSpreadsheet({
                     dirtyCells={dirtyCells}
                     density={density}
                     calcMode={calcMode}
+                    readOnly={isEffectiveReadOnly}
                     inputRef={inputRef}
                     editingValue={editingValue}
                     onInputChange={handleInputChange}

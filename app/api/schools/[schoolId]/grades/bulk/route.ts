@@ -9,6 +9,7 @@ import { PERMISSIONS } from "@/lib/constants/permissions";
 import { BulkSaveGradesSchema } from "@/lib/validations/grade.schema";
 import { saveBulkMatrixGrades } from "@/lib/services/grade.service";
 import { apiSuccess, apiError } from "@/lib/api/response";
+import { executeGradeScaleMiddleware } from "@/lib/security/grade-scale-validator";
 
 export async function POST(
   req: NextRequest,
@@ -22,11 +23,17 @@ export async function POST(
 
     const { schoolId } = await params;
 
+    // Resolver identificador institucional (UUID / slug)
+    const school = await prisma.school.findFirst({
+      where: { OR: [{ id: schoolId }, { slug: schoolId }] },
+    });
+    const targetSchoolId = school?.id || schoolId;
+
     // Verificar permisos para ingresar/modificar notas (GRADES_ENTER o GRADES_MODIFY)
     if (!session.isSystemAdmin) {
       const membership = await prisma.membership.findUnique({
         where: {
-          userId_schoolId: { userId: session.userId, schoolId },
+          userId_schoolId: { userId: session.userId, schoolId: targetSchoolId },
         },
         include: {
           role: {
@@ -64,10 +71,22 @@ export async function POST(
       });
     }
 
-    const tenantDb = createTenantPrisma(schoolId);
+    // Middleware de Validación Previa: Escala oficial [minGrade, maxGrade] antes de PostgreSQL
+    const scaleCheck = await executeGradeScaleMiddleware({
+      schoolId: targetSchoolId,
+      payload: { type: "bulk", grades: validated.data.grades },
+      userId: session.userId,
+      pathName: `POST /api/schools/${schoolId}/grades/bulk`,
+    });
+
+    if (!scaleCheck.allowed && scaleCheck.errorResponse) {
+      return scaleCheck.errorResponse;
+    }
+
+    const tenantDb = createTenantPrisma(targetSchoolId);
     const result = await saveBulkMatrixGrades(
       tenantDb,
-      schoolId,
+      targetSchoolId,
       validated.data.grades,
       session.userId
     );

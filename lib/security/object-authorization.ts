@@ -36,6 +36,22 @@ export interface ObjectAuthResult {
 }
 
 /**
+ * Resuelve el identificador único institucional (UUID) tanto si se recibe el ID como el slug.
+ * Garantiza aislamiento multi-tenant estricto y prevención de bypass de parámetros.
+ * Responsable: Maicol R. (Arquitectura Backend & Multi-Tenant Isolation)
+ */
+export async function resolveTargetSchoolId(schoolIdOrSlug: string): Promise<string> {
+  if (!schoolIdOrSlug) return schoolIdOrSlug;
+  const school = await prisma.school.findFirst({
+    where: {
+      OR: [{ id: schoolIdOrSlug }, { slug: schoolIdOrSlug }],
+    },
+    select: { id: true },
+  });
+  return school?.id || schoolIdOrSlug;
+}
+
+/**
  * Valida la autorización para consultar la ficha de un estudiante específico (BOLA / IDOR).
  */
 export async function validateStudentRecordAccess(
@@ -48,12 +64,14 @@ export async function validateStudentRecordAccess(
     return { allowed: true, statusCode: 200, roleName: "SYSTEM_ADMIN" };
   }
 
+  const targetSchoolId = await resolveTargetSchoolId(schoolId);
+
   // 2. Obtener membresía institucional del usuario solicitante
   const membership = await prisma.membership.findUnique({
     where: {
       userId_schoolId: {
         userId: session.userId,
-        schoolId,
+        schoolId: targetSchoolId,
       },
     },
     include: {
@@ -188,11 +206,13 @@ export async function validateGradesAccess(
     return { allowed: true, statusCode: 200, roleName: "SYSTEM_ADMIN" };
   }
 
+  const targetSchoolId = await resolveTargetSchoolId(schoolId);
+
   const membership = await prisma.membership.findUnique({
     where: {
       userId_schoolId: {
         userId: session.userId,
-        schoolId,
+        schoolId: targetSchoolId,
       },
     },
     include: {
@@ -367,9 +387,11 @@ export async function validateSingleGradeAccess(
   schoolId: string,
   gradeId: string
 ): Promise<ObjectAuthResult & { grade?: any }> {
+  const targetSchoolId = await resolveTargetSchoolId(schoolId);
+
   if (session.isSystemAdmin) {
     const grade = await prisma.grade.findFirst({
-      where: { id: gradeId, schoolId },
+      where: { id: gradeId, schoolId: targetSchoolId },
     });
     if (!grade) {
       return { allowed: false, statusCode: 404, reason: "Calificación no encontrada." };
@@ -381,7 +403,7 @@ export async function validateSingleGradeAccess(
     where: {
       userId_schoolId: {
         userId: session.userId,
-        schoolId,
+        schoolId: targetSchoolId,
       },
     },
     include: {
@@ -398,7 +420,7 @@ export async function validateSingleGradeAccess(
   }
 
   const grade = await prisma.grade.findFirst({
-    where: { id: gradeId, schoolId },
+    where: { id: gradeId, schoolId: targetSchoolId },
     include: {
       enrollment: {
         include: {
@@ -463,3 +485,52 @@ export async function validateSingleGradeAccess(
 
   return { allowed: false, statusCode: 403, reason: "Acceso denegado.", roleName };
 }
+
+/**
+ * Verifica que el usuario autenticado tenga membresía activa en la institución
+ * correspondiente al schoolSlug / schoolId proporcionado en la URL (Prevención IDOR / Multi-Tenant).
+ * Autor: Maicol R. & Frank M.
+ */
+export async function validateTenantAccess(
+  session: UserSession,
+  schoolSlugOrId: string
+): Promise<ObjectAuthResult & { resolvedSchoolId?: string }> {
+  if (!session || !session.userId) {
+    return { allowed: false, statusCode: 403, reason: "No autenticado." };
+  }
+
+  if (session.isSystemAdmin) {
+    const targetSchoolId = await resolveTargetSchoolId(schoolSlugOrId);
+    return { allowed: true, statusCode: 200, resolvedSchoolId: targetSchoolId, roleName: "SYSTEM_ADMIN" };
+  }
+
+  const targetSchoolId = await resolveTargetSchoolId(schoolSlugOrId);
+
+  const membership = await prisma.membership.findUnique({
+    where: {
+      userId_schoolId: {
+        userId: session.userId,
+        schoolId: targetSchoolId,
+      },
+    },
+    include: {
+      role: true,
+    },
+  });
+
+  if (!membership || !membership.isActive) {
+    return {
+      allowed: false,
+      statusCode: 403,
+      reason: "Acceso denegado (IDOR / Multi-Tenant): No perteneces a esta institución o tu membresía está inactiva.",
+    };
+  }
+
+  return {
+    allowed: true,
+    statusCode: 200,
+    resolvedSchoolId: targetSchoolId,
+    roleName: membership.role.name,
+  };
+}
+
