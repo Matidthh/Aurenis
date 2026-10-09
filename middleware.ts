@@ -38,6 +38,7 @@ const RESERVED_ROOT_PATHS = new Set([
   "privacy",
   "about",
   "contact",
+  "resenas",
 ]);
 
 /**

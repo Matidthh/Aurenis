@@ -274,6 +274,58 @@ async function main() {
     },
   });
 
+  // 10. Sembrar Reseñas Iniciales en la tabla wp_reviews
+  console.log("🔟 Sembrando reseñas iniciales en tabla wp_reviews...");
+  const initialReviews = [
+    {
+      id: "rev-lpmm-001",
+      authorName: "Rodrigo Castro Díaz",
+      authorEmail: "profesor.rodrigo@lpmm.cl",
+      authorRole: "Docente Jefatura",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 5,
+      title: "Excelente plataforma para el libro de clases digital",
+      comment: "Aurenis ha simplificado completamente el registro de calificaciones y asistencia ministerial. La rapidez para ingresar notas masivas y la trazabilidad son extraordinarias.",
+      isVerified: true,
+      isFeatured: true,
+      originSite: "aurenis-platform",
+    },
+    {
+      id: "rev-lpmm-002",
+      authorName: "Dirección LPMM",
+      authorEmail: "director@lpmm.cl",
+      authorRole: "Director de Establecimiento",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 5,
+      title: "Control institucional y métricas ministeriales al día",
+      comment: "La gestión multi-tenant y la supervisión del Decreto 67 nos permite tener reportes en tiempo real para el MINEDUC y la Superintendencia de Educación con total seguridad.",
+      isVerified: true,
+      isFeatured: true,
+      originSite: "aurenis-platform",
+    },
+    {
+      id: "rev-lpmm-003",
+      authorName: "Yamir Alonso Ahumada",
+      authorEmail: "yamir.ahumada@lpmm.cl",
+      authorRole: "Estudiante 1° Medio A",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 5,
+      title: "Muy fácil ver mis notas y promedio ponderado",
+      comment: "Puedo revisar mis notas y porcentajes desde el celular apenas el profe las sube. La interfaz es moderna, clara y no se cuelga.",
+      isVerified: true,
+      isFeatured: false,
+      originSite: "aurenis-platform",
+    },
+  ];
+
+  for (const rev of initialReviews) {
+    await prisma.wpReview.upsert({
+      where: { id: rev.id },
+      update: {},
+      create: rev,
+    });
+  }
+
   console.log("✨ Seed completado exitosamente.");
 }
 

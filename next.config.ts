@@ -7,7 +7,6 @@ export default function (phase: string): NextConfig {
   const isDev = phase === PHASE_DEVELOPMENT_SERVER;
 
   return {
-    distDir: isDev ? ".next-dev" : ".next",
     output: isDev ? undefined : "standalone",
     poweredByHeader: false,
     reactStrictMode: true,
@@ -28,10 +27,7 @@ export default function (phase: string): NextConfig {
     generateBuildId: async () => {
       return buildId;
     },
-    webpack: (config, { dev }) => {
-      if (dev) {
-        config.cache = false;
-      }
+    webpack: (config) => {
       return config;
     },
     async headers() {

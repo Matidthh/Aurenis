@@ -8,6 +8,7 @@ import { PortalsByRole } from "@/components/landing/portals-by-role";
 import { ProblemSolutionSection } from "@/components/landing/problem-solution-section";
 import { HowWeMigrateSection } from "@/components/landing/how-we-migrate-section";
 import { PricingPlans } from "@/components/landing/pricing-plans";
+import { LandingReviewsSection } from "@/components/landing/landing-reviews-section";
 import { FaqSection } from "@/components/landing/faq-section";
 import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
@@ -61,7 +62,10 @@ export function LandingClientPage() {
         onSelectPlan={(plan) => handleOpenQuote(plan)}
       />
 
-      {/* 8. Preguntas Frecuentes - Derribo de Objeciones */}
+      {/* 8. Reseñas y Testimonios de la Comunidad (Tablas BBDD: wp_reviews) */}
+      <LandingReviewsSection />
+
+      {/* 9. Preguntas Frecuentes - Derribo de Objeciones */}
       <FaqSection />
 
       {/* 9. Llamado a la Acción Final y Cierre Comercial */}

@@ -693,3 +693,46 @@ model PasswordResetToken {
   @@index([userId])
 }
 
+// -------------------------------------------------------------
+// 12. SISTEMA DE RESEÑAS Y VALORACIONES PÚBLICAS / EXTERNAS
+// Tablas identificadas con prefijo 'wp_' según requerimiento
+// -------------------------------------------------------------
+
+model WpReview {
+  id              String            @id @default(cuid())
+  authorName      String            @db.VarChar(120)
+  authorEmail     String?           @db.VarChar(180)
+  authorRole      String            @default("Comunidad Escolar") // Directivo, Docente, Estudiante, Apoderado, Evaluador
+  institutionName String?           @db.VarChar(180) // Nombre del colegio o institución externa
+  rating          Int               @default(5) // 1 a 5 estrellas
+  title           String            @db.VarChar(160)
+  comment         String            @db.Text
+  isVerified      Boolean           @default(true)
+  isFeatured      Boolean           @default(false)
+  originSite      String            @default("aurenis-platform") // Identificador del origen o web externa conectada
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  comments        WpReviewComment[]
+
+  @@index([rating])
+  @@index([isVerified])
+  @@index([createdAt])
+  @@map("wp_reviews")
+}
+
+model WpReviewComment {
+  id          String    @id @default(cuid())
+  reviewId    String
+  authorName  String    @db.VarChar(120)
+  comment     String    @db.Text
+  isApproved  Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+
+  review      WpReview  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+  @@map("wp_review_comments")
+}
+
+

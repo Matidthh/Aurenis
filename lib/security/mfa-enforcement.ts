@@ -55,13 +55,13 @@ export async function enforceMfaPolicy(input: MfaEnforcementCheckInput): Promise
 
   // Si envió código TOTP, verificarlo criptográficamente
   if (input.isMfaEnabledForUser && input.totpCode && input.totpSecret) {
-    const isValid = verifyTotpCode({
-      secretBase32: input.totpSecret,
-      token: input.totpCode,
+    const verification = await verifyTotpCode({
+      secret: input.totpSecret,
+      code: input.totpCode,
       userId: "user-mfa-check",
     });
 
-    if (!isValid) {
+    if (!verification.valid) {
       return {
         allowed: false,
         requiresMfaSetup: false,

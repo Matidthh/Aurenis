@@ -30,6 +30,8 @@ interface MockStore {
   promotionRecords: Map<string, any>;
   evaluationCommitteeRecords: Map<string, any>;
   passwordResetTokens: Map<string, any>;
+  wpReviews: Map<string, any>;
+  wpReviewComments: Map<string, any>;
   auditLogs: any[];
 }
 
@@ -60,8 +62,90 @@ function initStore(): MockStore {
     promotionRecords: new Map(),
     evaluationCommitteeRecords: new Map(),
     passwordResetTokens: new Map(),
+    wpReviews: new Map(),
+    wpReviewComments: new Map(),
     auditLogs: [],
   };
+
+  // Seed inicial de reseñas institucionales (tablas wp_reviews)
+  const seedReviews = [
+    {
+      id: "rev-lpmm-001",
+      authorName: "Rodrigo Castro Díaz",
+      authorEmail: "profesor.rodrigo@lpmm.cl",
+      authorRole: "Docente Jefatura",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 5,
+      title: "Excelente plataforma para el libro de clases digital",
+      comment: "Aurenis ha simplificado completamente el registro de calificaciones y asistencia ministerial. La rapidez para ingresar notas masivas y la trazabilidad son extraordinarias.",
+      isVerified: true,
+      isFeatured: true,
+      originSite: "aurenis-platform",
+      createdAt: new Date("2026-03-15T10:30:00Z"),
+      updatedAt: new Date("2026-03-15T10:30:00Z"),
+    },
+    {
+      id: "rev-lpmm-002",
+      authorName: "Dirección LPMM",
+      authorEmail: "director@lpmm.cl",
+      authorRole: "Director de Establecimiento",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 5,
+      title: "Control institucional y métricas ministeriales al día",
+      comment: "La gestión multi-tenant y la supervisión del Decreto 67 nos permite tener reportes en tiempo real para el MINEDUC y la Superintendencia de Educación con total seguridad.",
+      isVerified: true,
+      isFeatured: true,
+      originSite: "aurenis-platform",
+      createdAt: new Date("2026-03-20T14:15:00Z"),
+      updatedAt: new Date("2026-03-20T14:15:00Z"),
+    },
+    {
+      id: "rev-lpmm-003",
+      authorName: "Yamir Alonso Ahumada",
+      authorEmail: "yamir.ahumada@lpmm.cl",
+      authorRole: "Estudiante 1° Medio A",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 5,
+      title: "Muy fácil ver mis notas y promedio ponderado",
+      comment: "Puedo revisar mis notas y porcentajes desde el celular apenas el profe las sube. La interfaz es moderna, clara y no se cuelga.",
+      isVerified: true,
+      isFeatured: false,
+      originSite: "aurenis-platform",
+      createdAt: new Date("2026-03-25T16:00:00Z"),
+      updatedAt: new Date("2026-03-25T16:00:00Z"),
+    },
+    {
+      id: "rev-lpmm-004",
+      authorName: "María Belén Ahumada",
+      authorEmail: "apoderado.1@lpmm.cl",
+      authorRole: "Apoderada / Familia",
+      institutionName: "Liceo Politécnico Marga Marga",
+      rating: 4,
+      title: "Transparencia total para las familias",
+      comment: "Me da tranquilidad saber la asistencia y el desempeño académico de mi hijo semana a semana. Excelente comunicación con el establecimiento.",
+      isVerified: true,
+      isFeatured: false,
+      originSite: "aurenis-platform",
+      createdAt: new Date("2026-04-02T11:20:00Z"),
+      updatedAt: new Date("2026-04-02T11:20:00Z"),
+    },
+    {
+      id: "rev-mineduc-005",
+      authorName: "Supervisión Provincial Mineduc",
+      authorEmail: "supervision@mineduc.cl",
+      authorRole: "Evaluador Externo",
+      institutionName: "Ministerio de Educación",
+      rating: 5,
+      title: "Cumplimiento normativo y resguardo de datos NNA impecable",
+      comment: "La adhesión a la Circular 482 y el rigor en el cálculo de promedios ponderados y asistencia mensual hacen de Aurenis un referente en software escolar.",
+      isVerified: true,
+      isFeatured: true,
+      originSite: "wordpress-externo",
+      createdAt: new Date("2026-04-05T09:00:00Z"),
+      updatedAt: new Date("2026-04-05T09:00:00Z"),
+    },
+  ];
+  seedReviews.forEach((r) => store.wpReviews.set(r.id, r));
 
   // 1. Permissions
   ALL_PERMISSIONS.forEach((p, idx) => {
@@ -1645,6 +1729,93 @@ export function createMockPrisma() {
       async findMany(args?: any) {
         const result: any[] = [];
         for (const c of store.evaluationCommitteeRecords.values()) {
+          if (matchWhere(c, args?.where)) result.push(c);
+        }
+        return result;
+      },
+    },
+
+    wpReview: {
+      async create(args: any) {
+        const created = {
+          id: args.data?.id || `rev_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+          authorName: args.data?.authorName || "Anónimo",
+          authorEmail: args.data?.authorEmail || null,
+          authorRole: args.data?.authorRole || "Comunidad Escolar",
+          institutionName: args.data?.institutionName || "Institución Educativa",
+          rating: Number(args.data?.rating) || 5,
+          title: args.data?.title || "Reseña",
+          comment: args.data?.comment || "",
+          isVerified: args.data?.isVerified !== undefined ? Boolean(args.data?.isVerified) : true,
+          isFeatured: args.data?.isFeatured !== undefined ? Boolean(args.data?.isFeatured) : false,
+          originSite: args.data?.originSite || "aurenis-platform",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        store.wpReviews.set(created.id, created);
+        return created;
+      },
+      async findUnique(args: any) {
+        if (args?.where?.id) {
+          return store.wpReviews.get(args.where.id) || null;
+        }
+        return null;
+      },
+      async findFirst(args?: any) {
+        for (const r of store.wpReviews.values()) {
+          if (matchWhere(r, args?.where)) return r;
+        }
+        return null;
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const r of store.wpReviews.values()) {
+          if (matchWhere(r, args?.where)) result.push(r);
+        }
+        result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        if (args?.take && typeof args.take === "number") {
+          return result.slice(0, args.take);
+        }
+        return result;
+      },
+      async count(args?: any) {
+        let cnt = 0;
+        for (const r of store.wpReviews.values()) {
+          if (matchWhere(r, args?.where)) cnt++;
+        }
+        return cnt;
+      },
+      async update(args: any) {
+        const existing = store.wpReviews.get(args.where?.id);
+        if (existing) {
+          Object.assign(existing, args.data, { updatedAt: new Date() });
+          return existing;
+        }
+        return null;
+      },
+      async delete(args: any) {
+        const existing = store.wpReviews.get(args.where?.id);
+        if (existing) {
+          store.wpReviews.delete(args.where.id);
+          return existing;
+        }
+        return null;
+      },
+    },
+
+    wpReviewComment: {
+      async create(args: any) {
+        const created = {
+          id: args.data?.id || `revcom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+          ...args.data,
+          createdAt: new Date(),
+        };
+        store.wpReviewComments.set(created.id, created);
+        return created;
+      },
+      async findMany(args?: any) {
+        const result: any[] = [];
+        for (const c of store.wpReviewComments.values()) {
           if (matchWhere(c, args?.where)) result.push(c);
         }
         return result;

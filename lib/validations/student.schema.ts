@@ -300,7 +300,7 @@ export const HealthSystemEnum = z.enum(["FONASA", "ISAPRE", "Particular", "FFAA"
   }),
 });
 
-export const StudentMedicalRecordSchema = z
+export const StudentMedicalRecordBaseSchema = z
   .object({
     bloodGroup: BloodGroupEnum,
     healthSystem: HealthSystemEnum,
@@ -330,7 +330,9 @@ export const StudentMedicalRecordSchema = z
       .optional()
       .or(z.literal("")),
     isJunaebBeneficiary: z.boolean().default(false),
-  })
+  });
+
+export const StudentMedicalRecordSchema = StudentMedicalRecordBaseSchema
   .superRefine((data, ctx) => {
     // 1. Validación de Alergias Condicional
     if (data.hasAllergies) {
@@ -396,7 +398,7 @@ export const FullStudentRegistrationSchema = StudentIdentificationSchema.merge(
   StudentAcademicSchema
 )
   .merge(StudentGuardianSchema)
-  .merge(StudentMedicalRecordSchema);
+  .merge(StudentMedicalRecordBaseSchema);
 
 export type FullStudentRegistrationInput = z.infer<
   typeof FullStudentRegistrationSchema

@@ -24,6 +24,7 @@ export interface AcademicSummaryCardProps {
   href?: string;
   className?: string;
   badgeLabel?: string;
+  onClick?: () => void;
 }
 
 const ACCENT_STYLES = {
@@ -76,17 +77,19 @@ export function AcademicSummaryCard({
   href,
   className,
   badgeLabel,
+  onClick,
 }: AcademicSummaryCardProps) {
   const accent = ACCENT_STYLES[accentColor] || ACCENT_STYLES.blue;
 
   const cardContent = (
     <div
+      onClick={onClick}
       className={cn(
         "relative p-5 sm:p-6 rounded-3xl transition-all duration-300 group overflow-hidden",
         "bg-white/90 dark:bg-[#0C1425]/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80",
         "shadow-sm hover:shadow-xl dark:hover:shadow-[0_12px_35px_-10px_rgba(0,0,0,0.6)]",
         accent.glow,
-        href && "cursor-pointer active:scale-[0.99]",
+        (href || onClick) && "cursor-pointer active:scale-[0.99]",
         className
       )}
     >

@@ -192,9 +192,10 @@ export function GradeMatrixSpreadsheet({
   const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "lpmm";
   const isEffectiveReadOnly = Boolean(
     propReadOnly ||
-    user?.role === "student" ||
-    user?.role === "ESTUDIANTE" ||
-    user?.activeRole === "ESTUDIANTE"
+    (user as any)?.role === "student" ||
+    (user as any)?.role === "ESTUDIANTE" ||
+    (user as any)?.activeRole === "ESTUDIANTE" ||
+    (user as any)?.roleName === "STUDENT"
   );
 
   // Monitoreo de Rendimiento < 16ms

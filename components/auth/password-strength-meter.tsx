@@ -21,7 +21,15 @@ interface PasswordStrengthMeterProps {
 export function PasswordStrengthMeter({ password }: PasswordStrengthMeterProps) {
   const strengthData = useMemo(() => {
     if (!password) {
-      return { score: 0, label: "Vacía", color: "bg-slate-200 dark:bg-slate-700", criteria: [] };
+      return {
+        score: 0,
+        maxScore: 5,
+        label: "Vacía",
+        color: "bg-slate-200 dark:bg-slate-700",
+        textColor: "text-slate-400",
+        isCommon: false,
+        checks: [],
+      };
     }
 
     let score = 0;

@@ -7,7 +7,15 @@ async function runPostinstall() {
 
   // 1. Prisma Client Generation
   try {
-    execSync("npx --yes prisma generate", { stdio: "inherit", timeout: 45000 });
+    const prismaClientPath = path.join(root, "node_modules", "@prisma", "client", "index.js");
+    if (!fs.existsSync(prismaClientPath)) {
+      const localPrisma = path.join(root, "node_modules", ".bin", "prisma");
+      if (fs.existsSync(localPrisma)) {
+        execSync(`"${localPrisma}" generate`, { stdio: "inherit", timeout: 15000 });
+      } else {
+        execSync("npx prisma generate", { stdio: "inherit", timeout: 15000 });
+      }
+    }
   } catch (err) {
     console.warn("[postinstall] Notice: prisma generate deferred or handled gracefully:", err?.message || err);
   }

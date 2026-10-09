@@ -229,7 +229,7 @@ export async function POST(
 
     // 6. OPERACIÓN prisma.assessment.update (Si se solicitaron cambios en la evaluación)
     //    Garantizado que solo se ejecuta tras superar la validación Zod y del middleware.
-    let updatedAssessment = null;
+    let updatedAssessment: any = null;
     if (body.assessmentUpdates && body.assessmentId) {
       const targetAssessment = await prisma.assessment.findFirst({
         where: { id: assessmentId, schoolId },
@@ -260,7 +260,7 @@ export async function POST(
 
     // 7. OPERACIÓN prisma.grade.create (o upsert de seguridad)
     //    Garantizado que la calificación está estrictamente en [minGrade, maxGrade].
-    const roundedValue = scaleValidation.value;
+    const roundedValue = (scaleValidation as any).value ?? numericGrade;
     let savedGrade;
 
     if (isDatabaseConfigured()) {
@@ -426,7 +426,7 @@ export async function PATCH(
     }
 
     // Si incluye modificaciones a la evaluación (`prisma.assessment.update`)
-    let updatedAssessment = null;
+    let updatedAssessment: any = null;
     if (body.assessmentId && body.assessmentUpdates && isDatabaseConfigured()) {
       updatedAssessment = await prisma.assessment.update({
         where: { id: body.assessmentId },
@@ -443,7 +443,7 @@ export async function PATCH(
     }
 
     // Si incluye actualización a la calificación
-    let updatedGrade = null;
+    let updatedGrade: any = null;
     if (body.gradeId && isDatabaseConfigured()) {
       const currentGrade = await prisma.grade.findFirst({
         where: { id: body.gradeId, schoolId },
