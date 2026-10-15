@@ -76,15 +76,23 @@ export function LandingReviewsSection() {
     try {
       setLoading(true);
       const res = await fetch("/api/reviews?take=6");
+      if (!res.ok) {
+        // Fallback gracefully on transient cold start or 503 gateway responses
+        return;
+      }
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        return;
+      }
       const data = await res.json();
-      if (data.success) {
+      if (data && data.success) {
         setReviews(data.reviews || []);
         if (data.stats) {
           setStats(data.stats);
         }
       }
-    } catch (err) {
-      console.error("Error cargando reseñas en Home:", err);
+    } catch {
+      // Silently maintain the default institutional verified reviews on network hiccups
     } finally {
       setLoading(false);
     }

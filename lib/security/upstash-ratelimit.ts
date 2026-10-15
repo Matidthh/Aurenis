@@ -81,7 +81,7 @@ export async function enforceAuthRateLimit(req: NextRequest): Promise<NextRespon
   // Fallback local en memoria
   const now = Date.now();
   const windowMs = 60 * 1000;
-  const maxAttempts = 5;
+  const maxAttempts = process.env.NODE_ENV === "production" ? 20 : 60;
 
   let record = localMemoryStore.get(identifier);
   if (!record || now > record.resetTime) {
@@ -111,3 +111,9 @@ export async function enforceAuthRateLimit(req: NextRequest): Promise<NextRespon
 
   return null;
 }
+
+export function resetLocalAuthRateLimit(clientIp: string): void {
+  const identifier = `auth_ip_${clientIp}`;
+  localMemoryStore.delete(identifier);
+}
+

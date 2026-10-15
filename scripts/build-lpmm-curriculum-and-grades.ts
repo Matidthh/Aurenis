@@ -136,6 +136,29 @@ function getSubjectRoom(specialty: string, category: "Plan Común" | "Especialid
 }
 
 function getSubjectTeacher(courseCode: string, rawSubj: string, category: "Plan Común" | "Especialidad TP") {
+  // Profesores oficiales de la especialidad de 4° Medio E (Programación)
+  if (courseCode === "4E") {
+    if (rawSubj === "LENGUAJE") {
+      return { name: "Prof. Mirka Herrera", email: "mirka.herrera@edumargamarga.gob.cl" };
+    }
+    if (rawSubj.includes("MANTENIMIENTO Y ACT. DE HARD")) {
+      return { name: "Prof. Juan Gutiérrez", email: "juan.gutierrez@edumargamarga.gob.cl" };
+    }
+    if (rawSubj.includes("ADM. BBDD")) {
+      return { name: "Prof. Julio Molina", email: "julio.molina@edumargamarga.gob.cl" };
+    }
+    if (rawSubj.includes("EMPRENDIMIENTO")) {
+      return { name: "Prof. Marisol García", email: "marisol.garcia@edumargamarga.gob.cl" };
+    }
+    if (
+      rawSubj.includes("PRO. ORIENTADA A OBJETO") ||
+      rawSubj.includes("DISEÑO DE BBDD RELACIONADAS") ||
+      rawSubj.includes("DISEÑO DE APLICACIONES WEB")
+    ) {
+      return { name: "Prof. Eduardo Soto", email: "eduardo.soto@edumargamarga.gob.cl" };
+    }
+  }
+
   if (rawSubj === "MATEMÁTICA") return { name: "Prof. Claudia Vega Morales", email: "claudia.vega@lpmm.cl" };
   if (rawSubj === "LENGUAJE") return { name: "Prof. Marcela Soto Alarcón", email: "marcela.soto@lpmm.cl" };
   if (rawSubj === "INGLÉS") return { name: "Prof. Jorge Valenzuela Rojas", email: "jorge.valenzuela@lpmm.cl" };

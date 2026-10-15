@@ -12,7 +12,7 @@ import {
   getRateLimitHeaders,
   RATE_LIMIT_CONFIGS,
 } from "@/lib/security/rate-limiter";
-import { enforceAuthRateLimit } from "@/lib/security/upstash-ratelimit";
+import { enforceAuthRateLimit, resetLocalAuthRateLimit } from "@/lib/security/upstash-ratelimit";
 
 export async function POST(req: NextRequest) {
   // 1. Upstash Ratelimit middleware enforcement
@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
 
     // Tras autenticación exitosa, restablecer el contador de intentos fallidos
     await resetRateLimit(rateLimitKey);
+    resetLocalAuthRateLimit(clientIp);
 
     // Caso A: SuperAdmin del Sistema
     if (user.isSystemAdmin) {

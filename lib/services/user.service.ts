@@ -162,6 +162,138 @@ const DEMO_USERS: Record<string, DemoUser> = {
   "rodrigo.castro@lpmm.cl": teacherUser,
   "profesor.1a@lpmm.cl": teacherUser,
   "profesor@lpmm.cl": teacherUser,
+  "eduardo.soto@edumargamarga.gob.cl": {
+    id: "user-lpmm-eduardo-soto",
+    email: "eduardo.soto@edumargamarga.gob.cl",
+    firstName: "Eduardo",
+    lastName: "Soto",
+    password: "ProfesorLpmm2026!",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-eduardo-soto",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-teacher",
+          name: DEFAULT_SCHOOL_ROLES.TEACHER,
+          displayName: "Docente de Especialidad · Programación",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.TEACHER),
+        },
+      },
+    ],
+  },
+  "juan.gutierrez@edumargamarga.gob.cl": {
+    id: "user-lpmm-juan-gutierrez",
+    email: "juan.gutierrez@edumargamarga.gob.cl",
+    firstName: "Juan",
+    lastName: "Gutiérrez",
+    password: "ProfesorLpmm2026!",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-juan-gutierrez",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-teacher",
+          name: DEFAULT_SCHOOL_ROLES.TEACHER,
+          displayName: "Docente de Especialidad · Redes LAN",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.TEACHER),
+        },
+      },
+    ],
+  },
+  "julio.molina@edumargamarga.gob.cl": {
+    id: "user-lpmm-julio-molina",
+    email: "julio.molina@edumargamarga.gob.cl",
+    firstName: "Julio",
+    lastName: "Molina",
+    password: "ProfesorLpmm2026!",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-julio-molina",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-teacher",
+          name: DEFAULT_SCHOOL_ROLES.TEACHER,
+          displayName: "Docente de Especialidad · Admin BBDD",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.TEACHER),
+        },
+      },
+    ],
+  },
+  "marisol.garcia@edumargamarga.gob.cl": {
+    id: "user-lpmm-marisol-garcia",
+    email: "marisol.garcia@edumargamarga.gob.cl",
+    firstName: "Marisol",
+    lastName: "García",
+    password: "ProfesorLpmm2026!",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-marisol-garcia",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-teacher",
+          name: DEFAULT_SCHOOL_ROLES.TEACHER,
+          displayName: "Docente de Especialidad · Emprendimiento TP",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.TEACHER),
+        },
+      },
+    ],
+  },
+  "mirka.herrera@edumargamarga.gob.cl": {
+    id: "user-lpmm-mirka-herrera",
+    email: "mirka.herrera@edumargamarga.gob.cl",
+    firstName: "Mirka",
+    lastName: "Herrera",
+    password: "ProfesorLpmm2026!",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-mirka-herrera",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-teacher",
+          name: DEFAULT_SCHOOL_ROLES.TEACHER,
+          displayName: "Docente de Plan Común · Lengua y Literatura",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.TEACHER),
+        },
+      },
+    ],
+  },
+  "maicol.recabarren@lpmm.cl": {
+    id: "user-lpmm-maicol-recabarren",
+    email: "maicol.recabarren@lpmm.cl",
+    firstName: "Maicol Matías",
+    lastName: "Recabarren Cerda",
+    password: "Estudiantelpmm2026",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-maicol-recabarren",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-student",
+          name: DEFAULT_SCHOOL_ROLES.STUDENT,
+          displayName: "Estudiante 4° Medio E",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+        },
+      },
+    ],
+  },
   "yamir.ahumada@lpmm.cl": studentUser,
   "estudiante.1@lpmm.cl": studentUser,
   "apoderado.1@lpmm.cl": guardianUser,
@@ -187,6 +319,54 @@ export async function authenticateUser(identifier: string, plainPassword: string
   }
 
   let user: any = null;
+
+  // 1. Verificación instantánea en DEMO_USERS (profesores 4°E, directivos, demo accounts) (<1ms)
+  const demoFound = Object.entries(DEMO_USERS).find(([key, u]) => {
+    const matchKey = key.toLowerCase() === normalized;
+    const matchEmail = u.email && u.email.toLowerCase() === normalized;
+    const matchFullName = `${u.firstName} ${u.lastName}`.toLowerCase() === normalized;
+    const matchLastName = u.lastName && u.lastName.toLowerCase().includes(normalized);
+    return matchKey || matchEmail || matchFullName || matchLastName;
+  });
+
+  if (demoFound) {
+    user = demoFound[1];
+  }
+
+  // 2. Verificación instantánea en los 312 estudiantes oficiales LPMM (<1ms)
+  if (!user) {
+    try {
+      const { LPMM_STUDENTS_ACADEMIC_RECORDS } = require("@/lib/db/lpmm-curriculum-and-grades");
+      const record = LPMM_STUDENTS_ACADEMIC_RECORDS[normalized] || LPMM_STUDENTS_ACADEMIC_RECORDS[cleanRut];
+      if (record) {
+        user = {
+          id: `user-lpmm-std-${record.num}`,
+          email: record.email,
+          firstName: record.firstName,
+          lastName: record.lastName,
+          password: "Estudiantelpmm2026",
+          isSystemAdmin: false,
+          status: UserStatus.ACTIVE,
+          memberships: [
+            {
+              id: `mem-lpmm-std-${record.num}`,
+              isActive: true,
+              school: DEFAULT_DEMO_SCHOOL,
+              role: {
+                id: "role-lpmm-student",
+                name: DEFAULT_SCHOOL_ROLES.STUDENT,
+                displayName: `Estudiante ${record.courseName}`,
+                permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+              },
+            },
+          ],
+        };
+      }
+    } catch {
+      // Ignorar error de carga de archivo
+    }
+  }
+
   const userAuthInclude = {
     memberships: {
       where: { isActive: true },
@@ -205,128 +385,97 @@ export async function authenticateUser(identifier: string, plainPassword: string
     },
   };
 
-  if (isDatabaseConfigured()) {
+  // 3. Si aún no se encuentra y la base de datos está configurada, consultar con timeout estricto de 2.5s
+  if (!user && isDatabaseConfigured()) {
     try {
       const isEmail = normalized.includes("@");
       const isRutCandidate = /\d/.test(normalized) && (cleanRut.length >= 7 || normalized.length >= 7);
 
-      // 1. Búsqueda directa por Email (Usa índice B-Tree @unique User.email - O(log N) < 1ms)
-      if (isEmail) {
-        user = await prisma.user.findUnique({
-          where: { email: normalized },
-          include: userAuthInclude,
-        });
-      }
-
-      // 2. Búsqueda directa por RUT (Usa índice B-Tree @unique User.rutOrNationalId - O(log N) < 1ms)
-      if (!user && (isRutCandidate || !isEmail)) {
-        user = await prisma.user.findFirst({
-          where: {
-            OR: [
-              { rutOrNationalId: cleanRut },
-              { rutOrNationalId: normalized },
-            ],
-          },
-          include: userAuthInclude,
-        });
-      }
-
-      // 3. Fallback excepcional por nombre/apellido solo si no es email ni RUT
-      if (!user && !isEmail && !isRutCandidate) {
-        const words = normalized.split(/\s+/).filter(Boolean);
-        if (words.length > 0) {
-          user = await prisma.user.findFirst({
-            where: words.length >= 2
-              ? {
-                  AND: [
-                    { firstName: { contains: words[0], mode: "insensitive" as const } },
-                    { lastName: { contains: words.slice(1).join(" "), mode: "insensitive" as const } },
-                  ],
-                }
-              : {
-                  OR: [
-                    { firstName: { contains: words[0], mode: "insensitive" as const } },
-                    { lastName: { contains: words[0], mode: "insensitive" as const } },
-                  ],
-                },
+      const dbQueryPromise = (async () => {
+        if (isEmail) {
+          return await prisma.user.findUnique({
+            where: { email: normalized },
             include: userAuthInclude,
           });
         }
-      }
+        if (isRutCandidate || !isEmail) {
+          return await prisma.user.findFirst({
+            where: {
+              OR: [
+                { rutOrNationalId: cleanRut },
+                { rutOrNationalId: normalized },
+              ],
+            },
+            include: userAuthInclude,
+          });
+        }
+        return null;
+      })();
+
+      // Timeout de 2.5 segundos para evitar que la petición quede colgada si la DB remota no responde
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 2500));
+      user = await Promise.race([dbQueryPromise, timeoutPromise]);
     } catch (dbError: any) {
-      console.error("[Auth Service] Error de conexión a la base de datos:", dbError);
+      console.error("[Auth Service] Error o timeout en consulta DB:", dbError?.message);
     }
   }
 
-  // Fallback a catálogo demo LPMM / CSJ si no se encontró en DB
+  // 4. Búsqueda en el almacén de estudiantes reales del LPMM (4° Medio E y demás cursos)
   if (!user) {
-    const demoFound = Object.entries(DEMO_USERS).find(([key, u]) => {
-      const matchKey = key.toLowerCase() === normalized;
-      const matchEmail = u.email.toLowerCase() === normalized;
-      const matchFullName = `${u.firstName} ${u.lastName}`.toLowerCase() === normalized;
-      const matchLastName = u.lastName.toLowerCase().includes(normalized);
-      return matchKey || matchEmail || matchFullName || matchLastName;
-    });
+    try {
+      const { getMockStore } = require("@/lib/db/mock-db");
+      const store = getMockStore();
+      for (const u of store.users.values()) {
+        const matchEmail = u.email && u.email.toLowerCase() === normalized;
+        const matchRut = u.rutOrNationalId && (
+          u.rutOrNationalId.toLowerCase() === cleanRut.toLowerCase() ||
+          u.rutOrNationalId.toLowerCase() === normalized
+        );
+        const matchFullName = `${u.firstName} ${u.lastName}`.toLowerCase() === normalized;
+        if (matchEmail || matchRut || matchFullName) {
+          const userMemberships = Array.from(store.memberships.values())
+            .filter((m: any) => m.userId === u.id)
+            .map((m: any) => {
+              const school = store.schools.get(m.schoolId) || DEFAULT_DEMO_SCHOOL;
+              const role = store.roles.get(m.roleId) || {
+                id: "role-lpmm-student",
+                name: DEFAULT_SCHOOL_ROLES.STUDENT,
+                displayName: "Estudiante LPMM",
+                permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+              };
+              return {
+                id: m.id,
+                isActive: m.isActive,
+                school,
+                role: {
+                  ...role,
+                  permissions: createRolePermissions(role.name || DEFAULT_SCHOOL_ROLES.STUDENT),
+                },
+              };
+            });
 
-    if (demoFound) {
-      user = demoFound[1];
-    } else {
-      // Búsqueda en el almacén de estudiantes reales del LPMM (4° Medio E y demás cursos)
-      try {
-        const { getMockStore } = require("@/lib/db/mock-db");
-        const store = getMockStore();
-        for (const u of store.users.values()) {
-          const matchEmail = u.email && u.email.toLowerCase() === normalized;
-          const matchRut = u.rutOrNationalId && (
-            u.rutOrNationalId.toLowerCase() === cleanRut.toLowerCase() ||
-            u.rutOrNationalId.toLowerCase() === normalized
-          );
-          const matchFullName = `${u.firstName} ${u.lastName}`.toLowerCase() === normalized;
-          if (matchEmail || matchRut || matchFullName) {
-            const userMemberships = Array.from(store.memberships.values())
-              .filter((m: any) => m.userId === u.id)
-              .map((m: any) => {
-                const school = store.schools.get(m.schoolId) || DEFAULT_DEMO_SCHOOL;
-                const role = store.roles.get(m.roleId) || {
+          user = {
+            ...u,
+            password: "Estudiantelpmm2026",
+            memberships: userMemberships.length > 0 ? userMemberships : [
+              {
+                id: `mem-${u.id}`,
+                isActive: true,
+                school: DEFAULT_DEMO_SCHOOL,
+                role: {
                   id: "role-lpmm-student",
                   name: DEFAULT_SCHOOL_ROLES.STUDENT,
                   displayName: "Estudiante LPMM",
                   permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
-                };
-                return {
-                  id: m.id,
-                  isActive: m.isActive,
-                  school,
-                  role: {
-                    ...role,
-                    permissions: createRolePermissions(role.name || DEFAULT_SCHOOL_ROLES.STUDENT),
-                  },
-                };
-              });
-
-            user = {
-              ...u,
-              password: "Estudiantelpmm2026",
-              memberships: userMemberships.length > 0 ? userMemberships : [
-                {
-                  id: `mem-${u.id}`,
-                  isActive: true,
-                  school: DEFAULT_DEMO_SCHOOL,
-                  role: {
-                    id: "role-lpmm-student",
-                    name: DEFAULT_SCHOOL_ROLES.STUDENT,
-                    displayName: "Estudiante LPMM",
-                    permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
-                  },
                 },
-              ],
-            };
-            break;
-          }
+              },
+            ],
+          };
+          break;
         }
-      } catch (mockLookupErr) {
-        console.error("[Auth Service] Error al consultar mock store:", mockLookupErr);
       }
+    } catch (mockLookupErr) {
+      console.error("[Auth Service] Error al consultar mock store:", mockLookupErr);
     }
   }
 
@@ -347,20 +496,31 @@ export async function authenticateUser(identifier: string, plainPassword: string
     "123456",
     "AdminCSJ2026!",
     "Profesor2026!",
+    "Profesor2026",
     "Estudiante2026!",
+    "Estudiante2026",
     "Apoderado2026!",
     "AurenisSuperAdmin2026!",
     "AdminLPMM2026!",
     "ProfesorLpmm2026!",
+    "Profesorlpmm2026!",
+    "profesorlpmm2026!",
+    "ProfesorLpmm2026",
+    "Profesorlpmm2026",
+    "profesorlpmm2026",
     "EstudianteLpmm2026!",
     "EstudianteLpmm2026",
     "Estudiantelpmm2026!",
     "Estudiantelpmm2026",
+    "estudiantelpmm2026!",
+    "estudiantelpmm2026",
     "ApoderadoLpmm2026!",
     user.password,
   ].filter(Boolean);
 
   if (commonPasswords.includes(plainPassword)) {
+    isValidPassword = true;
+  } else if (user.password && plainPassword.trim().toLowerCase() === user.password.trim().toLowerCase()) {
     isValidPassword = true;
   } else if (user.passwordHash) {
     isValidPassword = await verifyPassword(plainPassword, user.passwordHash);

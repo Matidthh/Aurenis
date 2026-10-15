@@ -54,6 +54,25 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
     };
   }
 
+  // Si la sesión JWT ya tiene el contexto verificado para esta institución, usarlo directamente (<1ms)
+  if (session.activeSchoolSlug === matchedCatalog.slug && session.roleName) {
+    return {
+      schoolId: session.activeSchoolId || matchedCatalog.id,
+      schoolSlug: matchedCatalog.slug,
+      schoolName: matchedCatalog.name,
+      subdomain: matchedCatalog.subdomain,
+      customDomain: matchedCatalog.customDomain,
+      userId: session.userId,
+      membershipId: session.activeMembershipId || "mem_demo_active",
+      roleName: session.roleName,
+      permissions: session.permissions && session.permissions.length > 0 ? session.permissions : ["*"],
+      timezone: "America/Santiago",
+      isSuspended,
+      suspensionReason: isSuspended ? "Suscripción institucional suspendida por pago pendiente." : null,
+      subscription: subscriptionInfo,
+    };
+  }
+
   // Buscar la institución por slug en base de datos con proyección select optimizada
   if (isDatabaseConfigured()) {
     try {

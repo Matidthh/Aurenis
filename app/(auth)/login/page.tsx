@@ -280,7 +280,7 @@ function LoginContent() {
     setIsLoading(true);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     try {
       const res = await fetch("/api/auth/login", {
@@ -376,7 +376,7 @@ function LoginContent() {
     }
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     try {
       const res = await fetch("/api/auth/login", {
