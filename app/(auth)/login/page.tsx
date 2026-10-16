@@ -504,6 +504,7 @@ function LoginContent() {
             src="/campus-building.jpg"
             alt="Campus Educativo Moderno Aurenis"
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover object-center opacity-35"
             priority
             referrerPolicy="no-referrer"

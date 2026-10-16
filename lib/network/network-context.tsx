@@ -102,9 +102,15 @@ export function NetworkStatusProvider({ children }: { children: ReactNode }) {
       const originalFetch = window.fetch.bind(window);
 
       const customFetch = async (...args: Parameters<typeof fetch>) => {
-        // Ignorar peticiones internas de Next.js (_next/, hot-reloads, static chunks)
+        // Ignorar peticiones internas de Next.js (_next/, hot-reloads, static chunks, RSC payloads)
         const endpoint = typeof args[0] === "string" ? args[0] : (args[0] as Request)?.url || "";
-        if (endpoint.includes("/_next/") || endpoint.includes("__next") || endpoint.includes("favicon")) {
+        if (
+          endpoint.includes("/_next/") ||
+          endpoint.includes("__next") ||
+          endpoint.includes("favicon") ||
+          endpoint.includes("_rsc=") ||
+          endpoint.includes("rsc=")
+        ) {
           return originalFetch(...args);
         }
 
