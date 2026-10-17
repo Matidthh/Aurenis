@@ -62,7 +62,7 @@ import {
   getStudentAcademicRecord,
   StudentAcademicRecord,
   DetailedSubjectGrade,
-  getAllStudentsDirectory,
+  LPMM_STUDENTS_ACADEMIC_RECORDS,
 } from "@/lib/db/lpmm-curriculum-and-grades";
 
 /**
@@ -258,8 +258,21 @@ export function EstudianteDashboard({
     }
   }, [studentEmail]);
 
-  // Directorio completo con los 312 estudiantes reales del LPMM
-  const allStudents = useMemo(() => getAllStudentsDirectory(), []);
+  // Directorio completo con los estudiantes reales del LPMM
+  const allStudents = useMemo(() => {
+    if (typeof LPMM_STUDENTS_ACADEMIC_RECORDS === "object" && LPMM_STUDENTS_ACADEMIC_RECORDS !== null) {
+      const seen = new Set<string>();
+      const list: StudentAcademicRecord[] = [];
+      for (const record of Object.values(LPMM_STUDENTS_ACADEMIC_RECORDS)) {
+        if (record && record.email && !seen.has(record.email.toLowerCase())) {
+          seen.add(record.email.toLowerCase());
+          list.push(record);
+        }
+      }
+      return list;
+    }
+    return [];
+  }, []);
   const coursesList = useMemo(
     () => Array.from(new Set(allStudents.map((s) => s.courseName))),
     [allStudents]

@@ -433,6 +433,18 @@ export const LPMM_COURSE_SUBJECTS: Record<string, any[]> = ${JSON.stringify(cour
 
 export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecord> = ${JSON.stringify(studentDatabase, null, 2)};
 
+export function getAllStudentsDirectory(): StudentAcademicRecord[] {
+  const seen = new Set<string>();
+  const list: StudentAcademicRecord[] = [];
+  for (const record of Object.values(LPMM_STUDENTS_ACADEMIC_RECORDS)) {
+    if (record && record.email && !seen.has(record.email.toLowerCase())) {
+      seen.add(record.email.toLowerCase());
+      list.push(record);
+    }
+  }
+  return list;
+}
+
 export function getStudentAcademicRecord(identifier: string): StudentAcademicRecord | null {
   if (!identifier) return null;
   const clean = identifier.trim().toLowerCase();

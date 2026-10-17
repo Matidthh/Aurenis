@@ -46,3 +46,7 @@ next-env.d.ts
 # Bun lockfiles (use npm)
 bun.lock
 bun.lockb
+
+# Local IDE & agent storage
+.antigravity/
+.vscode/
