@@ -464527,6 +464527,14 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
   }
 };
 
+
+/**
+ * Retorna el directorio completo de estudiantes reales del LPMM.
+ */
+export function getAllStudentsDirectory(): StudentAcademicRecord[] {
+  return Object.values(LPMM_STUDENTS_ACADEMIC_RECORDS);
+}
+
 export function getStudentAcademicRecord(identifier: string): StudentAcademicRecord | null {
   if (!identifier) return null;
   const clean = identifier.trim().toLowerCase();
