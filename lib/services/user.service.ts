@@ -7,6 +7,8 @@ import { sessionStore } from "@/lib/auth/session-store";
 import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "@/lib/constants/roles";
 import { PERMISSIONS } from "@/lib/constants/permissions";
 import { getSchoolBySlug, SCHOOLS_CATALOG } from "./school.service";
+import { LPMM_STUDENTS_ACADEMIC_RECORDS } from "@/lib/db/lpmm-curriculum-and-grades";
+import { getMockStore } from "@/lib/db/mock-db";
 
 export class UserServiceError extends Error {
   statusCode: number;
@@ -336,7 +338,6 @@ export async function authenticateUser(identifier: string, plainPassword: string
   // 2. Verificación instantánea en los 312 estudiantes oficiales LPMM (<1ms)
   if (!user) {
     try {
-      const { LPMM_STUDENTS_ACADEMIC_RECORDS } = require("@/lib/db/lpmm-curriculum-and-grades");
       const record = LPMM_STUDENTS_ACADEMIC_RECORDS[normalized] || LPMM_STUDENTS_ACADEMIC_RECORDS[cleanRut];
       if (record) {
         user = {
@@ -423,7 +424,6 @@ export async function authenticateUser(identifier: string, plainPassword: string
   // 4. Búsqueda en el almacén de estudiantes reales del LPMM (4° Medio E y demás cursos)
   if (!user) {
     try {
-      const { getMockStore } = require("@/lib/db/mock-db");
       const store = getMockStore();
       for (const u of store.users.values()) {
         const matchEmail = u.email && u.email.toLowerCase() === normalized;
