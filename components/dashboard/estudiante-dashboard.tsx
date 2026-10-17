@@ -120,7 +120,7 @@ interface UpcomingActivity {
   subject: string;
   date: string;
   daysRemainingText: string;
-  type: "Prueba Sumativa" | "Guía de Ejercicios" | "Trabajo Práctico" | "Taller";
+  type: "Prueba Sumativa" | "Guía de Ejercicios" | "Trabajo Práctico" | "Taller" | "Taller Práctico";
   priority: "Alta" | "Media" | "Normal";
   syllabus: string;
 }
