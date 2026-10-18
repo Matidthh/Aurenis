@@ -110,11 +110,11 @@ export function ProtectedRoute({
         id="protected-route-loading"
         className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center"
       >
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 mb-4 animate-pulse">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-brand-50 dark:bg-brand-950/50 text-brand-600 dark:text-brand-400 mb-4 animate-pulse">
           <Lock className="w-6 h-6" />
         </div>
         <div className="flex items-center space-x-2 text-slate-700 dark:text-slate-300 font-medium text-sm">
-          <Loader2 className="w-4 h-4 animate-spin text-blue-600 dark:text-blue-400" />
+          <Loader2 className="w-4 h-4 animate-spin text-brand-600 dark:text-brand-400" />
           <span>Verificando autorización y credenciales...</span>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">

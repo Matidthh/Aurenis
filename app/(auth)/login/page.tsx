@@ -493,7 +493,7 @@ function LoginContent() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8FAFC] text-[#0F172A] selection:bg-[#3B82F6] selection:text-white font-sans antialiased">
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8FAFC] text-[#0F172A] selection:bg-brand-500 selection:text-white font-sans antialiased">
       {/* =========================================================================
           COLUMNA IZQUIERDA: HERO PANEL INSTITUCIONAL (Desktop 1280px+ & Tablet 768px-1024px)
           ========================================================================= */}
@@ -602,7 +602,7 @@ function LoginContent() {
 
           <Link
             href="/select-school"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-[#3B82F6] hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-500 hover:underline"
           >
             <span>Ver Colegios</span>
           </Link>
@@ -613,7 +613,7 @@ function LoginContent() {
           <div className="flex items-center justify-center mb-6">
             <Link
               href="/"
-              className="inline-flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] rounded-xl"
+              className="inline-flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-xl"
               aria-label="Ir al portal principal de Aurenis"
             >
               <AurenisLogo
@@ -684,7 +684,7 @@ function LoginContent() {
                     "w-full h-11 sm:h-12 rounded-xl border bg-white px-3.5 pl-10 text-sm text-[#0F172A] placeholder:text-[#94A3B8] transition-all focus:outline-none",
                     errors.identifier
                       ? "border-[#EF4444] text-[#0F172A] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20"
-                      : "border-[#E2E8F0] hover:border-slate-300 focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
+                      : "border-[#E2E8F0] hover:border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                   )}
                 />
               </div>
@@ -734,13 +734,13 @@ function LoginContent() {
                     "w-full h-11 sm:h-12 rounded-xl border bg-white px-3.5 pl-10 pr-10 text-sm text-[#0F172A] placeholder:text-[#94A3B8] transition-all focus:outline-none",
                     errors.password
                       ? "border-[#EF4444] text-[#0F172A] focus:border-[#EF4444] focus:ring-2 focus:ring-[#EF4444]/20"
-                      : "border-[#E2E8F0] hover:border-slate-300 focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
+                      : "border-[#E2E8F0] hover:border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                   )}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 p-1 text-[#64748B] hover:text-[#0F172A] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] rounded-md cursor-pointer"
+                  className="absolute right-3 p-1 text-[#64748B] hover:text-[#0F172A] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-md cursor-pointer"
                   aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
                   aria-pressed={showPassword}
                 >
@@ -777,7 +777,7 @@ function LoginContent() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-[#CBD5E1] text-[#3B82F6] focus:ring-[#3B82F6] transition cursor-pointer"
+                  className="w-4 h-4 rounded border-[#CBD5E1] text-brand-500 focus:ring-brand-500 transition cursor-pointer"
                 />
                 <span>Recordarme</span>
               </label>
@@ -785,7 +785,7 @@ function LoginContent() {
               <button
                 type="button"
                 onClick={() => setIsHelpModalOpen(true)}
-                className="text-xs sm:text-sm font-medium text-[#3B82F6] hover:text-[#2563EB] hover:underline transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] rounded"
+                className="text-xs sm:text-sm font-medium text-brand-500 hover:text-brand-600 hover:underline transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -796,7 +796,7 @@ function LoginContent() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-11 sm:h-12 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] active:bg-[#1D4ED8] text-white font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6] focus-visible:ring-offset-2"
+                className="w-full h-11 sm:h-12 rounded-xl bg-brand-500 hover:bg-brand-600 active:bg-brand-700 text-white font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
               >
                 {isLoading && !activeDemoId ? (
                   <>
@@ -827,7 +827,7 @@ function LoginContent() {
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="w-full h-11 sm:h-12 rounded-xl border border-[#E2E8F0] bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0F172A] font-medium text-sm transition-all flex items-center justify-center gap-2.5 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]"
+            className="w-full h-11 sm:h-12 rounded-xl border border-[#E2E8F0] bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0F172A] font-medium text-sm transition-all flex items-center justify-center gap-2.5 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           >
             <GoogleIcon className="w-4 h-4" />
             <span>Continuar con Google</span>
@@ -839,7 +839,7 @@ function LoginContent() {
             <button
               type="button"
               onClick={() => setIsContactModalOpen(true)}
-              className="font-medium text-[#3B82F6] hover:text-[#2563EB] hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#3B82F6] rounded"
+              className="font-medium text-brand-500 hover:text-brand-600 hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-500 rounded"
             >
               Contacta con tu institución
             </button>
@@ -850,7 +850,7 @@ function LoginContent() {
             <button
               type="button"
               onClick={() => setIsDemoModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-slate-500 hover:text-[#3B82F6] hover:bg-blue-50/80 transition-colors cursor-pointer border border-transparent hover:border-blue-200"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-slate-500 hover:text-brand-500 hover:bg-brand-50/80 transition-colors cursor-pointer border border-transparent hover:border-brand-200"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               <span>Modo Demostración y Cuentas de Prueba</span>
@@ -876,8 +876,8 @@ function LoginContent() {
         </ModalHeader>
         <ModalBody>
           <div className="space-y-4 text-xs sm:text-sm text-slate-600">
-            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 flex items-start gap-2.5">
-              <HelpCircle className="w-5 h-5 text-[#3B82F6] shrink-0 mt-0.5" />
+            <div className="p-3.5 rounded-xl bg-brand-50 border border-brand-200 text-brand-900 flex items-start gap-2.5">
+              <HelpCircle className="w-5 h-5 text-brand-500 shrink-0 mt-0.5" />
               <p className="leading-relaxed text-xs">
                 Por normativa del Ministerio de Educación de Chile (Circular 482) y estándares de resguardo de datos de estudiantes, la regeneración de credenciales se realiza de forma presencial o validada institucionalmente.
               </p>
@@ -922,7 +922,7 @@ function LoginContent() {
           <div className="space-y-4 text-xs sm:text-sm text-slate-600">
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
               <div className="flex items-center gap-2 text-sm font-semibold text-[#0F172A]">
-                <School className="w-4 h-4 text-[#3B82F6]" />
+                <School className="w-4 h-4 text-brand-500" />
                 <span>¿Tu colegio ya utiliza Aurenis?</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
@@ -930,9 +930,9 @@ function LoginContent() {
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
+            <div className="p-4 rounded-xl bg-brand-50 border border-brand-200 space-y-2">
               <div className="flex items-center gap-2 text-sm font-semibold text-[#0F172A]">
-                <Phone className="w-4 h-4 text-[#3B82F6]" />
+                <Phone className="w-4 h-4 text-brand-500" />
                 <span>¿Deseas incorporar Aurenis a tu colegio?</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed">
@@ -942,7 +942,7 @@ function LoginContent() {
                 <Link
                   href="/#planes"
                   onClick={() => setIsContactModalOpen(false)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#3B82F6] hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-500 hover:underline"
                 >
                   <span>Ver Planes y Financiamiento SEP</span>
                   <ArrowRight className="w-3.5 h-3.5" />

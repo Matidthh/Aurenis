@@ -60,7 +60,7 @@ export default function GlobalError({
             <button
               type="button"
               onClick={() => reset()}
-              style={{ padding: "10px 16px", borderRadius: 10, backgroundColor: "#2563eb", color: "#ffffff", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+              style={{ padding: "10px 16px", borderRadius: 10, backgroundColor: "#016fc7", color: "#ffffff", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
             >
               Reintentar
             </button>

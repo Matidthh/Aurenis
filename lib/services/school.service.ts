@@ -240,7 +240,7 @@ export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
       minPassingGrade: 4.0,
       minGrade: 1.0,
       maxGrade: 7.0,
-      primaryColor: "#2563eb",
+      primaryColor: "#016fc7",
       gradeScalePrecision: 1,
     },
     _count: {

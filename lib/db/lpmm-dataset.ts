@@ -661,7 +661,7 @@ export function populateLpmmStore(store: any) {
     minGrade: 1.0,
     maxGrade: 7.0,
     gradeScalePrecision: 1,
-    primaryColor: "#2563eb",
+    primaryColor: "#016fc7",
     requireAttendanceNote: false,
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),

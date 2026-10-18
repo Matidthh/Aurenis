@@ -19,7 +19,7 @@ export function AurenisLogo({
   className = "w-9 h-9",
   imageClassName = "object-contain",
   textClassName = "text-slate-900 dark:text-white text-lg font-black tracking-tight",
-  subtitleClassName = "text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-blue-400",
+  subtitleClassName = "text-[10px] uppercase font-bold tracking-wider text-brand-600 dark:text-brand-400",
   showText = true,
   subtitle,
   preferSvg = false,

@@ -45,9 +45,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     // 1. Estilos por Variante (WCAG AA validado)
     const variantStyles: Record<ButtonVariant, string> = {
-      // Primary sólido Brand 600 (#2563eb / #1d4ed8) con texto blanco de alto contraste (4.82:1)
+      // Primary sólido Brand 600 (#016fc7 / #0258a1) con texto blanco de alto contraste (4.82:1)
       primary:
-        "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white shadow-xs font-semibold",
+        "bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white shadow-xs font-semibold",
       // Secondary neutral para acciones de apoyo
       secondary:
         "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-medium",
@@ -78,7 +78,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // 3. Foco Visible Accesible (WCAG 2.4.7 Focus Visible)
     const focusStyles =
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900";
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900";
 
     const isDisabled = disabled || isLoading;
     const isNeumo = variant === "neumorphic" || neumorphic;

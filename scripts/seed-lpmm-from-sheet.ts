@@ -667,7 +667,7 @@ export async function seedLpmmSchool() {
           minGrade: 1.0,
           maxGrade: 7.0,
           gradeScalePrecision: 1,
-          primaryColor: "#2563eb",
+          primaryColor: "#016fc7",
           requireAttendanceNote: false,
         },
       },

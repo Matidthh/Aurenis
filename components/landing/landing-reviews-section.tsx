@@ -166,7 +166,7 @@ export function LandingReviewsSection() {
         {/* ENCABEZADO DE LA SECCIÓN EN EL HOME */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#2563EB] text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-600 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Reseñas de la Comunidad • Tablas BBDD: wp_reviews</span>
             </div>
@@ -184,7 +184,7 @@ export function LandingReviewsSection() {
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold shadow-xs transition cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold shadow-xs transition cursor-pointer"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Dejar Reseña</span>

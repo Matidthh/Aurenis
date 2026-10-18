@@ -38,7 +38,7 @@ function buildPasswordResetHtmlTemplate(input: PasswordResetEmailInput): string 
         .container { max-width: 580px; margin: 30px auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .header { background-color: #0a1128; padding: 24px; text-align: center; color: #ffffff; }
         .content { padding: 32px; text-align: left; }
-        .button { display: inline-block; background-color: #2563eb; color: #ffffff; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 12px; margin: 20px 0; text-align: center; }
+        .button { display: inline-block; background-color: #016fc7; color: #ffffff; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 12px; margin: 20px 0; text-align: center; }
         .footer { background-color: #f1f5f9; padding: 16px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; }
         .warning { background-color: #fffbebf8; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; font-size: 12px; color: #92400e; margin-top: 20px; }
       </style>
