@@ -845,7 +845,7 @@ export function EstudianteDashboard({
             <AcademicSummaryCard
               title="Próxima Evaluación"
               value={upcomingActivities[0]?.daysRemainingText || "En 3 días"}
-              subtitle={upcomingActivities[0]?.subject || subjectsData[0]?.name}
+              subtitle={upcomingActivities[0]?.subject || (subjectsData && subjectsData.length > 0 ? subjectsData[0].name : "Sin información")}
               badgeLabel={upcomingActivities[0]?.type || "Prueba"}
               icon={Calendar}
               accentColor="indigo"
