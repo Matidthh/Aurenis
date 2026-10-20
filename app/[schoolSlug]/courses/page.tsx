@@ -83,7 +83,7 @@ export default async function CoursesPage({
                 Malla de Asignaturas
               </div>
               <p className="text-xs text-slate-500 truncate">
-                {course.subjects.map((s: { name: string }) => s.name).join(", ") || "Sin asignaturas inscritas"}
+                {(course.subjects || []).map((s: { name: string }) => s?.name || "").filter(Boolean).join(", ") || "Sin asignaturas inscritas"}
               </p>
             </div>
           </div>

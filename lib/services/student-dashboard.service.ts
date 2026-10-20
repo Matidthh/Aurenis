@@ -49,15 +49,31 @@ export interface StudentDashboardData {
 }
 
 export function getStudentDashboardData(identifier?: string): StudentDashboardData {
-  const record = getStudentAcademicRecord(identifier || "yamir.ahumada@lpmm.cl") ||
-    getStudentAcademicRecord("yamir.ahumada@lpmm.cl")!;
+  const record =
+    getStudentAcademicRecord(identifier || "yamir.ahumada@lpmm.cl") ||
+    getStudentAcademicRecord("yamir.ahumada@lpmm.cl") || {
+      num: 1,
+      fullName: "Estudiante Aurenis",
+      firstName: "Estudiante",
+      lastName: "Aurenis",
+      email: identifier || "estudiante@lpmm.cl",
+      rut: "12.345.678-9",
+      courseName: "1° Medio A",
+      courseCode: "1A",
+      grade: 1,
+      letter: "A",
+      specialty: "Plan Común",
+      overallGpa: 6.0,
+      overallAttendance: 95.0,
+      subjects: [],
+    };
 
-  const subjects = record.subjects;
-  const totalPassed = subjects.filter((s) => s.currentAvg >= 4.0).length;
-  const totalAtRisk = subjects.filter((s) => s.currentAvg < 4.0).length;
+  const subjects = record.subjects || [];
+  const totalPassed = subjects.filter((s) => (s?.currentAvg ?? 0) >= 4.0).length;
+  const totalAtRisk = subjects.filter((s) => (s?.currentAvg ?? 0) < 4.0).length;
 
   // Build daily schedule tailored to student's course subjects
-  const sampleSubjects = subjects.slice(0, 5);
+  const sampleSubjects = subjects.length > 0 ? subjects.slice(0, 5) : [];
   const timeSlots = [
     "08:00 - 09:30",
     "09:45 - 11:15",
@@ -67,13 +83,13 @@ export function getStudentDashboardData(identifier?: string): StudentDashboardDa
   ];
 
   const schedule = timeSlots.map((slot, idx) => {
-    const sub = sampleSubjects[idx] || subjects[0];
+    const sub = sampleSubjects[idx] || (subjects.length > 0 ? subjects[0] : null);
     return {
       id: `block-${idx + 1}`,
       timeRange: slot,
-      subject: sub.name,
-      teacher: sub.teacher,
-      room: sub.room,
+      subject: sub?.name || "Asignatura Escolar",
+      teacher: sub?.teacher || "Docente Asignado",
+      room: sub?.room || "Sala de Clases",
       isCurrent: idx === 1,
       isPast: idx === 0,
     };

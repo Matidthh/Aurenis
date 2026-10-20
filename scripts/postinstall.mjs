@@ -20,7 +20,24 @@ async function runPostinstall() {
     console.warn("[postinstall] Notice: prisma generate deferred or handled gracefully:", err?.message || err);
   }
 
-  // 2. Ensure Next.js manifest directories exist to prevent dev/build crashes
+  // 2. LPMM Real Curriculum & Dataset Generation
+  try {
+    const lpmmDataFile = path.join(root, "lib", "db", "lpmm-curriculum-and-grades.ts");
+    if (!fs.existsSync(lpmmDataFile)) {
+      console.log("[postinstall] Generating lib/db/lpmm-curriculum-and-grades.ts...");
+      const localTsx = path.join(root, "node_modules", ".bin", "tsx");
+      const scriptPath = path.join(root, "scripts", "build-lpmm-curriculum-and-grades.ts");
+      if (fs.existsSync(localTsx)) {
+        execSync(`"${localTsx}" "${scriptPath}"`, { stdio: "inherit", timeout: 30000 });
+      } else {
+        execSync(`npx tsx "${scriptPath}"`, { stdio: "inherit", timeout: 30000 });
+      }
+    }
+  } catch (err) {
+    console.warn("[postinstall] Warning: build-lpmm-curriculum-and-grades failed:", err?.message || err);
+  }
+
+  // 3. Ensure Next.js manifest directories exist to prevent dev/build crashes
   try {
     const nextDir = path.join(root, ".next");
     const serverDir = path.join(nextDir, "server");

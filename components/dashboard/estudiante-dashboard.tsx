@@ -245,6 +245,99 @@ const DEFAULT_RICE_ARTICLES: RiceArticle[] = [
   },
 ];
 
+const DEFAULT_FALLBACK_SUBJECTS: DetailedSubjectGrade[] = [
+  {
+    id: "sub-len",
+    code: "LEN-101",
+    name: "Lengua y Literatura",
+    category: "Plan Común",
+    teacher: "Prof. Alejandro Sepúlveda",
+    room: "Sala 12",
+    weeklyHours: 6,
+    currentAvg: 6.2,
+    grades: [
+      { id: "g1", label: "Control de Lectura", value: 6.5, date: "15/03" },
+      { id: "g2", label: "Ensayo Argumentativo", value: 5.9, date: "18/04" },
+      { id: "g3", label: "Evaluación Sumativa", value: 6.2, date: "22/05" },
+      { id: "g4", label: "Comprensión Crítica", value: null, date: "24/10" },
+    ],
+  },
+  {
+    id: "sub-mat",
+    code: "MAT-101",
+    name: "Matemática",
+    category: "Plan Común",
+    teacher: "Prof. Rodrigo Castro",
+    room: "Laboratorio A",
+    weeklyHours: 6,
+    currentAvg: 5.8,
+    grades: [
+      { id: "g1", label: "Álgebra y Funciones", value: 5.5, date: "12/03" },
+      { id: "g2", label: "Geometría Analítica", value: 6.0, date: "14/04" },
+      { id: "g3", label: "Probabilidades", value: 5.9, date: "19/05" },
+      { id: "g4", label: "Evaluación Unidad 3", value: null, date: "28/10" },
+    ],
+  },
+  {
+    id: "sub-his",
+    code: "HIS-101",
+    name: "Historia, Geografía y Cs. Sociales",
+    category: "Plan Común",
+    teacher: "Prof. Marcela Silva",
+    room: "Sala 14",
+    weeklyHours: 4,
+    currentAvg: 6.4,
+    grades: [
+      { id: "g1", label: "Procesos Históricos", value: 6.5, date: "10/03" },
+      { id: "g2", label: "Ciudadanía y Sociedad", value: 6.3, date: "12/04" },
+      { id: "g3", label: "Informe de Investigación", value: null, date: "30/10" },
+    ],
+  },
+  {
+    id: "sub-cie",
+    code: "CIE-101",
+    name: "Ciencias Naturales (Biología/Física)",
+    category: "Plan Común",
+    teacher: "Prof. Carlos Gómez",
+    room: "Lab Ciencias",
+    weeklyHours: 4,
+    currentAvg: 6.0,
+    grades: [
+      { id: "g1", label: "Laboratorio Célula", value: 6.0, date: "20/03" },
+      { id: "g2", label: "Evaluación Mecánica", value: 6.0, date: "25/04" },
+    ],
+  },
+  {
+    id: "sub-ing",
+    code: "ING-101",
+    name: "Idioma Extranjero Inglés",
+    category: "Plan Común",
+    teacher: "Prof. Evelyn Soto",
+    room: "Sala Multimedia",
+    weeklyHours: 3,
+    currentAvg: 6.5,
+    grades: [
+      { id: "g1", label: "Oral Presentation", value: 6.8, date: "18/03" },
+      { id: "g2", label: "Reading Comprehension", value: 6.2, date: "22/04" },
+    ],
+  },
+  {
+    id: "sub-tp1",
+    code: "TP-101",
+    name: "Redes de Datos y Conectividad",
+    category: "Especialidad TP",
+    teacher: "Prof. Marcos Valenzuela",
+    room: "Taller Telecomunicaciones",
+    weeklyHours: 8,
+    currentAvg: 6.3,
+    grades: [
+      { id: "g1", label: "Configuración Switches", value: 6.5, date: "05/04" },
+      { id: "g2", label: "Cableado Estructurado", value: 6.1, date: "15/05" },
+      { id: "g3", label: "Topologías de Red", value: null, date: "04/11" },
+    ],
+  },
+];
+
 export function EstudianteDashboard({
   schoolSlug,
   studentName,
@@ -255,24 +348,28 @@ export function EstudianteDashboard({
   isStudentSelf = false,
   availableDemoStudents = [],
 }: EstudianteDashboardProps) {
-  // Inicialización limpia del registro del estudiante sin importar la DB al cliente
+  // Inicialización limpia del registro del estudiante con respaldo de seguridad
   const [currentStudent, setCurrentStudent] = useState<StudentAcademicRecord>(() => {
-    if (initialRecord) return initialRecord;
+    if (initialRecord && initialRecord.subjects && initialRecord.subjects.length > 0) {
+      return initialRecord;
+    }
     return {
-      num: 1,
-      fullName: studentName || "Estudiante Aurenis",
-      firstName: studentName?.split(" ")[0] || "Estudiante",
-      lastName: studentName?.split(" ").slice(1).join(" ") || "",
-      email: studentEmail || "estudiante@lpmm.cl",
-      rut: studentRut || "12.345.678-9",
-      courseName: courseName || "1° Medio A",
-      courseCode: "1A",
-      grade: 1,
-      letter: "A",
-      specialty: "Plan Común",
-      overallGpa: 6.0,
-      overallAttendance: 95.0,
-      subjects: [],
+      num: initialRecord?.num || 1,
+      fullName: initialRecord?.fullName || studentName || "Estudiante Aurenis",
+      firstName: initialRecord?.firstName || studentName?.split(" ")[0] || "Estudiante",
+      lastName: initialRecord?.lastName || studentName?.split(" ").slice(1).join(" ") || "",
+      email: initialRecord?.email || studentEmail || "yamir.ahumada@lpmm.cl",
+      rut: initialRecord?.rut || studentRut || "12.345.678-9",
+      courseName: initialRecord?.courseName || courseName || "1° Medio A",
+      courseCode: initialRecord?.courseCode || "1A",
+      grade: initialRecord?.grade || 1,
+      letter: initialRecord?.letter || "A",
+      specialty: initialRecord?.specialty || "Plan Común",
+      overallGpa: initialRecord?.overallGpa || 6.1,
+      overallAttendance: initialRecord?.overallAttendance || 95.0,
+      subjects: (initialRecord?.subjects && initialRecord.subjects.length > 0)
+        ? initialRecord.subjects
+        : DEFAULT_FALLBACK_SUBJECTS,
     };
   });
 
@@ -282,11 +379,41 @@ export function EstudianteDashboard({
   );
 
   React.useEffect(() => {
-    if (initialRecord) {
+    if (initialRecord && initialRecord.subjects && initialRecord.subjects.length > 0) {
       setCurrentStudent(initialRecord);
       setSelectedStudentEmail(initialRecord.email);
+      return;
     }
-  }, [initialRecord]);
+
+    let isCancelled = false;
+    const loadStudentData = async () => {
+      try {
+        setIsLoadingStudent(true);
+        const targetEmail = selectedStudentEmail || studentEmail || "yamir.ahumada@lpmm.cl";
+        const res = await fetch(
+          `/api/${schoolSlug}/student-dashboard?email=${encodeURIComponent(targetEmail)}`
+        );
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!isCancelled && json.success && json.data?.data) {
+          const d = json.data.data;
+          setCurrentStudent({
+            ...d.student,
+            subjects: (d.subjects && d.subjects.length > 0) ? d.subjects : DEFAULT_FALLBACK_SUBJECTS,
+          });
+        }
+      } catch (err) {
+        // En caso de desconexión se conservan los ramos de respaldo
+      } finally {
+        if (!isCancelled) setIsLoadingStudent(false);
+      }
+    };
+
+    loadStudentData();
+    return () => {
+      isCancelled = true;
+    };
+  }, [initialRecord, schoolSlug, selectedStudentEmail, studentEmail]);
 
   // Manejador seguro para inspectores/docentes que revisan fichas de alumnos
   const handleSelectDemoStudent = async (email: string) => {
@@ -302,7 +429,7 @@ export function EstudianteDashboard({
         const d = json.data.data;
         setCurrentStudent({
           ...d.student,
-          subjects: d.subjects || [],
+          subjects: (d.subjects && d.subjects.length > 0) ? d.subjects : DEFAULT_FALLBACK_SUBJECTS,
         });
       }
     } catch (err) {
@@ -318,7 +445,10 @@ export function EstudianteDashboard({
   const activeStudentRut = currentStudent.rut;
   const activeCourseName = currentStudent.courseName;
   const activeSpecialty = currentStudent.specialty;
-  const subjectsData: DetailedSubjectGrade[] = currentStudent.subjects;
+  const subjectsData: DetailedSubjectGrade[] =
+    currentStudent.subjects && currentStudent.subjects.length > 0
+      ? currentStudent.subjects
+      : DEFAULT_FALLBACK_SUBJECTS;
 
   // Estados de navegación
   const [activeTab, setActiveTab] = useState<TabType>("resumen");
@@ -396,8 +526,8 @@ export function EstudianteDashboard({
   // Promedio ponderado acumulado oficial
   const overallAverage = useMemo(() => {
     if (currentStudent.overallGpa > 0) return currentStudent.overallGpa.toFixed(1);
-    const validSubs = subjectsData.filter((s) => s.grades.length > 0);
-    const sum = validSubs.reduce((acc, curr) => acc + curr.currentAvg, 0);
+    const validSubs = (subjectsData || []).filter((s) => s && s.grades && s.grades.length > 0);
+    const sum = validSubs.reduce((acc, curr) => acc + (curr?.currentAvg || 0), 0);
     return validSubs.length > 0 ? (sum / validSubs.length).toFixed(1) : "6.0";
   }, [currentStudent, subjectsData]);
 
@@ -411,47 +541,57 @@ export function EstudianteDashboard({
       { id: "b3", timeRange: "11:30 - 13:00", isCurrent: false, isPast: false },
       { id: "b4", timeRange: "14:00 - 15:30", isCurrent: false, isPast: false },
     ];
+    if (!subjectsData || subjectsData.length === 0) {
+      return slots.map((s) => ({
+        ...s,
+        subject: "Asignatura Escolar",
+        teacher: "Docente Asignado",
+        room: "Sala de Clases",
+      }));
+    }
     return slots.map((slot, idx) => {
       const sub = subjectsData[idx % subjectsData.length] || subjectsData[0];
       return {
         ...slot,
-        subject: sub.name,
-        teacher: sub.teacher,
-        room: sub.room,
+        subject: sub?.name || "Asignatura Escolar",
+        teacher: sub?.teacher || "Docente Asignado",
+        room: sub?.room || "Sala de Clases",
       };
     });
   }, [subjectsData]);
 
   // Próximas evaluaciones amigables
   const upcomingActivities: UpcomingActivity[] = useMemo(() => {
+    if (!subjectsData || subjectsData.length === 0) return [];
     const countdowns = ["En 3 días", "Próximo Martes", "En 10 días"];
     const priorities: ("Alta" | "Media" | "Normal")[] = ["Alta", "Media", "Normal"];
 
-    return subjectsData.slice(0, 3).map((sub, idx) => {
+    return (subjectsData || []).slice(0, 3).map((sub, idx) => {
       if (!sub) return null;
-      const pendingGrade = sub.grades.find((g) => g.value === null);
+      const pendingGrade = sub.grades?.find((g) => g.value === null);
       return {
         id: `act-${idx + 1}`,
         title: pendingGrade?.label || `Evaluación de Unidad N°${idx + 1}`,
-        subject: sub.name,
+        subject: sub?.name || "Asignatura Escolar",
         date: pendingGrade?.date ? `Viernes ${pendingGrade.date}` : `Octubre ${18 + idx * 4}`,
         daysRemainingText: countdowns[idx] || "Próximamente",
         type: idx === 0 ? "Prueba Sumativa" : idx === 1 ? "Taller Práctico" : "Guía de Ejercicios",
         priority: priorities[idx] || "Normal",
-        syllabus: `Contenidos prioritarios de ${sub.name}. Recuerda repasar tus apuntes y guías de estudio para la evaluación.`,
+        syllabus: `Contenidos prioritarios de ${sub?.name || "la asignatura"}. Recuerda repasar tus apuntes y guías de estudio para la evaluación.`,
       };
     }).filter(Boolean) as UpcomingActivity[];
   }, [subjectsData]);
 
   // Filtrado de asignaturas en pestaña de notas
   const filteredSubjects = useMemo(() => {
+    if (!subjectsData || subjectsData.length === 0) return [];
     if (!subjectSearch.trim()) return subjectsData;
     const q = subjectSearch.toLowerCase();
     return subjectsData.filter(
       (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.teacher.toLowerCase().includes(q) ||
-        s.code.toLowerCase().includes(q)
+        (s?.name || "").toLowerCase().includes(q) ||
+        (s?.teacher || "").toLowerCase().includes(q) ||
+        (s?.code || "").toLowerCase().includes(q)
     );
   }, [subjectsData, subjectSearch]);
 
@@ -475,43 +615,43 @@ export function EstudianteDashboard({
   }, [commsFilter]);
 
   // Asignaturas aprobando
-  const passingSubjectsCount = subjectsData.filter((s) => s.currentAvg >= 4.0).length;
+  const passingSubjectsCount = (subjectsData || []).filter((s) => (s?.currentAvg ?? 0) >= 4.0).length;
 
   // Detección de ciclo formativo (1°/2° Medio vs 3°/4° Medio)
   const isJuniorLevel =
     (currentStudent.grade !== undefined && currentStudent.grade <= 2) ||
-    activeCourseName.startsWith("1°") ||
-    activeCourseName.startsWith("2°");
+    (activeCourseName || "").startsWith("1°") ||
+    (activeCourseName || "").startsWith("2°");
   const isSeniorLevel = !isJuniorLevel;
 
   // Ramos clasificados por categoría curricular real
   const especialidadSubjects = useMemo(
-    () => subjectsData.filter((s) => s.category === "Especialidad TP"),
+    () => (subjectsData || []).filter((s) => s && s.category === "Especialidad TP"),
     [subjectsData]
   );
   const planComunSubjects = useMemo(
-    () => subjectsData.filter((s) => s.category === "Plan Común"),
+    () => (subjectsData || []).filter((s) => s && s.category !== "Especialidad TP"),
     [subjectsData]
   );
 
   // Estadísticas de carga horaria y promedio de especialidad
   const totalWeeklyHours = useMemo(
-    () => subjectsData.reduce((acc, curr) => acc + (curr.weeklyHours || 4), 0),
+    () => (subjectsData || []).reduce((acc, curr) => acc + (curr?.weeklyHours || 4), 0),
     [subjectsData]
   );
   const especialidadWeeklyHours = useMemo(
-    () => especialidadSubjects.reduce((acc, curr) => acc + (curr.weeklyHours || 6), 0),
+    () => (especialidadSubjects || []).reduce((acc, curr) => acc + (curr?.weeklyHours || 6), 0),
     [especialidadSubjects]
   );
   const specialtyGpa = useMemo(() => {
     if (especialidadSubjects.length === 0) return null;
-    const sum = especialidadSubjects.reduce((acc, curr) => acc + curr.currentAvg, 0);
+    const sum = especialidadSubjects.reduce((acc, curr) => acc + (curr?.currentAvg || 0), 0);
     return (sum / especialidadSubjects.length).toFixed(1);
   }, [especialidadSubjects]);
 
   // Filtrado de ramos según selector de ciclo y buscador
   const filteredRamos = useMemo(() => {
-    let list = subjectsData;
+    let list = subjectsData || [];
     if (ramosFilter === "especialidad") {
       list = especialidadSubjects;
     } else if (ramosFilter === "plan_comun") {
@@ -522,10 +662,10 @@ export function EstudianteDashboard({
     const q = ramosSearch.toLowerCase();
     return list.filter(
       (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.teacher.toLowerCase().includes(q) ||
-        s.code.toLowerCase().includes(q) ||
-        s.room.toLowerCase().includes(q)
+        (s?.name || "").toLowerCase().includes(q) ||
+        (s?.teacher || "").toLowerCase().includes(q) ||
+        (s?.code || "").toLowerCase().includes(q) ||
+        (s?.room || "").toLowerCase().includes(q)
     );
   }, [subjectsData, ramosFilter, especialidadSubjects, planComunSubjects, ramosSearch]);
 
@@ -720,19 +860,19 @@ export function EstudianteDashboard({
                     <div className="space-y-1 max-h-60 overflow-y-auto">
                       {availableDemoStudents.map((st) => (
                         <button
-                          key={st.email}
+                          key={st?.email || Math.random()}
                           type="button"
-                          onClick={() => handleSelectDemoStudent(st.email)}
+                          onClick={() => st?.email && handleSelectDemoStudent(st.email)}
                           className={cn(
                             "w-full text-left p-2.5 rounded-xl text-xs transition flex flex-col gap-0.5 cursor-pointer",
-                            currentStudent.email === st.email
+                            currentStudent.email === st?.email
                               ? "bg-[#0c8ee9]/10 text-[#0c8ee9] font-bold border border-[#0c8ee9]/30"
                               : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
                           )}
                         >
-                          <span className="font-bold truncate">{st.name}</span>
+                          <span className="font-bold truncate">{st?.name || (st as any)?.fullName || st?.email || "Estudiante"}</span>
                           <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                            {st.course} · {st.specialty}
+                            {st?.course || "Curso"} · {st?.specialty || "Plan Común"}
                           </span>
                         </button>
                       ))}
@@ -835,7 +975,7 @@ export function EstudianteDashboard({
 
             <AcademicSummaryCard
               title="Mis Ramos Aprobados"
-              value={`${passingSubjectsCount}/${subjectsData.length}`}
+              value={`${passingSubjectsCount}/${(subjectsData || []).length}`}
               subtitle="Ramos oficiales sobre nota 4.0"
               badgeLabel="Plan Regular"
               icon={BookOpen}
@@ -846,7 +986,7 @@ export function EstudianteDashboard({
             <AcademicSummaryCard
               title="Próxima Evaluación"
               value={upcomingActivities.length > 0 ? upcomingActivities[0].daysRemainingText : "En 3 días"}
-              subtitle={upcomingActivities.length > 0 ? upcomingActivities[0].subject : (subjectsData && subjectsData.length > 0 ? subjectsData[0].name : "Sin información")}
+              subtitle={upcomingActivities.length > 0 ? upcomingActivities[0].subject : (subjectsData && subjectsData.length > 0 ? subjectsData[0]?.name : "Sin información")}
               badgeLabel={upcomingActivities.length > 0 ? upcomingActivities[0].type : "Prueba"}
               icon={Calendar}
               accentColor="indigo"
@@ -1578,15 +1718,17 @@ export function EstudianteDashboard({
                     08:00 - 09:30
                   </td>
                   {[0, 1, 2, 3, 4].map((dayIdx) => {
-                    const sub = subjectsData[dayIdx % subjectsData.length];
+                    const sub = subjectsData && subjectsData.length > 0
+                      ? subjectsData[dayIdx % subjectsData.length]
+                      : null;
                     return (
                       <td
                         key={dayIdx}
                         className="p-2.5 bg-blue-50/50 dark:bg-blue-950/20 font-bold text-slate-800 dark:text-slate-200 rounded-lg"
                       >
-                        {sub.name}
+                        {sub?.name || "Taller de Aprendizaje"}
                         <br />
-                        <span className="text-[10px] text-slate-400 font-normal">{sub.room}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Sala 12"}</span>
                       </td>
                     );
                   })}
@@ -1606,15 +1748,17 @@ export function EstudianteDashboard({
                     09:45 - 11:15
                   </td>
                   {[5, 6, 7, 8, 9].map((dayIdx) => {
-                    const sub = subjectsData[dayIdx % subjectsData.length];
+                    const sub = subjectsData && subjectsData.length > 0
+                      ? subjectsData[dayIdx % subjectsData.length]
+                      : null;
                     return (
                       <td
                         key={dayIdx}
                         className="p-2.5 bg-purple-50/50 dark:bg-purple-950/20 font-bold text-slate-800 dark:text-slate-200 rounded-lg"
                       >
-                        {sub.name}
+                        {sub?.name || "Asignatura Formativa"}
                         <br />
-                        <span className="text-[10px] text-slate-400 font-normal">{sub.room}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Laboratorio A"}</span>
                       </td>
                     );
                   })}
@@ -1633,15 +1777,17 @@ export function EstudianteDashboard({
                     14:00 - 15:30
                   </td>
                   {[2, 4, 1, 3, 0].map((dayIdx, i) => {
-                    const sub = subjectsData[(dayIdx + 2) % subjectsData.length];
+                    const sub = subjectsData && subjectsData.length > 0
+                      ? subjectsData[(dayIdx + 2) % subjectsData.length]
+                      : null;
                     return (
                       <td
                         key={i}
                         className="p-2.5 bg-emerald-50/50 dark:bg-emerald-950/20 font-bold text-slate-800 dark:text-slate-200 rounded-lg"
                       >
-                        {sub.name}
+                        {sub?.name || "Módulo Práctico"}
                         <br />
-                        <span className="text-[10px] text-slate-400 font-normal">{sub.room}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Taller Técnico"}</span>
                       </td>
                     );
                   })}
