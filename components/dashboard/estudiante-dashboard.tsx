@@ -435,7 +435,7 @@ export function EstudianteDashboard({
         subject: sub.name,
         date: pendingGrade?.date ? `Viernes ${pendingGrade.date}` : `Octubre ${18 + idx * 4}`,
         daysRemainingText: countdowns[idx] || "Próximamente",
-        type: idx === 0 ? "Prueba Sumativa" : idx === 1 ? "Taller Práctico" : "Guía de Ejercicios",
+        type: idx === 0 ? "Prueba Sumativa" : idx === 1 ? "Taller" : "Guía de Ejercicios",
         priority: priorities[idx] || "Normal",
         syllabus: `Contenidos prioritarios de ${sub.name}. Recuerda repasar tus apuntes y guías de estudio para la evaluación.`,
       };
