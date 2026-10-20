@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth/session";
 import { Page } from "@/components/layout/page";
 import { EstudianteDashboard } from "@/components/dashboard/estudiante-dashboard";
 import { getStudentAcademicRecord } from "@/lib/db/lpmm-curriculum-and-grades";
+import { listAvailableDemoStudents } from "@/lib/services/student-dashboard.service";
 
 export default async function EstudianteDashboardPage({
   params,
@@ -10,17 +11,20 @@ export default async function EstudianteDashboardPage({
   params: Promise<{ schoolSlug: string }>;
 }) {
   const { schoolSlug } = await params;
-  const tenantCtx = await requireTenantContext(schoolSlug);
+  await requireTenantContext(schoolSlug);
   const session = await getSession();
 
-  const userEmail = session?.email || "yamir.ahumada@lpmm.cl";
   const isStudentSelf = session?.roleName === "STUDENT";
+  const userEmail = session?.email || "yamir.ahumada@lpmm.cl";
+
   const record =
     getStudentAcademicRecord(userEmail) ||
     (session?.firstName && session?.lastName
       ? getStudentAcademicRecord(`${session.firstName} ${session.lastName}`)
       : null) ||
     getStudentAcademicRecord("yamir.ahumada@lpmm.cl")!;
+
+  const availableDemoStudents = !isStudentSelf ? listAvailableDemoStudents() : [];
 
   return (
     <Page title="Dashboard Estudiantes">
@@ -32,6 +36,7 @@ export default async function EstudianteDashboardPage({
         studentRut={record.rut}
         initialRecord={record}
         isStudentSelf={isStudentSelf}
+        availableDemoStudents={availableDemoStudents}
       />
     </Page>
   );

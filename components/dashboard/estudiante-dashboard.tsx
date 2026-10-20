@@ -58,11 +58,9 @@ import {
 } from "lucide-react";
 import { AcademicSummaryCard } from "./academic-summary-card";
 import { cn } from "@/lib/utils/cn";
-import {
-  getStudentAcademicRecord,
+import type {
   StudentAcademicRecord,
   DetailedSubjectGrade,
-  LPMM_STUDENTS_ACADEMIC_RECORDS,
 } from "@/lib/db/lpmm-curriculum-and-grades";
 
 /**
@@ -81,9 +79,16 @@ import {
  * 3. Agenda clara de "Tu clase en curso" y "Próximas evaluaciones" con cuentas regresivas.
  * 4. Alternador de vistas en Notas: Tarjetas amigables y Planilla completa.
  * 5. Acceso rápido y sin fricción a Credencial Digital, Marcado QR y Canal Seguro de Apoyo.
- * 6. Selector de prueba de los 14 cursos discretamente ubicado sin invadir el espacio del alumno.
+ * 6. Color de marca unificado oficial (#0c8ee9 - brand-500).
  * ============================================================================
  */
+
+export interface DemoStudentSummary {
+  email: string;
+  name: string;
+  course: string;
+  specialty: string;
+}
 
 export interface EstudianteDashboardProps {
   schoolSlug: string;
@@ -93,6 +98,7 @@ export interface EstudianteDashboardProps {
   studentRut?: string;
   initialRecord?: StudentAcademicRecord;
   isStudentSelf?: boolean;
+  availableDemoStudents?: DemoStudentSummary[];
 }
 
 type TabType =
@@ -120,7 +126,7 @@ interface UpcomingActivity {
   subject: string;
   date: string;
   daysRemainingText: string;
-  type: "Prueba Sumativa" | "Guía de Ejercicios" | "Trabajo Práctico" | "Taller" | "Taller Práctico";
+  type: "Prueba Sumativa" | "Guía de Ejercicios" | "Trabajo Práctico" | "Taller";
   priority: "Alta" | "Media" | "Normal";
   syllabus: string;
 }
@@ -247,64 +253,65 @@ export function EstudianteDashboard({
   studentRut,
   initialRecord,
   isStudentSelf = false,
+  availableDemoStudents = [],
 }: EstudianteDashboardProps) {
-  // Inicialización limpia del correo del estudiante
-  const initialEmail = studentEmail || initialRecord?.email || "yamir.ahumada@lpmm.cl";
-  const [selectedStudentEmail, setSelectedStudentEmail] = useState<string>(initialEmail);
+  // Inicialización limpia del registro del estudiante sin importar la DB al cliente
+  const [currentStudent, setCurrentStudent] = useState<StudentAcademicRecord>(() => {
+    if (initialRecord) return initialRecord;
+    return {
+      num: 1,
+      fullName: studentName || "Estudiante Aurenis",
+      firstName: studentName?.split(" ")[0] || "Estudiante",
+      lastName: studentName?.split(" ").slice(1).join(" ") || "",
+      email: studentEmail || "estudiante@lpmm.cl",
+      rut: studentRut || "12.345.678-9",
+      courseName: courseName || "1° Medio A",
+      courseCode: "1A",
+      grade: 1,
+      letter: "A",
+      specialty: "Plan Común",
+      overallGpa: 6.0,
+      overallAttendance: 95.0,
+      subjects: [],
+    };
+  });
+
+  const [isLoadingStudent, setIsLoadingStudent] = useState(false);
+  const [selectedStudentEmail, setSelectedStudentEmail] = useState<string>(
+    initialRecord?.email || studentEmail || "yamir.ahumada@lpmm.cl"
+  );
 
   React.useEffect(() => {
-    if (studentEmail && studentEmail !== selectedStudentEmail) {
-      setSelectedStudentEmail(studentEmail);
+    if (initialRecord) {
+      setCurrentStudent(initialRecord);
+      setSelectedStudentEmail(initialRecord.email);
     }
-  }, [studentEmail]);
+  }, [initialRecord]);
 
-  // Directorio completo con los estudiantes reales del LPMM
-  const allStudents = useMemo(() => {
-    if (typeof LPMM_STUDENTS_ACADEMIC_RECORDS === "object" && LPMM_STUDENTS_ACADEMIC_RECORDS !== null) {
-      const seen = new Set<string>();
-      const list: StudentAcademicRecord[] = [];
-      for (const record of Object.values(LPMM_STUDENTS_ACADEMIC_RECORDS)) {
-        if (record && record.email && !seen.has(record.email.toLowerCase())) {
-          seen.add(record.email.toLowerCase());
-          list.push(record);
-        }
+  // Manejador seguro para inspectores/docentes que revisan fichas de alumnos
+  const handleSelectDemoStudent = async (email: string) => {
+    if (isStudentSelf || email === currentStudent.email) return;
+    setIsLoadingStudent(true);
+    setSelectedStudentEmail(email);
+    try {
+      const res = await fetch(
+        `/api/${schoolSlug}/student-dashboard?email=${encodeURIComponent(email)}`
+      );
+      const json = await res.json();
+      if (json.success && json.data?.data) {
+        const d = json.data.data;
+        setCurrentStudent({
+          ...d.student,
+          subjects: d.subjects || [],
+        });
       }
-      return list;
+    } catch (err) {
+      console.error("Error al cargar datos del estudiante:", err);
+    } finally {
+      setIsLoadingStudent(false);
+      setIsInspectorSwitcherOpen(false);
     }
-    return [];
-  }, []);
-  const coursesList = useMemo(
-    () => Array.from(new Set(allStudents.map((s) => s.courseName))),
-    [allStudents]
-  );
-
-  // Registro Académico Real obtenido de las planillas oficiales
-  const currentStudent: StudentAcademicRecord = useMemo(() => {
-    if (initialRecord && initialRecord.email.toLowerCase() === selectedStudentEmail.toLowerCase()) {
-      return initialRecord;
-    }
-    return (
-      getStudentAcademicRecord(selectedStudentEmail) ||
-      (studentEmail ? getStudentAcademicRecord(studentEmail) : null) ||
-      (studentName ? getStudentAcademicRecord(studentName) : null) ||
-      getStudentAcademicRecord("yamir.ahumada@lpmm.cl")!
-    );
-  }, [initialRecord, selectedStudentEmail, studentEmail, studentName]);
-
-  const [selectedCourseFilter, setSelectedCourseFilter] = useState<string>(
-    currentStudent?.courseName || "1° Medio A"
-  );
-
-  React.useEffect(() => {
-    if (currentStudent?.courseName && currentStudent.courseName !== selectedCourseFilter) {
-      setSelectedCourseFilter(currentStudent.courseName);
-    }
-  }, [currentStudent?.courseName]);
-
-  const studentsInCourse = useMemo(
-    () => allStudents.filter((s) => s.courseName === selectedCourseFilter),
-    [allStudents, selectedCourseFilter]
-  );
+  };
 
   const activeStudentName = currentStudent.fullName;
   const firstName = currentStudent.firstName || activeStudentName.split(" ")[0];
@@ -329,12 +336,49 @@ export function EstudianteDashboard({
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isInspectorSwitcherOpen, setIsInspectorSwitcherOpen] = useState(false);
 
+  // Estados para Canal Seguro de Apoyo Escolar con API
+  const [supportCategory, setSupportCategory] = useState("Apoyo Pedagógico");
+  const [supportMessage, setSupportMessage] = useState("");
+  const [isSubmittingSupport, setIsSubmittingSupport] = useState(false);
+  const [supportSent, setSupportSent] = useState(false);
+  const [supportError, setSupportError] = useState<string | null>(null);
+  const [supportTicket, setSupportTicket] = useState<{ id: string; timestamp: string } | null>(null);
+
+  const handleSendSupport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supportMessage.trim()) return;
+    setIsSubmittingSupport(true);
+    setSupportError(null);
+    try {
+      const res = await fetch(`/api/${schoolSlug}/student-support`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: supportCategory,
+          message: supportMessage.trim(),
+          studentEmail: currentStudent.email,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error?.message || "No se pudo enviar el mensaje.");
+      }
+      setSupportTicket({
+        id: data.data?.ticketId || `TK-${Math.floor(100000 + Math.random() * 900000)}`,
+        timestamp: data.data?.createdAt || new Date().toISOString(),
+      });
+      setSupportSent(true);
+      setSupportMessage("");
+    } catch (err: any) {
+      setSupportError(err.message || "Error al enviar la solicitud.");
+    } finally {
+      setIsSubmittingSupport(false);
+    }
+  };
+
   // Filtros
   const [commsFilter, setCommsFilter] = useState<"all" | "unread" | "urgent">("all");
   const [riceSearch, setRiceSearch] = useState("");
-  const [supportCategory, setSupportCategory] = useState("Apoyo Pedagógico");
-  const [supportMessage, setSupportMessage] = useState("");
-  const [supportSent, setSupportSent] = useState(false);
 
   // Estados interactivos para sección Mis Ramos
   const [ramosFilter, setRamosFilter] = useState<"all" | "especialidad" | "plan_comun">("all");
@@ -559,7 +603,7 @@ export function EstudianteDashboard({
                 setIsQrModalOpen(true);
                 setTimeout(() => setQrScanned(true), 1200);
               }}
-              className="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white text-xs font-bold transition flex items-center gap-2 shadow-sm shadow-indigo-600/20 min-h-[44px] cursor-pointer"
+              className="px-4 py-2.5 rounded-2xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white text-xs font-bold transition flex items-center gap-2 shadow-sm shadow-[#0c8ee9]/20 min-h-[44px] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]"
             >
               <QrCode className="w-4 h-4" />
               <span>Marcar Asistencia QR</span>
@@ -569,10 +613,10 @@ export function EstudianteDashboard({
             <button
               type="button"
               onClick={() => setIsCredentialModalOpen(true)}
-              className="px-3.5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 active:scale-[0.98] text-slate-800 dark:text-slate-200 text-xs font-bold transition flex items-center gap-2 min-h-[44px] cursor-pointer"
+              className="px-3.5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 active:scale-[0.98] text-slate-800 dark:text-slate-200 text-xs font-bold transition flex items-center gap-2 min-h-[44px] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]"
               title="Ver Credencial Estudiantil Digital"
             >
-              <IdCard className="w-4 h-4 text-indigo-500" />
+              <IdCard className="w-4 h-4 text-[#0c8ee9]" />
               <span className="hidden sm:inline">Mi Credencial</span>
             </button>
 
@@ -649,58 +693,49 @@ export function EstudianteDashboard({
             </div>
 
             {/* Selector Discreto para Verificación de Otros Alumnos (Docente/Inspector) */}
-            {!isStudentSelf && (
+            {!isStudentSelf && availableDemoStudents.length > 0 && (
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setIsInspectorSwitcherOpen(!isInspectorSwitcherOpen)}
                   className="px-3 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium transition flex items-center gap-1.5 min-h-[44px] cursor-pointer"
-                  title="Cambiar Alumno de Demostración"
+                  title="Cambiar Alumno de Demostración (Modo Docente/Inspector)"
+                  aria-expanded={isInspectorSwitcherOpen}
+                  aria-label="Seleccionar alumno para inspección pedagógica"
                 >
-                  <Users className="w-3.5 h-3.5 text-indigo-500" />
-                  <span className="hidden md:inline">Cambiar Alumno</span>
+                  <Users className="w-3.5 h-3.5 text-[#0c8ee9]" />
+                  <span className="hidden md:inline">
+                    {isLoadingStudent ? "Cargando..." : "Cambiar Alumno"}
+                  </span>
                   <ChevronDown className="w-3 h-3" />
                 </button>
 
                 {isInspectorSwitcherOpen && (
-                  <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-3 z-40 space-y-2">
+                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-3 z-40 space-y-2">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-1">
-                      Seleccionar Curso y Estudiante
+                      Fichas de Alumnos Disponibles (Inspección)
                     </span>
 
-                    <select
-                      value={selectedCourseFilter}
-                      onChange={(e) => {
-                        const newCourse = e.target.value;
-                        setSelectedCourseFilter(newCourse);
-                        const firstStudent = allStudents.find((s) => s.courseName === newCourse);
-                        if (firstStudent) {
-                          setSelectedStudentEmail(firstStudent.email);
-                        }
-                      }}
-                      className="w-full text-xs font-semibold p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 cursor-pointer"
-                    >
-                      {coursesList.map((c) => (
-                        <option key={c} value={c}>
-                          Curso: {c}
-                        </option>
+                    <div className="space-y-1 max-h-60 overflow-y-auto">
+                      {availableDemoStudents.map((st) => (
+                        <button
+                          key={st.email}
+                          type="button"
+                          onClick={() => handleSelectDemoStudent(st.email)}
+                          className={cn(
+                            "w-full text-left p-2.5 rounded-xl text-xs transition flex flex-col gap-0.5 cursor-pointer",
+                            currentStudent.email === st.email
+                              ? "bg-[#0c8ee9]/10 text-[#0c8ee9] font-bold border border-[#0c8ee9]/30"
+                              : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                          )}
+                        >
+                          <span className="font-bold truncate">{st.name}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                            {st.course} · {st.specialty}
+                          </span>
+                        </button>
                       ))}
-                    </select>
-
-                    <select
-                      value={selectedStudentEmail}
-                      onChange={(e) => {
-                        setSelectedStudentEmail(e.target.value);
-                        setIsInspectorSwitcherOpen(false);
-                      }}
-                      className="w-full text-xs p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 cursor-pointer truncate"
-                    >
-                      {studentsInCourse.map((st) => (
-                        <option key={st.email} value={st.email}>
-                          {st.fullName} (Prom: {st.overallGpa.toFixed(1)})
-                        </option>
-                      ))}
-                    </select>
+                    </div>
                   </div>
                 )}
               </div>
@@ -731,11 +766,14 @@ export function EstudianteDashboard({
             <button
               key={tab.id}
               type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`panel-${tab.id}`}
               onClick={() => setActiveTab(tab.id as TabType)}
               className={cn(
-                "px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative",
+                "px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
                 isActive
-                  ? "bg-indigo-600 text-white shadow-xs"
+                  ? "bg-[#0c8ee9] text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
               )}
             >
@@ -747,7 +785,7 @@ export function EstudianteDashboard({
                     "text-[10px] font-black px-1.5 py-0.5 rounded-md",
                     isActive
                       ? "bg-white/20 text-white"
-                      : "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300"
+                      : "bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]"
                   )}
                 >
                   {tab.badge}
@@ -823,7 +861,7 @@ export function EstudianteDashboard({
               <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
                 <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-2xl bg-[#0c8ee9]/10 text-[#0c8ee9] flex items-center justify-center">
                       <Clock className="w-5 h-5" />
                     </div>
                     <div>
@@ -839,7 +877,7 @@ export function EstudianteDashboard({
                   <button
                     type="button"
                     onClick={() => setActiveTab("horario")}
-                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>Ver Semana Completa</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -853,7 +891,7 @@ export function EstudianteDashboard({
                       className={cn(
                         "p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3",
                         block.isCurrent
-                          ? "bg-indigo-50/80 dark:bg-indigo-950/40 border-indigo-300 dark:border-indigo-800 ring-2 ring-indigo-500/20"
+                          ? "bg-[#0c8ee9]/5 border-[#0c8ee9]/40 dark:border-[#0c8ee9]/50 ring-2 ring-[#0c8ee9]/20"
                           : block.isPast
                           ? "bg-slate-50/60 dark:bg-slate-900/60 border-slate-200/60 dark:border-slate-800/60 opacity-60"
                           : "bg-white dark:bg-slate-900/40 border-slate-200/80 dark:border-slate-800"
@@ -870,7 +908,7 @@ export function EstudianteDashboard({
                               {block.subject}
                             </span>
                             {block.isCurrent && (
-                              <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-600 text-white">
+                              <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#0c8ee9] text-white">
                                 Bloque en Curso
                               </span>
                             )}
@@ -882,10 +920,10 @@ export function EstudianteDashboard({
                           </div>
 
                           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                            <span className="font-semibold text-indigo-600 dark:text-indigo-400">Bloque Lectivo</span>
+                            <span className="font-semibold text-[#0c8ee9]">Bloque Lectivo</span>
                             <span aria-hidden="true">·</span>
                             <span className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
-                              <MapPin className="w-3.5 h-3.5 text-indigo-500" />
+                              <MapPin className="w-3.5 h-3.5 text-[#0c8ee9]" />
                               {block.room}
                             </span>
                           </div>
@@ -1215,6 +1253,24 @@ export function EstudianteDashboard({
 
           {/* VISTA 1: TARJETAS VISUALES AMIGABLES */}
           {notesViewMode === "cards" && (
+            filteredSubjects.length === 0 ? (
+              <div className="p-12 text-center bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl space-y-3">
+                <BookOpen className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto" />
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  No se encontraron asignaturas
+                </h4>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  No hay materias que coincidan con &ldquo;{subjectSearch}&rdquo;. Intenta con otro término o limpia el buscador.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSubjectSearch("")}
+                  className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"
+                >
+                  Limpiar búsqueda
+                </button>
+              </div>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
               {filteredSubjects.map((sub) => {
                 const isOver6 = sub.currentAvg >= 6.0;
@@ -1313,7 +1369,8 @@ export function EstudianteDashboard({
                 );
               })}
             </div>
-          )}
+          )
+        )}
 
           {/* VISTA 2: PLANILLA DETALLADA */}
           {notesViewMode === "table" && (
@@ -2078,7 +2135,7 @@ export function EstudianteDashboard({
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-[#0c8ee9]/10 text-[#0c8ee9] flex items-center justify-center mx-auto">
                 <QrCode className="w-6 h-6" />
               </div>
 
@@ -2092,11 +2149,11 @@ export function EstudianteDashboard({
               </div>
 
               <div className="p-6 rounded-2xl bg-slate-950 text-white flex flex-col items-center justify-center space-y-3 relative overflow-hidden">
-                <div className="w-40 h-40 border-2 border-indigo-500/80 rounded-2xl flex items-center justify-center relative">
+                <div className="w-40 h-40 border-2 border-[#0c8ee9]/80 rounded-2xl flex items-center justify-center relative">
                   <QrCode className="w-28 h-28 text-white/90" />
                   <div className="absolute inset-x-2 top-0 h-0.5 bg-emerald-400 animate-pulse shadow-md" />
                 </div>
-                <span className="text-[11px] font-mono text-indigo-300">
+                <span className="text-[11px] font-mono text-[#0c8ee9]">
                   {qrScanned ? "¡Código detectado exitosamente!" : "Buscando sesión en Sala 204..."}
                 </span>
               </div>
@@ -2114,7 +2171,7 @@ export function EstudianteDashboard({
                   setIsQrModalOpen(false);
                   setQrScanned(false);
                 }}
-                className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition cursor-pointer shadow-xs"
+                className="w-full py-3 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition cursor-pointer shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]"
               >
                 {qrScanned ? "Listo, volver al portal" : "Confirmar Presencia"}
               </button>
@@ -2131,7 +2188,7 @@ export function EstudianteDashboard({
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.92 }}
-              className="relative w-full max-w-sm bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-indigo-500/30 space-y-5"
+              className="relative w-full max-w-sm bg-gradient-to-br from-[#07284a] via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-[#0c8ee9]/30 space-y-5"
             >
               <button
                 type="button"
@@ -2141,10 +2198,10 @@ export function EstudianteDashboard({
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="flex items-center justify-between pb-3 border-b border-indigo-500/30">
+              <div className="flex items-center justify-between pb-3 border-b border-[#0c8ee9]/30">
                 <div className="flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-indigo-400" />
-                  <span className="text-xs font-black uppercase tracking-wider text-indigo-300">
+                  <Building2 className="w-4 h-4 text-[#0c8ee9]" />
+                  <span className="text-xs font-black uppercase tracking-wider text-sky-200">
                     Liceo Politécnico Marga Marga
                   </span>
                 </div>
@@ -2152,18 +2209,18 @@ export function EstudianteDashboard({
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-xl shrink-0 shadow-md">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0c8ee9] to-sky-700 flex items-center justify-center text-white font-black text-xl shrink-0 shadow-md">
                   {firstName.charAt(0)}
                   {currentStudent.lastName ? currentStudent.lastName.charAt(0) : ""}
                 </div>
                 <div className="space-y-0.5">
-                  <span className="text-[10px] font-bold text-indigo-300 uppercase block">
+                  <span className="text-[10px] font-bold text-sky-300 uppercase block">
                     Estudiante Regular 2026
                   </span>
                   <h4 className="text-sm font-black text-white leading-tight">
                     {activeStudentName}
                   </h4>
-                  <p className="text-xs text-indigo-300 font-semibold">Acreditación Estudiantil LPMM</p>
+                  <p className="text-xs text-sky-300 font-semibold">Acreditación Estudiantil LPMM</p>
                   <p className="text-[11px] text-slate-400">
                     {activeCourseName} · {activeSpecialty}
                   </p>
@@ -2205,7 +2262,7 @@ export function EstudianteDashboard({
               </button>
 
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]">
                   {selectedCommunication.department}
                 </span>
                 <span className="text-xs text-slate-400">·</span>
@@ -2231,7 +2288,7 @@ export function EstudianteDashboard({
                 <button
                   type="button"
                   onClick={() => setSelectedCommunication(null)}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition cursor-pointer"
                 >
                   Cerrar
                 </button>
@@ -2282,32 +2339,42 @@ export function EstudianteDashboard({
                   <h4 className="text-sm font-black text-slate-900 dark:text-white">
                     ¡Mensaje Enviado con Éxito!
                   </h4>
+                  {supportTicket && (
+                    <div className="p-3 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl space-y-1">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                        Número de Ticket de Seguimiento
+                      </span>
+                      <span className="font-mono font-black text-sm text-emerald-700 dark:text-emerald-300">
+                        {supportTicket.id}
+                      </span>
+                    </div>
+                  )}
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Tu Profesor Jefe y el equipo de Convivencia Escolar han recibido tu mensaje y se contactarán contigo de forma discreta y oportuna.
+                    Tu Profesor Jefe y el equipo de Convivencia Escolar han recibido tu mensaje de forma confidencial y se contactarán contigo de manera discreta.
                   </p>
                   <button
                     type="button"
                     onClick={() => {
                       setIsSupportModalOpen(false);
                       setSupportSent(false);
+                      setSupportTicket(null);
                     }}
-                    className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold transition cursor-pointer"
                   >
-                    Aceptar
+                    Aceptar y Volver
                   </button>
                 </div>
               ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (!supportMessage.trim()) return;
-                    setSupportSent(true);
-                    setSupportMessage("");
-                  }}
-                  className="space-y-4"
-                >
+                <form onSubmit={handleSendSupport} className="space-y-4">
+                  {supportError && (
+                    <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-xl text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{supportError}</span>
+                    </div>
+                  )}
+
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Puedes escribirnos si necesitas apoyo en alguna asignatura, conversar sobre alguna situación en el liceo o coordinar apoyo con la psicóloga o trabajadora social.
+                    Puedes escribirnos si necesitas apoyo en alguna asignatura, conversar sobre alguna situación en el liceo o coordinar orientación con el equipo psicosocial.
                   </p>
 
                   <div className="space-y-1.5">
@@ -2336,16 +2403,17 @@ export function EstudianteDashboard({
                       onChange={(e) => setSupportMessage(e.target.value)}
                       required
                       placeholder="Cuéntanos con tranquilidad en qué podemos orientarte..."
-                      className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0c8ee9]"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    disabled={isSubmittingSupport}
+                    className="w-full py-3 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-60"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Enviar Mensaje Seguro</span>
+                    <span>{isSubmittingSupport ? "Enviando mensaje confidencial..." : "Enviar Mensaje Seguro"}</span>
                   </button>
                 </form>
               )}

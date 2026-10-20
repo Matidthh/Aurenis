@@ -11,6 +11,7 @@ Este documento es el registro de verdad (**Source of Truth**) para el historial 
 | **01** | `20260907141816` | `init` | DDL Base | Alto (Creación inicial) | `rollback.sql` ✅ | Aplicada |
 | **02** | `20260908180000` | `db_optimizations_and_fixes` | DDL / Optimización | Medio (Relaciones y tipos) | `rollback.sql` ✅ | Aplicada |
 | **03** | `20260908190000` | `enterprise_expansion` | DDL / Expansión | Alto (Nuevos módulos) | `rollback.sql` ✅ | Aplicada |
+| **04** | `20261009120000` | `add_wp_reviews_tables` | DDL / Reseñas | Medio (Tablas de reseñas) | `rollback.sql` ✅ | Aplicada |
 
 ---
 
@@ -59,6 +60,16 @@ Este documento es el registro de verdad (**Source of Truth**) para el historial 
   - Infraestructura de Datos: `ArchivedRecord`, `Webhook`, `WebhookDelivery`, `PartitionMetadata`, `ReplicaLagMetrics`, `PerformanceMetric`
 - **Campos Agregados**: `deletedAt` (Soft deletes) y `version` (Optimistic locking) en entidades clave.
 - **Riesgo de Rollback**: 🟡 Reversible mediante `rollback.sql` modular.
+
+---
+
+### 4. `20261009120000_add_wp_reviews_tables`
+- **Archivo SQL**: `prisma/migrations/20261009120000_add_wp_reviews_tables/migration.sql`
+- **Rollback SQL**: `prisma/migrations/20261009120000_add_wp_reviews_tables/rollback.sql`
+- **Fecha de Registro**: 2026-10-09
+- **Objetivo**: Creación de tablas persistentes `wp_reviews` y `wp_review_comments` para el sistema de reseñas y conexión externa.
+- **Modelos Creados**: `wp_reviews`, `wp_review_comments`.
+- **Riesgo de Rollback**: 🟢 Bajo (Reversible mediante `rollback.sql`).
 
 ---
 
