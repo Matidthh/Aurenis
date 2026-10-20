@@ -30,7 +30,7 @@ export async function GET(
       return apiError(
         "No autenticado. Inicie sesión para acceder al portal del estudiante.",
         "UNAUTHORIZED",
-        { statusCode: 401 }
+        { status: 401 }
       );
     }
 
@@ -39,7 +39,7 @@ export async function GET(
       return apiError(
         "No tienes autorización para acceder a los registros de esta institución.",
         "FORBIDDEN",
-        { statusCode: 403 }
+        { status: 403 }
       );
     }
 
@@ -71,7 +71,7 @@ export async function GET(
     });
   } catch (error: any) {
     return apiError(error.message || "Error al obtener datos académicos del estudiante.", "INTERNAL_ERROR", {
-      statusCode: 500,
+      status: 500,
     });
   }
 }

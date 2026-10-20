@@ -82,13 +82,13 @@ export async function POST(
         createdAt: timestamp,
         message: "Tu solicitud ha sido remitida de forma segura y confidencial al equipo de Convivencia Escolar y tu Profesor Jefe.",
       },
-      { statusCode: 201 }
+      { status: 201 }
     );
   } catch (error: any) {
     return apiError(
       error.message || "Error al procesar la solicitud del Canal Seguro de Apoyo.",
       "INTERNAL_ERROR",
-      { statusCode: 500 }
+      { status: 500 }
     );
   }
 }
