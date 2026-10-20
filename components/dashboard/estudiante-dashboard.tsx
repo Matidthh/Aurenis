@@ -428,6 +428,7 @@ export function EstudianteDashboard({
     const priorities: ("Alta" | "Media" | "Normal")[] = ["Alta", "Media", "Normal"];
 
     return subjectsData.slice(0, 3).map((sub, idx) => {
+      if (!sub) return null;
       const pendingGrade = sub.grades.find((g) => g.value === null);
       return {
         id: `act-${idx + 1}`,
@@ -439,7 +440,7 @@ export function EstudianteDashboard({
         priority: priorities[idx] || "Normal",
         syllabus: `Contenidos prioritarios de ${sub.name}. Recuerda repasar tus apuntes y guías de estudio para la evaluación.`,
       };
-    });
+    }).filter(Boolean) as UpcomingActivity[];
   }, [subjectsData]);
 
   // Filtrado de asignaturas en pestaña de notas
@@ -1509,7 +1510,7 @@ export function EstudianteDashboard({
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {subjectsData.map((sub) => (
+              {currentStudent.subjects && currentStudent.subjects.map((sub) => (
                 <div
                   key={sub.id}
                   className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-4"
