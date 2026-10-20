@@ -246,7 +246,7 @@ async function enviarResenaExterna() {
               onClick={() => setShowApiDocs(!showApiDocs)}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition shadow-2xs cursor-pointer"
             >
-              <Code className="w-4 h-4 text-[#3B82F6]" />
+              <Code className="w-4 h-4 text-brand-500" />
               <span className="hidden sm:inline">Conectar a otra web</span>
               <span className="sm:hidden">API</span>
             </button>
@@ -254,7 +254,7 @@ async function enviarResenaExterna() {
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold transition shadow-xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition shadow-xs cursor-pointer"
             >
               <MessageSquare className="w-4 h-4" />
               <span>Dejar Reseña</span>
@@ -269,7 +269,7 @@ async function enviarResenaExterna() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
         {/* HERO / TÍTULO DEL APARTADO */}
         <section className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#2563EB] text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-600 text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Módulo de Reseñas y Testimonios • Tablas BBDD: wp_reviews</span>
           </div>
@@ -428,7 +428,7 @@ async function enviarResenaExterna() {
           {/* Columna Derecha: Tarjetas KPI de Confianza */}
           <div className="lg:col-span-3 flex flex-col justify-center space-y-3 p-2 bg-slate-50/70 rounded-xl border border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-100 text-[#3B82F6] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-500 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
@@ -479,7 +479,7 @@ async function enviarResenaExterna() {
                 className={cn(
                   "px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer shrink-0 border",
                   selectedRoleFilter === role
-                    ? "bg-[#3B82F6] text-white border-[#3B82F6] shadow-2xs"
+                    ? "bg-brand-500 text-white border-brand-500 shadow-2xs"
                     : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
                 )}
               >
@@ -493,7 +493,7 @@ async function enviarResenaExterna() {
               <button
                 type="button"
                 onClick={() => setSelectedRatingFilter(null)}
-                className="text-[#3B82F6] hover:underline font-semibold cursor-pointer"
+                className="text-brand-500 hover:underline font-semibold cursor-pointer"
               >
                 Quitar filtro de {selectedRatingFilter}★
               </button>
@@ -507,7 +507,7 @@ async function enviarResenaExterna() {
             ========================================================================= */}
         {loading ? (
           <div className="py-20 flex flex-col items-center justify-center space-y-3">
-            <Loader2 className="w-8 h-8 text-[#3B82F6] animate-spin" />
+            <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
             <p className="text-xs text-slate-500 font-medium">Cargando reseñas desde wp_reviews...</p>
           </div>
         ) : filteredReviews.length === 0 ? (
@@ -523,7 +523,7 @@ async function enviarResenaExterna() {
                 setSelectedRatingFilter(null);
                 setSelectedRoleFilter("Todos");
               }}
-              className="text-xs font-semibold text-[#3B82F6] hover:underline cursor-pointer"
+              className="text-xs font-semibold text-brand-500 hover:underline cursor-pointer"
             >
               Restablecer todos los filtros
             </button>

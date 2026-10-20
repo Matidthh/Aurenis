@@ -1073,10 +1073,10 @@ function LoginContent() {
               return (
                 <div
                   key={acc.id}
-                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#3B82F6] hover:shadow-xs transition-all flex items-center justify-between gap-3"
+                  className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-white hover:border-brand-500 hover:shadow-xs transition-all flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 border border-blue-100 text-[#3B82F6] flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-50 border border-brand-100 text-brand-500 flex items-center justify-center shrink-0">
                       <IconComp className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
@@ -1101,7 +1101,7 @@ function LoginContent() {
                     type="button"
                     disabled={isLoading}
                     onClick={() => handleQuickLogin(acc)}
-                    className="px-3.5 sm:px-4 py-2 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] text-white text-xs font-semibold transition flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs"
+                    className="px-3.5 sm:px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs"
                   >
                     {isThisLoading ? (
                       <>
@@ -1135,7 +1135,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-          <div className="w-8 h-8 border-3 border-[#3B82F6] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin" />
         </div>
       }
     >
