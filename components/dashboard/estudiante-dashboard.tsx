@@ -126,7 +126,7 @@ interface UpcomingActivity {
   subject: string;
   date: string;
   daysRemainingText: string;
-  type: "Prueba Sumativa" | "Guía de Ejercicios" | "Trabajo Práctico" | "Taller";
+  type: "Prueba Sumativa" | "Guía de Ejercicios" | "Trabajo Práctico" | "Taller" | "Taller Práctico";
   priority: "Alta" | "Media" | "Normal";
   syllabus: string;
 }
@@ -436,7 +436,7 @@ export function EstudianteDashboard({
         subject: sub.name,
         date: pendingGrade?.date ? `Viernes ${pendingGrade.date}` : `Octubre ${18 + idx * 4}`,
         daysRemainingText: countdowns[idx] || "Próximamente",
-        type: idx === 0 ? "Prueba Sumativa" : idx === 1 ? "Taller" : "Guía de Ejercicios",
+        type: idx === 0 ? "Prueba Sumativa" : idx === 1 ? "Taller Práctico" : "Guía de Ejercicios",
         priority: priorities[idx] || "Normal",
         syllabus: `Contenidos prioritarios de ${sub.name}. Recuerda repasar tus apuntes y guías de estudio para la evaluación.`,
       };
@@ -845,9 +845,9 @@ export function EstudianteDashboard({
 
             <AcademicSummaryCard
               title="Próxima Evaluación"
-              value={upcomingActivities[0]?.daysRemainingText || "En 3 días"}
-              subtitle={upcomingActivities[0]?.subject || (subjectsData && subjectsData.length > 0 ? subjectsData[0].name : "Sin información")}
-              badgeLabel={upcomingActivities[0]?.type || "Prueba"}
+              value={upcomingActivities.length > 0 ? upcomingActivities[0].daysRemainingText : "En 3 días"}
+              subtitle={upcomingActivities.length > 0 ? upcomingActivities[0].subject : (subjectsData && subjectsData.length > 0 ? subjectsData[0].name : "Sin información")}
+              badgeLabel={upcomingActivities.length > 0 ? upcomingActivities[0].type : "Prueba"}
               icon={Calendar}
               accentColor="indigo"
               onClick={() => setActiveTab("notas")}
