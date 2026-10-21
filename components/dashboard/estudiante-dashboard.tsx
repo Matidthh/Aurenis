@@ -688,9 +688,7 @@ export function EstudianteDashboard({
   }, [subjectsData, ramosFilter, especialidadSubjects, planComunSubjects, ramosSearch]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto pb-12">
-      {/* Columna Principal: 2/3 del espacio */}
-      <div className="lg:col-span-2 space-y-6">
+    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12">
         {/* ========================================================================= */}
         {/* 1. HERO Y HEADER AMIGABLE DEL ESTUDIANTE */}
         {/* ========================================================================= */}
@@ -2440,11 +2438,6 @@ export function EstudianteDashboard({
           </div>
         )}
       </AnimatePresence>
-    </div>
-      {/* Columna Lateral: 1/3 del espacio */}
-      <div className="space-y-6">
-        {/* Aquí irán los componentes de eventos y ayuda */}
-      </div>
     </div>
   );
 }
