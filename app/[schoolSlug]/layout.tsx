@@ -117,7 +117,7 @@ export default async function TenantLayout({
   // Menú Académico: Asignaturas (Admin + Docente + Alumno)
   if (canViewSubjects) {
     navItems.push({
-      title: role === "STUDENT" ? "Mis Asignaturas" : "Asignaturas",
+      title: role === "STUDENT" ? "Mis Ramos" : "Asignaturas",
       href: `/${tenantCtx.schoolSlug}/subjects`,
       icon: <Layers className="w-5 h-5 shrink-0" />,
       section: "Académico",

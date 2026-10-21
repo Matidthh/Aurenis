@@ -55,6 +55,13 @@ import {
   Baby,
   Briefcase,
   Filter,
+  ArrowLeft,
+  BarChart3,
+  UserCheck,
+  FileSpreadsheet,
+  Zap,
+  Home,
+  MessageSquare,
 } from "lucide-react";
 import { AcademicSummaryCard } from "./academic-summary-card";
 import { cn } from "@/lib/utils/cn";
@@ -600,6 +607,29 @@ export function EstudianteDashboard({
     }).filter(Boolean) as UpcomingActivity[];
   }, [subjectsData]);
 
+  // Calificaciones recientes para la tabla del resumen académico
+  const recentGrades = useMemo(() => {
+    const list: {
+      subject: string;
+      evalName: string;
+      grade: number;
+      date: string;
+    }[] = [];
+    (subjectsData || []).forEach((sub) => {
+      (sub?.grades || []).forEach((g) => {
+        if (g.value !== null && g.value !== undefined) {
+          list.push({
+            subject: sub.name,
+            evalName: g.label || "Evaluación Sumativa",
+            grade: g.value,
+            date: g.date ? `${g.date} 2026` : "12 abr 2026",
+          });
+        }
+      });
+    });
+    return list.slice(0, 5);
+  }, [subjectsData]);
+
   // Filtrado de asignaturas en pestaña de notas
   const filteredSubjects = useMemo(() => {
     if (!subjectsData || subjectsData.length === 0) return [];
@@ -692,73 +722,67 @@ export function EstudianteDashboard({
       {/* Columna Principal: 2/3 del espacio (Izquierda y Centro) */}
       <div className="lg:col-span-2 space-y-6">
         {/* ========================================================================= */}
-        {/* 1. HERO Y HEADER AMIGABLE DEL ESTUDIANTE */}
+        {/* 1. SECCIÓN DE BIENVENIDA COMPACTA Y MODERNA                               */}
         {/* ========================================================================= */}
-        <motion.header
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-          className="relative overflow-hidden bg-gradient-to-r from-white via-blue-50/40 to-indigo-50/40 dark:from-[#0C1425] dark:to-indigo-950/30 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-sm"
-        >
-          {/* Acento sutil en degradado superior */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400" />
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-            {/* Saludo y Bienvenida */}
-            <div className="space-y-2">
+        <div className="relative overflow-hidden bg-gradient-to-r from-sky-50/80 via-blue-50/40 to-white dark:from-[#0C1425] dark:via-slate-900/60 dark:to-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
                 <span>{activeCourseName}</span>
                 <span>·</span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{activeSpecialty}</span>
+                <span className="text-[#0c8ee9] font-semibold">{activeSpecialty}</span>
+                <span>·</span>
+                <span>Liceo Politécnico Marga Marga</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                {greetingTime}, <span className="text-[#0c8ee9]">{firstName}</span>! 👋
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                {greetingTime}, <span className="text-[#0c8ee9]">{firstName}</span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium max-w-lg leading-relaxed">
-                Aquí puedes revisar tu información académica, calificaciones, asistencia, horario y acceder a los recursos que necesitas.
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium max-w-xl leading-relaxed">
+                Bienvenido a tu espacio académico. Revisa tus calificaciones, asistencia, horarios y recursos en un solo lugar.
               </p>
             </div>
-
-            {/* Ilustración o Símbolo decorativo sutil */}
-            <div className="hidden sm:flex shrink-0 w-24 h-24 rounded-3xl bg-blue-500/10 dark:bg-blue-500/20 items-center justify-center text-blue-600 dark:text-blue-400 shadow-inner">
-              <BookOpen className="w-10 h-10" />
-            </div>
           </div>
-        </motion.header>
+        </div>
 
         {/* ========================================================================= */}
-        {/* 2. TARJETAS DE ACCESOS RÁPIDOS SUPERIORES (5 ICONOS DEL BOCETO) */}
+        {/* 2. ACCESOS RÁPIDOS UNIFORMES                                              */}
         {/* ========================================================================= */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {[
-            { id: "notas", label: "Mis Calificaciones", desc: "Revisa tus notas y promedios", icon: Award, color: "text-blue-600 bg-blue-50 dark:bg-blue-950/60" },
-            { id: "asistencia", label: "Mi Asistencia", desc: "Consulta tu asistencia y justificaciones", icon: CalendarCheck, color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60" },
-            { id: "horario", label: "Mi Horario", desc: "Revisa tus clases y actividades", icon: Clock, color: "text-purple-600 bg-purple-50 dark:bg-purple-950/60" },
-            { id: "asignaturas", label: "Mis Ramos", desc: "Accede a tus asignaturas", icon: BookOpen, color: "text-amber-600 bg-amber-50 dark:bg-amber-950/60" },
-            { id: "comunicados", label: "Boletín de Notas", desc: "Descarga tu boletín en PDF", icon: Printer, color: "text-indigo-600 bg-indigo-50 dark:bg-indigo-950/60" },
+            { id: "notas", label: "Mis Calificaciones", desc: "Notas y promedios oficiales", icon: Award },
+            { id: "asistencia", label: "Mi Asistencia", desc: "Registro diario y meta MINEDUC", icon: CalendarCheck },
+            { id: "horario", label: "Mi Horario", desc: "Bloques pedagógicos y salas", icon: Clock },
+            { id: "asignaturas", label: "Mis Ramos", desc: "Plan común y electivos", icon: BookOpen },
+            { id: "comunicados", label: "Boletín de Notas", desc: "Boletín y avisos escolares", icon: FileText },
           ].map((item) => {
             const Icon = item.icon;
+            const isSelected = activeTab === item.id;
             return (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => setActiveTab(item.id as TabType)}
-                className="p-4 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition flex flex-col justify-between text-left cursor-pointer group shadow-2xs hover:shadow-md"
+                className={cn(
+                  "p-4 rounded-2xl bg-white dark:bg-[#0C1425] border transition-all duration-200 flex flex-col justify-between text-left cursor-pointer group shadow-2xs hover:shadow-xs",
+                  isSelected
+                    ? "border-[#0c8ee9] ring-2 ring-[#0c8ee9]/15"
+                    : "border-slate-200/80 dark:border-slate-800 hover:border-[#0c8ee9]/50"
+                )}
               >
-                <div className="space-y-3">
-                  <div className={cn("w-10 h-10 rounded-2xl flex items-center justify-center", item.color)}>
-                    <Icon className="w-5 h-5" />
+                <div className="space-y-2.5">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#0c8ee9]/10 text-[#0c8ee9] group-hover:bg-[#0c8ee9] group-hover:text-white transition-colors">
+                    <Icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-[#0c8ee9] transition">
+                    <h3 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-[#0c8ee9] transition-colors">
                       {item.label}
                     </h3>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
                       {item.desc}
                     </p>
                   </div>
                 </div>
-                <div className="pt-3 flex justify-end text-slate-400 group-hover:text-[#0c8ee9]">
+                <div className="pt-2 flex justify-end text-slate-300 dark:text-slate-600 group-hover:text-[#0c8ee9] transition-colors">
                   <ChevronRight className="w-3.5 h-3.5" />
                 </div>
               </button>
@@ -766,225 +790,140 @@ export function EstudianteDashboard({
           })}
         </div>
 
-      {/* ========================================================================= */}
-      {/* 2. PESTAÑAS PRINCIPALES DEL PORTAL DEL ALUMNO */}
-      {/* ========================================================================= */}
-      <nav
-        aria-label="Navegación del portal escolar"
-        className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-2xl p-1.5 shadow-xs flex items-center gap-1 overflow-x-auto no-scrollbar"
-      >
-        {[
-          { id: "resumen", label: "Mi Día a Día", icon: Layers },
-          { id: "notas", label: "Mis Calificaciones", icon: Award, badge: overallAverage },
-          { id: "asistencia", label: "Mi Asistencia", icon: CalendarCheck, badge: `${currentStudent.overallAttendance}%` },
-          { id: "horario", label: "Horario Semanal", icon: Clock },
-          { id: "asignaturas", label: "Mis Ramos", icon: BookOpen, badge: `${subjectsData.length}` },
-          { id: "comunicados", label: "Avisos Escolares", icon: Inbox, badge: "Nuevo" },
-          { id: "reglamento", label: "Manual & Convivencia", icon: BookMarked },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`panel-${tab.id}`}
-              onClick={() => setActiveTab(tab.id as TabType)}
-              className={cn(
-                "px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
-                isActive
-                  ? "bg-[#0c8ee9] text-white shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-              )}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{tab.label}</span>
-              {tab.badge && (
-                <span
-                  className={cn(
-                    "text-[10px] font-black px-1.5 py-0.5 rounded-md",
-                    isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]"
-                  )}
-                >
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* ========================================================================= */}
-      {/* 3. CONTENIDO SEGÚN LA PESTAÑA ACTIVA */}
-      {/* ========================================================================= */}
-
-      {/* 3.1. PESTAÑA: MI DÍA A DÍA (RESUMEN AMIGABLE) */}
-      {activeTab === "resumen" && (
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-          className="space-y-6 sm:space-y-8"
+        {/* ========================================================================= */}
+        {/* 3. PESTAÑAS PRINCIPALES DEL PORTAL DEL ALUMNO                             */}
+        {/* ========================================================================= */}
+        <nav
+          aria-label="Navegación del portal escolar"
+          className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-1.5 shadow-2xs flex items-center gap-1 overflow-x-auto no-scrollbar"
         >
-          {/* Tarjetas Resumen de Progreso */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            <AcademicSummaryCard
-              title="Mi Promedio General"
-              value={overallAverage}
-              subtitle="Escala chilena oficial (1.0 - 7.0)"
-              badgeLabel={numAverage >= 6.0 ? "¡Sobresaliente!" : "Aprobando"}
-              icon={Award}
-              accentColor="purple"
-              trend={{ value: "+0.2 este semestre", isPositive: true }}
-              onClick={() => setActiveTab("notas")}
-            />
-
-            <AcademicSummaryCard
-              title="Mi Asistencia"
-              value={`${currentStudent.overallAttendance}%`}
-              subtitle="Meta MINEDUC (85%) cumplida"
-              badgeLabel="Al día"
-              icon={CalendarCheck}
-              accentColor="emerald"
-              trend={{ value: "+0.5%", isPositive: true }}
-              onClick={() => setActiveTab("asistencia")}
-            />
-
-            <AcademicSummaryCard
-              title="Mis Ramos Aprobados"
-              value={`${passingSubjectsCount}/${(subjectsData || []).length}`}
-              subtitle="Ramos oficiales sobre nota 4.0"
-              badgeLabel="Plan Regular"
-              icon={BookOpen}
-              accentColor="blue"
-              onClick={() => setActiveTab("asignaturas")}
-            />
-
-            <AcademicSummaryCard
-              title="Próxima Evaluación"
-              value={upcomingActivities.length > 0 ? upcomingActivities[0].daysRemainingText : "En 3 días"}
-              subtitle={upcomingActivities.length > 0 ? upcomingActivities[0].subject : (subjectsData && subjectsData.length > 0 ? subjectsData[0]?.name : "Sin información")}
-              badgeLabel={upcomingActivities.length > 0 ? upcomingActivities[0].type : "Prueba"}
-              icon={Calendar}
-              accentColor="indigo"
-              onClick={() => setActiveTab("notas")}
-            />
-          </div>
-
-          {/* Cuadrícula Principal: Horario de hoy + Agenda + Tarjeta de Asistencia */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-            {/* Columna Izquierda (8 cols): Clase Actual + Agenda de Próximas Evaluaciones */}
-            <div className="lg:col-span-8 space-y-6 sm:space-y-8">
-              {/* Bloque en Curso / Horario del Día */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
-                <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-[#0c8ee9]/10 text-[#0c8ee9] flex items-center justify-center">
-                      <Clock className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
-                        Tu Horario de Hoy
-                      </h2>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Bloques pedagógicos, asignaturas y salas programadas
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("horario")}
-                    className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
+          {[
+            { id: "resumen", label: "Mi Día a Día", icon: Layers },
+            { id: "notas", label: "Mis Calificaciones", icon: Award, badge: overallAverage },
+            { id: "asistencia", label: "Mi Asistencia", icon: CalendarCheck, badge: `${currentStudent.overallAttendance}%` },
+            { id: "horario", label: "Horario Semanal", icon: Clock },
+            { id: "asignaturas", label: "Mis Ramos", icon: BookOpen, badge: `${(subjectsData || []).length}` },
+            { id: "comunicados", label: "Avisos Escolares", icon: Inbox },
+            { id: "reglamento", label: "Manual & Convivencia", icon: BookMarked },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`panel-${tab.id}`}
+                onClick={() => setActiveTab(tab.id as TabType)}
+                className={cn(
+                  "px-3.5 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
+                  isActive
+                    ? "bg-[#0c8ee9] text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                )}
+              >
+                <Icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+                {tab.badge && (
+                  <span
+                    className={cn(
+                      "text-[10px] font-bold px-1.5 py-0.2 rounded-md",
+                      isActive
+                        ? "bg-white/20 text-white"
+                        : "bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]"
+                    )}
                   >
-                    <span>Ver Semana Completa</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
-                <div className="space-y-3">
-                  {scheduleToday.map((block) => (
-                    <div
-                      key={block.id}
-                      className={cn(
-                        "p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3",
-                        block.isCurrent
-                          ? "bg-[#0c8ee9]/5 border-[#0c8ee9]/40 dark:border-[#0c8ee9]/50 ring-2 ring-[#0c8ee9]/20"
-                          : block.isPast
-                          ? "bg-slate-50/60 dark:bg-slate-900/60 border-slate-200/60 dark:border-slate-800/60 opacity-60"
-                          : "bg-white dark:bg-slate-900/40 border-slate-200/80 dark:border-slate-800"
-                      )}
-                    >
-                      <div className="flex items-start sm:items-center gap-3.5">
-                        <div className="shrink-0 font-mono text-xs font-black text-slate-700 dark:text-slate-300 w-28">
-                          {block.timeRange}
-                        </div>
+        {/* Botón Volver al Resumen cuando se está en una pestaña secundaria */}
+        {activeTab !== "resumen" && (
+          <div className="flex items-center justify-between pb-1">
+            <button
+              type="button"
+              onClick={() => setActiveTab("resumen")}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0c8ee9] hover:underline cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Volver a la vista principal</span>
+            </button>
+          </div>
+        )}
 
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-extrabold text-sm text-slate-900 dark:text-white">
-                              {block.subject}
-                            </span>
-                            {block.isCurrent && (
-                              <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#0c8ee9] text-white">
-                                Bloque en Curso
-                              </span>
-                            )}
-                            {block.isPast && (
-                              <span className="text-[10px] font-medium text-slate-400 bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                                Completado
-                              </span>
-                            )}
-                          </div>
+        {/* ========================================================================= */}
+        {/* 4. CONTENIDO: MI DÍA A DÍA (RESUMEN AMIGABLE Y MÉTRICAS)                  */}
+        {/* ========================================================================= */}
+        {activeTab === "resumen" && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15 }}
+            className="space-y-6"
+          >
+            {/* E. MÉTRICAS ACADÉMICAS REALES */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+              <AcademicSummaryCard
+                title="Promedio General"
+                value={overallAverage}
+                subtitle="Escala oficial 1.0 a 7.0"
+                badgeLabel={numAverage >= 6.0 ? "Sobresaliente" : numAverage >= 5.0 ? "Buen Rendimiento" : numAverage >= 4.0 ? "Aprobando" : "En Riesgo"}
+                icon={Award}
+                accentColor="blue"
+                onClick={() => setActiveTab("notas")}
+              />
 
-                          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                            <span className="font-semibold text-[#0c8ee9]">Bloque Lectivo</span>
-                            <span aria-hidden="true">·</span>
-                            <span className="flex items-center gap-1 font-semibold text-slate-700 dark:text-slate-300">
-                              <MapPin className="w-3.5 h-3.5 text-[#0c8ee9]" />
-                              {block.room}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+              <AcademicSummaryCard
+                title="Mi Asistencia"
+                value={`${currentStudent.overallAttendance}%`}
+                subtitle={currentStudent.overallAttendance >= 85 ? "Cumple norma MINEDUC (≥85%)" : "Bajo mínimo MINEDUC (85%)"}
+                badgeLabel={currentStudent.overallAttendance >= 85 ? "Al día" : "Atención"}
+                icon={CalendarCheck}
+                accentColor="emerald"
+                onClick={() => setActiveTab("asistencia")}
+              />
 
-                      {block.isCurrent && (
-                        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setIsQrModalOpen(true);
-                              setTimeout(() => setQrScanned(true), 1200);
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
-                          >
-                            <QrCode className="w-3.5 h-3.5" />
-                            <span>Marcar en Sala</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
+              <AcademicSummaryCard
+                title="Ramos Aprobados"
+                value={`${passingSubjectsCount} de ${(subjectsData || []).length}`}
+                subtitle="Calificación igual o superior a 4.0"
+                badgeLabel={`${passingSubjectsCount}/${(subjectsData || []).length}`}
+                icon={BookOpen}
+                accentColor="purple"
+                onClick={() => setActiveTab("asignaturas")}
+              />
 
-              {/* Agenda de Próximas Evaluaciones */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
-                <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-                      <Calendar className="w-5 h-5" />
+              <AcademicSummaryCard
+                title="Próxima Evaluación"
+                value={upcomingActivities.length > 0 ? upcomingActivities[0].daysRemainingText : "Al día"}
+                subtitle={upcomingActivities.length > 0 ? `${upcomingActivities[0].subject} · ${upcomingActivities[0].date}` : "Sin evaluaciones pendientes"}
+                badgeLabel={upcomingActivities.length > 0 ? upcomingActivities[0].type : "Sin pendientes"}
+                icon={Calendar}
+                accentColor="indigo"
+                onClick={() => setActiveTab("notas")}
+              />
+            </div>
+
+            {/* F. INFORMACIÓN ACADÉMICA RECIENTE: 2 PANELES EQUILIBRADOS */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+              {/* F.1. ÚLTIMAS CALIFICACIONES (TABLA COMPACTA) */}
+              <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
+                      <Award className="w-4 h-4" />
                     </div>
                     <div>
-                      <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
-                        Tus Próximas Evaluaciones
+                      <h2 className="text-sm font-bold text-slate-900 dark:text-white">
+                        Últimas Calificaciones
                       </h2>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Organízate con tiempo para repasar con tranquilidad
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Evaluaciones registradas recientemente
                       </p>
                     </div>
                   </div>
@@ -992,185 +931,196 @@ export function EstudianteDashboard({
                   <button
                     type="button"
                     onClick={() => setActiveTab("notas")}
-                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    <span>Ver Todas las Asignaturas</span>
+                    <span>Ver todas</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {upcomingActivities.map((act) => (
-                    <div
-                      key={act.id}
-                      className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-3 flex flex-col justify-between hover:border-indigo-300 dark:hover:border-indigo-700 transition"
-                    >
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
-                            {act.daysRemainingText}
-                          </span>
-                          <span className="text-[11px] font-bold text-slate-400">{act.type}</span>
-                        </div>
+                {recentGrades.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="text-[11px] font-semibold text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                          <th className="pb-2 font-medium">Asignatura</th>
+                          <th className="pb-2 font-medium">Evaluación</th>
+                          <th className="pb-2 font-medium text-center">Nota</th>
+                          <th className="pb-2 font-medium text-right">Fecha</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
+                        {recentGrades.map((gradeItem, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition">
+                            <td className="py-2.5 pr-2 font-semibold text-slate-900 dark:text-white truncate max-w-[140px]">
+                              {gradeItem.subject}
+                            </td>
+                            <td className="py-2.5 pr-2 text-slate-500 dark:text-slate-400 truncate max-w-[120px]">
+                              {gradeItem.evalName}
+                            </td>
+                            <td className="py-2.5 px-2 text-center">
+                              <span
+                                className={cn(
+                                  "inline-block font-mono font-bold px-2 py-0.5 rounded-md text-xs",
+                                  gradeItem.grade >= 6.0
+                                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
+                                    : gradeItem.grade >= 5.0
+                                    ? "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                    : gradeItem.grade >= 4.0
+                                    ? "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
+                                    : "bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 border border-red-200 dark:border-red-800"
+                                )}
+                              >
+                                {gradeItem.grade.toFixed(1)}
+                              </span>
+                            </td>
+                            <td className="py-2.5 pl-2 text-right text-[11px] text-slate-400 font-mono">
+                              {gradeItem.date}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="py-8 text-center text-xs text-slate-400">
+                    No hay calificaciones registradas recientemente.
+                  </div>
+                )}
+              </div>
 
-                        <h3 className="text-sm font-extrabold text-slate-900 dark:text-white line-clamp-2">
-                          {act.subject}
-                        </h3>
-
-                        <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">
-                          {act.title}
+              {/* F.2. PRÓXIMAS EVALUACIONES Y HORARIO DE HOY */}
+              <div className="space-y-6">
+                {/* Próximas Evaluaciones */}
+                <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h2 className="text-sm font-bold text-slate-900 dark:text-white">
+                          Próximas Evaluaciones
+                        </h2>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                          Fechas y materias programadas
                         </p>
                       </div>
-
-                      <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-                        <span className="font-semibold">{act.date}</span>
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab("notas")}
-                          className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                        >
-                          Temario
-                        </button>
-                      </div>
                     </div>
-                  ))}
-                </div>
-              </section>
-            </div>
 
-            {/* Columna Derecha (4 cols): Asistencia Amigable + Mensajes + Consejo */}
-            <div className="lg:col-span-4 space-y-6 sm:space-y-8">
-              {/* Tarjeta de Asistencia con Barra de Meta MINEDUC */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-xs space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <CalendarCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    <h3 className="font-black text-sm text-slate-900 dark:text-white">
-                      Tu Meta de Asistencia
-                    </h3>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("asistencia")}
-                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                  >
-                    Detalle
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-baseline justify-between">
-                    <div>
-                      <span className="text-4xl font-black text-slate-900 dark:text-white font-mono">
-                        {currentStudent.overallAttendance}%
-                      </span>
-                      <span className="text-xs text-slate-400 ml-1.5 font-medium">acumulada</span>
-                    </div>
-                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-300 px-2.5 py-1 rounded-xl border border-emerald-200 dark:border-emerald-800">
-                      Cumpliendo Meta 🎉
-                    </span>
-                  </div>
-
-                  {/* Barra de progreso con marcador visual del 85% */}
-                  <div className="space-y-1.5">
-                    <div className="relative w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-500 rounded-full transition-all duration-500"
-                        style={{ width: `${currentStudent.overallAttendance}%` }}
-                      />
-                      <div
-                        className="absolute top-0 bottom-0 w-1 bg-amber-500 z-10"
-                        style={{ left: "85%" }}
-                        title="Meta mínima de promoción escolar MINEDUC (85%)"
-                      />
-                    </div>
-                    <div className="flex justify-between text-[11px] text-slate-400 font-semibold">
-                      <span>0%</span>
-                      <span className="text-amber-600 dark:text-amber-400 font-bold">
-                        85% Meta Mínima
-                      </span>
-                      <span>100%</span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed pt-1">
-                    ¡Excelente constancia! Tienes <strong>46 días presentes</strong> y solo 2 inasistencias justificadas.
-                  </p>
-                </div>
-              </section>
-
-              {/* Últimos Comunicados */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-xs space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <Inbox className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                    <h3 className="font-black text-sm text-slate-900 dark:text-white">
-                      Avisos Importantes
-                    </h3>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("comunicados")}
-                    className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
-                  >
-                    Ver Todos
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {DEFAULT_COMMUNICATIONS.slice(0, 2).map((comm) => (
-                    <div
-                      key={comm.id}
-                      onClick={() => {
-                        setSelectedCommunication(comm);
-                        setActiveTab("comunicados");
-                      }}
-                      className="p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800/80 hover:border-indigo-300 dark:hover:border-indigo-800 bg-slate-50/60 dark:bg-slate-900/60 transition cursor-pointer space-y-1"
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("notas")}
+                      className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
                     >
-                      <div className="flex items-center justify-between text-[11px] text-slate-400">
-                        <span className="font-bold text-slate-700 dark:text-slate-300">
-                          {comm.senderRole}
-                        </span>
-                        <span>{comm.date}</span>
-                      </div>
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
-                        {comm.title}
-                      </h4>
-                      <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
-                        {comm.preview}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
+                      <span>Temarios</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
 
-              {/* Tarjeta de Apoyo Emocional & Convivencia */}
-              <section className="p-6 rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 text-white space-y-3 shadow-md relative overflow-hidden">
-                <div className="flex items-center gap-2 text-indigo-300">
-                  <HeartHandshake className="w-5 h-5" />
-                  <span className="text-xs font-black uppercase tracking-wider">
-                    Espacio Seguro del Alumno
-                  </span>
+                  <div className="space-y-2.5">
+                    {upcomingActivities.length > 0 ? (
+                      upcomingActivities.slice(0, 2).map((act) => (
+                        <div
+                          key={act.id}
+                          className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between gap-3"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex flex-col items-center justify-center shrink-0 font-mono">
+                              <span className="text-[8px] font-bold uppercase leading-tight">Días</span>
+                              <span className="text-xs font-black">{act.daysRemainingText.replace(/[^0-9]/g, "") || "3"}</span>
+                            </div>
+                            <div className="min-w-0 space-y-0.5">
+                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                {act.subject}
+                              </h4>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                                {act.title} · {act.type}
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[11px] font-medium text-slate-400 shrink-0 font-mono">
+                            {act.date}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="py-4 text-center text-xs text-slate-400">
+                        Sin evaluaciones pendientes.
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <h4 className="text-sm font-black leading-snug">
-                  ¿Necesitas orientación o conversar con tu Profe Jefe?
-                </h4>
-                <p className="text-xs text-indigo-100/80 leading-relaxed">
-                  Estamos aquí para apoyarte en cualquier inquietud académica, personal o de convivencia escolar.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setIsSupportModalOpen(true)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <span>Escribir Mensaje Seguro</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </section>
+
+                {/* Horario de Hoy */}
+                <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+                        <Clock className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h2 className="text-sm font-bold text-slate-900 dark:text-white">
+                          Tu Horario de Hoy
+                        </h2>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                          Bloques lectivos y salas programadas
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("horario")}
+                      className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Ver semana</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {scheduleToday.slice(0, 3).map((block) => (
+                      <div
+                        key={block.id}
+                        className={cn(
+                          "p-2.5 rounded-xl border flex items-center justify-between gap-3 text-xs transition",
+                          block.isCurrent
+                            ? "bg-[#0c8ee9]/5 border-[#0c8ee9]/40 ring-1 ring-[#0c8ee9]/20"
+                            : "bg-slate-50/60 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800/80"
+                        )}
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="font-mono text-[11px] font-bold text-slate-600 dark:text-slate-300 shrink-0 w-24">
+                            {block.timeRange}
+                          </span>
+                          <div className="min-w-0">
+                            <span className="font-bold text-slate-900 dark:text-white truncate block">
+                              {block.subject}
+                            </span>
+                            <span className="text-[10px] text-slate-400 truncate block">
+                              {block.room}
+                            </span>
+                          </div>
+                        </div>
+
+                        {block.isCurrent ? (
+                          <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[#0c8ee9] text-white shrink-0">
+                            En curso
+                          </span>
+                        ) : block.isPast ? (
+                          <span className="text-[9px] font-medium text-slate-400 shrink-0">
+                            Completado
+                          </span>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
 
       {/* 3.2. PESTAÑA: MIS CALIFICACIONES */}
       {activeTab === "notas" && (
@@ -2456,95 +2406,95 @@ export function EstudianteDashboard({
       {/* ========================================================================= */}
       <div className="space-y-6">
         {/* 1. Tarjeta de Perfil del Estudiante */}
-        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-4 text-center">
+        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4 text-center">
           <div className="relative inline-block mx-auto">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-2xl flex items-center justify-center shadow-md mx-auto">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0c8ee9] to-blue-700 text-white font-black text-xl flex items-center justify-center shadow-xs mx-auto">
               {firstName.charAt(0)}
               {currentStudent.lastName ? currentStudent.lastName.charAt(0) : ""}
             </div>
-            <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" title="En línea" />
+            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" title="Conectado" />
           </div>
 
           <div className="space-y-1">
-            <h3 className="text-base font-black text-slate-900 dark:text-white">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">
               {firstName} {currentStudent.lastName}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Estudiante · {activeCourseName}
+              {activeCourseName} · {activeSpecialty}
             </p>
-            <p className="text-[11px] text-[#0c8ee9] font-bold">
+            <p className="text-[11px] text-[#0c8ee9] font-medium">
               Liceo Politécnico Marga Marga
             </p>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 py-2 rounded-2xl">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>En línea</span>
+            {currentStudent.rut && (
+              <p className="text-[10px] text-slate-400 font-mono">
+                RUT: {currentStudent.rut}
+              </p>
+            )}
           </div>
         </div>
 
-        {/* 2. Próximos Eventos */}
-        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-4">
+        {/* 2. Próximos Eventos Escolares */}
+        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-[#0c8ee9]" />
-              <h3 className="font-black text-sm text-slate-900 dark:text-white">
+              <h3 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
                 Próximos Eventos
               </h3>
             </div>
             <button
               type="button"
-              onClick={() => setActiveTab("notas")}
+              onClick={() => setActiveTab("horario")}
               className="text-xs font-bold text-[#0c8ee9] hover:underline cursor-pointer"
             >
-              Ver calendario →
+              Calendario →
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {[
               { date: "15 ABR", title: "Prueba de Matemática", time: "08:00 - 09:30", type: "Evaluación" },
-              { date: "17 ABR", title: "Entrega de trabajo grupal", time: "Lengua y Literatura", type: "Tarea" },
+              { date: "17 ABR", title: "Entrega Trabajo Grupal", time: "Lengua y Literatura", type: "Tarea" },
               { date: "21 ABR", title: "Evaluación de Historia", time: "10:00 - 11:30", type: "Evaluación" },
             ].map((ev, idx) => (
-              <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-start gap-3">
-                <div className="px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-center shrink-0 font-mono">
-                  <span className="text-[10px] font-bold block uppercase">ABR</span>
-                  <span className="text-sm font-black">{ev.date.split(" ")[0]}</span>
+              <div key={idx} className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-start gap-3">
+                <div className="px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-blue-400 text-center shrink-0 font-mono">
+                  <span className="text-[9px] font-bold block uppercase leading-none">ABR</span>
+                  <span className="text-xs font-black">{ev.date.split(" ")[0]}</span>
                 </div>
                 <div className="flex-1 min-w-0 space-y-0.5">
                   <div className="flex items-center justify-between gap-1">
-                    <h4 className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
                       {ev.title}
                     </h4>
-                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
+                    <span className="text-[9px] font-medium px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                       {ev.type}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-500 truncate">{ev.time}</p>
+                  <p className="text-[11px] text-slate-400 truncate">{ev.time}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* 3. Tarjeta ¿Necesitas ayuda? */}
-        <div className="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 text-white rounded-3xl p-6 shadow-md space-y-4 relative overflow-hidden">
-          <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-indigo-300">
-            <HeartHandshake className="w-6 h-6" />
+        {/* 3. Tarjeta de Apoyo Escolar (Section G) */}
+        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5 relative overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
+            <HeartHandshake className="w-5 h-5" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-black">
-              ¿Necesitas ayuda?
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+              ¿Necesitas apoyo escolar?
             </h3>
-            <p className="text-xs text-indigo-100/80 leading-relaxed">
-              Puedes solicitar apoyo escolar en cualquier momento desde el botón de abajo.
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Canal confidencial para solicitar orientación pedagógica o conversar con tu profesor jefe.
             </p>
           </div>
           <button
             type="button"
             onClick={() => setIsSupportModalOpen(true)}
-            className="w-full py-3 rounded-2xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full py-2.5 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
           >
             <Send className="w-3.5 h-3.5" />
             <span>Solicitar apoyo escolar</span>
