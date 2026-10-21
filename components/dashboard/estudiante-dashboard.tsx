@@ -2473,7 +2473,7 @@ export function EstudianteDashboard({
               Estudiante · {activeCourseName}
             </p>
             <p className="text-[11px] text-[#0c8ee9] font-bold">
-              {schoolName}
+              Liceo Politécnico Marga Marga
             </p>
           </div>
 
