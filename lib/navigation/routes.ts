@@ -98,20 +98,7 @@ export const PUBLIC_ROUTES: Record<string, RouteMetadata> = {
     isPublic: true,
     scope: "api",
   },
-  REVIEWS: {
-    path: "/resenas",
-    title: "Reseñas y Testimonios",
-    breadcrumbLabel: "Reseñas",
-    isPublic: true,
-    scope: "public",
-  },
-  API_REVIEWS: {
-    path: "/api/reviews",
-    title: "API Reseñas",
-    breadcrumbLabel: "API Reviews",
-    isPublic: true,
-    scope: "api",
-  },
+
 };
 
 /**
@@ -324,18 +311,7 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/login" || pathname.startsWith("/login/")) return true;
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
   if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) return true;
-  if (pathname === "/resenas" || pathname.startsWith("/resenas/")) return true;
-  if (
-    pathname.startsWith("/api/auth/login") ||
-    pathname.startsWith("/api/auth/google") ||
-    pathname.startsWith("/api/auth/logout") ||
-    pathname.startsWith("/api/auth/forgot-password") ||
-    pathname.startsWith("/api/auth/reset-password") ||
-    pathname.startsWith("/api/schools/search") ||
-    pathname.startsWith("/api/reviews")
-  ) {
-    return true;
-  }
+
   if (pathname === "/system/design-system" || pathname.startsWith("/system/design-system")) return true;
   if (pathname === "/_not-found" || pathname === "/404" || pathname === "/500" || pathname === "/_error") return true;
   return false;

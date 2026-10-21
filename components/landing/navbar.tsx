@@ -134,12 +134,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
           >
             Preguntas Frecuentes
           </button>
-          <button
-            onClick={() => handleScrollTo("resenas")}
-            className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-all hover:scale-[1.02] cursor-pointer"
-          >
-            Reseñas
-          </button>
+
         </nav>
 
         {/* 3. Acciones del Header: Iniciar sesión + Botón Cotizar/Demo */}
@@ -225,12 +220,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             >
               Preguntas Frecuentes
             </button>
-            <button
-              onClick={() => handleScrollTo("resenas")}
-              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
-            >
-              Reseñas y Testimonios
-            </button>
+
           </div>
 
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
