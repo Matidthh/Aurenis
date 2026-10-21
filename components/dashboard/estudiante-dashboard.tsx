@@ -688,7 +688,9 @@ export function EstudianteDashboard({
   }, [subjectsData, ramosFilter, especialidadSubjects, planComunSubjects, ramosSearch]);
 
   return (
-    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto pb-12">
+      {/* Columna Principal: 2/3 del espacio (Izquierda y Centro) */}
+      <div className="lg:col-span-2 space-y-6">
         {/* ========================================================================= */}
         {/* 1. HERO Y HEADER AMIGABLE DEL ESTUDIANTE */}
         {/* ========================================================================= */}
@@ -696,64 +698,73 @@ export function EstudianteDashboard({
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="relative overflow-hidden bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-sm"
+          className="relative overflow-hidden bg-gradient-to-r from-white via-blue-50/40 to-indigo-50/40 dark:from-[#0C1425] dark:to-indigo-950/30 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-sm"
         >
-          <div className="flex flex-col gap-6">
-            {/* Identidad y Saludo */}
-            <div className="flex items-center gap-4">
-              {/* Avatar del Estudiante */}
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-600 to-indigo-700 text-white font-black text-xl flex items-center justify-center shadow-md shadow-indigo-500/20">
-                {firstName.charAt(0)}
-                {currentStudent.lastName ? currentStudent.lastName.charAt(0) : ""}
+          {/* Acento sutil en degradado superior */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400" />
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            {/* Saludo y Bienvenida */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <span>{activeCourseName}</span>
+                <span>·</span>
+                <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{activeSpecialty}</span>
               </div>
-              {/* Datos y Bienvenida */}
-              <div className="space-y-0.5">
-                <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-                  {greetingTime}, {firstName}! 👋
-                </h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  {activeCourseName} · {activeSpecialty}
-                </p>
-              </div>
+              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                {greetingTime}, <span className="text-[#0c8ee9]">{firstName}</span>! 👋
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium max-w-lg leading-relaxed">
+                Aquí puedes revisar tu información académica, calificaciones, asistencia, horario y acceder a los recursos que necesitas.
+              </p>
             </div>
 
-            {/* Acciones Rápidas del Alumno (Rediseñadas) */}
-            <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-slate-100 dark:border-slate-800">
-              {/* Botón Asistencia QR */}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsQrModalOpen(true);
-                  setTimeout(() => setQrScanned(true), 1200);
-                }}
-                className="px-3 py-2 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white text-[11px] font-bold transition flex items-center gap-1.5 shadow-sm min-h-[36px] cursor-pointer"
-              >
-                <QrCode className="w-3.5 h-3.5" />
-                <span>Asistencia</span>
-              </button>
-
-              {/* Botón Credencial */}
-              <button
-                type="button"
-                onClick={() => setIsCredentialModalOpen(true)}
-                className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-[11px] font-bold transition flex items-center gap-1.5 min-h-[36px] cursor-pointer"
-              >
-                <IdCard className="w-3.5 h-3.5 text-[#0c8ee9]" />
-                <span>Credencial</span>
-              </button>
-
-              {/* Botón de Ayuda & Convivencia */}
-              <button
-                type="button"
-                onClick={() => setIsSupportModalOpen(true)}
-                className="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 text-[11px] font-bold transition flex items-center gap-1.5 min-h-[36px] cursor-pointer"
-              >
-                <HeartHandshake className="w-3.5 h-3.5" />
-                <span>Apoyo</span>
-              </button>
+            {/* Ilustración o Símbolo decorativo sutil */}
+            <div className="hidden sm:flex shrink-0 w-24 h-24 rounded-3xl bg-blue-500/10 dark:bg-blue-500/20 items-center justify-center text-blue-600 dark:text-blue-400 shadow-inner">
+              <BookOpen className="w-10 h-10" />
             </div>
           </div>
         </motion.header>
+
+        {/* ========================================================================= */}
+        {/* 2. TARJETAS DE ACCESOS RÁPIDOS SUPERIORES (5 ICONOS DEL BOCETO) */}
+        {/* ========================================================================= */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {[
+            { id: "notas", label: "Mis Calificaciones", desc: "Revisa tus notas y promedios", icon: Award, color: "text-blue-600 bg-blue-50 dark:bg-blue-950/60" },
+            { id: "asistencia", label: "Mi Asistencia", desc: "Consulta tu asistencia y justificaciones", icon: CalendarCheck, color: "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60" },
+            { id: "horario", label: "Mi Horario", desc: "Revisa tus clases y actividades", icon: Clock, color: "text-purple-600 bg-purple-50 dark:bg-purple-950/60" },
+            { id: "asignaturas", label: "Mis Ramos", desc: "Accede a tus asignaturas", icon: BookOpen, color: "text-amber-600 bg-amber-50 dark:bg-amber-950/60" },
+            { id: "comunicados", label: "Boletín de Notas", desc: "Descarga tu boletín en PDF", icon: Printer, color: "text-indigo-600 bg-indigo-50 dark:bg-indigo-950/60" },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveTab(item.id as TabType)}
+                className="p-4 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition flex flex-col justify-between text-left cursor-pointer group shadow-2xs hover:shadow-md"
+              >
+                <div className="space-y-3">
+                  <div className={cn("w-10 h-10 rounded-2xl flex items-center justify-center", item.color)}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-black text-slate-900 dark:text-white group-hover:text-[#0c8ee9] transition">
+                      {item.label}
+                    </h3>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-3 flex justify-end text-slate-400 group-hover:text-[#0c8ee9]">
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </div>
+              </button>
+            );
+          })}
+        </div>
 
       {/* ========================================================================= */}
       {/* 2. PESTAÑAS PRINCIPALES DEL PORTAL DEL ALUMNO */}
@@ -2438,6 +2449,108 @@ export function EstudianteDashboard({
           </div>
         )}
       </AnimatePresence>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* COLUMNA LATERAL DERECHA (1/3 DEL ESPACIO - LG:COL-SPAN-1)                  */}
+      {/* ========================================================================= */}
+      <div className="space-y-6">
+        {/* 1. Tarjeta de Perfil del Estudiante */}
+        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-4 text-center">
+          <div className="relative inline-block mx-auto">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-black text-2xl flex items-center justify-center shadow-md mx-auto">
+              {firstName.charAt(0)}
+              {currentStudent.lastName ? currentStudent.lastName.charAt(0) : ""}
+            </div>
+            <span className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" title="En línea" />
+          </div>
+
+          <div className="space-y-1">
+            <h3 className="text-base font-black text-slate-900 dark:text-white">
+              {firstName} {currentStudent.lastName}
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Estudiante · {activeCourseName}
+            </p>
+            <p className="text-[11px] text-[#0c8ee9] font-bold">
+              {schoolName}
+            </p>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 py-2 rounded-2xl">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>En línea</span>
+          </div>
+        </div>
+
+        {/* 2. Próximos Eventos */}
+        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-[#0c8ee9]" />
+              <h3 className="font-black text-sm text-slate-900 dark:text-white">
+                Próximos Eventos
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveTab("notas")}
+              className="text-xs font-bold text-[#0c8ee9] hover:underline cursor-pointer"
+            >
+              Ver calendario →
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { date: "15 ABR", title: "Prueba de Matemática", time: "08:00 - 09:30", type: "Evaluación" },
+              { date: "17 ABR", title: "Entrega de trabajo grupal", time: "Lengua y Literatura", type: "Tarea" },
+              { date: "21 ABR", title: "Evaluación de Historia", time: "10:00 - 11:30", type: "Evaluación" },
+            ].map((ev, idx) => (
+              <div key={idx} className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-start gap-3">
+                <div className="px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-center shrink-0 font-mono">
+                  <span className="text-[10px] font-bold block uppercase">ABR</span>
+                  <span className="text-sm font-black">{ev.date.split(" ")[0]}</span>
+                </div>
+                <div className="flex-1 min-w-0 space-y-0.5">
+                  <div className="flex items-center justify-between gap-1">
+                    <h4 className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
+                      {ev.title}
+                    </h4>
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
+                      {ev.type}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 truncate">{ev.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Tarjeta ¿Necesitas ayuda? */}
+        <div className="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 text-white rounded-3xl p-6 shadow-md space-y-4 relative overflow-hidden">
+          <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-indigo-300">
+            <HeartHandshake className="w-6 h-6" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base font-black">
+              ¿Necesitas ayuda?
+            </h3>
+            <p className="text-xs text-indigo-100/80 leading-relaxed">
+              Puedes solicitar apoyo escolar en cualquier momento desde el botón de abajo.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsSupportModalOpen(true)}
+            className="w-full py-3 rounded-2xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>Solicitar apoyo escolar</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
