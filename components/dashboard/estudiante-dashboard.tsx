@@ -688,220 +688,74 @@ export function EstudianteDashboard({
   }, [subjectsData, ramosFilter, especialidadSubjects, planComunSubjects, ramosSearch]);
 
   return (
-    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12">
-      {/* ========================================================================= */}
-      {/* 1. HERO Y HEADER AMIGABLE DEL ESTUDIANTE */}
-      {/* ========================================================================= */}
-      <motion.header
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
-        className="relative overflow-hidden bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-sm"
-      >
-        {/* Acento sutil en degradado superior */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400" />
-
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          {/* Identidad y Saludo */}
-          <div className="flex items-start sm:items-center gap-4 sm:gap-5">
-            {/* Avatar del Estudiante */}
-            <div className="relative shrink-0">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-600 to-indigo-700 text-white font-black text-xl sm:text-2xl flex items-center justify-center shadow-md shadow-indigo-500/20 ring-4 ring-white dark:ring-slate-900">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto pb-12">
+      {/* Columna Principal: 2/3 del espacio */}
+      <div className="lg:col-span-2 space-y-6">
+        {/* ========================================================================= */}
+        {/* 1. HERO Y HEADER AMIGABLE DEL ESTUDIANTE */}
+        {/* ========================================================================= */}
+        <motion.header
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="relative overflow-hidden bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-sm"
+        >
+          <div className="flex flex-col gap-6">
+            {/* Identidad y Saludo */}
+            <div className="flex items-center gap-4">
+              {/* Avatar del Estudiante */}
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-600 to-indigo-700 text-white font-black text-xl flex items-center justify-center shadow-md shadow-indigo-500/20">
                 {firstName.charAt(0)}
                 {currentStudent.lastName ? currentStudent.lastName.charAt(0) : ""}
               </div>
-              <span
-                className="absolute -bottom-1 -right-1 p-1 bg-emerald-500 text-white rounded-full ring-2 ring-white dark:ring-slate-900"
-                title="Alumno Regular Activo"
-              >
-                <Check className="w-3 h-3 stroke-[3]" />
-              </span>
-            </div>
-
-            {/* Datos y Bienvenida */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 flex-wrap text-xs text-slate-500 dark:text-slate-400">
-                <span className="font-semibold text-slate-700 dark:text-slate-300">
-                  {activeCourseName}
-                </span>
-                <span aria-hidden="true">·</span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-semibold">
-                  {activeSpecialty}
-                </span>
-                <span aria-hidden="true">·</span>
-                <span className="font-semibold text-emerald-600 dark:text-emerald-400">Alumno Regular Activo</span>
+              {/* Datos y Bienvenida */}
+              <div className="space-y-0.5">
+                <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                  {greetingTime}, {firstName}! 👋
+                </h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                  {activeCourseName} · {activeSpecialty}
+                </p>
               </div>
-
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                {greetingTime}, <span className="text-indigo-600 dark:text-indigo-400">{firstName}</span>! 👋
-              </h1>
-
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium flex items-center gap-1.5 flex-wrap">
-                <span>Liceo Politécnico Marga Marga</span>
-                <span aria-hidden="true">·</span>
-                <span>Primer Semestre 2026</span>
-                <span aria-hidden="true">·</span>
-                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {numAverage >= 6.0
-                    ? "¡Vas con un rendimiento sobresaliente!"
-                    : numAverage >= 5.0
-                    ? "¡Buen avance este semestre, sigue con ese ánimo!"
-                    : "¡Todo el apoyo para seguir subiendo tus metas!"}
-                </span>
-              </p>
             </div>
-          </div>
 
-          {/* Acciones Rápidas del Alumno */}
-          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap self-start lg:self-auto">
-            {/* Botón Asistencia QR */}
-            <button
-              type="button"
-              onClick={() => {
-                setIsQrModalOpen(true);
-                setTimeout(() => setQrScanned(true), 1200);
-              }}
-              className="px-4 py-2.5 rounded-2xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white text-xs font-bold transition flex items-center gap-2 shadow-sm shadow-[#0c8ee9]/20 min-h-[44px] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]"
-            >
-              <QrCode className="w-4 h-4" />
-              <span>Marcar Asistencia QR</span>
-            </button>
-
-            {/* Botón Credencial */}
-            <button
-              type="button"
-              onClick={() => setIsCredentialModalOpen(true)}
-              className="px-3.5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 active:scale-[0.98] text-slate-800 dark:text-slate-200 text-xs font-bold transition flex items-center gap-2 min-h-[44px] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]"
-              title="Ver Credencial Estudiantil Digital"
-            >
-              <IdCard className="w-4 h-4 text-[#0c8ee9]" />
-              <span className="hidden sm:inline">Mi Credencial</span>
-            </button>
-
-            {/* Botón de Ayuda & Convivencia */}
-            <button
-              type="button"
-              onClick={() => setIsSupportModalOpen(true)}
-              className="px-3.5 py-2.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/50 active:scale-[0.98] text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 text-xs font-bold transition flex items-center gap-2 min-h-[44px] cursor-pointer"
-              title="Canal confidencial con Convivencia Escolar o Profesor Jefe"
-            >
-              <HeartHandshake className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="hidden sm:inline">Apoyo Escolar</span>
-            </button>
-
-            {/* Notificaciones */}
-            <div className="relative">
+            {/* Acciones Rápidas del Alumno (Rediseñadas) */}
+            <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-slate-100 dark:border-slate-800">
+              {/* Botón Asistencia QR */}
               <button
                 type="button"
-                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="min-h-[44px] min-w-[44px] p-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 transition flex items-center justify-center cursor-pointer relative"
-                aria-label="Notificaciones del alumno"
+                onClick={() => {
+                  setIsQrModalOpen(true);
+                  setTimeout(() => setQrScanned(true), 1200);
+                }}
+                className="px-3 py-2 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white text-[11px] font-bold transition flex items-center gap-1.5 shadow-sm min-h-[36px] cursor-pointer"
               >
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
+                <QrCode className="w-3.5 h-3.5" />
+                <span>Asistencia</span>
               </button>
 
-              {/* Menú de Notificaciones */}
-              <AnimatePresence>
-                {isNotificationsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: -4 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -4 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-4 z-40 space-y-3"
-                  >
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                      <span className="font-bold text-xs text-slate-900 dark:text-white">
-                        Avisos Académicos
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setIsNotificationsOpen(false)}
-                        className="text-slate-400 hover:text-slate-600 text-xs font-semibold cursor-pointer"
-                      >
-                        Cerrar
-                      </button>
-                    </div>
+              {/* Botón Credencial */}
+              <button
+                type="button"
+                onClick={() => setIsCredentialModalOpen(true)}
+                className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-[11px] font-bold transition flex items-center gap-1.5 min-h-[36px] cursor-pointer"
+              >
+                <IdCard className="w-3.5 h-3.5 text-[#0c8ee9]" />
+                <span>Credencial</span>
+              </button>
 
-                    <div className="space-y-2 text-xs">
-                      <div className="p-3 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 space-y-1">
-                        <div className="flex items-center justify-between font-bold text-slate-900 dark:text-white">
-                          <span>Próxima Prueba</span>
-                          <span className="text-[10px] text-slate-400 font-normal">En 3 días</span>
-                        </div>
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                          Redes de Conectividad con Prof. Alejandro Sepúlveda a las 09:45 hrs.
-                        </p>
-                      </div>
-
-                      <div className="p-3 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 space-y-1">
-                        <div className="flex items-center justify-between font-bold text-slate-900 dark:text-white">
-                          <span>Asistencia Marcada</span>
-                          <span className="text-[10px] text-slate-400 font-normal">Hoy 08:04</span>
-                        </div>
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                          Presente confirmado en bloque matutino de Matemática.
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Botón de Ayuda & Convivencia */}
+              <button
+                type="button"
+                onClick={() => setIsSupportModalOpen(true)}
+                className="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60 text-[11px] font-bold transition flex items-center gap-1.5 min-h-[36px] cursor-pointer"
+              >
+                <HeartHandshake className="w-3.5 h-3.5" />
+                <span>Apoyo</span>
+              </button>
             </div>
-
-            {/* Selector Discreto para Verificación de Otros Alumnos (Docente/Inspector) */}
-            {!isStudentSelf && availableDemoStudents.length > 0 && (
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setIsInspectorSwitcherOpen(!isInspectorSwitcherOpen)}
-                  className="px-3 py-2 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium transition flex items-center gap-1.5 min-h-[44px] cursor-pointer"
-                  title="Cambiar Alumno de Demostración (Modo Docente/Inspector)"
-                  aria-expanded={isInspectorSwitcherOpen}
-                  aria-label="Seleccionar alumno para inspección pedagógica"
-                >
-                  <Users className="w-3.5 h-3.5 text-[#0c8ee9]" />
-                  <span className="hidden md:inline">
-                    {isLoadingStudent ? "Cargando..." : "Cambiar Alumno"}
-                  </span>
-                  <ChevronDown className="w-3 h-3" />
-                </button>
-
-                {isInspectorSwitcherOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-3 z-40 space-y-2">
-                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-1">
-                      Fichas de Alumnos Disponibles (Inspección)
-                    </span>
-
-                    <div className="space-y-1 max-h-60 overflow-y-auto">
-                      {availableDemoStudents.map((st) => (
-                        <button
-                          key={st?.email || Math.random()}
-                          type="button"
-                          onClick={() => st?.email && handleSelectDemoStudent(st.email)}
-                          className={cn(
-                            "w-full text-left p-2.5 rounded-xl text-xs transition flex flex-col gap-0.5 cursor-pointer",
-                            currentStudent.email === st?.email
-                              ? "bg-[#0c8ee9]/10 text-[#0c8ee9] font-bold border border-[#0c8ee9]/30"
-                              : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
-                          )}
-                        >
-                          <span className="font-bold truncate">{st?.name || (st as any)?.fullName || st?.email || "Estudiante"}</span>
-                          <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                            {st?.course || "Curso"} · {st?.specialty || "Plan Común"}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
-        </div>
-      </motion.header>
+        </motion.header>
 
       {/* ========================================================================= */}
       {/* 2. PESTAÑAS PRINCIPALES DEL PORTAL DEL ALUMNO */}
@@ -2586,6 +2440,11 @@ export function EstudianteDashboard({
           </div>
         )}
       </AnimatePresence>
+    </div>
+      {/* Columna Lateral: 1/3 del espacio */}
+      <div className="space-y-6">
+        {/* Aquí irán los componentes de eventos y ayuda */}
+      </div>
     </div>
   );
 }

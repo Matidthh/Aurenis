@@ -28,12 +28,14 @@ export default async function TenantDashboardPage({
       : session?.email?.split("@")[0] || "Usuario Institucional";
 
   return (
-    <Page title="Paneles de Gestión Académica & Roles">
+    <Page title="Portal Académico">
       <div className="space-y-6">
-        <PageHeader
-          title={`Tablero de Control — ${tenantCtx.schoolName}`}
-          description="Acceda a los paneles especializados para Directivos, Docentes, Convivencia Escolar, Apoderados y Alumnos."
-        />
+        {defaultRole !== "ESTUDIANTE" && activeRoleName !== "STUDENT" && (
+          <PageHeader
+            title={`Tablero de Control — ${tenantCtx.schoolName}`}
+            description="Acceda a los paneles especializados para Directivos, Docentes, Convivencia Escolar, Apoderados y Alumnos."
+          />
+        )}
 
         <RoleDashboardShell
           schoolSlug={schoolSlug}

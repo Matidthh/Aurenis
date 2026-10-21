@@ -199,6 +199,11 @@ export function Header({
 
   // Nombre amigable del rol
   const displayRoleTitle = currentDemoRole?.roleTitle || user?.roleName || "Usuario";
+  const isStudentRole =
+    currentDemoRole?.roleKey === "alumno" ||
+    user?.roleName === "STUDENT" ||
+    displayRoleTitle.toLowerCase().includes("estudiante") ||
+    displayRoleTitle.toLowerCase().includes("alumno");
 
   return (
     <header
@@ -280,7 +285,8 @@ export function Header({
         {/* ================================================================= */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* 3.1 BOTONERA / SELECTOR DE ROLES DE PRUEBA (DESARROLLO ACTIVA) */}
-          <div className="relative" ref={devRolesRef}>
+          {!isStudentRole && (
+            <div className="relative" ref={devRolesRef}>
             {/* Botón selector principal */}
             <button
               id="header-dev-role-selector-btn"
@@ -416,6 +422,7 @@ export function Header({
               </div>
             )}
           </div>
+          )}
 
           {/* 3.2 BADGE DEL COLEGIO ACTIVO (CON ACCESO A CAMBIO) */}
           {schoolContext && (
