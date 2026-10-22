@@ -126,10 +126,15 @@ export async function POST(req: NextRequest) {
 
       await setSessionCookie(token);
 
+      const hostHeader = req.headers.get("host") || "";
+      const tenantHeader = req.headers.get("x-tenant-subdomain") || "";
+      const isSubdomainMatch = tenantHeader === mem.school.slug || hostHeader.startsWith(`${mem.school.slug}.`);
+      const redirectUrl = isSubdomainMatch ? "/dashboard" : `/${mem.school.slug}/dashboard`;
+
       return NextResponse.json({
         success: true,
         token,
-        redirectUrl: `/${mem.school.slug}/dashboard`,
+        redirectUrl,
         user: {
           id: user.id,
           email: user.email,

@@ -154,6 +154,21 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const { setSessionData } = useAuth();
   const schoolParam = searchParams.get("school") || searchParams.get("slug");
+  const [detectedSubdomain, setDetectedSubdomain] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname.toLowerCase();
+      const parts = hostname.split(".");
+      if (parts.length > 2 && !["www", "admin", "app", "api", "system"].includes(parts[0])) {
+        setDetectedSubdomain(parts[0]);
+      } else if (hostname.includes("localhost") && parts.length > 1 && !["www", "localhost", "127"].includes(parts[0])) {
+        setDetectedSubdomain(parts[0]);
+      }
+    }
+  }, []);
+
+  const activeSchoolSlug = schoolParam || detectedSubdomain || undefined;
 
   // Form states
   const [identifier, setIdentifier] = useState("");
@@ -249,7 +264,7 @@ function LoginContent() {
     const validation = LoginFormSchema.safeParse({
       identifier,
       password,
-      schoolSlug: schoolParam || undefined,
+      schoolSlug: activeSchoolSlug,
       rememberMe,
     });
 
@@ -289,7 +304,7 @@ function LoginContent() {
         body: JSON.stringify({
           email: identifier.trim(),
           password,
-          schoolSlug: schoolParam || undefined,
+          schoolSlug: activeSchoolSlug,
         }),
         signal: controller.signal,
       });
@@ -336,7 +351,15 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
-      const targetUrl = data.redirectUrl || "/select-school";
+      let targetUrl = data.redirectUrl || "/select-school";
+      // Si estamos en un subdominio y la redirección incluye el slug (ej: /lpmm/dashboard en lpmm.aurenis.app),
+      // normalizar a /dashboard para mantener la URL limpia sin duplicar el slug
+      if (detectedSubdomain && targetUrl.startsWith(`/${detectedSubdomain}/`)) {
+        targetUrl = targetUrl.replace(`/${detectedSubdomain}`, "");
+      } else if (detectedSubdomain && targetUrl === `/${detectedSubdomain}`) {
+        targetUrl = "/dashboard";
+      }
+
       router.push(targetUrl);
       setTimeout(() => {
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {

@@ -13,7 +13,7 @@ export function InstitutionLoginSection() {
     if (schoolDomain.trim()) {
       // En un entorno real, buscaría el colegio y redirigiría a /slug/login
       const slug = schoolDomain.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-      router.push(`/${slug}/login`);
+      router.push(`/login?school=${encodeURIComponent(slug)}`);
     }
   };
 

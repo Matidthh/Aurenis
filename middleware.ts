@@ -408,7 +408,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (tenantSubdomain && !pathname.startsWith(`/${tenantSubdomain}`) && !pathname.startsWith("/_next") && !pathname.startsWith("/api/")) {
+  // Excluir de reescritura de subdominio: rutas reservadas del sistema y autenticación (/login, /forgot-password, /select-school, /api, etc.)
+  const firstPathSegment = pathname.split("/")[1] || "";
+  const isAuthOrSystemPath = RESERVED_ROOT_PATHS.has(firstPathSegment) && firstPathSegment !== "";
+
+  if (tenantSubdomain && !isAuthOrSystemPath && !pathname.startsWith(`/${tenantSubdomain}`) && !pathname.startsWith("/_next") && !pathname.startsWith("/api/")) {
     const rewriteUrl = new URL(`/${tenantSubdomain}${pathname === "/" ? "" : pathname}`, request.url);
     rewriteUrl.search = request.nextUrl.search;
     
@@ -448,9 +452,11 @@ export async function middleware(request: NextRequest) {
   const requestHeaders = sanitizeAndInjectHeaders(request, session);
   requestHeaders.set("x-request-id", requestId);
   requestHeaders.set("x-nonce", cspNonce);
+  if (tenantSubdomain) {
+    requestHeaders.set("x-tenant-subdomain", tenantSubdomain);
+  }
 
   // 7. Aislamiento Estricto para Rutas Web UI /[schoolSlug]/* (Bypass de estado cliente)
-  const firstPathSegment = pathname.split("/")[1] || "";
   const isTenantUiRoute =
     firstPathSegment !== "" &&
     !RESERVED_ROOT_PATHS.has(firstPathSegment) &&
@@ -514,7 +520,8 @@ export async function middleware(request: NextRequest) {
     if (session.isSystemAdmin) {
       response = NextResponse.redirect(new URL("/system/dashboard", request.url));
     } else if (session.schoolSlug) {
-      response = NextResponse.redirect(new URL(`/${session.schoolSlug}/dashboard`, request.url));
+      const targetPath = tenantSubdomain === session.schoolSlug ? "/dashboard" : `/${session.schoolSlug}/dashboard`;
+      response = NextResponse.redirect(new URL(targetPath, request.url));
     } else {
       response = NextResponse.redirect(new URL("/select-school", request.url));
     }
