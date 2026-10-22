@@ -129,7 +129,17 @@ export async function POST(req: NextRequest) {
       const hostHeader = req.headers.get("host") || "";
       const tenantHeader = req.headers.get("x-tenant-subdomain") || "";
       const isSubdomainMatch = tenantHeader === mem.school.slug || hostHeader.startsWith(`${mem.school.slug}.`);
-      const redirectUrl = isSubdomainMatch ? "/dashboard" : `/${mem.school.slug}/dashboard`;
+
+      let roleSubpath = "";
+      const roleUpper = (mem.role.name || "").toUpperCase();
+      if (roleUpper === "STUDENT") roleSubpath = "/estudiante";
+      else if (roleUpper === "TEACHER") roleSubpath = "/docente";
+      else if (roleUpper === "ADMIN" || roleUpper === "DIRECTOR") roleSubpath = "/directivo";
+      else if (roleUpper === "GUARDIAN") roleSubpath = "/apoderado";
+      else if (roleUpper === "CONVIVENCIA") roleSubpath = "/convivencia";
+
+      const baseDashboard = isSubdomainMatch ? "/dashboard" : `/${mem.school.slug}/dashboard`;
+      const redirectUrl = `${baseDashboard}${roleSubpath}`;
 
       return NextResponse.json({
         success: true,

@@ -124,7 +124,85 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/20",
     description: "Gestión central de colegios, licenciamiento, auditoría general e integraciones.",
   },
+  {
+    id: "demo-lpmm-maicol",
+    roleKey: "alumno",
+    roleTitle: "Estudiante 4° Medio E (Programación)",
+    institutionName: "Liceo Politécnico Marga Marga",
+    institutionCode: "LPMM-001 (RBD 10240)",
+    name: "Maicol Matías Recabarren",
+    identifier: "maicol.recabarren@lpmm.cl",
+    pass: "Estudiantelpmm2026",
+    icon: GraduationCap,
+    badgeColor: "bg-purple-500/10 text-purple-600 border-purple-500/20",
+    description: "Ficha oficial de notas Decreto 67, asistencia institucional, asignaturas TP y credencial QR.",
+  },
 ];
+
+/**
+ * Resuelve de forma infalible la URL de redirección post-login
+ * según el rol del usuario, el slug de la institución y el contexto de subdominio.
+ * Autores: 👑 Maicol R. (Arquitectura) & 💻 Malcom Marcelo (Lógica de Cliente)
+ */
+export function resolveUserDashboardUrl({
+  data,
+  subdomain,
+  fallbackSlug,
+}: {
+  data: any;
+  subdomain?: string | null;
+  fallbackSlug?: string;
+}): string {
+  // Caso 1: SuperAdmin del Sistema siempre va a la consola central
+  if (data?.user?.isSystemAdmin) {
+    return "/system/dashboard";
+  }
+
+  const user = data?.user;
+  const roleName = (user?.roleName || "").toUpperCase();
+  const schoolSlug = user?.activeSchool?.slug || fallbackSlug || subdomain || "";
+
+  // Subruta específica asignada a cada rol en AURENIS
+  let roleSubpath = "";
+  if (roleName === "STUDENT") roleSubpath = "/estudiante";
+  else if (roleName === "TEACHER") roleSubpath = "/docente";
+  else if (roleName === "ADMIN" || roleName === "DIRECTOR") roleSubpath = "/directivo";
+  else if (roleName === "GUARDIAN") roleSubpath = "/apoderado";
+  else if (roleName === "CONVIVENCIA") roleSubpath = "/convivencia";
+
+  // Caso 2: Petición bajo un subdominio institucional (ej: lpmm.aurenis.app o lpmm.localhost:3000)
+  if (subdomain && schoolSlug && subdomain.toLowerCase() === schoolSlug.toLowerCase()) {
+    return `/dashboard${roleSubpath}`;
+  }
+
+  // Caso 3: URL provista por el backend
+  if (data?.redirectUrl && typeof data.redirectUrl === "string") {
+    let target = data.redirectUrl;
+    // Si estamos en subdominio y el target incluye el slug, lo normalizamos
+    if (subdomain && target.startsWith(`/${subdomain}/`)) {
+      target = target.replace(`/${subdomain}`, "");
+    } else if (subdomain && target === `/${subdomain}`) {
+      target = "/dashboard";
+    }
+
+    // Si la redirección es a /dashboard y tenemos rol específico, añadimos la subruta
+    if (target === "/dashboard" && roleSubpath) {
+      return `/dashboard${roleSubpath}`;
+    }
+    if (schoolSlug && target === `/${schoolSlug}/dashboard` && roleSubpath) {
+      return `/${schoolSlug}/dashboard${roleSubpath}`;
+    }
+    return target;
+  }
+
+  // Caso 4: Ruta canónica con schoolSlug
+  if (schoolSlug) {
+    return `/${schoolSlug}/dashboard${roleSubpath}`;
+  }
+
+  // Caso 5: Selector de colegios para usuarios con múltiples membresías
+  return "/select-school";
+}
 
 function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -351,14 +429,11 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
-      let targetUrl = data.redirectUrl || "/select-school";
-      // Si estamos en un subdominio y la redirección incluye el slug (ej: /lpmm/dashboard en lpmm.aurenis.app),
-      // normalizar a /dashboard para mantener la URL limpia sin duplicar el slug
-      if (detectedSubdomain && targetUrl.startsWith(`/${detectedSubdomain}/`)) {
-        targetUrl = targetUrl.replace(`/${detectedSubdomain}`, "");
-      } else if (detectedSubdomain && targetUrl === `/${detectedSubdomain}`) {
-        targetUrl = "/dashboard";
-      }
+      const targetUrl = resolveUserDashboardUrl({
+        data,
+        subdomain: detectedSubdomain,
+        fallbackSlug: activeSchoolSlug,
+      });
 
       router.push(targetUrl);
       setTimeout(() => {
@@ -408,7 +483,7 @@ function LoginContent() {
         body: JSON.stringify({
           email: account.identifier.trim(),
           password: account.pass,
-          schoolSlug: schoolParam || undefined,
+          schoolSlug: activeSchoolSlug || (account.id.includes("lpmm") ? "lpmm" : undefined),
         }),
         signal: controller.signal,
       });
@@ -441,7 +516,12 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
-      const targetUrl = data.redirectUrl || "/select-school";
+      const targetUrl = resolveUserDashboardUrl({
+        data,
+        subdomain: detectedSubdomain,
+        fallbackSlug: activeSchoolSlug || (account.id.includes("lpmm") ? "lpmm" : undefined),
+      });
+
       router.push(targetUrl);
       setTimeout(() => {
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
@@ -498,7 +578,12 @@ function LoginContent() {
         setSessionData(sessionUser, data.token || null);
       }
 
-      const targetUrl = data.redirectUrl || "/select-school";
+      const targetUrl = resolveUserDashboardUrl({
+        data,
+        subdomain: detectedSubdomain,
+        fallbackSlug: activeSchoolSlug,
+      });
+
       router.push(targetUrl);
       setTimeout(() => {
         if (typeof window !== "undefined" && window.location.pathname !== targetUrl) {
