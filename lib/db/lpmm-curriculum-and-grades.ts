@@ -27,7 +27,7 @@ export interface DetailedSubjectGrade {
   }[];
   currentAvg: number;
   attendanceRate: number;
-  status: "Aprobando" | "Destacado" | "En Riesgo";
+  status: string;
 }
 
 export interface StudentAcademicRecord {

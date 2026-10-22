@@ -1067,7 +1067,7 @@ export function EstudianteDashboard({
                               {sub.name}
                             </span>
                             <span className="text-[10px] text-slate-400">
-                              {latestGrade?.type || "Evaluación"} · {latestGrade?.date || "Abril 2025"}
+                              {latestGrade?.label || "Evaluación"} · {latestGrade?.date || "Abril 2025"}
                             </span>
                           </div>
 
