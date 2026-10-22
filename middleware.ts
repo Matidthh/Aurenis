@@ -386,6 +386,61 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 4.3 Soporte de Subdominios Multi-Tenant en aurenis.app (ej. lpmm.aurenis.app -> /lpmm/*)
+  const host = request.headers.get("host") || "";
+  let tenantSubdomain: string | null = null;
+  const hostParts = host.split(".");
+  const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "auth", "mail", "system"]);
+
+  if (host.endsWith(".aurenis.app")) {
+    if (hostParts.length > 2) {
+      const sub = hostParts[0].toLowerCase();
+      if (!RESERVED_SUBDOMAINS.has(sub)) {
+        tenantSubdomain = sub;
+      }
+    }
+  } else if (host.includes("localhost") || host.includes("127.0.0.1")) {
+    if (hostParts.length > 1) {
+      const sub = hostParts[0].toLowerCase();
+      if (!RESERVED_SUBDOMAINS.has(sub) && sub !== "localhost" && sub !== "127") {
+        tenantSubdomain = sub;
+      }
+    }
+  }
+
+  if (tenantSubdomain && !pathname.startsWith(`/${tenantSubdomain}`) && !pathname.startsWith("/_next") && !pathname.startsWith("/api/")) {
+    const rewriteUrl = new URL(`/${tenantSubdomain}${pathname === "/" ? "" : pathname}`, request.url);
+    rewriteUrl.search = request.nextUrl.search;
+    
+    const { session, hadInvalidToken } = await verifySessionToken(request);
+    const requestHeaders = sanitizeAndInjectHeaders(request, session);
+    requestHeaders.set("x-request-id", requestId);
+    requestHeaders.set("x-nonce", cspNonce);
+    requestHeaders.set("x-tenant-subdomain", tenantSubdomain);
+
+    const tenantBlock = enforceTenantIsolation({
+      request,
+      session,
+      targetIdentifier: tenantSubdomain,
+      isApi: false,
+      hadInvalidToken,
+      corsHeaders,
+    });
+
+    if (tenantBlock) {
+      return applySecurityHeaders(tenantBlock, cspNonce);
+    }
+
+    const rewriteRes = NextResponse.rewrite(rewriteUrl, {
+      request: { headers: requestHeaders },
+    });
+
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      rewriteRes.headers.set(key, value);
+    });
+    return applySecurityHeaders(rewriteRes, cspNonce);
+  }
+
   // 5. Validación Criptográfica Centralizada de Sesión (Backend-Only)
   const { session, hadInvalidToken } = await verifySessionToken(request);
 

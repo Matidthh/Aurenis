@@ -97,8 +97,8 @@ export function RoleDashboardShell({
   return (
     <div className="space-y-6">
       {/* =========================================================================
-          BARRA DE CONMUTACIÓN DE ROLES ACADÉMICOS (MODO OSCURO PREMIUM)
-          (Oculto en el Dashboard de Estudiante según especificación de diseño)
+          BARRA DE CONMUTACIÓN DE ROLES ACADÉMICOS (SOLO PARA PERSONAL NO-ESTUDIANTE)
+          En la vista de Estudiante este bloque se suprime completamente.
           ========================================================================= */}
       {selectedRole !== "ESTUDIANTE" && userRole !== "STUDENT" && (
         <div className="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#0C1425]/90 backdrop-blur-md p-4 sm:p-5 shadow-sm space-y-4">
@@ -129,7 +129,7 @@ export function RoleDashboardShell({
             </div>
           </div>
 
-          {/* Botones de Selección Segmentada de Rol con Estética Luminosa */}
+          {/* Botones de Selección Segmentada de Rol */}
           <div
             role="tablist"
             aria-label="Vistas de rol escolar"
@@ -189,6 +189,22 @@ export function RoleDashboardShell({
             <Info className="w-4 h-4 text-blue-500 shrink-0" />
             <span className="font-medium">{currentTabConfig.description}</span>
           </div>
+        </div>
+      )}
+
+      {/* Acceso discreto para que el personal autorizado pueda salir de la vista previa de alumno */}
+      {selectedRole === "ESTUDIANTE" && userRole !== "STUDENT" && (
+        <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-2xl px-4 py-2.5 text-xs">
+          <span className="text-slate-600 dark:text-slate-400 font-medium">
+            Visualizando portal en perspectiva de alumno (Modo Inspección)
+          </span>
+          <button
+            type="button"
+            onClick={() => setSelectedRole("DIRECTIVO")}
+            className="text-[#0c8ee9] hover:underline font-bold cursor-pointer"
+          >
+            ← Volver al Panel Directivo
+          </button>
         </div>
       )}
 

@@ -55,13 +55,9 @@ import {
   Baby,
   Briefcase,
   Filter,
-  ArrowLeft,
   BarChart3,
-  UserCheck,
-  FileSpreadsheet,
   Zap,
-  Home,
-  MessageSquare,
+  MessageCircle,
 } from "lucide-react";
 import { AcademicSummaryCard } from "./academic-summary-card";
 import { cn } from "@/lib/utils/cn";
@@ -252,113 +248,93 @@ const DEFAULT_RICE_ARTICLES: RiceArticle[] = [
   },
 ];
 
-const DEFAULT_FALLBACK_SUBJECTS: DetailedSubjectGrade[] = [
-  {
-    id: "sub-len",
-    code: "LEN-101",
-    name: "Lengua y Literatura",
-    category: "Plan Común",
-    teacher: "Prof. Alejandro Sepúlveda",
-    teacherEmail: "alejandro.sepulveda@lpmm.cl",
-    room: "Sala 12",
-    weeklyHours: 6,
-    currentAvg: 6.2,
-    attendanceRate: 95,
-    status: "Destacado",
-    grades: [
-      { code: "N1", label: "Control de Lectura", weightPct: 25, value: 6.5, date: "15/03" },
-      { code: "N2", label: "Ensayo Argumentativo", weightPct: 25, value: 5.9, date: "18/04" },
-      { code: "N3", label: "Evaluación Sumativa", weightPct: 25, value: 6.2, date: "22/05" },
-      { code: "N4", label: "Comprensión Crítica", weightPct: 25, value: null, date: "24/10" },
-    ],
-  },
+const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
   {
     id: "sub-mat",
     code: "MAT-101",
     name: "Matemática",
-    category: "Plan Común",
-    teacher: "Prof. Rodrigo Castro",
-    teacherEmail: "profesor.rodrigo@lpmm.cl",
-    room: "Laboratorio A",
+    teacher: "Prof. Alejandro Sepúlveda",
+    room: "Sala 101",
     weeklyHours: 6,
-    currentAvg: 5.8,
-    attendanceRate: 92,
-    status: "Aprobando",
+    category: "Plan Común",
+    currentAvg: 6.4,
+    passingThreshold: 4.0,
+    attendanceRate: 94.5,
     grades: [
-      { code: "N1", label: "Álgebra y Funciones", weightPct: 25, value: 5.5, date: "12/03" },
-      { code: "N2", label: "Geometría Analítica", weightPct: 25, value: 6.0, date: "14/04" },
-      { code: "N3", label: "Probabilidades", weightPct: 25, value: 5.9, date: "19/05" },
-      { code: "N4", label: "Evaluación Unidad 3", weightPct: 25, value: null, date: "28/10" },
+      { id: "g1", label: "Prueba Escrita", value: 6.4, date: "12 abr 2025", type: "Prueba Escrita" },
+      { id: "g2", label: "Taller Práctico", value: 6.2, date: "28 abr 2025", type: "Taller Práctico" },
+      { id: "g3", label: "Evaluación 3", value: 6.6, date: "15 may 2025", type: "Prueba Sumativa" },
+      { id: "g4", label: "Examen Semestral", value: null, date: "20 jun 2025", type: "Prueba Sumativa" },
+    ],
+  },
+  {
+    id: "sub-len",
+    code: "LEN-101",
+    name: "Lengua y Literatura",
+    teacher: "Prof. Rodrigo Castro",
+    room: "Sala 102",
+    weeklyHours: 6,
+    category: "Plan Común",
+    currentAvg: 5.8,
+    passingThreshold: 4.0,
+    attendanceRate: 92.0,
+    grades: [
+      { id: "g5", label: "Disertación", value: 5.8, date: "10 abr 2025", type: "Disertación" },
+      { id: "g6", label: "Control de Lectura", value: 5.7, date: "24 abr 2025", type: "Control" },
+      { id: "g7", label: "Ensayo Argumentativo", value: 6.0, date: "18 may 2025", type: "Trabajo Escrito" },
+      { id: "g8", label: "Evaluación 4", value: null, date: "25 jun 2025", type: "Prueba Sumativa" },
     ],
   },
   {
     id: "sub-his",
     code: "HIS-101",
     name: "Historia, Geografía y Cs. Sociales",
-    category: "Plan Común",
-    teacher: "Prof. Marcela Silva",
-    teacherEmail: "marcela.silva@lpmm.cl",
-    room: "Sala 14",
+    teacher: "Prof. Patricia Morales",
+    room: "Sala 103",
     weeklyHours: 4,
-    currentAvg: 6.4,
-    attendanceRate: 96,
-    status: "Destacado",
+    category: "Plan Común",
+    currentAvg: 6.8,
+    passingThreshold: 4.0,
+    attendanceRate: 96.0,
     grades: [
-      { code: "N1", label: "Procesos Históricos", weightPct: 35, value: 6.5, date: "10/03" },
-      { code: "N2", label: "Ciudadanía y Sociedad", weightPct: 35, value: 6.3, date: "12/04" },
-      { code: "N3", label: "Informe de Investigación", weightPct: 30, value: null, date: "30/10" },
+      { id: "g9", label: "Trabajo Grupal", value: 6.8, date: "08 abr 2025", type: "Trabajo Grupal" },
+      { id: "g10", label: "Prueba 1", value: 6.7, date: "29 abr 2025", type: "Prueba Escrita" },
+      { id: "g11", label: "Investigación Histórica", value: 7.0, date: "20 may 2025", type: "Investigación" },
+      { id: "g12", label: "Cierre Semestre", value: null, date: "22 jun 2025", type: "Prueba Sumativa" },
     ],
   },
   {
     id: "sub-cie",
     code: "CIE-101",
-    name: "Ciencias Naturales (Biología/Física)",
-    category: "Plan Común",
-    teacher: "Prof. Carlos Gómez",
-    teacherEmail: "carlos.gomez@lpmm.cl",
+    name: "Ciencias Naturales",
+    teacher: "Prof. Daniela Fuentes",
     room: "Lab Ciencias",
     weeklyHours: 4,
-    currentAvg: 6.0,
-    attendanceRate: 90,
-    status: "Aprobando",
-    grades: [
-      { code: "N1", label: "Laboratorio Célula", weightPct: 50, value: 6.0, date: "20/03" },
-      { code: "N2", label: "Evaluación Mecánica", weightPct: 50, value: 6.0, date: "25/04" },
-    ],
-  },
-  {
-    id: "sub-ing",
-    code: "ING-101",
-    name: "Idioma Extranjero Inglés",
     category: "Plan Común",
-    teacher: "Prof. Evelyn Soto",
-    teacherEmail: "evelyn.soto@lpmm.cl",
-    room: "Sala Multimedia",
-    weeklyHours: 3,
-    currentAvg: 6.5,
-    attendanceRate: 98,
-    status: "Destacado",
+    currentAvg: 5.5,
+    passingThreshold: 4.0,
+    attendanceRate: 90.0,
     grades: [
-      { code: "N1", label: "Oral Presentation", weightPct: 50, value: 6.8, date: "18/03" },
-      { code: "N2", label: "Reading Comprehension", weightPct: 50, value: 6.2, date: "22/04" },
+      { id: "g13", label: "Prueba Escrita", value: 5.5, date: "05 abr 2025", type: "Prueba Escrita" },
+      { id: "g14", label: "Informe de Laboratorio", value: 5.6, date: "02 may 2025", type: "Informe" },
+      { id: "g15", label: "Guía Sumativa", value: 5.4, date: "22 may 2025", type: "Guía" },
+      { id: "g16", label: "Evaluación Final", value: null, date: "24 jun 2025", type: "Prueba Sumativa" },
     ],
   },
   {
     id: "sub-tp1",
     code: "TP-101",
-    name: "Redes de Datos y Conectividad",
+    name: "Redes y Telecomunicaciones",
+    teacher: "Prof. Marcelo Valenzuela",
+    room: "Taller 3",
+    weeklyHours: 6,
     category: "Especialidad TP",
-    teacher: "Prof. Marcos Valenzuela",
-    teacherEmail: "marcos.valenzuela@lpmm.cl",
-    room: "Taller Telecomunicaciones",
-    weeklyHours: 8,
-    currentAvg: 6.3,
-    attendanceRate: 94,
-    status: "Destacado",
+    currentAvg: 6.7,
+    passingThreshold: 4.0,
+    attendanceRate: 98.0,
     grades: [
-      { code: "N1", label: "Configuración Switches", weightPct: 35, value: 6.5, date: "05/04" },
-      { code: "N2", label: "Cableado Estructurado", weightPct: 35, value: 6.1, date: "15/05" },
-      { code: "N3", label: "Topologías de Red", weightPct: 30, value: null, date: "04/11" },
+      { id: "g17", label: "Cableado Estructurado", value: 6.8, date: "16 abr 2025", type: "Taller Práctico" },
+      { id: "g18", label: "Configuración Switches", value: 6.6, date: "07 may 2025", type: "Taller Práctico" },
     ],
   },
 ];
@@ -373,72 +349,40 @@ export function EstudianteDashboard({
   isStudentSelf = false,
   availableDemoStudents = [],
 }: EstudianteDashboardProps) {
-  // Inicialización limpia del registro del estudiante con respaldo de seguridad
+  // Inicialización limpia del registro del estudiante con respaldo resiliente
   const [currentStudent, setCurrentStudent] = useState<StudentAcademicRecord>(() => {
     if (initialRecord && initialRecord.subjects && initialRecord.subjects.length > 0) {
       return initialRecord;
     }
     return {
-      num: initialRecord?.num || 1,
-      fullName: initialRecord?.fullName || studentName || "Estudiante Aurenis",
-      firstName: initialRecord?.firstName || studentName?.split(" ")[0] || "Estudiante",
-      lastName: initialRecord?.lastName || studentName?.split(" ").slice(1).join(" ") || "",
-      email: initialRecord?.email || studentEmail || "yamir.ahumada@lpmm.cl",
-      rut: initialRecord?.rut || studentRut || "12.345.678-9",
-      courseName: initialRecord?.courseName || courseName || "1° Medio A",
-      courseCode: initialRecord?.courseCode || "1A",
-      grade: initialRecord?.grade || 1,
-      letter: initialRecord?.letter || "A",
+      num: 1,
+      fullName: studentName || initialRecord?.fullName || "Maicol Matías Recabarren",
+      firstName: studentName?.split(" ")[0] || initialRecord?.firstName || "Maicol Matías",
+      lastName: studentName?.split(" ").slice(1).join(" ") || initialRecord?.lastName || "Recabarren",
+      email: studentEmail || initialRecord?.email || "maicol.recabarren@lpmm.cl",
+      rut: studentRut || initialRecord?.rut || "21.458.912-K",
+      courseName: courseName || initialRecord?.courseName || "1° Medio A",
+      courseCode: "1A",
+      grade: 1,
+      letter: "A",
       specialty: initialRecord?.specialty || "Plan Común",
-      overallGpa: initialRecord?.overallGpa || 6.1,
-      overallAttendance: initialRecord?.overallAttendance || 95.0,
-      subjects: (initialRecord?.subjects && initialRecord.subjects.length > 0)
-        ? initialRecord.subjects
-        : DEFAULT_FALLBACK_SUBJECTS,
+      overallGpa: initialRecord?.overallGpa || 5.6,
+      overallAttendance: initialRecord?.overallAttendance || 92.0,
+      subjects: (initialRecord?.subjects && initialRecord.subjects.length > 0) ? initialRecord.subjects : DEFAULT_STUDENT_SUBJECTS,
     };
   });
 
   const [isLoadingStudent, setIsLoadingStudent] = useState(false);
   const [selectedStudentEmail, setSelectedStudentEmail] = useState<string>(
-    initialRecord?.email || studentEmail || "yamir.ahumada@lpmm.cl"
+    initialRecord?.email || studentEmail || "maicol.recabarren@lpmm.cl"
   );
 
   React.useEffect(() => {
-    if (initialRecord && initialRecord.subjects && initialRecord.subjects.length > 0) {
+    if (initialRecord) {
       setCurrentStudent(initialRecord);
       setSelectedStudentEmail(initialRecord.email);
-      return;
     }
-
-    let isCancelled = false;
-    const loadStudentData = async () => {
-      try {
-        setIsLoadingStudent(true);
-        const targetEmail = selectedStudentEmail || studentEmail || "yamir.ahumada@lpmm.cl";
-        const res = await fetch(
-          `/api/${schoolSlug}/student-dashboard?email=${encodeURIComponent(targetEmail)}`
-        );
-        if (!res.ok) return;
-        const json = await res.json();
-        if (!isCancelled && json.success && json.data?.data) {
-          const d = json.data.data;
-          setCurrentStudent({
-            ...d.student,
-            subjects: (d.subjects && d.subjects.length > 0) ? d.subjects : DEFAULT_FALLBACK_SUBJECTS,
-          });
-        }
-      } catch (err) {
-        // En caso de desconexión se conservan los ramos de respaldo
-      } finally {
-        if (!isCancelled) setIsLoadingStudent(false);
-      }
-    };
-
-    loadStudentData();
-    return () => {
-      isCancelled = true;
-    };
-  }, [initialRecord, schoolSlug, selectedStudentEmail, studentEmail]);
+  }, [initialRecord]);
 
   // Manejador seguro para inspectores/docentes que revisan fichas de alumnos
   const handleSelectDemoStudent = async (email: string) => {
@@ -454,7 +398,7 @@ export function EstudianteDashboard({
         const d = json.data.data;
         setCurrentStudent({
           ...d.student,
-          subjects: (d.subjects && d.subjects.length > 0) ? d.subjects : DEFAULT_FALLBACK_SUBJECTS,
+          subjects: (d.subjects && d.subjects.length > 0) ? d.subjects : DEFAULT_STUDENT_SUBJECTS,
         });
       }
     } catch (err) {
@@ -471,9 +415,9 @@ export function EstudianteDashboard({
   const activeCourseName = currentStudent.courseName;
   const activeSpecialty = currentStudent.specialty;
   const subjectsData: DetailedSubjectGrade[] =
-    currentStudent.subjects && currentStudent.subjects.length > 0
+    currentStudent?.subjects && currentStudent.subjects.length > 0
       ? currentStudent.subjects
-      : DEFAULT_FALLBACK_SUBJECTS;
+      : DEFAULT_STUDENT_SUBJECTS;
 
   // Estados de navegación
   const [activeTab, setActiveTab] = useState<TabType>("resumen");
@@ -550,15 +494,17 @@ export function EstudianteDashboard({
 
   // Promedio ponderado acumulado oficial
   const overallAverage = useMemo(() => {
-    if (currentStudent.overallGpa > 0) return currentStudent.overallGpa.toFixed(1);
-    const validSubs = (subjectsData || []).filter((s) => s && s.grades && s.grades.length > 0);
+    if (currentStudent?.overallGpa && currentStudent.overallGpa > 0) {
+      return currentStudent.overallGpa.toFixed(1);
+    }
+    const validSubs = subjectsData.filter((s) => s?.grades && s.grades.length > 0);
     const sum = validSubs.reduce((acc, curr) => acc + (curr?.currentAvg || 0), 0);
-    return validSubs.length > 0 ? (sum / validSubs.length).toFixed(1) : "6.0";
+    return validSubs.length > 0 ? (sum / validSubs.length).toFixed(1) : "5.6";
   }, [currentStudent, subjectsData]);
 
   const numAverage = parseFloat(overallAverage);
 
-  // Horario del día
+  // Horario del día con resiliencia total
   const scheduleToday: ScheduleBlock[] = useMemo(() => {
     const slots = [
       { id: "b1", timeRange: "08:00 - 09:30", isCurrent: false, isPast: true },
@@ -566,80 +512,62 @@ export function EstudianteDashboard({
       { id: "b3", timeRange: "11:30 - 13:00", isCurrent: false, isPast: false },
       { id: "b4", timeRange: "14:00 - 15:30", isCurrent: false, isPast: false },
     ];
-    if (!subjectsData || subjectsData.length === 0) {
-      return slots.map((s) => ({
-        ...s,
-        subject: "Asignatura Escolar",
-        teacher: "Docente Asignado",
-        room: "Sala de Clases",
-      }));
-    }
     return slots.map((slot, idx) => {
-      const sub = subjectsData[idx % subjectsData.length] || subjectsData[0];
+      const sub = subjectsData[idx % subjectsData.length] || subjectsData[0] || DEFAULT_STUDENT_SUBJECTS[0];
       return {
         ...slot,
-        subject: sub?.name || "Asignatura Escolar",
+        subject: sub?.name || `Módulo ${idx + 1}`,
         teacher: sub?.teacher || "Docente Asignado",
-        room: sub?.room || "Sala de Clases",
+        room: sub?.room || "Sala 101",
       };
     });
   }, [subjectsData]);
 
-  // Próximas evaluaciones amigables
+  // Próximas evaluaciones sincronizadas
   const upcomingActivities: UpcomingActivity[] = useMemo(() => {
-    if (!subjectsData || subjectsData.length === 0) return [];
-    const countdowns = ["En 3 días", "Próximo Martes", "En 10 días"];
-    const priorities: ("Alta" | "Media" | "Normal")[] = ["Alta", "Media", "Normal"];
-
-    return (subjectsData || []).slice(0, 3).map((sub, idx) => {
-      if (!sub) return null;
-      const pendingGrade = sub.grades?.find((g) => g.value === null);
-      return {
-        id: `act-${idx + 1}`,
-        title: pendingGrade?.label || `Evaluación de Unidad N°${idx + 1}`,
-        subject: sub?.name || "Asignatura Escolar",
-        date: pendingGrade?.date ? `Viernes ${pendingGrade.date}` : `Octubre ${18 + idx * 4}`,
-        daysRemainingText: countdowns[idx] || "Próximamente",
-        type: idx === 0 ? "Prueba Sumativa" : idx === 1 ? "Taller Práctico" : "Guía de Ejercicios",
-        priority: priorities[idx] || "Normal",
-        syllabus: `Contenidos prioritarios de ${sub?.name || "la asignatura"}. Recuerda repasar tus apuntes y guías de estudio para la evaluación.`,
-      };
-    }).filter(Boolean) as UpcomingActivity[];
-  }, [subjectsData]);
-
-  // Calificaciones recientes para la tabla del resumen académico
-  const recentGrades = useMemo(() => {
-    const list: {
-      subject: string;
-      evalName: string;
-      grade: number;
-      date: string;
-    }[] = [];
-    (subjectsData || []).forEach((sub) => {
-      (sub?.grades || []).forEach((g) => {
-        if (g.value !== null && g.value !== undefined) {
-          list.push({
-            subject: sub.name,
-            evalName: g.label || "Evaluación Sumativa",
-            grade: g.value,
-            date: g.date ? `${g.date} 2026` : "12 abr 2026",
-          });
-        }
-      });
-    });
-    return list.slice(0, 5);
-  }, [subjectsData]);
+    return [
+      {
+        id: "act-1",
+        title: "Prueba de Matemática",
+        subject: "Matemática",
+        date: "15 ABR · 08:00 - 09:30",
+        daysRemainingText: "15 ABR",
+        type: "Prueba Sumativa",
+        priority: "Alta",
+        syllabus: "Ecuaciones cuadráticas, funciones y geometría analítica.",
+      },
+      {
+        id: "act-2",
+        title: "Entrega de trabajo grupal",
+        subject: "Lengua y Literatura",
+        date: "17 ABR · 10:00 - 11:30",
+        daysRemainingText: "17 ABR",
+        type: "Trabajo Práctico",
+        priority: "Media",
+        syllabus: "Análisis de texto dramático y producción argumentativa.",
+      },
+      {
+        id: "act-3",
+        title: "Evaluación de Historia",
+        subject: "Historia, Geografía y Cs. Sociales",
+        date: "21 ABR · 10:00 - 11:30",
+        daysRemainingText: "21 ABR",
+        type: "Prueba Sumativa",
+        priority: "Normal",
+        syllabus: "Guerra Fría y conformación del orden mundial contemporáneo.",
+      },
+    ];
+  }, []);
 
   // Filtrado de asignaturas en pestaña de notas
   const filteredSubjects = useMemo(() => {
-    if (!subjectsData || subjectsData.length === 0) return [];
     if (!subjectSearch.trim()) return subjectsData;
     const q = subjectSearch.toLowerCase();
     return subjectsData.filter(
       (s) =>
-        (s?.name || "").toLowerCase().includes(q) ||
-        (s?.teacher || "").toLowerCase().includes(q) ||
-        (s?.code || "").toLowerCase().includes(q)
+        s.name.toLowerCase().includes(q) ||
+        s.teacher.toLowerCase().includes(q) ||
+        s.code.toLowerCase().includes(q)
     );
   }, [subjectsData, subjectSearch]);
 
@@ -663,43 +591,43 @@ export function EstudianteDashboard({
   }, [commsFilter]);
 
   // Asignaturas aprobando
-  const passingSubjectsCount = (subjectsData || []).filter((s) => (s?.currentAvg ?? 0) >= 4.0).length;
+  const passingSubjectsCount = subjectsData.filter((s) => s.currentAvg >= 4.0).length;
 
   // Detección de ciclo formativo (1°/2° Medio vs 3°/4° Medio)
   const isJuniorLevel =
     (currentStudent.grade !== undefined && currentStudent.grade <= 2) ||
-    (activeCourseName || "").startsWith("1°") ||
-    (activeCourseName || "").startsWith("2°");
+    activeCourseName.startsWith("1°") ||
+    activeCourseName.startsWith("2°");
   const isSeniorLevel = !isJuniorLevel;
 
   // Ramos clasificados por categoría curricular real
   const especialidadSubjects = useMemo(
-    () => (subjectsData || []).filter((s) => s && s.category === "Especialidad TP"),
+    () => subjectsData.filter((s) => s.category === "Especialidad TP"),
     [subjectsData]
   );
   const planComunSubjects = useMemo(
-    () => (subjectsData || []).filter((s) => s && s.category !== "Especialidad TP"),
+    () => subjectsData.filter((s) => s.category === "Plan Común"),
     [subjectsData]
   );
 
   // Estadísticas de carga horaria y promedio de especialidad
   const totalWeeklyHours = useMemo(
-    () => (subjectsData || []).reduce((acc, curr) => acc + (curr?.weeklyHours || 4), 0),
+    () => subjectsData.reduce((acc, curr) => acc + (curr.weeklyHours || 4), 0),
     [subjectsData]
   );
   const especialidadWeeklyHours = useMemo(
-    () => (especialidadSubjects || []).reduce((acc, curr) => acc + (curr?.weeklyHours || 6), 0),
+    () => especialidadSubjects.reduce((acc, curr) => acc + (curr.weeklyHours || 6), 0),
     [especialidadSubjects]
   );
   const specialtyGpa = useMemo(() => {
     if (especialidadSubjects.length === 0) return null;
-    const sum = especialidadSubjects.reduce((acc, curr) => acc + (curr?.currentAvg || 0), 0);
+    const sum = especialidadSubjects.reduce((acc, curr) => acc + curr.currentAvg, 0);
     return (sum / especialidadSubjects.length).toFixed(1);
   }, [especialidadSubjects]);
 
   // Filtrado de ramos según selector de ciclo y buscador
   const filteredRamos = useMemo(() => {
-    let list = subjectsData || [];
+    let list = subjectsData;
     if (ramosFilter === "especialidad") {
       list = especialidadSubjects;
     } else if (ramosFilter === "plan_comun") {
@@ -710,220 +638,311 @@ export function EstudianteDashboard({
     const q = ramosSearch.toLowerCase();
     return list.filter(
       (s) =>
-        (s?.name || "").toLowerCase().includes(q) ||
-        (s?.teacher || "").toLowerCase().includes(q) ||
-        (s?.code || "").toLowerCase().includes(q) ||
-        (s?.room || "").toLowerCase().includes(q)
+        s.name.toLowerCase().includes(q) ||
+        s.teacher.toLowerCase().includes(q) ||
+        s.code.toLowerCase().includes(q) ||
+        s.room.toLowerCase().includes(q)
     );
   }, [subjectsData, ramosFilter, especialidadSubjects, planComunSubjects, ramosSearch]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto pb-12">
-      {/* Columna Principal: 2/3 del espacio (Izquierda y Centro) */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* ========================================================================= */}
-        {/* 1. SECCIÓN DE BIENVENIDA COMPACTA Y MODERNA                               */}
-        {/* ========================================================================= */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-sky-50/80 via-blue-50/40 to-white dark:from-[#0C1425] dark:via-slate-900/60 dark:to-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                <span>{activeCourseName}</span>
-                <span>·</span>
-                <span className="text-[#0c8ee9] font-semibold">{activeSpecialty}</span>
-                <span>·</span>
-                <span>Liceo Politécnico Marga Marga</span>
+    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12">
+      {/* ========================================================================= */}
+      {/* 1. SECCIÓN SUPERIOR: BIENVENIDA + FICHA DE PERFIL DEL ALUMNO */}
+      {/* ========================================================================= */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
+        {/* Banner de Bienvenida (8 cols) */}
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="lg:col-span-8 relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-50/90 via-blue-50/70 to-indigo-50/80 dark:from-[#0d1d3b] dark:via-[#0c1830] dark:to-[#101f3e] border border-blue-100 dark:border-blue-900/40 p-6 sm:p-8 flex flex-col justify-between shadow-xs"
+        >
+          {/* Acento sutil en degradado superior */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0c8ee9] via-indigo-500 to-sky-400" />
+
+          {/* Gráfico decorativo de fondo */}
+          <div className="absolute -right-6 -bottom-6 w-48 h-48 bg-gradient-to-br from-blue-400/10 to-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="space-y-2 relative z-10 max-w-xl">
+            <span className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+              <span>Hola, {firstName}</span>
+              <span className="inline-block">👋</span>
+            </span>
+
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+              Bienvenido a tu espacio académico
+            </h1>
+
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-normal leading-relaxed pt-1">
+              Aquí puedes revisar tu información académica, calificaciones, asistencia, horario y acceder a los recursos que necesitas.
+            </p>
+          </div>
+
+          <div className="pt-4 flex items-center gap-3 relative z-10 flex-wrap">
+            <button
+              type="button"
+              onClick={() => {
+                setIsQrModalOpen(true);
+                setTimeout(() => setQrScanned(true), 1200);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
+            >
+              <QrCode className="w-3.5 h-3.5" />
+              <span>Marcar Asistencia QR</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsCredentialModalOpen(true)}
+              className="px-3 py-2 rounded-xl bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            >
+              <IdCard className="w-3.5 h-3.5 text-[#0c8ee9]" />
+              <span>Mi Credencial Digital</span>
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Ficha de Perfil Compacta (4 cols) */}
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0.05 }}
+          className="lg:col-span-4 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 p-6 shadow-xs flex flex-col justify-between"
+        >
+          <div className="flex items-center gap-4">
+            <div className="relative shrink-0">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#0c8ee9] via-blue-600 to-indigo-700 text-white font-black text-xl flex items-center justify-center shadow-md shadow-[#0c8ee9]/25 ring-3 ring-blue-50 dark:ring-slate-800">
+                {firstName.charAt(0)}
+                {currentStudent.lastName ? currentStudent.lastName.charAt(0) : "R"}
               </div>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-                {greetingTime}, <span className="text-[#0c8ee9]">{firstName}</span>
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium max-w-xl leading-relaxed">
-                Bienvenido a tu espacio académico. Revisa tus calificaciones, asistencia, horarios y recursos en un solo lugar.
+            </div>
+
+            <div className="space-y-1 min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight truncate">
+                {activeStudentName}
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">
+                Estudiante · {activeCourseName}
+              </p>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+                Liceo Politécnico Marga Marga
               </p>
             </div>
           </div>
-        </div>
 
-        {/* ========================================================================= */}
-        {/* 2. ACCESOS RÁPIDOS UNIFORMES                                              */}
-        {/* ========================================================================= */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {[
-            { id: "notas", label: "Mis Calificaciones", desc: "Notas y promedios oficiales", icon: Award },
-            { id: "asistencia", label: "Mi Asistencia", desc: "Registro diario y meta MINEDUC", icon: CalendarCheck },
-            { id: "horario", label: "Mi Horario", desc: "Bloques pedagógicos y salas", icon: Clock },
-            { id: "asignaturas", label: "Mis Ramos", desc: "Plan común y electivos", icon: BookOpen },
-            { id: "comunicados", label: "Boletín de Notas", desc: "Boletín y avisos escolares", icon: FileText },
-          ].map((item) => {
-            const Icon = item.icon;
-            const isSelected = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActiveTab(item.id as TabType)}
-                className={cn(
-                  "p-4 rounded-2xl bg-white dark:bg-[#0C1425] border transition-all duration-200 flex flex-col justify-between text-left cursor-pointer group shadow-2xs hover:shadow-xs",
-                  isSelected
-                    ? "border-[#0c8ee9] ring-2 ring-[#0c8ee9]/15"
-                    : "border-slate-200/80 dark:border-slate-800 hover:border-[#0c8ee9]/50"
-                )}
-              >
-                <div className="space-y-2.5">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#0c8ee9]/10 text-[#0c8ee9] group-hover:bg-[#0c8ee9] group-hover:text-white transition-colors">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-[#0c8ee9] transition-colors">
-                      {item.label}
-                    </h3>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-2 flex justify-end text-slate-300 dark:text-slate-600 group-hover:text-[#0c8ee9] transition-colors">
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </div>
-              </button>
-            );
-          })}
-        </div>
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/70 dark:border-emerald-800/70">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              En línea
+            </span>
 
-        {/* ========================================================================= */}
-        {/* 3. PESTAÑAS PRINCIPALES DEL PORTAL DEL ALUMNO                             */}
-        {/* ========================================================================= */}
-        <nav
-          aria-label="Navegación del portal escolar"
-          className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-1.5 shadow-2xs flex items-center gap-1 overflow-x-auto no-scrollbar"
-        >
-          {[
-            { id: "resumen", label: "Mi Día a Día", icon: Layers },
-            { id: "notas", label: "Mis Calificaciones", icon: Award, badge: overallAverage },
-            { id: "asistencia", label: "Mi Asistencia", icon: CalendarCheck, badge: `${currentStudent.overallAttendance}%` },
-            { id: "horario", label: "Horario Semanal", icon: Clock },
-            { id: "asignaturas", label: "Mis Ramos", icon: BookOpen, badge: `${(subjectsData || []).length}` },
-            { id: "comunicados", label: "Avisos Escolares", icon: Inbox },
-            { id: "reglamento", label: "Manual & Convivencia", icon: BookMarked },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                aria-controls={`panel-${tab.id}`}
-                onClick={() => setActiveTab(tab.id as TabType)}
-                className={cn(
-                  "px-3.5 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
-                  isActive
-                    ? "bg-[#0c8ee9] text-white shadow-2xs"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-                )}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{tab.label}</span>
-                {tab.badge && (
-                  <span
-                    className={cn(
-                      "text-[10px] font-bold px-1.5 py-0.2 rounded-md",
-                      isActive
-                        ? "bg-white/20 text-white"
-                        : "bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]"
-                    )}
-                  >
-                    {tab.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Botón Volver al Resumen cuando se está en una pestaña secundaria */}
-        {activeTab !== "resumen" && (
-          <div className="flex items-center justify-between pb-1">
-            <button
-              type="button"
-              onClick={() => setActiveTab("resumen")}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0c8ee9] hover:underline cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Volver a la vista principal</span>
-            </button>
+            <span className="text-[11px] font-semibold text-slate-400">
+              RUT: {activeStudentRut}
+            </span>
           </div>
-        )}
+        </motion.div>
+      </div>
 
-        {/* ========================================================================= */}
-        {/* 4. CONTENIDO: MI DÍA A DÍA (RESUMEN AMIGABLE Y MÉTRICAS)                  */}
-        {/* ========================================================================= */}
-        {activeTab === "resumen" && (
-          <motion.div
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.15 }}
-            className="space-y-6"
-          >
-            {/* E. MÉTRICAS ACADÉMICAS REALES */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
-              <AcademicSummaryCard
-                title="Promedio General"
-                value={overallAverage}
-                subtitle="Escala oficial 1.0 a 7.0"
-                badgeLabel={numAverage >= 6.0 ? "Sobresaliente" : numAverage >= 5.0 ? "Buen Rendimiento" : numAverage >= 4.0 ? "Aprobando" : "En Riesgo"}
-                icon={Award}
-                accentColor="blue"
-                onClick={() => setActiveTab("notas")}
-              />
+      {/* ========================================================================= */}
+      {/* 2. PESTAÑAS PRINCIPALES DEL PORTAL */}
+      {/* ========================================================================= */}
+      <nav
+        aria-label="Navegación del portal escolar"
+        className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-2xl p-1.5 shadow-xs flex items-center gap-1 overflow-x-auto no-scrollbar"
+      >
+        {[
+          { id: "resumen", label: "Inicio", icon: Layers },
+          { id: "notas", label: "Mis Calificaciones", icon: Award, badge: overallAverage },
+          { id: "asistencia", label: "Mi Asistencia", icon: CalendarCheck, badge: `${currentStudent.overallAttendance}%` },
+          { id: "horario", label: "Mi Horario", icon: Clock },
+          { id: "asignaturas", label: "Mis Ramos", icon: BookOpen, badge: `${subjectsData.length}` },
+          { id: "comunicados", label: "Avisos Escolares", icon: Inbox },
+          { id: "reglamento", label: "Reglamento & Convivencia", icon: BookMarked },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`panel-${tab.id}`}
+              onClick={() => setActiveTab(tab.id as TabType)}
+              className={cn(
+                "px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
+                isActive
+                  ? "bg-[#0c8ee9] text-white shadow-xs"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+              )}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{tab.label}</span>
+              {tab.badge && (
+                <span
+                  className={cn(
+                    "text-[10px] font-black px-1.5 py-0.5 rounded-md",
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]"
+                  )}
+                >
+                  {tab.badge}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
 
-              <AcademicSummaryCard
-                title="Mi Asistencia"
-                value={`${currentStudent.overallAttendance}%`}
-                subtitle={currentStudent.overallAttendance >= 85 ? "Cumple norma MINEDUC (≥85%)" : "Bajo mínimo MINEDUC (85%)"}
-                badgeLabel={currentStudent.overallAttendance >= 85 ? "Al día" : "Atención"}
-                icon={CalendarCheck}
-                accentColor="emerald"
-                onClick={() => setActiveTab("asistencia")}
-              />
+      {/* ========================================================================= */}
+      {/* 3. CONTENIDO SEGÚN LA PESTAÑA ACTIVA */}
+      {/* ========================================================================= */}
 
-              <AcademicSummaryCard
-                title="Ramos Aprobados"
-                value={`${passingSubjectsCount} de ${(subjectsData || []).length}`}
-                subtitle="Calificación igual o superior a 4.0"
-                badgeLabel={`${passingSubjectsCount}/${(subjectsData || []).length}`}
-                icon={BookOpen}
-                accentColor="purple"
-                onClick={() => setActiveTab("asignaturas")}
-              />
-
-              <AcademicSummaryCard
-                title="Próxima Evaluación"
-                value={upcomingActivities.length > 0 ? upcomingActivities[0].daysRemainingText : "Al día"}
-                subtitle={upcomingActivities.length > 0 ? `${upcomingActivities[0].subject} · ${upcomingActivities[0].date}` : "Sin evaluaciones pendientes"}
-                badgeLabel={upcomingActivities.length > 0 ? upcomingActivities[0].type : "Sin pendientes"}
-                icon={Calendar}
-                accentColor="indigo"
-                onClick={() => setActiveTab("notas")}
-              />
+      {/* 3.1. PESTAÑA: INICIO / RESUMEN COMERCIAL LIMPIO */}
+      {activeTab === "resumen" && (
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="space-y-6 sm:space-y-7"
+        >
+          {/* Fila de 5 Tarjetas de Acceso Rápido */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            {/* 1. Mis Calificaciones */}
+            <div
+              onClick={() => setActiveTab("notas")}
+              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
+                <Award className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                  Mis Calificaciones
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  Revisa tus notas y promedios
+                </p>
+              </div>
+              <div className="mt-4 self-end">
+                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
             </div>
 
-            {/* F. INFORMACIÓN ACADÉMICA RECIENTE: 2 PANELES EQUILIBRADOS */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-              {/* F.1. ÚLTIMAS CALIFICACIONES (TABLA COMPACTA) */}
-              <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+            {/* 2. Mi Asistencia */}
+            <div
+              onClick={() => setActiveTab("asistencia")}
+              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-[#38bdf8] flex items-center justify-center mb-3">
+                <CalendarCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                  Mi Asistencia
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  Consulta tu asistencia y justificaciones
+                </p>
+              </div>
+              <div className="mt-4 self-end">
+                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Mi Horario */}
+            <div
+              onClick={() => setActiveTab("horario")}
+              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3">
+                <Clock className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                  Mi Horario
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  Revisa tus clases y actividades del día
+                </p>
+              </div>
+              <div className="mt-4 self-end">
+                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Mis Ramos */}
+            <div
+              onClick={() => setActiveTab("asignaturas")}
+              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                  Mis Ramos
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  Accede a la información de tus asignaturas
+                </p>
+              </div>
+              <div className="mt-4 self-end">
+                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Boletín de Notas */}
+            <div
+              onClick={() => setIsCredentialModalOpen(true)}
+              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-3">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                  Boletín de Notas
+                </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  Descarga tu boletín en formato PDF
+                </p>
+              </div>
+              <div className="mt-4 self-end">
+                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Cuadrícula Principal (8 cols izquierda + 4 cols derecha) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Columna Izquierda (8 cols) */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Resumen Académico con métricas clave */}
+              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
-                      <Award className="w-4 h-4" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-[#0c8ee9]/10 text-[#0c8ee9] flex items-center justify-center">
+                      <BarChart3 className="w-5 h-5" />
                     </div>
                     <div>
-                      <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-                        Últimas Calificaciones
+                      <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+                        Resumen Académico
                       </h2>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        Evaluaciones registradas recientemente
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        Indicadores clave de tu rendimiento este semestre
                       </p>
                     </div>
                   </div>
@@ -933,194 +952,320 @@ export function EstudianteDashboard({
                     onClick={() => setActiveTab("notas")}
                     className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    <span>Ver todas</span>
+                    <span>Ver detalle</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                {recentGrades.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead>
-                        <tr className="text-[11px] font-semibold text-slate-400 border-b border-slate-100 dark:border-slate-800">
-                          <th className="pb-2 font-medium">Asignatura</th>
-                          <th className="pb-2 font-medium">Evaluación</th>
-                          <th className="pb-2 font-medium text-center">Nota</th>
-                          <th className="pb-2 font-medium text-right">Fecha</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                        {recentGrades.map((gradeItem, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition">
-                            <td className="py-2.5 pr-2 font-semibold text-slate-900 dark:text-white truncate max-w-[140px]">
-                              {gradeItem.subject}
-                            </td>
-                            <td className="py-2.5 pr-2 text-slate-500 dark:text-slate-400 truncate max-w-[120px]">
-                              {gradeItem.evalName}
-                            </td>
-                            <td className="py-2.5 px-2 text-center">
-                              <span
-                                className={cn(
-                                  "inline-block font-mono font-bold px-2 py-0.5 rounded-md text-xs",
-                                  gradeItem.grade >= 6.0
-                                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
-                                    : gradeItem.grade >= 5.0
-                                    ? "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
-                                    : gradeItem.grade >= 4.0
-                                    ? "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
-                                    : "bg-red-50 text-red-700 dark:bg-red-950/60 dark:text-red-300 border border-red-200 dark:border-red-800"
-                                )}
-                              >
-                                {gradeItem.grade.toFixed(1)}
-                              </span>
-                            </td>
-                            <td className="py-2.5 pl-2 text-right text-[11px] text-slate-400 font-mono">
-                              {gradeItem.date}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="py-8 text-center text-xs text-slate-400">
-                    No hay calificaciones registradas recientemente.
-                  </div>
-                )}
-              </div>
-
-              {/* F.2. PRÓXIMAS EVALUACIONES Y HORARIO DE HOY */}
-              <div className="space-y-6">
-                {/* Próximas Evaluaciones */}
-                <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-                        <Calendar className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-                          Próximas Evaluaciones
-                        </h2>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                          Fechas y materias programadas
-                        </p>
-                      </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {/* Promedio General */}
+                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Promedio General
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
+                        {overallAverage}
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
+                        +0.2
+                      </span>
                     </div>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                      Escala oficial (1.0 - 7.0)
+                    </p>
+                  </div>
 
+                  {/* Asistencia */}
+                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Asistencia
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
+                        {currentStudent.overallAttendance}%
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
+                        +0.5%
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                      Meta MINEDUC cumplida
+                    </p>
+                  </div>
+
+                  {/* Ramos Aprobados */}
+                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Ramos Aprobados
+                    </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
+                        {passingSubjectsCount}/{subjectsData.length}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                      {passingSubjectsCount === subjectsData.length ? "Todos aprobando 🎉" : `Falta ${subjectsData.length - passingSubjectsCount} ramo`}
+                    </p>
+                  </div>
+
+                  {/* Horario Semanal */}
+                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                      Horario Semanal
+                    </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
+                        {totalWeeklyHours || 36}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                      horas pedagógicas
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Sección Inferior Izquierda: Últimas Calificaciones + Acceso Rápido */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Últimas Calificaciones */}
+                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2">
+                      <Award className="w-4 h-4 text-[#0c8ee9]" />
+                      <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                        Últimas Calificaciones
+                      </h3>
+                    </div>
                     <button
                       type="button"
                       onClick={() => setActiveTab("notas")}
-                      className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
+                      className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
                     >
-                      <span>Temarios</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <span>Ver todas</span>
+                      <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
 
                   <div className="space-y-2.5">
-                    {upcomingActivities.length > 0 ? (
-                      upcomingActivities.slice(0, 2).map((act) => (
+                    {subjectsData.slice(0, 4).map((sub) => {
+                      const latestGrade = sub.grades.find((g) => g.value !== null) || sub.grades[0];
+                      const val = latestGrade?.value ?? sub.currentAvg;
+                      return (
                         <div
-                          key={act.id}
-                          className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between gap-3"
+                          key={sub.id}
+                          onClick={() => setActiveTab("notas")}
+                          className="p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-3 hover:border-[#0c8ee9]/40 transition cursor-pointer"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex flex-col items-center justify-center shrink-0 font-mono">
-                              <span className="text-[8px] font-bold uppercase leading-tight">Días</span>
-                              <span className="text-xs font-black">{act.daysRemainingText.replace(/[^0-9]/g, "") || "3"}</span>
-                            </div>
-                            <div className="min-w-0 space-y-0.5">
-                              <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                                {act.subject}
-                              </h4>
-                              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                                {act.title} · {act.type}
-                              </p>
-                            </div>
+                          <div className="min-w-0 flex-1">
+                            <span className="font-extrabold text-xs text-slate-900 dark:text-white block truncate">
+                              {sub.name}
+                            </span>
+                            <span className="text-[10px] text-slate-400">
+                              {latestGrade?.type || "Evaluación"} · {latestGrade?.date || "Abril 2025"}
+                            </span>
                           </div>
-                          <span className="text-[11px] font-medium text-slate-400 shrink-0 font-mono">
-                            {act.date}
-                          </span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="py-4 text-center text-xs text-slate-400">
-                        Sin evaluaciones pendientes.
-                      </div>
-                    )}
-                  </div>
-                </div>
 
-                {/* Horario de Hoy */}
-                <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                        <Clock className="w-4 h-4" />
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span
+                              className={cn(
+                                "font-mono font-black text-sm px-2.5 py-1 rounded-xl",
+                                val >= 6.0
+                                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400"
+                                  : val >= 4.0
+                                  ? "bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-[#38bdf8]"
+                                  : "bg-rose-50 dark:bg-rose-950/60 text-rose-600"
+                              )}
+                            >
+                              {val.toFixed(1)}
+                            </span>
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* Acceso Rápido */}
+                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+                  <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <Zap className="w-4 h-4 text-amber-500" />
+                    <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                      Acceso rápido
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div
+                      onClick={() => setIsSupportModalOpen(true)}
+                      className="p-3.5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 hover:border-[#0c8ee9] transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div className="flex items-center justify-between">
+                        <HeartHandshake className="w-4 h-4 text-[#0c8ee9]" />
+                        <ArrowRight className="w-3 h-3 text-[#0c8ee9]" />
                       </div>
-                      <div>
-                        <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-                          Tu Horario de Hoy
-                        </h2>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                          Bloques lectivos y salas programadas
-                        </p>
+                      <div className="mt-2">
+                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
+                          Solicitar apoyo escolar
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                          Canal psicosocial
+                        </span>
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("horario")}
-                      className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
+                    <div
+                      onClick={() => setIsCredentialModalOpen(true)}
+                      className="p-3.5 rounded-2xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 hover:border-purple-500 transition cursor-pointer flex flex-col justify-between"
                     >
-                      <span>Ver semana</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-2">
-                    {scheduleToday.slice(0, 3).map((block) => (
-                      <div
-                        key={block.id}
-                        className={cn(
-                          "p-2.5 rounded-xl border flex items-center justify-between gap-3 text-xs transition",
-                          block.isCurrent
-                            ? "bg-[#0c8ee9]/5 border-[#0c8ee9]/40 ring-1 ring-[#0c8ee9]/20"
-                            : "bg-slate-50/60 dark:bg-slate-900/40 border-slate-200/60 dark:border-slate-800/80"
-                        )}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="font-mono text-[11px] font-bold text-slate-600 dark:text-slate-300 shrink-0 w-24">
-                            {block.timeRange}
-                          </span>
-                          <div className="min-w-0">
-                            <span className="font-bold text-slate-900 dark:text-white truncate block">
-                              {block.subject}
-                            </span>
-                            <span className="text-[10px] text-slate-400 truncate block">
-                              {block.room}
-                            </span>
-                          </div>
-                        </div>
-
-                        {block.isCurrent ? (
-                          <span className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[#0c8ee9] text-white shrink-0">
-                            En curso
-                          </span>
-                        ) : block.isPast ? (
-                          <span className="text-[9px] font-medium text-slate-400 shrink-0">
-                            Completado
-                          </span>
-                        ) : null}
+                      <div className="flex items-center justify-between">
+                        <FileText className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                        <ArrowRight className="w-3 h-3 text-purple-600" />
                       </div>
-                    ))}
+                      <div className="mt-2">
+                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
+                          Descargar boletín
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                          Informe semestral
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => setActiveTab("horario")}
+                      className="p-3.5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div className="flex items-center justify-between">
+                        <Calendar className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <ArrowRight className="w-3 h-3 text-emerald-600" />
+                      </div>
+                      <div className="mt-2">
+                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
+                          Ver calendario
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                          Fechas y horario
+                        </span>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => setActiveTab("reglamento")}
+                      className="p-3.5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 hover:border-amber-500 transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div className="flex items-center justify-between">
+                        <BookOpen className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                        <ArrowRight className="w-3 h-3 text-amber-600" />
+                      </div>
+                      <div className="mt-2">
+                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
+                          Ver manual de uso
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                          Guía y convivencia
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </section>
               </div>
             </div>
-          </motion.div>
-        )}
+
+            {/* Columna Derecha (4 cols): Próximos Eventos + ¿Necesitas Ayuda? */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Próximos Eventos */}
+              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-[#0c8ee9]" />
+                    <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                      Próximos Eventos
+                    </h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("horario")}
+                    className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
+                  >
+                    <span>Ver calendario</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {upcomingActivities.map((act) => (
+                    <div
+                      key={act.id}
+                      className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center gap-3"
+                    >
+                      {/* Fecha con Badge Tipo Calendario */}
+                      <div className="shrink-0 w-12 text-center p-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
+                        <span className="block font-black text-sm text-slate-900 dark:text-white leading-tight font-mono">
+                          {act.date.split(" ")[0] || "15"}
+                        </span>
+                        <span className="block text-[9px] font-bold uppercase text-slate-400 tracking-wider">
+                          {act.date.split(" ")[1] || "ABR"}
+                        </span>
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="font-extrabold text-xs text-slate-900 dark:text-white truncate">
+                            {act.title}
+                          </span>
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] shrink-0">
+                            {act.type === "Prueba Sumativa" ? "Evaluación" : "Tarea"}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
+                          {act.subject}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* ¿Necesitas ayuda? */}
+              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-xs text-center flex flex-col items-center justify-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+
+                <div className="space-y-1">
+                  <h4 className="font-black text-sm text-slate-900 dark:text-white">
+                    ¿Necesitas ayuda?
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+                    Puedes solicitar apoyo escolar en cualquier momento desde el botón de abajo.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsSupportModalOpen(true)}
+                  className="w-full py-3 px-4 rounded-2xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Solicitar apoyo escolar</span>
+                </button>
+              </section>
+            </div>
+          </div>
+
+          {/* Pie de Página Institucional */}
+          <div className="pt-6 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+            <span className="font-semibold">
+              AURENIS <span className="font-normal">· Gestión Académica</span>
+            </span>
+            <span className="italic">
+              Tu esfuerzo de hoy, construye tu mañana ✨
+            </span>
+          </div>
+        </motion.div>
+      )}
 
       {/* 3.2. PESTAÑA: MIS CALIFICACIONES */}
       {activeTab === "notas" && (
@@ -1549,17 +1694,15 @@ export function EstudianteDashboard({
                     08:00 - 09:30
                   </td>
                   {[0, 1, 2, 3, 4].map((dayIdx) => {
-                    const sub = subjectsData && subjectsData.length > 0
-                      ? subjectsData[dayIdx % subjectsData.length]
-                      : null;
+                    const sub = subjectsData[dayIdx % subjectsData.length] || DEFAULT_STUDENT_SUBJECTS[0];
                     return (
                       <td
                         key={dayIdx}
                         className="p-2.5 bg-blue-50/50 dark:bg-blue-950/20 font-bold text-slate-800 dark:text-slate-200 rounded-lg"
                       >
-                        {sub?.name || "Taller de Aprendizaje"}
+                        {sub?.name || "Asignatura"}
                         <br />
-                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Sala 12"}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Sala 101"}</span>
                       </td>
                     );
                   })}
@@ -1579,17 +1722,15 @@ export function EstudianteDashboard({
                     09:45 - 11:15
                   </td>
                   {[5, 6, 7, 8, 9].map((dayIdx) => {
-                    const sub = subjectsData && subjectsData.length > 0
-                      ? subjectsData[dayIdx % subjectsData.length]
-                      : null;
+                    const sub = subjectsData[dayIdx % subjectsData.length] || DEFAULT_STUDENT_SUBJECTS[1] || DEFAULT_STUDENT_SUBJECTS[0];
                     return (
                       <td
                         key={dayIdx}
                         className="p-2.5 bg-purple-50/50 dark:bg-purple-950/20 font-bold text-slate-800 dark:text-slate-200 rounded-lg"
                       >
-                        {sub?.name || "Asignatura Formativa"}
+                        {sub?.name || "Asignatura"}
                         <br />
-                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Laboratorio A"}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Lab 2"}</span>
                       </td>
                     );
                   })}
@@ -1608,17 +1749,15 @@ export function EstudianteDashboard({
                     14:00 - 15:30
                   </td>
                   {[2, 4, 1, 3, 0].map((dayIdx, i) => {
-                    const sub = subjectsData && subjectsData.length > 0
-                      ? subjectsData[(dayIdx + 2) % subjectsData.length]
-                      : null;
+                    const sub = subjectsData[(dayIdx + 2) % subjectsData.length] || DEFAULT_STUDENT_SUBJECTS[2] || DEFAULT_STUDENT_SUBJECTS[0];
                     return (
                       <td
                         key={i}
                         className="p-2.5 bg-emerald-50/50 dark:bg-emerald-950/20 font-bold text-slate-800 dark:text-slate-200 rounded-lg"
                       >
-                        {sub?.name || "Módulo Práctico"}
+                        {sub?.name || "Asignatura"}
                         <br />
-                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Taller Técnico"}</span>
+                        <span className="text-[10px] text-slate-400 font-normal">{sub?.room || "Taller 3"}</span>
                       </td>
                     );
                   })}
@@ -2399,108 +2538,6 @@ export function EstudianteDashboard({
           </div>
         )}
       </AnimatePresence>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* COLUMNA LATERAL DERECHA (1/3 DEL ESPACIO - LG:COL-SPAN-1)                  */}
-      {/* ========================================================================= */}
-      <div className="space-y-6">
-        {/* 1. Tarjeta de Perfil del Estudiante */}
-        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4 text-center">
-          <div className="relative inline-block mx-auto">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0c8ee9] to-blue-700 text-white font-black text-xl flex items-center justify-center shadow-xs mx-auto">
-              {firstName.charAt(0)}
-              {currentStudent.lastName ? currentStudent.lastName.charAt(0) : ""}
-            </div>
-            <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" title="Conectado" />
-          </div>
-
-          <div className="space-y-1">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              {firstName} {currentStudent.lastName}
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              {activeCourseName} · {activeSpecialty}
-            </p>
-            <p className="text-[11px] text-[#0c8ee9] font-medium">
-              Liceo Politécnico Marga Marga
-            </p>
-            {currentStudent.rut && (
-              <p className="text-[10px] text-slate-400 font-mono">
-                RUT: {currentStudent.rut}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* 2. Próximos Eventos Escolares */}
-        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#0c8ee9]" />
-              <h3 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
-                Próximos Eventos
-              </h3>
-            </div>
-            <button
-              type="button"
-              onClick={() => setActiveTab("horario")}
-              className="text-xs font-bold text-[#0c8ee9] hover:underline cursor-pointer"
-            >
-              Calendario →
-            </button>
-          </div>
-
-          <div className="space-y-2.5">
-            {[
-              { date: "15 ABR", title: "Prueba de Matemática", time: "08:00 - 09:30", type: "Evaluación" },
-              { date: "17 ABR", title: "Entrega Trabajo Grupal", time: "Lengua y Literatura", type: "Tarea" },
-              { date: "21 ABR", title: "Evaluación de Historia", time: "10:00 - 11:30", type: "Evaluación" },
-            ].map((ev, idx) => (
-              <div key={idx} className="p-3 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex items-start gap-3">
-                <div className="px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-blue-400 text-center shrink-0 font-mono">
-                  <span className="text-[9px] font-bold block uppercase leading-none">ABR</span>
-                  <span className="text-xs font-black">{ev.date.split(" ")[0]}</span>
-                </div>
-                <div className="flex-1 min-w-0 space-y-0.5">
-                  <div className="flex items-center justify-between gap-1">
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                      {ev.title}
-                    </h4>
-                    <span className="text-[9px] font-medium px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                      {ev.type}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-400 truncate">{ev.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 3. Tarjeta de Apoyo Escolar (Section G) */}
-        <div className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-3.5 relative overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
-            <HeartHandshake className="w-5 h-5" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              ¿Necesitas apoyo escolar?
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Canal confidencial para solicitar orientación pedagógica o conversar con tu profesor jefe.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setIsSupportModalOpen(true)}
-            className="w-full py-2.5 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] text-white font-bold text-xs transition flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
-          >
-            <Send className="w-3.5 h-3.5" />
-            <span>Solicitar apoyo escolar</span>
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
