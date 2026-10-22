@@ -144,7 +144,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
  * según el rol del usuario, el slug de la institución y el contexto de subdominio.
  * Autores: 👑 Maicol R. (Arquitectura) & 💻 Malcom Marcelo (Lógica de Cliente)
  */
-export function resolveUserDashboardUrl({
+function resolveUserDashboardUrl({
   data,
   subdomain,
   fallbackSlug,
