@@ -258,7 +258,6 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     weeklyHours: 6,
     category: "Plan Común",
     currentAvg: 6.4,
-    passingThreshold: 4.0,
     attendanceRate: 94.5,
     grades: [
       { code: "g1", label: "Prueba Escrita", weightPct: 0.25, value: 6.4, date: "12 abr 2025" },
@@ -276,7 +275,6 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     weeklyHours: 6,
     category: "Plan Común",
     currentAvg: 5.8,
-    passingThreshold: 4.0,
     attendanceRate: 92.0,
     grades: [
       { code: "g5", label: "Disertación", weightPct: 0.25, value: 5.8, date: "10 abr 2025" },
@@ -294,7 +292,6 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     weeklyHours: 4,
     category: "Plan Común",
     currentAvg: 6.8,
-    passingThreshold: 4.0,
     attendanceRate: 96.0,
     grades: [
       { code: "g9", label: "Trabajo Grupal", weightPct: 0.25, value: 6.8, date: "08 abr 2025" },
@@ -312,7 +309,6 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     weeklyHours: 4,
     category: "Plan Común",
     currentAvg: 5.5,
-    passingThreshold: 4.0,
     attendanceRate: 90.0,
     grades: [
       { code: "g13", label: "Prueba Escrita", weightPct: 0.25, value: 5.5, date: "05 abr 2025" },
@@ -330,7 +326,6 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     weeklyHours: 6,
     category: "Especialidad TP",
     currentAvg: 6.7,
-    passingThreshold: 4.0,
     attendanceRate: 98.0,
     grades: [
       { code: "g17", label: "Cableado Estructurado", weightPct: 0.5, value: 6.8, date: "16 abr 2025" },
