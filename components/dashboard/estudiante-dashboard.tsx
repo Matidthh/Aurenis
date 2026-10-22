@@ -261,10 +261,10 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     passingThreshold: 4.0,
     attendanceRate: 94.5,
     grades: [
-      { id: "g1", label: "Prueba Escrita", value: 6.4, date: "12 abr 2025", type: "Prueba Escrita" },
-      { id: "g2", label: "Taller Práctico", value: 6.2, date: "28 abr 2025", type: "Taller Práctico" },
-      { id: "g3", label: "Evaluación 3", value: 6.6, date: "15 may 2025", type: "Prueba Sumativa" },
-      { id: "g4", label: "Examen Semestral", value: null, date: "20 jun 2025", type: "Prueba Sumativa" },
+      { code: "g1", label: "Prueba Escrita", weightPct: 0.25, value: 6.4, date: "12 abr 2025" },
+      { code: "g2", label: "Taller Práctico", weightPct: 0.25, value: 6.2, date: "28 abr 2025" },
+      { code: "g3", label: "Evaluación 3", weightPct: 0.25, value: 6.6, date: "15 may 2025" },
+      { code: "g4", label: "Examen Semestral", weightPct: 0.25, value: null, date: "20 jun 2025" },
     ],
   },
   {
@@ -279,10 +279,10 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     passingThreshold: 4.0,
     attendanceRate: 92.0,
     grades: [
-      { id: "g5", label: "Disertación", value: 5.8, date: "10 abr 2025", type: "Disertación" },
-      { id: "g6", label: "Control de Lectura", value: 5.7, date: "24 abr 2025", type: "Control" },
-      { id: "g7", label: "Ensayo Argumentativo", value: 6.0, date: "18 may 2025", type: "Trabajo Escrito" },
-      { id: "g8", label: "Evaluación 4", value: null, date: "25 jun 2025", type: "Prueba Sumativa" },
+      { code: "g5", label: "Disertación", weightPct: 0.25, value: 5.8, date: "10 abr 2025" },
+      { code: "g6", label: "Control de Lectura", weightPct: 0.25, value: 5.7, date: "24 abr 2025" },
+      { code: "g7", label: "Ensayo Argumentativo", weightPct: 0.25, value: 6.0, date: "18 may 2025" },
+      { code: "g8", label: "Evaluación 4", weightPct: 0.25, value: null, date: "25 jun 2025" },
     ],
   },
   {
@@ -297,10 +297,10 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     passingThreshold: 4.0,
     attendanceRate: 96.0,
     grades: [
-      { id: "g9", label: "Trabajo Grupal", value: 6.8, date: "08 abr 2025", type: "Trabajo Grupal" },
-      { id: "g10", label: "Prueba 1", value: 6.7, date: "29 abr 2025", type: "Prueba Escrita" },
-      { id: "g11", label: "Investigación Histórica", value: 7.0, date: "20 may 2025", type: "Investigación" },
-      { id: "g12", label: "Cierre Semestre", value: null, date: "22 jun 2025", type: "Prueba Sumativa" },
+      { code: "g9", label: "Trabajo Grupal", weightPct: 0.25, value: 6.8, date: "08 abr 2025" },
+      { code: "g10", label: "Prueba 1", weightPct: 0.25, value: 6.7, date: "29 abr 2025" },
+      { code: "g11", label: "Investigación Histórica", weightPct: 0.25, value: 7.0, date: "20 may 2025" },
+      { code: "g12", label: "Cierre Semestre", weightPct: 0.25, value: null, date: "22 jun 2025" },
     ],
   },
   {
@@ -315,10 +315,10 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     passingThreshold: 4.0,
     attendanceRate: 90.0,
     grades: [
-      { id: "g13", label: "Prueba Escrita", value: 5.5, date: "05 abr 2025", type: "Prueba Escrita" },
-      { id: "g14", label: "Informe de Laboratorio", value: 5.6, date: "02 may 2025", type: "Informe" },
-      { id: "g15", label: "Guía Sumativa", value: 5.4, date: "22 may 2025", type: "Guía" },
-      { id: "g16", label: "Evaluación Final", value: null, date: "24 jun 2025", type: "Prueba Sumativa" },
+      { code: "g13", label: "Prueba Escrita", weightPct: 0.25, value: 5.5, date: "05 abr 2025" },
+      { code: "g14", label: "Informe de Laboratorio", weightPct: 0.25, value: 5.6, date: "02 may 2025" },
+      { code: "g15", label: "Guía Sumativa", weightPct: 0.25, value: 5.4, date: "22 may 2025" },
+      { code: "g16", label: "Evaluación Final", weightPct: 0.25, value: null, date: "24 jun 2025" },
     ],
   },
   {
@@ -333,8 +333,8 @@ const DEFAULT_STUDENT_SUBJECTS: DetailedSubjectGrade[] = [
     passingThreshold: 4.0,
     attendanceRate: 98.0,
     grades: [
-      { id: "g17", label: "Cableado Estructurado", value: 6.8, date: "16 abr 2025", type: "Taller Práctico" },
-      { id: "g18", label: "Configuración Switches", value: 6.6, date: "07 may 2025", type: "Taller Práctico" },
+      { code: "g17", label: "Cableado Estructurado", weightPct: 0.5, value: 6.8, date: "16 abr 2025" },
+      { code: "g18", label: "Configuración Switches", weightPct: 0.5, value: 6.6, date: "07 may 2025" },
     ],
   },
 ];
