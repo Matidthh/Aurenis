@@ -157,13 +157,10 @@ export function ProblemSolutionSection({
 
             <button
               type="button"
-              onClick={() =>
-                onOpenDemoModal
-                  ? onOpenDemoModal("Agendar Demostración")
-                  : onOpenQuoteModal
-                  ? onOpenQuoteModal("Cotización")
-                  : scrollToSimulator()
-              }
+              onClick={() => {
+                if (onOpenDemoModal) onOpenDemoModal("Agendar Demostración");
+                else if (onOpenQuoteModal) onOpenQuoteModal("Cotización");
+              }}
               className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer min-h-[40px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
               <span>Agendar Demo</span>
