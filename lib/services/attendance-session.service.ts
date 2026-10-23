@@ -351,6 +351,9 @@ export async function recordAttendanceViaQR(params: {
 }): Promise<{
   success: boolean;
   message: string;
+  status?: string;
+  isLate?: boolean;
+  statusLabel?: string;
   courseName?: string;
   studentName?: string;
   recordedAt?: string;
