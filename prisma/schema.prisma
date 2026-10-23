@@ -235,6 +235,23 @@ model SchoolSettings {
   updatedAt             DateTime         @updatedAt
 }
 
+model GradingScale {
+  id                  String   @id @default(cuid())
+  schoolId            String
+  name                String
+  minPassingGrade     Decimal  @db.Decimal(3, 1)
+  minGrade            Decimal  @db.Decimal(3, 1)
+  maxGrade            Decimal  @db.Decimal(3, 1)
+  gradeScalePrecision Int      @default(1)
+
+  school              School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([schoolId])
+}
+
+
 model AcademicPeriod {
   id          String       @id @default(cuid())
   schoolId    String

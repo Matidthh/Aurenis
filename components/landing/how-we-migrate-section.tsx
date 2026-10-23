@@ -76,44 +76,33 @@ export function HowWeMigrateSection() {
 
         {/* 3 Step Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {steps.map((s, idx) => {
+      {steps.map((s, idx) => {
             const Icon = s.icon;
             return (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-slate-200/90 p-7 sm:p-8 flex flex-col justify-between shadow-xs hover:border-slate-300 transition-all"
+                className="bg-white rounded-2xl border border-slate-200/90 p-6 flex flex-col justify-start shadow-xs hover:border-slate-300 transition-all"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className={`inline-flex items-center text-xs font-black px-3 py-1 rounded-full border ${s.badgeColor}`}>
-                      {s.stepBadge}
-                    </span>
-                    <span className="text-3xl font-black text-slate-200 select-none">
-                      {s.number}
-                    </span>
-                  </div>
-
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${s.iconColor}`}>
-                    <Icon className="w-6 h-6" />
-                  </div>
-
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-snug mb-3">
-                    {s.title}
-                  </h3>
-
-                  <p className="text-sm text-slate-600 leading-relaxed mb-6 font-medium">
-                    {s.description}
-                  </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className={`inline-flex items-center text-[10px] font-black px-2 py-0.5 rounded-full border ${s.badgeColor}`}>
+                    {s.stepBadge}
+                  </span>
+                  <span className="text-xl font-black text-slate-200 select-none">
+                    {s.number}
+                  </span>
                 </div>
 
-                <div className="pt-6 border-t border-slate-100 space-y-2.5">
-                  {s.details.map((detail, dIdx) => (
-                    <div key={dIdx} className="flex items-start gap-2 text-xs text-slate-600 font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>{detail}</span>
-                    </div>
-                  ))}
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${s.iconColor}`}>
+                  <Icon className="w-5 h-5" />
                 </div>
+
+                <h3 className="text-sm font-bold text-slate-900 leading-snug mb-1.5">
+                  {s.title}
+                </h3>
+
+                <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                  {s.description}
+                </p>
               </div>
             );
           })}

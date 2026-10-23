@@ -1,37 +1,33 @@
 "use client";
 
 import React from "react";
-import { Zap, ShieldCheck, Award, Lock } from "lucide-react";
+import { Users, GraduationCap, BookOpen, BarChart } from "lucide-react";
 
 export function InstitutionalStats() {
   const stats = [
     {
-      value: "0.1s",
-      label: "Respuesta en Digitación",
-      subtext: "Ingreso de calificaciones y asistencia sin latencia.",
-      icon: Zap,
+      value: "248+",
+      label: "Estudiantes activos",
+      icon: Users,
+      tag: "Comunidad",
+    },
+    {
+      value: "18",
+      label: "Docentes registrados",
+      icon: GraduationCap,
+      tag: "Docencia",
+    },
+    {
+      value: "32",
+      label: "Cursos disponibles",
+      icon: BookOpen,
+      tag: "Académico",
+    },
+    {
+      value: "6.7",
+      label: "Promedio general",
+      icon: BarChart,
       tag: "Rendimiento",
-    },
-    {
-      value: "100%",
-      label: "Alineación Circular N° 30",
-      subtext: "Registro estandarizado según directrices SuperEduc.",
-      icon: ShieldCheck,
-      tag: "Normativa",
-    },
-    {
-      value: "Dual",
-      label: "Motor Decreto 67",
-      subtext: "Cálculo en modo Simple o Ponderado por porcentaje.",
-      icon: Award,
-      tag: "Evaluación",
-    },
-    {
-      value: "RBAC",
-      label: "Control de Acceso y Datos",
-      subtext: "PostgreSQL, sesiones JWT y permisos por rol.",
-      icon: Lock,
-      tag: "Seguridad",
     },
   ];
 
@@ -43,7 +39,7 @@ export function InstitutionalStats() {
         <div className="flex items-center justify-center mb-8">
           <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-slate-700 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            Capacidades Técnicas y Normativas Verificables
+            Indicadores Institucionales
           </span>
         </div>
 
@@ -75,15 +71,10 @@ export function InstitutionalStats() {
                     </div>
                   </div>
                 </div>
-
-                <div className="pt-2.5 mt-3 border-t border-slate-100 text-[11px] text-slate-500 font-medium leading-snug">
-                  {st.subtext}
-                </div>
               </div>
             );
           })}
         </div>
-
       </div>
     </section>
   );
