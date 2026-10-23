@@ -30,6 +30,9 @@ import {
   Building2,
   X,
   Sparkles,
+  ShieldCheck,
+  Lock,
+  Headset,
 } from "lucide-react";
 
 interface ReplicatedHeroProps {
@@ -561,51 +564,51 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
         </div>
 
         {/* ========================================================================= */}
-        {/* BOTTOM METRICS STRIP: 248+ / 18 / 32 / 8.7 WITH VERTICAL DIVIDERS */}
+        {/* BOTTOM VALUE PILLARS STRIP */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-14 pb-4 border-t border-slate-200/70 mt-12 items-center">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-14 pb-4 border-t border-slate-200/70 mt-12 items-center">
           
-          {/* Metric 1 */}
+          {/* Pillar 1: Normativa */}
           <div className="flex items-center gap-3.5 justify-center sm:justify-start">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <Users className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">248+</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Estudiantes activos</div>
+              <div className="text-sm font-bold text-[#0f172a] leading-tight">100% Normativo</div>
+              <div className="text-[10px] text-slate-500 font-medium mt-0.5">Circular 30 y Decreto 67</div>
             </div>
           </div>
 
-          {/* Metric 2 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start md:border-l md:border-slate-200 md:pl-6">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5" />
+          {/* Pillar 2: Seguridad */}
+          <div className="flex items-center gap-3.5 justify-center sm:justify-start lg:border-l lg:border-slate-200 lg:pl-6">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <Lock className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">18</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Docentes registrados</div>
+              <div className="text-sm font-bold text-[#0f172a] leading-tight">Seguridad Total</div>
+              <div className="text-[10px] text-slate-500 font-medium mt-0.5">Aislamiento Multi-tenant</div>
             </div>
           </div>
 
-          {/* Metric 3 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start md:border-l md:border-slate-200 md:pl-6">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <BookOpen className="w-5 h-5" />
+          {/* Pillar 3: Soporte */}
+          <div className="flex items-center gap-3.5 justify-center sm:justify-start lg:border-l lg:border-slate-200 lg:pl-6">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+              <Headset className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">32</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Cursos disponibles</div>
+              <div className="text-sm font-bold text-[#0f172a] leading-tight">Soporte Local</div>
+              <div className="text-[10px] text-slate-500 font-medium mt-0.5">Capacitación y Acompañamiento</div>
             </div>
           </div>
 
-          {/* Metric 4 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start md:border-l md:border-slate-200 md:pl-6">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <Star className="w-5 h-5" />
+          {/* Pillar 4: Gestión */}
+          <div className="flex items-center gap-3.5 justify-center sm:justify-start lg:border-l lg:border-slate-200 lg:pl-6">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+              <LayoutDashboard className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">8.7</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Promedio general</div>
+              <div className="text-sm font-bold text-[#0f172a] leading-tight">Gestión Ágil</div>
+              <div className="text-[10px] text-slate-500 font-medium mt-0.5">Reportes en Tiempo Real</div>
             </div>
           </div>
 

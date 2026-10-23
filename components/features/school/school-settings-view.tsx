@@ -33,6 +33,7 @@ import { Badge } from "@/components/ui/badge";
 import { CreatePeriodModal } from "./create-period-modal";
 import { EditPeriodModal } from "./edit-period-modal";
 import { SchoolBackupCard } from "./school-backup-card";
+import { GradingSettingsForm } from "./grading-settings-form";
 import { apiClient } from "@/lib/api";
 
 export interface AcademicPeriodItem {
@@ -711,94 +712,12 @@ export function SchoolSettingsView({ initialData, schoolId, schoolSlug }: School
               </div>
             </div>
 
-            {/* Escala de Calificaciones */}
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                Parámetros de la Escala de Calificaciones
-              </h4>
-
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                    Nota Mínima
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min={0}
-                    max={100}
-                    value={settingsData.minGrade}
-                    onChange={(e) =>
-                      setSettingsData({ ...settingsData, minGrade: parseFloat(e.target.value) || 0 })
-                    }
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none font-bold"
-                  />
-                  <span className="text-[11px] text-slate-500 mt-1 block">Escala estándar: 1.0</span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                    Nota de Aprobación *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min={0}
-                    max={100}
-                    value={settingsData.minPassingGrade}
-                    onChange={(e) =>
-                      setSettingsData({
-                        ...settingsData,
-                        minPassingGrade: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                    className="w-full px-3.5 py-2 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-emerald-600"
-                  />
-                  <span className="text-[11px] text-slate-500 mt-1 block">
-                    Notas inferiores se marcarán rojas
-                  </span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                    Nota Máxima
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min={1}
-                    max={100}
-                    value={settingsData.maxGrade}
-                    onChange={(e) =>
-                      setSettingsData({ ...settingsData, maxGrade: parseFloat(e.target.value) || 0 })
-                    }
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none font-bold"
-                  />
-                  <span className="text-[11px] text-slate-500 mt-1 block">Escala estándar: 7.0</span>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                    Precisión Decimal
-                  </label>
-                  <select
-                    value={settingsData.gradeScalePrecision}
-                    onChange={(e) =>
-                      setSettingsData({
-                        ...settingsData,
-                        gradeScalePrecision: parseInt(e.target.value) || 1,
-                      })
-                    }
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:ring-2 focus:ring-brand-500 outline-none"
-                  >
-                    <option value={0}>0 decimales (ej. 4)</option>
-                    <option value={1}>1 decimal (ej. 4.5)</option>
-                    <option value={2}>2 decimales (ej. 4.55)</option>
-                  </select>
-                  <span className="text-[11px] text-slate-500 mt-1 block">Redondeo automático</span>
-                </div>
-              </div>
-            </div>
+            <GradingSettingsForm 
+              settingsData={settingsData}
+              setSettingsData={setSettingsData}
+              onSave={handleSaveGeneralSettings}
+              isSaving={isSaving}
+            />
 
             {/* Asistencia y Promoción */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

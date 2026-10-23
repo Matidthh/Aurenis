@@ -39,7 +39,7 @@ export function InstitutionalStats() {
     <section id="metricas" className="relative w-full bg-[#F8F8F5] text-slate-900 py-12 sm:py-16 overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-10 relative z-10">
         
-        {/* Píldora de Título - Estilo Limpio Original */}
+        {/* Píldora de Título */}
         <div className="flex items-center justify-center mb-8">
           <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-slate-700 shadow-2xs">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
@@ -47,7 +47,7 @@ export function InstitutionalStats() {
           </span>
         </div>
 
-        {/* Rejilla de Tarjetas Compactas y Estilizadas */}
+        {/* Rejilla de Tarjetas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {stats.map((st, i) => {
             const Icon = st.icon;
@@ -88,3 +88,4 @@ export function InstitutionalStats() {
     </section>
   );
 }
+

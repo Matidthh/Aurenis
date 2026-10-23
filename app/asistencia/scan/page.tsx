@@ -109,7 +109,7 @@ function AttendanceScanContent() {
 
         setAttendanceData({
           status: data?.status || data?.record?.status || "PRESENT",
-          studentName: data?.studentName || `${user.firstName} ${user.lastName}`,
+          studentName: data?.studentName || (user != null ? `${user.firstName} ${user.lastName}` : "Estudiante"),
           courseName: data?.courseName || "Tu Curso",
           recordedAt: timeStr,
           method: "QR",
