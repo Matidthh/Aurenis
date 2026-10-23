@@ -45,7 +45,7 @@ export function ComparisonBattlecard({ onOpenQuoteModal }: ComparisonBattlecardP
       highlight: false,
     },
     {
-      feature: "Puesta en marcha y carga de datos",
+      feature: "Transición y migración de datos",
       excel: "Manual",
       traditional: "Procesos largos y desatendidos",
       aurenis: "Importación asistida de nóminas y cursos",

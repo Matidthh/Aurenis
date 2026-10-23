@@ -139,65 +139,6 @@ export function PricingPlans({ onSelectPlan }: PricingPlansProps) {
           })}
         </div>
 
-        {/* 2. Sección Separada: Implementación Inicial y Puesta en Marcha */}
-        <div className="mt-14 sm:mt-18 max-w-6xl mx-auto">
-          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-7 sm:p-10 relative overflow-hidden">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-              
-              {/* Información del Servicio de Implementación */}
-              <div className="space-y-4 max-w-2xl">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider">
-                  <Wrench className="w-4 h-4 text-blue-600" />
-                  <span>Servicio de Puesta en Marcha</span>
-                </div>
-
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  {INITIAL_IMPLEMENTATION_SERVICE.title}
-                </h3>
-
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  {INITIAL_IMPLEMENTATION_SERVICE.description}
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-slate-700">
-                  {INITIAL_IMPLEMENTATION_SERVICE.items.map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                      <span className="leading-tight">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tarjeta de Precio de Implementación y CTA */}
-              <div className="w-full lg:w-auto shrink-0 bg-slate-50 border border-slate-200/80 rounded-2xl p-6 sm:p-7 text-center lg:text-right space-y-3">
-                <div>
-                  <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                    {INITIAL_IMPLEMENTATION_SERVICE.priceDisplay}
-                  </div>
-                  <div className="text-xs font-medium text-slate-500 mt-0.5">
-                    {INITIAL_IMPLEMENTATION_SERVICE.priceNote}
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-slate-500 max-w-xs mx-auto lg:ml-auto">
-                  Ajustado a la matrícula, cantidad de sedes y volumen de registros históricos a migrar.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() => onSelectPlan("Servicio de Implementación Inicial (Desde $500.000 CLP)")}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition cursor-pointer flex items-center justify-center gap-2 mx-auto lg:ml-auto shadow-xs"
-                >
-                  <span>{INITIAL_IMPLEMENTATION_SERVICE.ctaText}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
         {/* 3. Tabla de Comparativa Detallada de Funcionalidades */}
         <div className="mt-16 sm:mt-20 max-w-6xl mx-auto space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">

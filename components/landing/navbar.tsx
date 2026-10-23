@@ -108,25 +108,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             onClick={() => handleScrollTo("problema-solucion")}
             className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
-            Pilares Normativos
-          </button>
-          <button
-            onClick={() => handleScrollTo("migracion")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
-          >
-            Migración 48h
-          </button>
-          <button
-            onClick={() => handleScrollTo("planes")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
-          >
-            Planes y Precios
-          </button>
-          <button
-            onClick={() => handleScrollTo("faq")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
-          >
-            Preguntas Frecuentes
+            Gestión Docente
           </button>
 
         </nav>
@@ -188,25 +170,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
               onClick={() => handleScrollTo("problema-solucion")}
               className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
-              Pilares Normativos
-            </button>
-            <button
-              onClick={() => handleScrollTo("migracion")}
-              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
-            >
-              Migración 48h
-            </button>
-            <button
-              onClick={() => handleScrollTo("planes")}
-              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
-            >
-              Planes y Precios
-            </button>
-            <button
-              onClick={() => handleScrollTo("faq")}
-              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
-            >
-              Preguntas Frecuentes
+              Gestión Docente
             </button>
 
           </div>

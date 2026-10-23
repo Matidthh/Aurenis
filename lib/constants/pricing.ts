@@ -112,20 +112,7 @@ export const AURENIS_PLANS: PricingPlan[] = [
   },
 ];
 
-export const INITIAL_IMPLEMENTATION_SERVICE: ImplementationService = {
-  title: "Implementación Inicial y Puesta en Marcha",
-  priceDisplay: "Desde $500.000",
-  priceNote: "CLP · Pago único por establecimiento",
-  description: "Servicio opcional de acompañamiento técnico para asegurar una transición fluida y sin fricción operativa en su comunidad escolar.",
-  items: [
-    "Configuración inicial de la institución y parámetros académicos",
-    "Carga y validación de nóminas de estudiantes, cursos y personal docente",
-    "Configuración de asignaturas, ponderaciones y períodos del establecimiento",
-    "Preparación del entorno institucional y validación de accesos seguros",
-    "Sesión de inducción técnica y puesta en marcha para el equipo directivo y UTP",
-  ],
-  ctaText: "Solicitar Implementación",
-};
+
 
 export const COMPARISON_FEATURES: ComparisonFeature[] = [
   // Capacidad y Acceso
@@ -247,11 +234,5 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
     professional: "Directo y prioritario",
     enterprise: "Canal preferencial dedicado",
   },
-  {
-    category: "Seguridad y Soporte",
-    name: "Implementación Inicial y Puesta en Marcha",
-    start: "Disponible (Desde $500.000)",
-    professional: "Acompañamiento guiado",
-    enterprise: "Acompañamiento institucional",
   },
 ];

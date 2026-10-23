@@ -120,15 +120,14 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
             {/* Main Headline */}
             <div className="space-y-1">
               <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black text-[#0f172a] tracking-[-0.04em] leading-[1.08]">
-                Gestión académica <br />
-                más simple, para <br />
-                <span className="text-[#6366f1]">mejores resultados.</span>
+                Tu Libro de Clases, <br />
+                más <span className="text-[#6366f1]">rápido</span> que nunca.
               </h1>
             </div>
 
             {/* Subtitle / Description */}
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-lg font-normal">
-              Aurenis es una plataforma web diseñada para facilitar la gestión académica en colegios, con un sistema intuitivo, seguro y completo para estudiantes, docentes y administradores.
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-lg font-medium">
+              Olvídate de las planillas lentas y los errores de cálculo. Aurenis está diseñado para que el registro de notas y asistencia sea la parte más fácil de tu día.
             </p>
 
             {/* CTAs */}

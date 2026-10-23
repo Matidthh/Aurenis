@@ -124,7 +124,7 @@ export function HowWeMigrateSection() {
           <div className="space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2 text-xs font-bold text-emerald-700">
               <Clock className="w-4 h-4 text-emerald-600" />
-              <span>Tiempo de puesta en marcha: menos de 72 horas</span>
+              <span>Migración rápida: menos de 72 horas</span>
             </div>
             <h4 className="text-lg sm:text-xl font-bold text-slate-900">
               ¿Listo para coordinar la migración de tu establecimiento?

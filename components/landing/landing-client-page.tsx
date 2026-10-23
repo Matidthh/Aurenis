@@ -5,10 +5,6 @@ import { LandingNavbar } from "@/components/landing/navbar";
 import { ReplicatedHero } from "@/components/landing/replicated-hero";
 import { InstitutionalStats } from "@/components/landing/institutional-stats";
 import { ProblemSolutionSection } from "@/components/landing/problem-solution-section";
-import { HowWeMigrateSection } from "@/components/landing/how-we-migrate-section";
-import { PricingPlans } from "@/components/landing/pricing-plans";
-import { FaqSection } from "@/components/landing/faq-section";
-import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { getBookingUrl } from "@/lib/booking";
 
@@ -49,24 +45,7 @@ export function LandingClientPage() {
         onOpenDemoModal={(src) => handleOpenQuote(src || "Demostración desde Pilares")}
       />
 
-      {/* 6. Protocolo de Migración Rápida en 48 Horas */}
-      <HowWeMigrateSection />
-
-      {/* 7. Planes y Precios Transparentes */}
-      <PricingPlans
-        onSelectPlan={(plan) => handleOpenQuote(plan)}
-      />
-
-      {/* 8. Preguntas Frecuentes - Derribo de Objeciones */}
-      <FaqSection />
-
-      {/* 9. Llamado a la Acción Final y Cierre Comercial */}
-      <FinalCtaSection
-        onOpenQuoteModal={() => handleOpenQuote("Solicitud Cierre Comercial")}
-        onOpenDemoModal={() => handleOpenQuote("Demostración Cierre Comercial")}
-      />
-
-      {/* 10. Pie de Página Institucional */}
+      {/* 5. Pie de Página Institucional */}
       <LandingFooter />
     </div>
   );
