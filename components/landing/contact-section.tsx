@@ -40,7 +40,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900">Correo Comercial</h4>
-                  <p className="text-sm text-slate-500">contacto@aurenis.cl</p>
+                  <a href="mailto:contact@aurenis.app" className="text-sm text-slate-500 hover:text-blue-600 transition">contact@aurenis.app</a>
                 </div>
               </div>
               <div className="flex items-center gap-4">

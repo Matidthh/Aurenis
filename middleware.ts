@@ -39,6 +39,7 @@ const RESERVED_ROOT_PATHS = new Set([
   "about",
   "contact",
   "resenas",
+  "asistencia",
 ]);
 
 /**
@@ -227,6 +228,9 @@ function enforceTenantIsolation({
 
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("returnUrl", pathname);
+    if (targetIdentifier && !RESERVED_ROOT_PATHS.has(targetIdentifier)) {
+      loginUrl.searchParams.set("school", targetIdentifier);
+    }
     const redirectRes = NextResponse.redirect(loginUrl);
     if (hadInvalidToken) redirectRes.cookies.delete(SESSION_COOKIE_NAME);
     return redirectRes;
@@ -387,12 +391,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // 4.3 Soporte de Subdominios Multi-Tenant en aurenis.app (ej. lpmm.aurenis.app -> /lpmm/*)
-  const host = request.headers.get("host") || "";
+  const rawHost = request.headers.get("x-forwarded-host") || request.headers.get("host") || "";
+  const host = rawHost.split(":")[0].toLowerCase().trim();
   let tenantSubdomain: string | null = null;
   const hostParts = host.split(".");
   const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "auth", "mail", "system"]);
 
-  if (host.endsWith(".aurenis.app")) {
+  if (host.endsWith(".aurenis.app") || host.endsWith(".aurenis.com") || host.endsWith(".aurenis.cl")) {
     if (hostParts.length > 2) {
       const sub = hostParts[0].toLowerCase();
       if (!RESERVED_SUBDOMAINS.has(sub)) {

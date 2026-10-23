@@ -7,7 +7,7 @@
 /coverage
 
 # Next.js
-# /.next/
+/.next/
 /.next-dev/
 # /.next-build/
 # /out/

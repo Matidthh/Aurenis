@@ -29,7 +29,7 @@ export function LandingFooter() {
             </div>
 
             <div className="pt-2 text-xs text-slate-300 space-y-1">
-              <div>Contacto directo: <a href="mailto:contacto@aurenis.cl" className="text-blue-400 hover:underline font-semibold">contacto@aurenis.cl</a></div>
+              <div>Contacto directo: <a href="mailto:contact@aurenis.app" className="text-blue-400 hover:underline font-semibold">contact@aurenis.app</a></div>
               <div className="text-slate-400">Región de Valparaíso, Chile</div>
             </div>
           </div>

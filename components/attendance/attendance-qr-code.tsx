@@ -33,7 +33,7 @@ export function AttendanceQRCode({
   schoolSlug,
   courseId,
   subjectId,
-  ttlSeconds = 30,
+  ttlSeconds = 15,
   title = "Código QR de Asistencia",
   subtitle = "Muestre este código a sus estudiantes para registrar su asistencia en tiempo real.",
   onTokenRefresh,
@@ -86,8 +86,12 @@ export function AttendanceQRCode({
         onTokenRefresh(signedToken);
       }
 
+      // Codificar la URL directa de escaneo para que cualquier cámara móvil abra el portal
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      const scanUrl = `${origin}/asistencia/scan?token=${encodeURIComponent(signedToken)}&school=${encodeURIComponent(schoolSlug)}`;
+
       // Renderizar el código QR en un Canvas/Base64 Data URL de alta definición
-      const dataUrl = await QRCode.toDataURL(signedToken, {
+      const dataUrl = await QRCode.toDataURL(scanUrl, {
         width: 320,
         margin: 2,
         color: { dark: "#0f172a", light: "#ffffff" },

@@ -313,6 +313,7 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) return true;
 
   if (pathname === "/system/design-system" || pathname.startsWith("/system/design-system")) return true;
+  if (pathname === "/asistencia/scan" || pathname.startsWith("/asistencia/scan")) return true;
   if (pathname === "/_not-found" || pathname === "/404" || pathname === "/500" || pathname === "/_error") return true;
   return false;
 }

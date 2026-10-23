@@ -18,5 +18,5 @@ export function getBookingUrl(contextOrPlan?: string): string {
     `Hola equipo de Aurenis,\n\nMe gustaría agendar una breve videollamada de demostración para evaluar la plataforma en nuestro establecimiento educacional.\n\nNombre:\nColegio / RBD:\nCargo (Director / Jefe UTP / Administrador):\nCantidad aprox. de alumnos:\nTeléfono de contacto:\n\nQuedo atento a su disponibilidad.`
   );
 
-  return `mailto:contacto@aurenis.cl?subject=${subject}&body=${body}`;
+  return `mailto:contact@aurenis.app?subject=${subject}&body=${body}`;
 }

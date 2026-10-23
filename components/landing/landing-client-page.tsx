@@ -4,7 +4,6 @@ import React from "react";
 import { LandingNavbar } from "@/components/landing/navbar";
 import { ReplicatedHero } from "@/components/landing/replicated-hero";
 import { InstitutionalStats } from "@/components/landing/institutional-stats";
-import { PortalsByRole } from "@/components/landing/portals-by-role";
 import { ProblemSolutionSection } from "@/components/landing/problem-solution-section";
 import { HowWeMigrateSection } from "@/components/landing/how-we-migrate-section";
 import { PricingPlans } from "@/components/landing/pricing-plans";
@@ -44,10 +43,7 @@ export function LandingClientPage() {
       {/* 3. Barra de Métricas y Capacidades Técnicas (Trust Strip) */}
       <InstitutionalStats />
 
-      {/* 4. Demostración de Producto por Roles: Directivo/UTP, Docente, Alumno, Apoderado */}
-      <PortalsByRole />
-
-      {/* 5. Pilares Esenciales de Gestión y Cumplimiento Normativo */}
+      {/* 4. Pilares Esenciales de Gestión y Cumplimiento Normativo */}
       <ProblemSolutionSection
         onOpenQuoteModal={(src) => handleOpenQuote(src || "Cotización desde Pilares")}
         onOpenDemoModal={(src) => handleOpenQuote(src || "Demostración desde Pilares")}

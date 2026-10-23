@@ -108,14 +108,14 @@ export async function startAttendanceSession(params: {
     status = mockSession.status;
   }
 
-  // Generar token QR dinámico firmado con expiración de 30s
+  // Generar token QR dinámico firmado con expiración de 15s (rotación continua)
   const qrToken = await generateQRSessionToken({
     sessionId,
     schoolId: params.schoolId,
     courseId: params.courseId,
     subjectId: params.subjectId,
     date: dateStr,
-    ttlSeconds: 30,
+    ttlSeconds: 15,
   });
 
   return getAttendanceSessionLiveState({
@@ -364,6 +364,7 @@ export async function recordAttendanceViaQR(params: {
   let studentProfileId: string | null = null;
   let studentName = "";
   let courseName = "Curso";
+  let calculatedStatus: AttendanceStatus = AttendanceStatus.PRESENT;
 
   if (isDatabaseConfigured()) {
     // Verificar sesión
@@ -417,7 +418,7 @@ export async function recordAttendanceViaQR(params: {
       sessionStartTime: session?.createdAt || new Date(payload.iat * 1000),
       toleranceMinutes: 15, // Tolerancia institucional de 15 minutos
     });
-    const calculatedStatus = atrasoCheck.status;
+    calculatedStatus = atrasoCheck.status;
 
     // 3. Upsert registro con estado calculado (PRESENT o LATE) y método QR
     await prisma.attendanceRecord.upsert({
@@ -455,12 +456,19 @@ export async function recordAttendanceViaQR(params: {
         method: "QR",
         sessionId: payload.sessionId,
         courseId: payload.courseId,
-        status: "PRESENT",
+        status: calculatedStatus,
       },
     }).catch(() => {});
   } else {
     // Mock Store
     const store = getMockStore();
+
+    // Evaluar atraso para el store mock
+    const atrasoCheck = checkAtraso({
+      sessionStartTime: new Date(payload.iat * 1000),
+      toleranceMinutes: 15,
+    });
+    calculatedStatus = atrasoCheck.status;
 
     // Verificar si la sesión mock existe y si está cerrada
     if ((store as any).attendanceSessions) {
@@ -509,7 +517,7 @@ export async function recordAttendanceViaQR(params: {
       courseId: payload.courseId,
       studentProfileId,
       dateStr: payload.date,
-      status: "PRESENT",
+      status: calculatedStatus,
       method: "QR",
       sessionId: payload.sessionId,
       updatedAt: new Date(),
@@ -522,9 +530,17 @@ export async function recordAttendanceViaQR(params: {
     second: "2-digit",
   });
 
+  const isLate = calculatedStatus === "LATE";
+  const statusLabel = isLate ? "Atraso (Llegada tardía)" : "Presente";
+
   return {
     success: true,
-    message: `¡Asistencia registrada correctamente mediante QR para ${studentName}!`,
+    status: calculatedStatus,
+    isLate,
+    statusLabel,
+    message: isLate
+      ? `¡Atraso registrado mediante QR para ${studentName}! (Llegada posterior a la tolerancia de 15 min)`
+      : `¡Asistencia registrada correctamente mediante QR para ${studentName}!`,
     courseName,
     studentName,
     recordedAt: recordedAtStr,

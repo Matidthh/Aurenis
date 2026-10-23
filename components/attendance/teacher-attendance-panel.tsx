@@ -25,6 +25,7 @@ import {
   UserCheck,
   FileSpreadsheet,
   AlertTriangle,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -64,7 +65,7 @@ export function TeacherAttendancePanel({
   const [isSessionActive, setIsSessionActive] = useState<boolean>(false);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [qrToken, setQrToken] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState<number>(30);
+  const [countdown, setCountdown] = useState<number>(15);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -116,14 +117,16 @@ export function TeacherAttendancePanel({
 
       if (state.qrToken) {
         setQrToken(state.qrToken);
-        const url = await QRCode.toDataURL(state.qrToken, {
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const scanUrl = `${origin}/asistencia/scan?token=${encodeURIComponent(state.qrToken)}&school=${encodeURIComponent(schoolSlug)}`;
+        const url = await QRCode.toDataURL(scanUrl, {
           width: 320,
           margin: 2,
           color: { dark: "#0f172a", light: "#ffffff" },
         });
         setQrDataUrl(url);
       }
-      setCountdown(30);
+      setCountdown(15);
       setIsQrModalOpen(true);
     } catch (err: any) {
       setMessage({ type: "error", text: err.message || "Error de conexión" });
@@ -156,7 +159,9 @@ export function TeacherAttendancePanel({
 
           if (state.qrToken) {
             setQrToken(state.qrToken);
-            const url = await QRCode.toDataURL(state.qrToken, {
+            const origin = typeof window !== "undefined" ? window.location.origin : "";
+            const scanUrl = `${origin}/asistencia/scan?token=${encodeURIComponent(state.qrToken)}&school=${encodeURIComponent(schoolSlug)}`;
+            const url = await QRCode.toDataURL(scanUrl, {
               width: 320,
               margin: 2,
               color: { dark: "#0f172a", light: "#ffffff" },
@@ -172,11 +177,11 @@ export function TeacherAttendancePanel({
     return () => clearInterval(interval);
   }, [isSessionActive, sessionId, schoolSlug, selectedCourseId, selectedDate]);
 
-  // Temporizador de refresco del QR (cada 30s)
+  // Temporizador de refresco del QR (cada 15s)
   useEffect(() => {
     if (!isSessionActive) return;
     const timer = setInterval(() => {
-      setCountdown((prev) => (prev <= 1 ? 30 : prev - 1));
+      setCountdown((prev) => (prev <= 1 ? 15 : prev - 1));
     }, 1000);
     return () => clearInterval(timer);
   }, [isSessionActive]);
@@ -209,6 +214,23 @@ export function TeacherAttendancePanel({
           return {
             ...s,
             status: "PRESENT",
+            method: "MANUAL",
+            recordedAt: new Date().toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" }),
+          };
+        }
+        return s;
+      })
+    );
+  }
+
+  // Marcar todos los pendientes restantes como Ausentes (Injustificados)
+  function handleMarkAllPendingAbsent() {
+    setStudents((prev) =>
+      prev.map((s) => {
+        if (s.status === "PENDING") {
+          return {
+            ...s,
+            status: "ABSENT_UNJUSTIFIED",
             method: "MANUAL",
             recordedAt: new Date().toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" }),
           };
@@ -543,6 +565,16 @@ export function TeacherAttendancePanel({
             </Button>
 
             <Button
+              onClick={handleMarkAllPendingAbsent}
+              variant="outline"
+              size="sm"
+              className="rounded-xl border-rose-500/30 text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-xs font-semibold flex items-center gap-1.5"
+            >
+              <XCircle className="w-3.5 h-3.5" />
+              Marcar Pendientes como Ausentes
+            </Button>
+
+            <Button
               onClick={handleSaveManual}
               disabled={isSaving}
               size="sm"
@@ -551,6 +583,14 @@ export function TeacherAttendancePanel({
               <Save className="w-3.5 h-3.5" />
               <span>{isSaving ? "Guardando..." : "Guardar Asistencia"}</span>
             </Button>
+          </div>
+        </div>
+
+        {/* Banner Informativo de Sistema Híbrido Dual */}
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50/50 dark:from-slate-800/80 dark:to-slate-800/40 border border-blue-200/80 dark:border-blue-900/40 flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300">
+          <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+          <div className="leading-relaxed">
+            <strong className="text-blue-950 dark:text-blue-200">Sistema Híbrido Sincrónico:</strong> Los estudiantes con dispositivo y datos móviles escanean el código QR en pantalla y quedan registrados automáticamente. Para aquellos que no tengan teléfono, se hayan quedado sin batería/datos o traigan pase de inspectoría, puedes marcarlos <strong>directamente con los botones de la lista</strong>. Ambos métodos se integran en tiempo real en el Libro de Clases oficial.
           </div>
         </div>
 

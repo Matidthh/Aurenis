@@ -105,12 +105,6 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
         {/* 2. Navegación Principal Desktop Enterprise */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Navegación principal">
           <button
-            onClick={() => handleScrollTo("portales")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
-          >
-            Ahorro Institucional
-          </button>
-          <button
             onClick={() => handleScrollTo("problema-solucion")}
             className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
           >
@@ -139,7 +133,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
 
         {/* 3. Acciones del Header: Iniciar sesión + Botón Cotizar/Demo */}
         <div className="flex items-center gap-3">
-          <Link href="/login">
+          <Link href="/login?school=lpmm">
             <Button
               id="navbar-btn-login"
               variant="outline"
@@ -191,12 +185,6 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
         >
           <div className="space-y-3">
             <button
-              onClick={() => handleScrollTo("portales")}
-              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
-            >
-              Ahorro Institucional
-            </button>
-            <button
               onClick={() => handleScrollTo("problema-solucion")}
               className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
@@ -224,7 +212,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
           </div>
 
           <div className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
-            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="block w-full">
+            <Link href="/login?school=lpmm" onClick={() => setIsMobileMenuOpen(false)} className="block w-full">
               <Button variant="outline" className="w-full justify-center py-3 text-sm font-semibold">
                 Iniciar sesión
               </Button>

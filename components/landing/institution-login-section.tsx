@@ -59,6 +59,26 @@ export function InstitutionLoginSection() {
               </button>
             </div>
           </div>
+
+          {/* Accesos rápidos a portales institucionales de alta demanda */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-xs text-slate-400 font-medium mr-1">Portales frecuentes:</span>
+            {[
+              { slug: "lpmm", name: "Liceo Politécnico Marga Marga (LPMM)", rbd: "RBD 10240" },
+              { slug: "colegio-san-jose", name: "Colegio San José", rbd: "RBD 10245" },
+              { slug: "colegio-alerce-real", name: "Colegio Alerce Real", rbd: "RBD 10250" },
+            ].map((school) => (
+              <button
+                key={school.slug}
+                type="button"
+                onClick={() => router.push(`/login?school=${school.slug}`)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs text-slate-200 hover:text-white transition-colors cursor-pointer shadow-2xs"
+              >
+                <span className="font-semibold">{school.name}</span>
+                <span className="text-[10px] text-blue-400 font-mono">({school.rbd})</span>
+              </button>
+            ))}
+          </div>
           
           <div className="flex items-center justify-center gap-2 mt-6 text-sm text-slate-400">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />

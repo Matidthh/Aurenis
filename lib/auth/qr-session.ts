@@ -66,7 +66,7 @@ export async function generateQRSessionToken(params: {
   ttlSeconds?: number;
 }): Promise<string> {
   const nonce = Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
-  const ttl = params.ttlSeconds || 30; // 30 segundos por defecto
+  const ttl = params.ttlSeconds || 15; // 15 segundos: rotación dinámica estricta anti-fraude
 
   const hmacSig = generateAttendanceHMAC({
     sessionId: params.sessionId,

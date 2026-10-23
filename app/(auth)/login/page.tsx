@@ -28,6 +28,9 @@ import {
   Phone,
   School,
   CheckCircle2,
+  ChevronDown,
+  Globe,
+  Check,
 } from "lucide-react";
 import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import { Button } from "@/components/ui/button";
@@ -148,11 +151,24 @@ function resolveUserDashboardUrl({
   data,
   subdomain,
   fallbackSlug,
+  returnUrl,
 }: {
   data: any;
   subdomain?: string | null;
   fallbackSlug?: string;
+  returnUrl?: string | null;
 }): string {
+  // Caso 0: Si existe una returnUrl segura pendiente (ej: /asistencia/scan?token=...)
+  if (
+    returnUrl &&
+    returnUrl.startsWith("/") &&
+    !returnUrl.startsWith("//") &&
+    !returnUrl.startsWith("/api") &&
+    !returnUrl.startsWith("/login")
+  ) {
+    return returnUrl;
+  }
+
   // Caso 1: SuperAdmin del Sistema siempre va a la consola central
   if (data?.user?.isSystemAdmin) {
     return "/system/dashboard";
@@ -227,12 +243,61 @@ function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
+interface SchoolOption {
+  slug: string;
+  name: string;
+  shortName: string;
+  subdomain: string;
+  domainSuffix: string;
+  code: string;
+  city: string;
+  color: string;
+}
+
+const AVAILABLE_SCHOOLS: SchoolOption[] = [
+  {
+    slug: "lpmm",
+    name: "Liceo Politécnico Marga Marga",
+    shortName: "LPMM",
+    subdomain: "lpmm.aurenis.app",
+    domainSuffix: "@lpmm.cl",
+    code: "RBD 10240",
+    city: "Quilpué / Melipilla",
+    color: "from-blue-600 to-indigo-700",
+  },
+  {
+    slug: "colegio-san-jose",
+    name: "Colegio San José de Las Condes",
+    shortName: "San José",
+    subdomain: "sanjose.aurenis.app",
+    domainSuffix: "@sanjose.cl",
+    code: "RBD 10245",
+    city: "Santiago",
+    color: "from-emerald-600 to-teal-700",
+  },
+  {
+    slug: "colegio-alerce-real",
+    name: "Colegio Alerce Real",
+    shortName: "Alerce Real",
+    subdomain: "alerce.aurenis.app",
+    domainSuffix: "@alerce.cl",
+    code: "RBD 10250",
+    city: "Puerto Montt",
+    color: "from-amber-600 to-orange-700",
+  },
+];
+
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setSessionData } = useAuth();
   const schoolParam = searchParams.get("school") || searchParams.get("slug");
+  const returnUrlParam = searchParams.get("returnUrl");
   const [detectedSubdomain, setDetectedSubdomain] = useState<string | null>(null);
+  const [selectedSchoolSlug, setSelectedSchoolSlug] = useState<string>(() => {
+    return schoolParam || "lpmm";
+  });
+  const [isSchoolSelectorOpen, setIsSchoolSelectorOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -240,13 +305,18 @@ function LoginContent() {
       const parts = hostname.split(".");
       if (parts.length > 2 && !["www", "admin", "app", "api", "system"].includes(parts[0])) {
         setDetectedSubdomain(parts[0]);
+        setSelectedSchoolSlug(parts[0]);
       } else if (hostname.includes("localhost") && parts.length > 1 && !["www", "localhost", "127"].includes(parts[0])) {
         setDetectedSubdomain(parts[0]);
+        setSelectedSchoolSlug(parts[0]);
+      } else if (schoolParam) {
+        setSelectedSchoolSlug(schoolParam);
       }
     }
-  }, []);
+  }, [schoolParam]);
 
-  const activeSchoolSlug = schoolParam || detectedSubdomain || undefined;
+  const activeSchoolSlug = selectedSchoolSlug || schoolParam || detectedSubdomain || "lpmm";
+  const currentSchool = AVAILABLE_SCHOOLS.find((s) => s.slug === activeSchoolSlug) || AVAILABLE_SCHOOLS[0];
 
   // Form states
   const [identifier, setIdentifier] = useState("");
@@ -307,6 +377,15 @@ function LoginContent() {
     const val = e.target.value;
     setIdentifier(val);
     if (serverError) setServerError(null);
+
+    // Detección automática inteligente de establecimiento por correo o palabras clave
+    const lower = val.toLowerCase().trim();
+    const matched = AVAILABLE_SCHOOLS.find(
+      (s) => lower.includes(s.domainSuffix) || lower.includes(`@${s.slug}`)
+    );
+    if (matched && matched.slug !== selectedSchoolSlug) {
+      setSelectedSchoolSlug(matched.slug);
+    }
 
     if (touched.identifier || hasSubmitted) {
       setErrors((prev) => ({ ...prev, identifier: validateIdentifier(val) }));
@@ -433,6 +512,7 @@ function LoginContent() {
         data,
         subdomain: detectedSubdomain,
         fallbackSlug: activeSchoolSlug,
+        returnUrl: returnUrlParam,
       });
 
       router.push(targetUrl);
@@ -520,6 +600,7 @@ function LoginContent() {
         data,
         subdomain: detectedSubdomain,
         fallbackSlug: activeSchoolSlug || (account.id.includes("lpmm") ? "lpmm" : undefined),
+        returnUrl: returnUrlParam,
       });
 
       router.push(targetUrl);
@@ -733,13 +814,115 @@ function LoginContent() {
           </div>
 
           {/* 2. Títulos de Bienvenida */}
-          <div className="text-left mb-6 sm:mb-8">
+          <div className="text-left mb-5">
             <h2 className="text-2xl sm:text-[28px] font-bold text-[#0F172A] tracking-tight">
               Iniciar sesión
             </h2>
-            <p className="text-sm text-[#64748B] mt-1.5 font-normal">
-              Accede a tu cuenta para continuar
+            <p className="text-sm text-[#64748B] mt-1 font-normal">
+              Accede al portal académico de tu establecimiento
             </p>
+          </div>
+
+          {/* 2.1 Tarjeta de Identificación Institucional y Selector de Colegio */}
+          <div className="mb-6 p-3.5 rounded-2xl bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-200/90 text-left transition-all">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 text-slate-500">
+                <Building2 className="w-3.5 h-3.5 text-brand-600 shrink-0" />
+                <span className="text-[11px] font-semibold uppercase tracking-wider">
+                  Colegio Vinculado
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSchoolSelectorOpen(!isSchoolSelectorOpen)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-brand-600 hover:text-brand-700 hover:bg-brand-50/80 transition-colors cursor-pointer border border-brand-200/50"
+                aria-expanded={isSchoolSelectorOpen}
+              >
+                <span>{isSchoolSelectorOpen ? "Cerrar" : "Cambiar colegio"}</span>
+                <ChevronDown
+                  className={cn(
+                    "w-3.5 h-3.5 transition-transform duration-200",
+                    isSchoolSelectorOpen && "rotate-180"
+                  )}
+                />
+              </button>
+            </div>
+
+            <div className="mt-2">
+              <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                {currentSchool.name}
+              </h3>
+              <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                <span className="inline-flex items-center text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 shadow-2xs">
+                  {currentSchool.code}
+                </span>
+                <span className="text-[11px] text-slate-500 font-medium">
+                  {currentSchool.city}
+                </span>
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-full ml-auto">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <Globe className="w-3 h-3 text-emerald-600" />
+                  <span className="font-mono text-[10px]">{currentSchool.subdomain}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Menú Desplegable con Todos los Colegios Disponibles */}
+            <AnimatePresence>
+              {isSchoolSelectorOpen && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="pt-3 mt-3 border-t border-slate-200 space-y-2 overflow-hidden"
+                >
+                  <p className="text-[11px] font-medium text-slate-600">
+                    Selecciona tu establecimiento para ingresar:
+                  </p>
+                  <div className="space-y-1.5">
+                    {AVAILABLE_SCHOOLS.map((school) => {
+                      const isSelected = school.slug === currentSchool.slug;
+                      return (
+                        <button
+                          key={school.slug}
+                          type="button"
+                          onClick={() => {
+                            setSelectedSchoolSlug(school.slug);
+                            router.replace(`/login?school=${school.slug}`);
+                            setIsSchoolSelectorOpen(false);
+                          }}
+                          className={cn(
+                            "w-full text-left p-2.5 rounded-xl border transition flex items-center justify-between gap-2.5 cursor-pointer",
+                            isSelected
+                              ? "bg-brand-50 border-brand-300 text-brand-950 font-semibold"
+                              : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700 font-medium"
+                          )}
+                        >
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs truncate">{school.name}</span>
+                              <span className="text-[10px] font-mono text-slate-400">
+                                {school.code}
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-mono text-slate-500 block mt-0.5">
+                              {school.subdomain}
+                            </span>
+                          </div>
+                          {isSelected && (
+                            <Check className="w-4 h-4 text-brand-600 shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[10px] text-slate-500 pt-1 leading-normal italic">
+                    💡 <strong>Auto-detección:</strong> Al escribir tu correo (ej. @lpmm.cl o @sanjose.cl) tu colegio se vincula automáticamente.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* 3. Mensaje de Error del Servidor o Red */}

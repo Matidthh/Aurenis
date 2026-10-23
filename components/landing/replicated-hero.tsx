@@ -116,7 +116,7 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3.5 pt-1">
               <Link
-                href="/login"
+                href="/login?school=lpmm"
                 className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[#5046e5] hover:bg-[#4338ca] text-white shadow-[0_10px_25px_rgba(79,70,229,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Ingresar al Sistema</span>

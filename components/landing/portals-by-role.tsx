@@ -295,7 +295,7 @@ export function PortalsByRole() {
                   <span>Ver Planes Comerciales</span>
                 </a>
                 <Link
-                  href="/login"
+                  href="/login?school=lpmm"
                   className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center justify-center gap-1.5 shadow-2xs"
                 >
                   <span>Ingresar al Sistema</span>
