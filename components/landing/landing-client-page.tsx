@@ -5,6 +5,10 @@ import { LandingNavbar } from "@/components/landing/navbar";
 import { ReplicatedHero } from "@/components/landing/replicated-hero";
 import { InstitutionalStats } from "@/components/landing/institutional-stats";
 import { ProblemSolutionSection } from "@/components/landing/problem-solution-section";
+import { HowWeMigrateSection } from "@/components/landing/how-we-migrate-section";
+import { PricingPlans } from "@/components/landing/pricing-plans";
+import { FaqSection } from "@/components/landing/faq-section";
+import { FinalCtaSection } from "@/components/landing/final-cta-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { getBookingUrl } from "@/lib/booking";
 
@@ -45,7 +49,24 @@ export function LandingClientPage() {
         onOpenDemoModal={(src) => handleOpenQuote(src || "Demostración desde Pilares")}
       />
 
-      {/* 5. Pie de Página Institucional */}
+      {/* 5. Protocolo de Migración Rápida */}
+      <HowWeMigrateSection />
+
+      {/* 6. Planes y Precios */}
+      <PricingPlans
+        onSelectPlan={(plan) => handleOpenQuote(plan)}
+      />
+
+      {/* 7. Preguntas Frecuentes */}
+      <FaqSection />
+
+      {/* 8. Llamado a la Acción Final */}
+      <FinalCtaSection
+        onOpenQuoteModal={() => handleOpenQuote("Solicitud Cierre Comercial")}
+        onOpenDemoModal={() => handleOpenQuote("Demostración Cierre Comercial")}
+      />
+
+      {/* 9. Pie de Página Institucional */}
       <LandingFooter />
     </div>
   );

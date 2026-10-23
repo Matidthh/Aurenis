@@ -110,6 +110,24 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
           >
             Gestión Docente
           </button>
+          <button
+            onClick={() => handleScrollTo("migracion")}
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+          >
+            Migración
+          </button>
+          <button
+            onClick={() => handleScrollTo("planes")}
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+          >
+            Planes
+          </button>
+          <button
+            onClick={() => handleScrollTo("faq")}
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+          >
+            FAQ
+          </button>
 
         </nav>
 
@@ -171,6 +189,24 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
               className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               Gestión Docente
+            </button>
+            <button
+              onClick={() => handleScrollTo("migracion")}
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
+            >
+              Migración
+            </button>
+            <button
+              onClick={() => handleScrollTo("planes")}
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
+            >
+              Planes
+            </button>
+            <button
+              onClick={() => handleScrollTo("faq")}
+              className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
+            >
+              FAQ
             </button>
 
           </div>

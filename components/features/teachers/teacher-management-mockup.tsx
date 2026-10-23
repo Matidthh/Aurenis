@@ -29,6 +29,7 @@ import {
   RefreshCw,
   Loader2,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 export interface TeacherData {
   id: string;
@@ -412,19 +413,23 @@ export function TeacherManagementMockup({
         </div>
       </div>
 
-      {/* 4. Renderizado: Tarjetas vs Tabla */}
       {viewMode === "cards" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredTeachers.map((teacher) => {
-            const utilizationPercent = Math.round(
-              (teacher.assignedHours / teacher.contractHours) * 100
-            );
+          <AnimatePresence mode="popLayout">
+            {filteredTeachers.map((teacher, idx) => {
+              const utilizationPercent = Math.round(
+                (teacher.assignedHours / teacher.contractHours) * 100
+              );
 
-            return (
-              <div
-                key={teacher.id}
-                className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-md transition flex flex-col justify-between"
-              >
+              return (
+                <motion.div
+                  key={teacher.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3, delay: Math.min(idx * 0.05, 0.6) }}
+                  className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-md transition flex flex-col justify-between"
+                >
                 <div className="space-y-3">
                   {/* Top: Avatar, Nombre y Badges */}
                   <div className="flex items-start justify-between gap-3">
@@ -530,9 +535,10 @@ export function TeacherManagementMockup({
                     <span>Editar Perfil</span>
                   </button>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
+          </AnimatePresence>
         </div>
       ) : (
         /* Vista Tabla */
@@ -551,8 +557,16 @@ export function TeacherManagementMockup({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredTeachers.map((tch) => (
-                  <tr key={tch.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/30 transition">
+                <AnimatePresence mode="popLayout">
+                  {filteredTeachers.map((tch, idx) => (
+                    <motion.tr 
+                      key={tch.id} 
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ duration: 0.2, delay: Math.min(idx * 0.04, 0.5) }}
+                      className="hover:bg-slate-50/70 dark:hover:bg-slate-800/30 transition"
+                    >
                     <td className="py-3.5 px-4">
                       <div className="font-bold text-slate-900 dark:text-white">{tch.name}</div>
                       <div className="font-mono text-[11px] text-slate-400">{tch.rut} • {tch.email}</div>
@@ -614,8 +628,9 @@ export function TeacherManagementMockup({
                         </button>
                       </div>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
+                </AnimatePresence>
               </tbody>
             </table>
           </div>

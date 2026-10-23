@@ -28,6 +28,7 @@ import {
   List,
   RefreshCw,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 export interface StudentMockupData {
   id: string;
@@ -466,12 +467,17 @@ export function StudentTableMockup({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
-                {filteredStudents.map((st) => (
-                  <tr
-                    key={st.id}
-                    className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition group cursor-pointer"
-                    onClick={() => onSelectStudent(st)}
-                  >
+                <AnimatePresence mode="popLayout">
+                  {filteredStudents.map((st, idx) => (
+                    <motion.tr
+                      key={st.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2, delay: Math.min(idx * 0.03, 0.5) }}
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition group cursor-pointer"
+                      onClick={() => onSelectStudent(st)}
+                    >
                     <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
                       <input
                         type="checkbox"
@@ -575,8 +581,9 @@ export function StudentTableMockup({
                         <Eye className="w-4 h-4" />
                       </button>
                     </td>
-                  </tr>
-                ))}
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
               </tbody>
             </table>
           </div>
@@ -584,12 +591,17 @@ export function StudentTableMockup({
       ) : (
         /* Vista en Cuadrícula de Tarjetas Responsiva */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredStudents.map((st) => (
-            <div
-              key={st.id}
-              onClick={() => onSelectStudent(st)}
-              className="cursor-pointer p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md transition space-y-3"
-            >
+          <AnimatePresence mode="popLayout">
+            {filteredStudents.map((st, idx) => (
+              <motion.div
+                key={st.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, delay: Math.min(idx * 0.03, 0.5) }}
+                onClick={() => onSelectStudent(st)}
+                className="cursor-pointer p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md transition space-y-3"
+              >
               <div className="flex items-start justify-between gap-2">
                 <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-sm">
                   {(st?.name || "")
@@ -636,8 +648,9 @@ export function StudentTableMockup({
                 <span>{st.course}</span>
                 <span className="text-brand-600 font-semibold hover:underline">Ver Ficha →</span>
               </div>
-            </div>
+            </motion.div>
           ))}
+          </AnimatePresence>
         </div>
       )}
 
