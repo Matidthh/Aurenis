@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Check, Minus, ArrowRight, ShieldCheck, HelpCircle, Layers, Award, Wrench } from "lucide-react";
 import {
   AURENIS_PLANS,
-  INITIAL_IMPLEMENTATION_SERVICE,
   COMPARISON_FEATURES,
   PricingPlan,
 } from "@/lib/constants/pricing";

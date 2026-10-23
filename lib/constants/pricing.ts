@@ -20,14 +20,7 @@ export interface PricingPlan {
   ctaType: "start" | "professional" | "enterprise";
 }
 
-export interface ImplementationService {
-  title: string;
-  priceDisplay: string;
-  priceNote: string;
-  description: string;
-  items: string[];
-  ctaText: string;
-}
+
 
 export interface ComparisonFeature {
   name: string;
@@ -233,6 +226,5 @@ export const COMPARISON_FEATURES: ComparisonFeature[] = [
     start: "Estándar por correo",
     professional: "Directo y prioritario",
     enterprise: "Canal preferencial dedicado",
-  },
   },
 ];
