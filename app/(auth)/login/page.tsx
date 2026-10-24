@@ -134,7 +134,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     institutionName: "Liceo Politécnico Marga Marga",
     institutionCode: "LPMM-001 (RBD 10240)",
     name: "Maicol Matías Recabarren",
-    identifier: "maicol.recabarren@lpmm.cl",
+    identifier: "maicolcerda1234@gmail.com",
     pass: "Estudiantelpmm2026",
     icon: GraduationCap,
     badgeColor: "bg-purple-500/10 text-purple-600 border-purple-500/20",

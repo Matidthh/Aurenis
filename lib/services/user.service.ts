@@ -274,9 +274,9 @@ const DEMO_USERS: Record<string, DemoUser> = {
       },
     ],
   },
-  "maicol.recabarren@lpmm.cl": {
+  "maicolcerda1234@gmail.com": {
     id: "user-lpmm-maicol-recabarren",
-    email: "maicol.recabarren@lpmm.cl",
+    email: "maicolcerda1234@gmail.com",
     firstName: "Maicol Matías",
     lastName: "Recabarren Cerda",
     password: "Estudiantelpmm2026",

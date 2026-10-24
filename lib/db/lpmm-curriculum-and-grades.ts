@@ -459021,12 +459021,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "maicol.recabarren@lpmm.cl": {
+  "maicolcerda1234@gmail.com": {
     "num": 16,
     "fullName": "Recabarren Cerda Maicol Matías",
     "firstName": "Maicol Matías",
     "lastName": "Recabarren Cerda",
-    "email": "maicol.recabarren@lpmm.cl",
+    "email": "maicolcerda1234@gmail.com",
     "rut": "22.469.016-6",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -459710,7 +459710,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Recabarren Cerda Maicol Matías",
     "firstName": "Maicol Matías",
     "lastName": "Recabarren Cerda",
-    "email": "maicol.recabarren@lpmm.cl",
+    "email": "maicolcerda1234@gmail.com",
     "rut": "22.469.016-6",
     "courseName": "4° Medio E",
     "courseCode": "4E",
