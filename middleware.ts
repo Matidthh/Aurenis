@@ -397,7 +397,7 @@ export async function middleware(request: NextRequest) {
   const hostParts = host.split(".");
   const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "auth", "mail", "system"]);
 
-  if (host.endsWith(".aurenis.app") || host.endsWith(".aurenis.com") || host.endsWith(".aurenis.cl")) {
+  if (host.endsWith(".aurenis.app") || host.endsWith(".aurenis.com") || host.endsWith(".aurenis.cl") || host.endsWith(".run.app")) {
     if (hostParts.length > 2) {
       const sub = hostParts[0].toLowerCase();
       if (!RESERVED_SUBDOMAINS.has(sub)) {
