@@ -95,15 +95,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Si se solicitó un colegio o tiene exactamente 1 colegio asociado, activamos su contexto inmediatamente
+    // Si se solicitó un colegio, intentamos encontrar la membresía correspondiente
     let selectedMem: any = null;
     if (requestedSlug) {
       selectedMem = activeMemberships.find(
         (m: any) => m.school?.slug?.toLowerCase() === requestedSlug || m.school?.id === requestedSlug
       );
+
+      // CRITICAL: Si se solicitó un colegio específico y el usuario NO pertenece a él, 
+      // rechazamos el acceso por seguridad multi-tenant (Autor: Maicol R.)
+      if (!selectedMem && requestedSlug !== "system") {
+        return NextResponse.json(
+          { error: "No tienes una cuenta activa en esta institución educativa." },
+          { status: 403 }
+        );
+      }
     }
 
-    if (!selectedMem && activeMemberships.length === 1) {
+    // Fallback: Si no hay slug solicitado y solo tiene 1 colegio, lo seleccionamos automáticamente
+    if (!selectedMem && activeMemberships.length === 1 && !requestedSlug) {
       selectedMem = activeMemberships[0];
     }
 
