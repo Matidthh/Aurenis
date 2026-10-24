@@ -413,12 +413,20 @@ export async function authenticateUser(identifier: string, plainPassword: string
         return null;
       })();
 
-      // Timeout de 2.5 segundos para evitar que la petición quede colgada si la DB remota no responde
-      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 2500));
+      // Timeout de 5 segundos para asegurar conexión con DB remota (autor: Maicol R.)
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 5000));
       user = await Promise.race([dbQueryPromise, timeoutPromise]);
+      if (!user) {
+        console.warn("[Auth Service] Autenticación fallida: usuario no encontrado en DB tras timeout.");
+      }
     } catch (dbError: any) {
       console.error("[Auth Service] Error o timeout en consulta DB:", dbError?.message);
     }
+  }
+
+  // Debugging log para identificar discrepancias en credenciales
+  if (!user) {
+    console.debug(`[Auth Service] Usuario no localizado para identificador: ${normalized}`);
   }
 
   // 4. Búsqueda en el almacén de estudiantes reales del LPMM (4° Medio E y demás cursos)
