@@ -23,3 +23,5 @@ export type {
   AssessmentCol,
   GradeMatrixSpreadsheetProps,
 } from "@/components/features/academic/grade-matrix-spreadsheet";
+export { GradeThresholdsModal } from "@/components/grades/grade-thresholds-modal";
+export type { GradeThresholdsModalProps } from "@/components/grades/grade-thresholds-modal";

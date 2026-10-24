@@ -47,6 +47,22 @@ export const UpdateSchoolSettingsSchema = z
     requireAttendanceNote: z.boolean().optional(),
     minAttendancePercentage: z.number().min(0, "Mínimo 0% de asistencia").max(100, "Máximo 100% de asistencia").optional(),
     defaultAssessmentWeight: z.number().min(0, "Mínimo 0% de ponderación").max(100, "Máximo 100% de ponderación").optional(),
+    gradeColorThresholds: z
+      .object({
+        redMax: z.number().min(0, "El umbral rojo debe ser mayor o igual a 0").max(100, "El umbral rojo no puede exceder 100"),
+        yellowMax: z.number().min(0, "El umbral ámbar debe ser mayor o igual a 0").max(100, "El umbral ámbar no puede exceder 100"),
+        greenMax: z.number().min(0, "El umbral verde debe ser mayor o igual a 0").max(100, "El umbral verde no puede exceder 100"),
+        blueMax: z.number().min(0, "El umbral azul debe ser mayor o igual a 0").max(100, "El umbral azul no puede exceder 100").default(7.0),
+        redLabel: z.string().optional().default("Insuficiente"),
+        yellowLabel: z.string().optional().default("Elemental"),
+        greenLabel: z.string().optional().default("Adecuado"),
+        blueLabel: z.string().optional().default("Destacado"),
+      })
+      .refine((data) => data.redMax < data.yellowMax && data.yellowMax < data.greenMax && data.greenMax <= data.blueMax, {
+        message: "Los umbrales del semáforo deben ser estrictamente ascendentes: Rojo < Ámbar < Verde <= Azul",
+        path: ["redMax"],
+      })
+      .optional(),
   })
   .refine(
     (data) => {
@@ -69,6 +85,24 @@ export const UpdateSchoolSettingsSchema = z
   );
 
 export type UpdateSchoolSettingsInput = z.infer<typeof UpdateSchoolSettingsSchema>;
+
+export const GradeColorThresholdsSchema = z
+  .object({
+    redMax: z.number().min(0, "El umbral rojo debe ser mayor o igual a 0").max(100, "El umbral rojo no puede exceder 100"),
+    yellowMax: z.number().min(0, "El umbral ámbar debe ser mayor o igual a 0").max(100, "El umbral ámbar no puede exceder 100"),
+    greenMax: z.number().min(0, "El umbral verde debe ser mayor o igual a 0").max(100, "El umbral verde no puede exceder 100"),
+    blueMax: z.number().min(0, "El umbral azul debe ser mayor o igual a 0").max(100, "El umbral azul no puede exceder 100").default(7.0),
+    redLabel: z.string().optional().default("Insuficiente"),
+    yellowLabel: z.string().optional().default("Elemental"),
+    greenLabel: z.string().optional().default("Adecuado"),
+    blueLabel: z.string().optional().default("Destacado"),
+  })
+  .refine((data) => data.redMax < data.yellowMax && data.yellowMax < data.greenMax && data.greenMax <= data.blueMax, {
+    message: "Los umbrales del semáforo deben ser estrictamente ascendentes: Rojo < Ámbar < Verde <= Azul",
+    path: ["redMax"],
+  });
+
+export type GradeColorThresholds = z.infer<typeof GradeColorThresholdsSchema>;
 
 // Validaciones de Periodos Académicos
 export const CreateAcademicPeriodSchema = z

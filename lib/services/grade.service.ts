@@ -150,12 +150,28 @@ export async function getSchoolGradingConfig(tenantDb: TenantPrismaClient, schoo
         where: { schoolId },
       });
 
+      const customConfig = (settings?.customConfig as any) || {};
+      const minPassing = Number(settings?.minPassingGrade || 4.0);
+      const maxGrade = Number(settings?.maxGrade || 7.0);
+
+      const colorThresholds = customConfig.gradeColorThresholds || {
+        redMax: minPassing,
+        yellowMax: 5.0,
+        greenMax: 6.0,
+        blueMax: maxGrade,
+        redLabel: "Insuficiente",
+        yellowLabel: "Elemental",
+        greenLabel: "Adecuado",
+        blueLabel: "Destacado",
+      };
+
       return {
-        minPassingGrade: Number(settings?.minPassingGrade || 4.0),
+        minPassingGrade: minPassing,
         minGrade: Number(settings?.minGrade || 1.0),
-        maxGrade: Number(settings?.maxGrade || 7.0),
+        maxGrade: maxGrade,
         precision: settings?.gradeScalePrecision || 1,
         termType: settings?.termType || "SEMESTER",
+        colorThresholds,
       };
     } catch {
       // Fallback a demo
@@ -168,6 +184,16 @@ export async function getSchoolGradingConfig(tenantDb: TenantPrismaClient, schoo
     maxGrade: 7.0,
     precision: 1,
     termType: "SEMESTER",
+    colorThresholds: {
+      redMax: 4.0,
+      yellowMax: 5.0,
+      greenMax: 6.0,
+      blueMax: 7.0,
+      redLabel: "Insuficiente",
+      yellowLabel: "Elemental",
+      greenLabel: "Adecuado",
+      blueLabel: "Destacado",
+    },
   };
 }
 

@@ -1,10 +1,11 @@
 "use client";
 
 import React, { memo } from "react";
+import type { GradeColorThresholds } from "@/lib/validations/school.schema";
 
 /**
  * Panel de Métricas y Estadísticas Globales del Curso con Semaforización Oficial
- * Responsable de autoría: Frank M. (Gestión Curricular y Estructura Académica)
+ * Responsable de autoría: Frank M. (Gestión Curricular y Estructura Académica) & Lucas P. (Diseño y WCAG AA)
  * Optimizado con React.memo para recalcularse únicamente ante variaciones reales del conjunto de datos.
  */
 
@@ -23,12 +24,23 @@ export interface CourseStatsData {
 interface GradeMatrixStatsProps {
   stats: CourseStatsData;
   totalStudents: number;
+  thresholds?: GradeColorThresholds | null;
 }
 
 export const GradeMatrixStats = memo(function GradeMatrixStats({
   stats,
   totalStudents,
+  thresholds,
 }: GradeMatrixStatsProps) {
+  const red = thresholds?.redMax ?? 4.0;
+  const yellow = thresholds?.yellowMax ?? 5.0;
+  const green = thresholds?.greenMax ?? 6.0;
+  const blue = thresholds?.blueMax ?? 7.0;
+
+  const redLabel = thresholds?.redLabel || "Insuficiente";
+  const yellowLabel = thresholds?.yellowLabel || "Elemental";
+  const greenLabel = thresholds?.greenLabel || "Adecuado";
+  const blueLabel = thresholds?.blueLabel || "Destacado";
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
       {/* 1. Promedio General */}
@@ -64,7 +76,7 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
       {/* 3. En Riesgo */}
       <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          En Riesgo (&lt; 4.0)
+          En Riesgo (&lt; {red.toFixed(1)})
         </div>
         <div
           className={`text-2xl font-black mt-1 ${
@@ -75,7 +87,7 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
         >
           {stats.failingCount}
         </div>
-        <div className="text-[10px] text-slate-400 mt-0.5">Alumnos bajo nota 4.0</div>
+        <div className="text-[10px] text-slate-400 mt-0.5">Alumnos bajo nota {red.toFixed(1)}</div>
       </div>
 
       {/* 4. Desviación Estándar */}
@@ -92,7 +104,7 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
       {/* 5 y 6. Distribución de Notas Cromática — Decreto 67 */}
       <div className="col-span-2 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
         <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-          <span>Semáforo Decreto 67</span>
+          <span>Semáforo D.67 ({red.toFixed(1)} - {blue.toFixed(1)})</span>
           <span className="text-[10px] text-slate-500 font-mono font-semibold">WCAG AA</span>
         </div>
 
@@ -100,11 +112,11 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
           {/* Rojo: Insuficiente */}
           <div
             role="status"
-            aria-label={`Insuficiente (< 4.0): ${stats.distUnder4} alumnos en riesgo`}
+            aria-label={`${redLabel} (< ${red.toFixed(1)}): ${stats.distUnder4} alumnos en riesgo`}
             className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-800"
           >
-            <span className="text-[9px] font-extrabold text-red-900 dark:text-red-200 block truncate" title="Insuficiente (< 4.0)">
-              Insuf. (&lt;4.0)
+            <span className="text-[9px] font-extrabold text-red-900 dark:text-red-200 block truncate" title={`${redLabel} (< ${red.toFixed(1)})`}>
+              {redLabel.slice(0, 5)}. (&lt;{red.toFixed(1)})
             </span>
             <span className="text-sm font-black text-red-700 dark:text-red-300">
               {stats.distUnder4}
@@ -114,11 +126,11 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
           {/* Ámbar: Elemental */}
           <div
             role="status"
-            aria-label={`Elemental (4.0 a 4.9): ${stats.dist4to5} alumnos en alerta`}
+            aria-label={`${yellowLabel} (${red.toFixed(1)} a ${(yellow - 0.1).toFixed(1)}): ${stats.dist4to5} alumnos en alerta`}
             className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800"
           >
-            <span className="text-[9px] font-bold text-amber-950 dark:text-amber-200 block truncate" title="Elemental (4.0 a 4.9)">
-              Elem. (4-4.9)
+            <span className="text-[9px] font-bold text-amber-950 dark:text-amber-200 block truncate" title={`${yellowLabel} (${red.toFixed(1)} a ${(yellow - 0.1).toFixed(1)})`}>
+              {yellowLabel.slice(0, 5)}. ({red.toFixed(1)}-{(yellow - 0.1).toFixed(1)})
             </span>
             <span className="text-sm font-black text-amber-800 dark:text-amber-300">
               {stats.dist4to5}
@@ -128,11 +140,11 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
           {/* Verde: Adecuado */}
           <div
             role="status"
-            aria-label={`Adecuado (5.0 a 5.9): ${stats.dist5to6} alumnos satisfactorios`}
+            aria-label={`${greenLabel} (${yellow.toFixed(1)} a ${(green - 0.1).toFixed(1)}): ${stats.dist5to6} alumnos satisfactorios`}
             className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800"
           >
-            <span className="text-[9px] font-bold text-emerald-950 dark:text-emerald-200 block truncate" title="Adecuado (5.0 a 5.9)">
-              Adec. (5-5.9)
+            <span className="text-[9px] font-bold text-emerald-950 dark:text-emerald-200 block truncate" title={`${greenLabel} (${yellow.toFixed(1)} a ${(green - 0.1).toFixed(1)})`}>
+              {greenLabel.slice(0, 5)}. ({yellow.toFixed(1)}-{(green - 0.1).toFixed(1)})
             </span>
             <span className="text-sm font-black text-emerald-800 dark:text-emerald-300">
               {stats.dist5to6}
@@ -142,11 +154,11 @@ export const GradeMatrixStats = memo(function GradeMatrixStats({
           {/* Azul: Destacado */}
           <div
             role="status"
-            aria-label={`Destacado (6.0 a 7.0): ${stats.dist6to7} alumnos sobresalientes`}
+            aria-label={`${blueLabel} (${green.toFixed(1)} a ${blue.toFixed(1)}): ${stats.dist6to7} alumnos sobresalientes`}
             className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800"
           >
-            <span className="text-[9px] font-black text-blue-950 dark:text-blue-200 block truncate" title="Destacado (6.0 a 7.0)">
-              Dest. (6-7.0)
+            <span className="text-[9px] font-black text-blue-950 dark:text-blue-200 block truncate" title={`${blueLabel} (${green.toFixed(1)} a ${blue.toFixed(1)})`}>
+              {blueLabel.slice(0, 5)}. ({green.toFixed(1)}-{blue.toFixed(1)})
             </span>
             <span className="text-sm font-black text-blue-800 dark:text-blue-300">
               {stats.dist6to7}

@@ -25,6 +25,9 @@ import {
 import { GradeMatrixRow } from "./grade-matrix-row";
 import { GradeMatrixFooter } from "./grade-matrix-footer";
 import { GradeMatrixDecretoModal } from "./grade-matrix-decreto-modal";
+import { GradeThresholdsModal } from "@/components/grades/grade-thresholds-modal";
+import type { GradeColorThresholds } from "@/lib/validations/school.schema";
+import { DEFAULT_GRADE_THRESHOLDS } from "@/lib/constants/grade-thresholds";
 
 /**
  * Planilla Matricial de Calificaciones Refactorizada y Modularizada (< 16ms / 60 FPS)
@@ -182,11 +185,21 @@ interface CellCoordinate {
 export interface GradeMatrixSpreadsheetProps {
   schoolSlug?: string;
   readOnly?: boolean;
+  gradeConfig?: {
+    minGrade?: number;
+    maxGrade?: number;
+    minPassingGrade?: number;
+    allowDecimals?: boolean;
+    precision?: number;
+    termType?: string;
+    colorThresholds?: GradeColorThresholds;
+  };
 }
 
 export function GradeMatrixSpreadsheet({
   schoolSlug: propSchoolSlug,
   readOnly: propReadOnly,
+  gradeConfig,
 }: GradeMatrixSpreadsheetProps = {}) {
   const { user, token } = useAuth();
   const activeSchool = propSchoolSlug || user?.activeSchoolSlug || "lpmm";
@@ -198,12 +211,32 @@ export function GradeMatrixSpreadsheet({
     (user as any)?.roleName === "STUDENT"
   );
 
+  const isAdmin = Boolean(
+    user?.isSystemAdmin ||
+    (user as any)?.role === "admin" ||
+    (user as any)?.role === "ADMIN" ||
+    (user as any)?.role === "DIRECTOR" ||
+    (user as any)?.role === "SUPER_ADMIN" ||
+    (user as any)?.activeRole === "ADMIN" ||
+    (user as any)?.activeRole === "DIRECTOR" ||
+    (user as any)?.activeRole === "SUPER_ADMIN" ||
+    (user as any)?.roleName === "SCHOOL_ADMIN" ||
+    (user as any)?.roleName === "SYSTEM_ADMIN" ||
+    !isEffectiveReadOnly
+  );
+
   // Monitoreo de Rendimiento < 16ms
   const { stats: perfStats, onRenderCallback } = useRenderPerformance("GradeMatrixSpreadsheet");
 
   const [assessments, setAssessments] = useState<AssessmentCol[]>(INITIAL_ASSESSMENTS);
   const [students, setStudents] = useState<StudentRow[]>(INITIAL_STUDENTS);
   const [isLive, setIsLive] = useState<boolean>(false);
+
+  // Umbrales semafóricos institucionales (Decreto 67 y Escala Oficial)
+  const [thresholds, setThresholds] = useState<GradeColorThresholds>(
+    () => gradeConfig?.colorThresholds || DEFAULT_GRADE_THRESHOLDS
+  );
+  const [showThresholdsModal, setShowThresholdsModal] = useState<boolean>(false);
   
   // Configuración de visualización y velocidad
   const [calcMode, setCalcMode] = useState<"simple" | "weighted">("simple");
@@ -224,6 +257,13 @@ export function GradeMatrixSpreadsheet({
   const [saveStatus, setSaveStatus] = useState<"synced" | "saving" | "unsaved">("synced");
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
 
+  // Sincronizar umbrales si cambian los props
+  useEffect(() => {
+    if (gradeConfig?.colorThresholds) {
+      setThresholds(gradeConfig.colorThresholds);
+    }
+  }, [gradeConfig?.colorThresholds]);
+
   // Referencia a input activo
   const inputRef = useRef<HTMLInputElement>(null);
   const gridContainerRef = useRef<HTMLDivElement>(null);
@@ -236,6 +276,10 @@ export function GradeMatrixSpreadsheet({
         const res = await apiClient.get<any>(`/api/schools/${activeSchool}/grades/matrix`, {
           token: token || undefined,
         });
+
+        if (res.data?.gradingConfig?.colorThresholds) {
+          setThresholds(res.data.gradingConfig.colorThresholds);
+        }
 
         if (res.data && res.data.matrix && Array.isArray(res.data.matrix) && res.data.matrix.length > 0) {
           if (res.data.assessments && Array.isArray(res.data.assessments) && res.data.assessments.length > 0) {
@@ -305,6 +349,10 @@ export function GradeMatrixSpreadsheet({
 
   // Filtrado de alumnos memoizado
   const filteredStudents = useMemo(() => {
+    const red = thresholds.redMax;
+    const yellow = thresholds.yellowMax;
+    const green = thresholds.greenMax;
+
     return students.filter((st) => {
       const fullName = `${st.name} ${st.lastName} ${st.rut}`.toLowerCase();
       const matchesSearch = fullName.includes(searchQuery.toLowerCase());
@@ -313,24 +361,24 @@ export function GradeMatrixSpreadsheet({
 
       const avg = calculateStudentAverage(st);
       if (riskFilter === "at_risk") {
-        return avg !== null && avg < 4.0;
+        return avg !== null && avg < red;
       }
       if (riskFilter === "elemental") {
-        return avg !== null && avg >= 4.0 && avg < 5.0;
+        return avg !== null && avg >= red && avg < yellow;
       }
       if (riskFilter === "adecuado") {
-        return avg !== null && avg >= 5.0 && avg < 6.0;
+        return avg !== null && avg >= yellow && avg < green;
       }
       if (riskFilter === "destacado") {
-        return avg !== null && avg >= 6.0;
+        return avg !== null && avg >= green;
       }
       if (riskFilter === "passing") {
-        return avg !== null && avg >= 4.0;
+        return avg !== null && avg >= red;
       }
 
       return true;
     });
-  }, [students, searchQuery, riskFilter, calculateStudentAverage]);
+  }, [students, searchQuery, riskFilter, calculateStudentAverage, thresholds]);
 
   // Métricas del curso globales memoizadas
   const courseStats: CourseStatsData = useMemo(() => {
@@ -342,16 +390,20 @@ export function GradeMatrixSpreadsheet({
     let d5to6 = 0;
     let d6to7 = 0;
 
+    const red = thresholds.redMax;
+    const yellow = thresholds.yellowMax;
+    const green = thresholds.greenMax;
+
     filteredStudents.forEach((st) => {
       const avg = calculateStudentAverage(st);
       if (avg !== null) {
         studentAverages.push(avg);
-        if (avg >= 4.0) passing++;
+        if (avg >= red) passing++;
         else failing++;
 
-        if (avg < 4.0) dUnder4++;
-        else if (avg < 5.0) d4to5++;
-        else if (avg < 6.0) d5to6++;
+        if (avg < red) dUnder4++;
+        else if (avg < yellow) d4to5++;
+        else if (avg < green) d5to6++;
         else d6to7++;
       }
     });
@@ -654,7 +706,11 @@ export function GradeMatrixSpreadsheet({
         />
 
         {/* 2. Estadísticas y Métricas Globales Memoizadas */}
-        <GradeMatrixStats stats={courseStats} totalStudents={students.length} />
+        <GradeMatrixStats
+          stats={courseStats}
+          totalStudents={students.length}
+          thresholds={thresholds}
+        />
 
         {/* 3. Barra de Filtros, Tipeo y Densidad Memoizada */}
         <GradeMatrixToolbar
@@ -665,6 +721,9 @@ export function GradeMatrixSpreadsheet({
           calcMode={calcMode}
           onCalcModeChange={setCalcMode}
           onOpenDecretoModal={handleOpenDecretoModal}
+          onOpenThresholdsModal={() => setShowThresholdsModal(true)}
+          thresholds={thresholds}
+          isAdmin={isAdmin}
           rapidTypeMode={rapidTypeMode}
           onToggleRapidTypeMode={handleToggleRapidTypeMode}
           advanceDirection={advanceDirection}
@@ -799,6 +858,7 @@ export function GradeMatrixSpreadsheet({
                     onKeyDown={handleKeyDown}
                     onSelectCell={handleSelectCell}
                     calculateStudentAverage={calculateStudentAverage}
+                    thresholds={thresholds}
                   />
                 );
               })}
@@ -825,6 +885,22 @@ export function GradeMatrixSpreadsheet({
           onClose={handleCloseDecretoModal}
           calcMode={calcMode}
           onSelectCalcMode={setCalcMode}
+        />
+
+        {/* 7. Modal de Ajuste de Umbrales del Semáforo Institucional (Persistente en DB) */}
+        <GradeThresholdsModal
+          isOpen={showThresholdsModal}
+          onClose={() => setShowThresholdsModal(false)}
+          schoolSlug={activeSchool}
+          currentThresholds={thresholds}
+          minGrade={gradeConfig?.minGrade ?? 1.0}
+          maxGrade={gradeConfig?.maxGrade ?? 7.0}
+          isAdmin={isAdmin}
+          onThresholdsSaved={(savedThresholds) => {
+            setThresholds(savedThresholds);
+            setFeedbackMessage("Umbrales del semáforo actualizados en la base de datos.");
+            setTimeout(() => setFeedbackMessage(null), 4000);
+          }}
         />
       </div>
     </Profiler>

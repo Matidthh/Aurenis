@@ -5,6 +5,7 @@ import { StudentRow, AssessmentCol } from "./grade-matrix-spreadsheet";
 import { GradeMatrixCell } from "./grade-matrix-cell";
 import { DensityMode } from "./grade-matrix-toolbar";
 import { GradeStatusSemaphoricIndicator } from "./grade-status-semaphoric-indicator";
+import type { GradeColorThresholds } from "@/lib/validations/school.schema";
 
 /**
  * Fila de Estudiante en Planilla Matricial con React.memo
@@ -31,6 +32,7 @@ interface GradeMatrixRowProps {
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onSelectCell: (studentIndex: number, assessmentIndex: number) => void;
   calculateStudentAverage: (student: StudentRow) => number | null;
+  thresholds?: GradeColorThresholds | null;
 }
 
 export const GradeMatrixRow = memo(function GradeMatrixRow({
@@ -49,6 +51,7 @@ export const GradeMatrixRow = memo(function GradeMatrixRow({
   onKeyDown,
   onSelectCell,
   calculateStudentAverage,
+  thresholds,
 }: GradeMatrixRowProps) {
   const studentAvg = calculateStudentAverage(student);
   const isPassing = studentAvg !== null && studentAvg >= 4.0;
@@ -109,7 +112,7 @@ export const GradeMatrixRow = memo(function GradeMatrixRow({
         );
       })}
 
-      {/* Promedio Final del Alumno (Decreto 67 y WCAG AA) */}
+      {/* Promedio Final del Alumno (Decreto 67 y WCAG AA con Umbrales Institucionales) */}
       <td className="text-center px-2 py-2 border-l-2 border-slate-300 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-850/60">
         <GradeStatusSemaphoricIndicator
           grade={studentAvg}
@@ -117,16 +120,18 @@ export const GradeMatrixRow = memo(function GradeMatrixRow({
           size="sm"
           showLabel={false}
           showValue={true}
+          thresholds={thresholds}
         />
       </td>
 
-      {/* Situación / Alerta Semafórica (Rojo, Ámbar, Verde, Azul - Decreto 67) */}
+      {/* Situación / Alerta Semafórica (Rojo, Ámbar, Verde, Azul - Decreto 67 con Umbrales Institucionales) */}
       <td className="text-center px-2 py-2">
         <GradeStatusSemaphoricIndicator
           grade={studentAvg}
           variant="status-label"
           size="xs"
           attendancePct={student.attendancePct}
+          thresholds={thresholds}
         />
       </td>
     </tr>

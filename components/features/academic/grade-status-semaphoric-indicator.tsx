@@ -8,6 +8,7 @@ import {
   Award,
   Minus,
 } from "lucide-react";
+import type { GradeColorThresholds } from "@/lib/validations/school.schema";
 
 /**
  * ============================================================================
@@ -145,15 +146,23 @@ export const DECRETO_67_TIERS: Record<Decreto67Tier, TierConfig> = {
 
 /**
  * Determina el nivel pedagógico oficial según el Decreto 67 a partir de una nota numérica
+ * y los umbrales configurados para la institución (Rojo, Ámbar, Verde, Azul).
  */
-export function getDecreto67Tier(grade: number | null | undefined): Decreto67Tier {
+export function getDecreto67Tier(
+  grade: number | null | undefined,
+  thresholds?: GradeColorThresholds | null
+): Decreto67Tier {
   if (grade === null || grade === undefined || isNaN(grade)) {
     return "EMPTY";
   }
   const val = Number(grade);
-  if (val < 4.0) return "INSUFFICIENT";
-  if (val < 5.0) return "ELEMENTAL";
-  if (val < 6.0) return "ADEQUATE";
+  const red = thresholds?.redMax ?? 4.0;
+  const yellow = thresholds?.yellowMax ?? 5.0;
+  const green = thresholds?.greenMax ?? 6.0;
+
+  if (val < red) return "INSUFFICIENT";
+  if (val < yellow) return "ELEMENTAL";
+  if (val < green) return "ADEQUATE";
   return "OUTSTANDING";
 }
 
@@ -167,6 +176,7 @@ export interface GradeStatusSemaphoricIndicatorProps {
   size?: "xs" | "sm" | "md";
   className?: string;
   title?: string;
+  thresholds?: GradeColorThresholds | null;
 }
 
 export const GradeStatusSemaphoricIndicator = memo(
@@ -180,9 +190,44 @@ export const GradeStatusSemaphoricIndicator = memo(
     size = "sm",
     className = "",
     title,
+    thresholds,
   }: GradeStatusSemaphoricIndicatorProps) {
-    const tier = getDecreto67Tier(grade);
-    const config = DECRETO_67_TIERS[tier];
+    const tier = getDecreto67Tier(grade, thresholds);
+    const baseConfig = DECRETO_67_TIERS[tier];
+
+    // Personalización dinámica de etiquetas y rangos según umbrales de la institución
+    const customLabel =
+      tier === "INSUFFICIENT"
+        ? thresholds?.redLabel
+        : tier === "ELEMENTAL"
+        ? thresholds?.yellowLabel
+        : tier === "ADEQUATE"
+        ? thresholds?.greenLabel
+        : tier === "OUTSTANDING"
+        ? thresholds?.blueLabel
+        : undefined;
+
+    const red = thresholds?.redMax ?? 4.0;
+    const yellow = thresholds?.yellowMax ?? 5.0;
+    const green = thresholds?.greenMax ?? 6.0;
+    const blue = thresholds?.blueMax ?? 7.0;
+
+    const dynamicRange =
+      tier === "INSUFFICIENT"
+        ? `< ${red.toFixed(1)}`
+        : tier === "ELEMENTAL"
+        ? `${red.toFixed(1)} a ${(yellow - 0.1).toFixed(1)}`
+        : tier === "ADEQUATE"
+        ? `${yellow.toFixed(1)} a ${(green - 0.1).toFixed(1)}`
+        : tier === "OUTSTANDING"
+        ? `${green.toFixed(1)} a ${blue.toFixed(1)}`
+        : baseConfig.rangeDescription;
+
+    const config = {
+      ...baseConfig,
+      label: customLabel || baseConfig.label,
+      rangeDescription: dynamicRange,
+    };
     const IconComponent = config.icon;
 
     const formattedValue =

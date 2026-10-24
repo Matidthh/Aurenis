@@ -41,6 +41,7 @@ export default async function GradesPage({
       />
 
       <GradesPageClient
+        schoolSlug={schoolSlug}
         gradeConfig={gradeConfig}
         assessments={assessments}
         readOnly={isReadOnly}

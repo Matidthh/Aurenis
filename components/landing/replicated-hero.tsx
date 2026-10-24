@@ -33,6 +33,7 @@ import {
   ShieldCheck,
   Lock,
   Headset,
+  Scale,
 } from "lucide-react";
 
 interface ReplicatedHeroProps {
@@ -578,53 +579,110 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
         </div>
 
         {/* ========================================================================= */}
-        {/* BOTTOM METRICS STRIP: DYNAMIC FROM DB */}
+        {/* CAPACIDADES Y MÉTRICAS INSTITUCIONALES */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-14 pb-4 border-t border-slate-200/70 mt-12 items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 pt-12 pb-2 border-t border-slate-200/80 mt-12">
           
-          {/* Metric 1 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <Users className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">{stats.students}+</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Estudiantes activos</div>
-            </div>
-          </div>
-
-          {/* Metric 2 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start md:border-l md:border-slate-200 md:pl-6">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <GraduationCap className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">{stats.teachers}</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Docentes registrados</div>
-            </div>
-          </div>
-
-          {/* Metric 3 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start md:border-l md:border-slate-200 md:pl-6">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">{stats.courses}</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Cursos disponibles</div>
+          {/* Card 1: Rendimiento */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-blue-400 transition-all duration-200 flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/60">
+                  Rendimiento
+                </span>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+                  0.1s
+                </div>
+                <div className="text-sm font-bold text-slate-800">
+                  Respuesta en Digitación
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
+                  Ingreso de calificaciones y asistencia sin latencia.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Metric 4 */}
-          <div className="flex items-center gap-3.5 justify-center sm:justify-start md:border-l md:border-slate-200 md:pl-6">
-            <div className="w-10 h-10 rounded-xl bg-[#eef1ff] text-[#5046e5] flex items-center justify-center shrink-0">
-              <Star className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-2xl font-black text-[#0f172a] leading-none">{stats.averageGrade}</div>
-              <div className="text-xs text-slate-500 font-medium mt-1">Promedio general</div>
+          {/* Card 2: Normativa */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-400 transition-all duration-200 flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shadow-2xs group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-200">
+                  <FileCheck className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                  Normativa
+                </span>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors">
+                  100%
+                </div>
+                <div className="text-sm font-bold text-slate-800">
+                  Alineación Circular N° 30
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
+                  Registro estandarizado según directrices SuperEduc.
+                </p>
+              </div>
             </div>
           </div>
+
+          {/* Card 3: Evaluación */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-indigo-400 transition-all duration-200 flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shadow-2xs group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-200">
+                  <Scale className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+                  Evaluación
+                </span>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
+                  Dual
+                </div>
+                <div className="text-sm font-bold text-slate-800">
+                  Motor Decreto 67
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
+                  Cálculo en modo Simple o Ponderado por porcentaje.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Seguridad */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-purple-400 transition-all duration-200 flex flex-col justify-between group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shadow-2xs group-hover:bg-purple-600 group-hover:text-white transition-colors duration-200">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200/60">
+                  Seguridad
+                </span>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-purple-600 transition-colors">
+                  RBAC
+                </div>
+                <div className="text-sm font-bold text-slate-800">
+                  Control de Acceso y Datos
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
+                  PostgreSQL, sesiones JWT y permisos por rol.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </main>

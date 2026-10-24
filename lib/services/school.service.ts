@@ -7,6 +7,7 @@ import { DEFAULT_SCHOOL_ROLES, ROLE_PRESETS } from "@/lib/constants/roles";
 import {
   CreateSchoolInput,
   UpdateSchoolSettingsInput,
+  GradeColorThresholds,
   CreateAcademicPeriodInput,
   UpdateAcademicPeriodInput,
 } from "@/lib/validations/school.schema";
@@ -414,6 +415,7 @@ export async function updateSchoolSettings(
         ...(data.motto !== undefined && { motto: data.motto }),
         ...(data.minAttendancePercentage !== undefined && { minAttendancePercentage: data.minAttendancePercentage }),
         ...(data.defaultAssessmentWeight !== undefined && { defaultAssessmentWeight: data.defaultAssessmentWeight }),
+        ...(data.gradeColorThresholds !== undefined && { gradeColorThresholds: data.gradeColorThresholds }),
       };
 
       const updatedSettings = await prisma.schoolSettings.upsert({
@@ -978,5 +980,100 @@ export async function deleteAcademicPeriod(
   }
 
   return { success: true, id: periodId };
+}
+
+/**
+ * Obtener los umbrales de color del semáforo para promedios de la institución
+ * Autor: Maicol R. (Backend/Arquitectura) & Frank M. (Seguridad/Normativa)
+ */
+export async function getSchoolGradeThresholds(schoolId: string): Promise<GradeColorThresholds> {
+  const school = await prisma.school.findFirst({
+    where: { OR: [{ id: schoolId }, { slug: schoolId }] },
+    include: { settings: true },
+  });
+
+  const customConfig = (school?.settings?.customConfig as Record<string, any>) || {};
+  if (customConfig.gradeColorThresholds) {
+    return customConfig.gradeColorThresholds as GradeColorThresholds;
+  }
+
+  // Fallback por defecto estándar Decreto 67 oficial (1.0 - 7.0)
+  const minPassing = Number(school?.settings?.minPassingGrade ?? 4.0);
+  const maxGrade = Number(school?.settings?.maxGrade ?? 7.0);
+
+  return {
+    redMax: minPassing,
+    yellowMax: 5.0,
+    greenMax: 6.0,
+    blueMax: maxGrade,
+    redLabel: "Insuficiente",
+    yellowLabel: "Elemental",
+    greenLabel: "Adecuado",
+    blueLabel: "Destacado",
+  };
+}
+
+/**
+ * Actualizar los umbrales de color del semáforo para promedios de la institución en la base de datos
+ * Autor: Maicol R. (Backend/Arquitectura) & Frank M. (Seguridad/Normativa)
+ */
+export async function updateSchoolGradeThresholds(
+  schoolId: string,
+  thresholds: GradeColorThresholds,
+  userId?: string
+): Promise<GradeColorThresholds> {
+  const school = await prisma.school.findFirst({
+    where: { OR: [{ id: schoolId }, { slug: schoolId }] },
+    include: { settings: true },
+  });
+
+  if (!school) {
+    throw new SchoolServiceError("Institución no encontrada.");
+  }
+
+  const currentSettings = school.settings;
+  const currentCustomConfig = (currentSettings?.customConfig as Record<string, any>) || {};
+
+  const updatedCustomConfig = {
+    ...currentCustomConfig,
+    gradeColorThresholds: thresholds,
+  };
+
+  await prisma.schoolSettings.upsert({
+    where: { schoolId: school.id },
+    update: {
+      customConfig: updatedCustomConfig,
+    },
+    create: {
+      schoolId: school.id,
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      gradeScalePrecision: 1,
+      primaryColor: "#0284c7",
+      requireAttendanceNote: false,
+      customConfig: updatedCustomConfig,
+    },
+  });
+
+  // Registro de auditoría obligatorio
+  await logAuditEvent({
+    schoolId: school.id,
+    userId: userId || null,
+    action: AuditAction.UPDATE,
+    entityType: "GRADE_COLOR_THRESHOLDS",
+    entityId: school.id,
+    details: thresholds as unknown as Record<string, unknown>,
+  });
+
+  // Sincronizar catálogo en memoria
+  const catalogSchool = SCHOOLS_CATALOG.find((s) => s.id === school.id || s.slug === school.slug);
+  if (catalogSchool) {
+    if (!catalogSchool.customConfig) catalogSchool.customConfig = {};
+    (catalogSchool.customConfig as any).gradeColorThresholds = thresholds;
+  }
+
+  return thresholds;
 }
 
