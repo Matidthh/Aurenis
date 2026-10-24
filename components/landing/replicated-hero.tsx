@@ -579,106 +579,82 @@ export function ReplicatedHero({ onOpenDemoModal, onOpenQuoteModal, hideHeader =
         </div>
 
         {/* ========================================================================= */}
-        {/* CAPACIDADES Y MÉTRICAS INSTITUCIONALES */}
+        {/* CAPACIDADES Y MÉTRICAS INSTITUCIONALES (COMPACTAS ESTILO PILARES) */}
         {/* ========================================================================= */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 pt-12 pb-2 border-t border-slate-200/80 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-10 pb-2 border-t border-slate-200/80 mt-10">
           
           {/* Card 1: Rendimiento */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-blue-400 transition-all duration-200 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-2xs group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
-                  <Zap className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/60">
-                  Rendimiento
-                </span>
+          <div className="flex items-start gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-blue-300 transition">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5">
+              <Zap className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[#0f172a]">Rendimiento</span>
+                <span className="font-mono font-black text-xs text-blue-600">0.1s</span>
               </div>
-              <div className="space-y-1">
-                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
-                  0.1s
-                </div>
-                <div className="text-sm font-bold text-slate-800">
-                  Respuesta en Digitación
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
-                  Ingreso de calificaciones y asistencia sin latencia.
-                </p>
+              <div className="text-[11px] font-semibold text-slate-700 leading-snug">
+                Respuesta en Digitación
+              </div>
+              <div className="text-[10px] text-slate-500 leading-snug pt-0.5">
+                Ingreso sin latencia.
               </div>
             </div>
           </div>
 
           {/* Card 2: Normativa */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-emerald-400 transition-all duration-200 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shadow-2xs group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-200">
-                  <FileCheck className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                  Normativa
-                </span>
+          <div className="flex items-start gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-emerald-300 transition">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0 mt-0.5">
+              <FileCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[#0f172a]">Normativa</span>
+                <span className="font-mono font-black text-xs text-emerald-600">100%</span>
               </div>
-              <div className="space-y-1">
-                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors">
-                  100%
-                </div>
-                <div className="text-sm font-bold text-slate-800">
-                  Alineación Circular N° 30
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
-                  Registro estandarizado según directrices SuperEduc.
-                </p>
+              <div className="text-[11px] font-semibold text-slate-700 leading-snug">
+                Alineación Circular N° 30
+              </div>
+              <div className="text-[10px] text-slate-500 leading-snug pt-0.5">
+                SuperEduc.
               </div>
             </div>
           </div>
 
           {/* Card 3: Evaluación */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-indigo-400 transition-all duration-200 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100 shadow-2xs group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-200">
-                  <Scale className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200/60">
-                  Evaluación
-                </span>
+          <div className="flex items-start gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-indigo-300 transition">
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0 mt-0.5">
+              <Scale className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[#0f172a]">Evaluación</span>
+                <span className="font-mono font-black text-xs text-indigo-600">Dual</span>
               </div>
-              <div className="space-y-1">
-                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-indigo-600 transition-colors">
-                  Dual
-                </div>
-                <div className="text-sm font-bold text-slate-800">
-                  Motor Decreto 67
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
-                  Cálculo en modo Simple o Ponderado por porcentaje.
-                </p>
+              <div className="text-[11px] font-semibold text-slate-700 leading-snug">
+                Motor Decreto 67
+              </div>
+              <div className="text-[10px] text-slate-500 leading-snug pt-0.5">
+                Simple o Ponderado.
               </div>
             </div>
           </div>
 
           {/* Card 4: Seguridad */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-purple-400 transition-all duration-200 flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 shadow-2xs group-hover:bg-purple-600 group-hover:text-white transition-colors duration-200">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200/60">
-                  Seguridad
-                </span>
+          <div className="flex items-start gap-2.5 bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-purple-300 transition">
+            <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shrink-0 mt-0.5">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-xs text-[#0f172a]">Seguridad</span>
+                <span className="font-mono font-black text-xs text-purple-600">RBAC</span>
               </div>
-              <div className="space-y-1">
-                <div className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 group-hover:text-purple-600 transition-colors">
-                  RBAC
-                </div>
-                <div className="text-sm font-bold text-slate-800">
-                  Control de Acceso y Datos
-                </div>
-                <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
-                  PostgreSQL, sesiones JWT y permisos por rol.
-                </p>
+              <div className="text-[11px] font-semibold text-slate-700 leading-snug">
+                Control de Acceso
+              </div>
+              <div className="text-[10px] text-slate-500 leading-snug pt-0.5">
+                PostgreSQL y JWT.
               </div>
             </div>
           </div>

@@ -138,6 +138,7 @@ model School {
   files             FileRecord[]
   attendanceSessions AttendanceSession[]
   promotionRecords  PromotionRecord[]
+  gradingScales     GradingScale[]
   committeeRecords  EvaluationCommitteeRecord[]
 
   createdAt         DateTime           @default(now())
