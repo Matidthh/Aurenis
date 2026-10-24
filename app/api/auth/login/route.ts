@@ -52,8 +52,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const requestedSlug = validated.data.schoolSlug?.trim().toLowerCase();
+    console.log(`[Login Route] Iniciando login para ${validated.data.email} en ${requestedSlug || 'global'}`);
     const user = await authenticateUser(validated.data.email, validated.data.password, requestedSlug);
+    console.log(`[Login Route] Autenticación de servicio exitosa para ${user.email}`);
 
     // Tras autenticación exitosa, restablecer el contador de intentos fallidos
     await resetRateLimit(rateLimitKey);
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
 
     // Caso A: SuperAdmin del Sistema
     if (user.isSystemAdmin) {
+      console.log(`[Login Route] Identificado como SuperAdmin.`);
       const token = await signSessionToken({
         sub: user.id,
         email: user.email,
@@ -71,6 +73,7 @@ export async function POST(req: NextRequest) {
       });
 
       await setSessionCookie(token);
+      console.log(`[Login Route] Cookie de SuperAdmin establecida.`);
 
       return NextResponse.json({
         success: true,
@@ -87,8 +90,10 @@ export async function POST(req: NextRequest) {
 
     // Caso B: Usuario institucional
     const activeMemberships = user.memberships || [];
+    console.log(`[Login Route] Miembro de ${activeMemberships.length} instituciones.`);
 
     if (activeMemberships.length === 0) {
+      console.warn(`[Login Route] Sin membresías activas.`);
       return NextResponse.json(
         { error: "No tienes una membresía activa en ninguna institución educativa." },
         { status: 403 }
@@ -105,6 +110,7 @@ export async function POST(req: NextRequest) {
       // CRITICAL: Si se solicitó un colegio específico y el usuario NO pertenece a él, 
       // rechazamos el acceso por seguridad multi-tenant (Autor: Maicol R.)
       if (!selectedMem && requestedSlug !== "system") {
+        console.warn(`[Login Route] Intento de acceso a colegio ajeno: ${requestedSlug}`);
         return NextResponse.json(
           { error: "No tienes una cuenta activa en esta institución educativa." },
           { status: 403 }
@@ -118,6 +124,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (selectedMem) {
+      console.log(`[Login Route] Membresía seleccionada: ${selectedMem.school.slug}`);
       const mem = selectedMem;
       const permissions = mem.role.permissions.map((rp: any) => rp.permission.code);
 
@@ -135,6 +142,7 @@ export async function POST(req: NextRequest) {
       });
 
       await setSessionCookie(token);
+      console.log(`[Login Route] Cookie de institución establecida.`);
 
       const hostHeader = req.headers.get("host") || "";
       const tenantHeader = req.headers.get("x-tenant-subdomain") || "";
@@ -150,6 +158,7 @@ export async function POST(req: NextRequest) {
 
       const baseDashboard = isSubdomainMatch ? "/dashboard" : `/${mem.school.slug}/dashboard`;
       const redirectUrl = `${baseDashboard}${roleSubpath}`;
+      console.log(`[Login Route] Redirigiendo a: ${redirectUrl}`);
 
       return NextResponse.json({
         success: true,
@@ -170,6 +179,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Si tiene múltiples colegios, emitimos sesión parcial y lo enviamos al selector
+    console.log(`[Login Route] Enviando a selector de colegios.`);
     const token = await signSessionToken({
       sub: user.id,
       email: user.email,

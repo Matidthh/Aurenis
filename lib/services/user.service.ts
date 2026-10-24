@@ -387,11 +387,15 @@ export async function authenticateUser(identifier: string, plainPassword: string
   };
 
   // 3. Si aún no se encuentra y la base de datos está configurada, consultar con timeout estricto de 2.5s
-  if (!user && isDatabaseConfigured()) {
+  const dbStatus = isDatabaseConfigured();
+  console.log(`[Auth Service] Buscando usuario: ${normalized}. DB configurada: ${dbStatus}`);
+
+  if (!user && dbStatus) {
     try {
       const isEmail = normalized.includes("@");
       const isRutCandidate = /\d/.test(normalized) && (cleanRut.length >= 7 || normalized.length >= 7);
 
+      console.log(`[Auth Service] Consultando base de datos real...`);
       const dbQueryPromise = (async () => {
         if (isEmail) {
           return await prisma.user.findUnique({
@@ -416,21 +420,19 @@ export async function authenticateUser(identifier: string, plainPassword: string
       // Timeout de 5 segundos para asegurar conexión con DB remota (autor: Maicol R.)
       const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 5000));
       user = await Promise.race([dbQueryPromise, timeoutPromise]);
-      if (!user) {
-        console.warn("[Auth Service] Autenticación fallida: usuario no encontrado en DB tras timeout.");
+      if (user) {
+        console.log(`[Auth Service] Usuario ENCONTRADO en DB: ${user.id} (${user.email})`);
+      } else {
+        console.warn("[Auth Service] Usuario NO ENCONTRADO en DB (o timeout de 5s).");
       }
     } catch (dbError: any) {
-      console.error("[Auth Service] Error o timeout en consulta DB:", dbError?.message);
+      console.error("[Auth Service] ERROR en consulta DB:", dbError?.message);
     }
-  }
-
-  // Debugging log para identificar discrepancias en credenciales
-  if (!user) {
-    console.debug(`[Auth Service] Usuario no localizado para identificador: ${normalized}`);
   }
 
   // 4. Búsqueda en el almacén de estudiantes reales del LPMM (4° Medio E y demás cursos)
   if (!user) {
+    console.log(`[Auth Service] Buscando en Mock Store / Almacén LPMM...`);
     try {
       const store = getMockStore();
       for (const u of store.users.values()) {
@@ -496,6 +498,7 @@ export async function authenticateUser(identifier: string, plainPassword: string
     throw new UserServiceError("Tu cuenta se encuentra suspendida o inactiva.", 403);
   }
 
+  console.log(`[Auth Service] Iniciando verificación de contraseña para ${user.email}...`);
   let isValidPassword = false;
   const commonPasswords = [
     "Password123!",
@@ -528,15 +531,22 @@ export async function authenticateUser(identifier: string, plainPassword: string
 
   if (commonPasswords.includes(plainPassword)) {
     isValidPassword = true;
+    console.log(`[Auth Service] Password validada por lista común.`);
   } else if (user.password && plainPassword.trim().toLowerCase() === user.password.trim().toLowerCase()) {
     isValidPassword = true;
+    console.log(`[Auth Service] Password validada por coincidencia directa (Mock User).`);
   } else if (user.passwordHash) {
+    console.log(`[Auth Service] Validando hash Bcrypt...`);
     isValidPassword = await verifyPassword(plainPassword, user.passwordHash);
+    console.log(`[Auth Service] Resultado Bcrypt: ${isValidPassword}`);
   }
 
   if (!isValidPassword) {
+    console.error(`[Auth Service] LOGIN FALLIDO: Password incorrecta para ${user.email}`);
     throw new UserServiceError("Credenciales inválidas.", 401);
   }
+
+  console.log(`[Auth Service] ✅ LOGIN EXITOSO: ${user.email}`);
 
   // Registrar login en auditoría de forma asíncrona no bloqueante
   if (isDatabaseConfigured()) {

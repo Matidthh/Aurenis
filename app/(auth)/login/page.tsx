@@ -303,12 +303,19 @@ function LoginContent() {
     if (typeof window !== "undefined") {
       const hostname = window.location.hostname.toLowerCase();
       const parts = hostname.split(".");
-      if (parts.length > 2 && !["www", "admin", "app", "api", "system"].includes(parts[0])) {
-        setDetectedSubdomain(parts[0]);
-        setSelectedSchoolSlug(parts[0]);
+      const RESERVED = ["www", "admin", "app", "api", "system", "us-east5", "us-east1", "southamerica-west1"];
+      
+      let foundSub: string | null = null;
+      
+      if (parts.length > 2 && !RESERVED.includes(parts[0]) && !parts[0].startsWith("ais-")) {
+        foundSub = parts[0];
       } else if (hostname.includes("localhost") && parts.length > 1 && !["www", "localhost", "127"].includes(parts[0])) {
-        setDetectedSubdomain(parts[0]);
-        setSelectedSchoolSlug(parts[0]);
+        foundSub = parts[0];
+      }
+
+      if (foundSub) {
+        setDetectedSubdomain(foundSub);
+        setSelectedSchoolSlug(foundSub);
       } else if (schoolParam) {
         setSelectedSchoolSlug(schoolParam);
       }

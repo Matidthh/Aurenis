@@ -395,9 +395,10 @@ export async function middleware(request: NextRequest) {
   const host = rawHost.split(":")[0].toLowerCase().trim();
   let tenantSubdomain: string | null = null;
   const hostParts = host.split(".");
-  const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "auth", "mail", "system"]);
+  const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "auth", "mail", "system", "us-east1", "us-east4", "us-east5", "us-central1", "southamerica-east1", "southamerica-west1"]);
 
-  if (host.endsWith(".aurenis.app") || host.endsWith(".aurenis.com") || host.endsWith(".aurenis.cl") || host.endsWith(".run.app")) {
+  // Detectamos subdominios solo en dominios oficiales o locales
+  if (host.endsWith(".aurenis.app") || host.endsWith(".aurenis.com") || host.endsWith(".aurenis.cl")) {
     if (hostParts.length > 2) {
       const sub = hostParts[0].toLowerCase();
       if (!RESERVED_SUBDOMAINS.has(sub)) {
@@ -408,6 +409,15 @@ export async function middleware(request: NextRequest) {
     if (hostParts.length > 1) {
       const sub = hostParts[0].toLowerCase();
       if (!RESERVED_SUBDOMAINS.has(sub) && sub !== "localhost" && sub !== "127") {
+        tenantSubdomain = sub;
+      }
+    }
+  } else if (host.endsWith(".run.app")) {
+    // Para Cloud Run, el subdominio de tenant solo es válido si es el primer segmento y NO es un identificador técnico de AIS/GCP
+    // Ejemplo: lpmm.run.app (OK), ais-dev-xyz.us-east5.run.app (IGNORAR como tenant)
+    if (hostParts.length === 3) {
+      const sub = hostParts[0].toLowerCase();
+      if (!RESERVED_SUBDOMAINS.has(sub) && !sub.startsWith("ais-")) {
         tenantSubdomain = sub;
       }
     }
