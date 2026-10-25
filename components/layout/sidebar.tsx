@@ -385,9 +385,9 @@ export function Sidebar({
                           className="hidden md:flex fixed left-20 ml-2 z-50 items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 dark:bg-slate-800 text-white text-xs font-medium shadow-xl whitespace-nowrap border border-slate-700 pointer-events-none"
                         >
                           <span>{item.title}</span>
-                          {item.badge && (
+                          {(item as NavItem).badge && (
                             <span className="px-1.5 py-0.2 rounded bg-brand-500 text-white text-[10px]">
-                              {item.badge}
+                              {(item as NavItem).badge}
                             </span>
                           )}
                         </motion.div>
