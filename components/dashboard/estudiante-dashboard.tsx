@@ -370,18 +370,18 @@ export function EstudianteDashboard({
     }
     return {
       num: 16,
-      fullName: studentName || initialRecord?.fullName || "Maicol Matías Recabarren Cerda",
+      fullName: studentName || initialRecord?.fullName || "Recabarren Cerda Maicol Matías",
       firstName: studentName?.split(" ")[0] || initialRecord?.firstName || "Maicol Matías",
       lastName: studentName?.split(" ").slice(1).join(" ") || initialRecord?.lastName || "Recabarren Cerda",
       email: studentEmail || initialRecord?.email || "maicolcerda1234@gmail.com",
       rut: studentRut || initialRecord?.rut || "22.469.016-6",
-      courseName: courseName || initialRecord?.courseName || "4° Medio E",
-      courseCode: "4E",
-      grade: 4,
-      letter: "E",
-      specialty: initialRecord?.specialty || "Programación",
-      overallGpa: initialRecord?.overallGpa || 5.6,
-      overallAttendance: initialRecord?.overallAttendance || 92.0,
+      courseName: courseName || initialRecord?.courseName || "1º Medio A",
+      courseCode: "1A",
+      grade: 1,
+      letter: "A",
+      specialty: initialRecord?.specialty || "Telecomunicaciones y Redes",
+      overallGpa: initialRecord?.overallGpa || 5.8,
+      overallAttendance: initialRecord?.overallAttendance || 95.0,
       subjects: (initialRecord?.subjects && initialRecord.subjects.length > 0) ? initialRecord.subjects : DEFAULT_STUDENT_SUBJECTS,
     };
   });
@@ -1319,19 +1319,19 @@ export function EstudianteDashboard({
           className="space-y-6"
         >
           {/* Cabecera y Selector de Vista */}
-          <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">
-                    Tus Calificaciones Oficiales
+                <div className="flex items-center gap-2.5">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                    Libro de Calificaciones — Mis Calificaciones
                   </h2>
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-300 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
                     Semestre 1 · 2026
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Escala chilena de 1.0 a 7.0 (aprobación con nota 4.0 o superior)
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Estudiante: <strong className="text-slate-700 dark:text-slate-200">{activeStudentName}</strong> • Curso: <strong className="text-slate-700 dark:text-slate-200">{activeCourseName}</strong> • Escala chilena 1.0 a 7.0 (Aprobación ≥ 4.0)
                 </p>
               </div>
 
@@ -1344,8 +1344,8 @@ export function EstudianteDashboard({
                     type="text"
                     value={subjectSearch}
                     onChange={(e) => setSubjectSearch(e.target.value)}
-                    placeholder="Buscar materia..."
-                    className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Buscar asignatura..."
+                    className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0c8ee9]"
                   />
                 </div>
 
@@ -1373,7 +1373,7 @@ export function EstudianteDashboard({
                         : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                     )}
                   >
-                    Planilla
+                    Planilla Matriz
                   </button>
                 </div>
 
@@ -1389,25 +1389,96 @@ export function EstudianteDashboard({
               </div>
             </div>
 
-            {/* Guía Visual Amigable de Escala de Notas */}
-            <div className="pt-2 flex items-center gap-3 sm:gap-6 flex-wrap text-xs text-slate-500 border-t border-slate-100 dark:border-slate-800">
-              <span className="font-bold text-slate-700 dark:text-slate-300">Escala:</span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                <span>6.0 - 7.0 Sobresaliente</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span>5.0 - 5.9 Bueno</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <span>4.0 - 4.9 Aprobando</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                <span>&lt; 4.0 En Refuerzo</span>
-              </span>
+            {/* Barra de Filtros por Categoría Curricular */}
+            <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setRamosFilter("all")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer",
+                  ramosFilter === "all"
+                    ? "bg-[#0c8ee9] text-white shadow-xs"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200"
+                )}
+              >
+                Todas las Asignaturas ({subjectsData.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setRamosFilter("plan_comun")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer",
+                  ramosFilter === "plan_comun"
+                    ? "bg-[#0c8ee9] text-white shadow-xs"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200"
+                )}
+              >
+                Plan Común ({planComunSubjects.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setRamosFilter("especialidad")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer",
+                  ramosFilter === "especialidad"
+                    ? "bg-[#0c8ee9] text-white shadow-xs"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200"
+                )}
+              >
+                Especialidad TP ({especialidadSubjects.length})
+              </button>
+            </div>
+          </div>
+
+          {/* Estadísticas Resumen del Módulo de Notas */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs space-y-1">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Promedio Ponderado</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-900 dark:text-white font-mono">
+                  {overallAverage}
+                </span>
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                  Destacado
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500">Calculado sobre 5 asignaturas vigentes</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs space-y-1">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ramos Aprobados</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-slate-900 dark:text-white font-mono">
+                  {passingSubjectsCount}/{subjectsData.length}
+                </span>
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full">
+                  100%
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500">Sin riesgo de repitencia</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs space-y-1">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mejor Asignatura</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-xl font-black text-slate-900 dark:text-white truncate">
+                  Historia (6.8)
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500">Prof. Patricia Morales</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs space-y-1">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Asistencia Global</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-black text-emerald-600 font-mono">
+                  {currentStudent.overallAttendance}%
+                </span>
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                  Óptima
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500">Exigencia mínima: 85%</p>
             </div>
           </div>
 
@@ -1420,18 +1491,18 @@ export function EstudianteDashboard({
                   No se encontraron asignaturas
                 </h4>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  No hay materias que coincidan con &ldquo;{subjectSearch}&rdquo;. Intenta con otro término o limpia el buscador.
+                  No hay materias que coincidan con tus filtros de búsqueda. Intenta con otro término.
                 </p>
                 <button
                   type="button"
-                  onClick={() => setSubjectSearch("")}
+                  onClick={() => { setSubjectSearch(""); setRamosFilter("all"); }}
                   className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer"
                 >
-                  Limpiar búsqueda
+                  Restaurar filtros
                 </button>
               </div>
             ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {filteredSubjects.map((sub) => {
                 const isOver6 = sub.currentAvg >= 6.0;
                 const isOver5 = sub.currentAvg >= 5.0 && sub.currentAvg < 6.0;
@@ -1440,88 +1511,98 @@ export function EstudianteDashboard({
                 return (
                   <div
                     key={sub.id}
-                    className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs space-y-4 hover:border-indigo-300 dark:hover:border-indigo-700 transition"
+                    className="p-6 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs space-y-4 hover:border-[#0c8ee9]/50 transition flex flex-col justify-between"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-mono font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
-                            {sub.code}
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="space-y-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-mono font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded">
+                              {sub.code}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-[10px] font-bold px-2.5 py-0.5 rounded",
+                                sub.category === "Especialidad TP"
+                                  ? "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200"
+                                  : "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200"
+                              )}
+                            >
+                              {sub.category}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-black text-slate-900 dark:text-white truncate">
+                            {sub.name}
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            Docente: <strong className="text-slate-700 dark:text-slate-300">{sub.teacher}</strong> · Sala {sub.room}
+                          </p>
+                        </div>
+
+                        {/* Promedio con Numerales Tabulares */}
+                        <div className="text-right shrink-0">
+                          <span className="text-[10px] text-slate-400 font-semibold block uppercase">
+                            Promedio
                           </span>
                           <span
                             className={cn(
-                              "text-[10px] font-bold px-2 py-0.5 rounded",
-                              sub.category === "Especialidad TP"
-                                ? "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200"
-                                : "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200"
+                              "text-3xl font-black font-mono tabular-nums block",
+                              isOver6
+                                ? "text-blue-600 dark:text-blue-400"
+                                : isOver5
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : isPassing
+                                ? "text-amber-600 dark:text-amber-400"
+                                : "text-rose-600 dark:text-rose-400"
                             )}
                           >
-                            {sub.category}
+                            {sub.currentAvg.toFixed(1)}
                           </span>
                         </div>
-                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
-                          {sub.name}
-                        </h3>
-                        <p className="text-xs text-slate-500">
-                          Sala {sub.room} · {sub.weeklyHours} hrs pedagógicas semanales
-                        </p>
                       </div>
 
-                      {/* Promedio Grande con Acento Visual */}
-                      <div className="text-right shrink-0">
-                        <span className="text-[10px] text-slate-400 font-semibold block uppercase">
-                          Promedio
-                        </span>
-                        <span
-                          className={cn(
-                            "text-2xl sm:text-3xl font-black font-mono block",
-                            isOver6
-                              ? "text-blue-600 dark:text-blue-400"
-                              : isOver5
-                              ? "text-emerald-600 dark:text-emerald-400"
-                              : isPassing
-                              ? "text-amber-600 dark:text-amber-400"
-                              : "text-rose-600 dark:text-rose-400"
-                          )}
-                        >
-                          {sub.currentAvg.toFixed(1)}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Fila de Notas Parciales */}
-                    <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
-                      <span className="text-[11px] font-bold text-slate-500 block">
-                        Calificaciones Parciales:
-                      </span>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {sub.grades.map((g, idx) => (
-                          <div
-                            key={g.code || idx}
-                            className={cn(
-                              "px-2.5 py-1.5 rounded-xl border text-xs font-mono font-bold flex flex-col items-center min-w-[42px]",
-                              g.value !== null && g.value >= 6.0
-                                ? "bg-blue-50/70 border-blue-200 text-blue-800 dark:bg-blue-950/40 dark:border-blue-900 dark:text-blue-200"
-                                : g.value !== null && g.value >= 4.0
-                                ? "bg-emerald-50/70 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-200"
-                                : g.value !== null
-                                ? "bg-rose-50/70 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-200"
-                                : "bg-slate-50 border-dashed border-slate-300 text-slate-400 dark:bg-slate-800/40 dark:border-slate-700"
-                            )}
-                            title={g.label}
-                          >
-                            <span className="text-[9px] text-slate-400 uppercase font-sans">
-                              {g.code}
-                            </span>
-                            <span>{g.value !== null ? g.value.toFixed(1) : "—"}</span>
-                          </div>
-                        ))}
+                      {/* Desglose de Evaluaciones Parciales */}
+                      <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                            Evaluaciones Registradas ({sub.grades.length}):
+                          </span>
+                          <span className="text-[11px] text-slate-400">Ponderación oficial</span>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          {sub.grades.map((g, idx) => (
+                            <div
+                              key={g.code || idx}
+                              className={cn(
+                                "p-2.5 rounded-2xl border text-xs font-mono font-bold flex flex-col items-center justify-center gap-1",
+                                g.value !== null && g.value >= 6.0
+                                  ? "bg-blue-50/60 border-blue-200 text-blue-800 dark:bg-blue-950/40 dark:border-blue-900 dark:text-blue-200"
+                                  : g.value !== null && g.value >= 4.0
+                                  ? "bg-emerald-50/60 border-emerald-200 text-emerald-800 dark:bg-emerald-950/40 dark:border-emerald-900 dark:text-emerald-200"
+                                  : g.value !== null
+                                  ? "bg-rose-50/60 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-200"
+                                  : "bg-slate-50 border-dashed border-slate-300 text-slate-400 dark:bg-slate-800/40 dark:border-slate-700"
+                              )}
+                            >
+                              <div className="flex items-center justify-between w-full text-[9px] text-slate-400 uppercase font-sans px-1">
+                                <span>{g.code}</span>
+                                <span>{Math.round((g.weightPct || 0.25) * 100)}%</span>
+                              </div>
+                              <span className="text-sm font-black tabular-nums">
+                                {g.value !== null ? g.value.toFixed(1) : "Pendiente"}
+                              </span>
+                              <span className="text-[9px] text-slate-500 font-sans truncate max-w-[80px]">
+                                {g.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="pt-2 flex items-center justify-between text-xs text-slate-500">
-                      <span>Asistencia: <strong>{sub.attendanceRate.toFixed(1)}%</strong></span>
-                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                      <span>Asistencia en ramo: <strong className="font-mono text-slate-700 dark:text-slate-300">{sub.attendanceRate.toFixed(1)}%</strong></span>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-0.5 rounded-full">
                         {sub.status}
                       </span>
                     </div>
@@ -1532,73 +1613,73 @@ export function EstudianteDashboard({
           )
         )}
 
-          {/* VISTA 2: PLANILLA DETALLADA */}
+          {/* VISTA 2: PLANILLA MATRIZ DETALLADA */}
           {notesViewMode === "table" && (
-            <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-5 sm:p-7 shadow-xs overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse min-w-[700px]">
+            <div className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse min-w-[750px]">
                 <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[10px] bg-slate-50/50 dark:bg-slate-800/50">
-                    <th className="py-3 px-3">Asignatura</th>
-                    <th className="py-3 px-2 text-center">Tipo</th>
-                    <th className="py-3 px-2 text-center">N1</th>
-                    <th className="py-3 px-2 text-center">N2</th>
-                    <th className="py-3 px-2 text-center">N3</th>
-                    <th className="py-3 px-2 text-center">N4</th>
-                    <th className="py-3 px-3 text-center">Promedio</th>
-                    <th className="py-3 px-2 text-center">Asistencia</th>
-                    <th className="py-3 px-3 text-right">Estado</th>
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 font-bold uppercase tracking-wider text-[10px] bg-slate-50/70 dark:bg-slate-800/70">
+                    <th className="py-3.5 px-3">Asignatura</th>
+                    <th className="py-3.5 px-2 text-center">Categoría</th>
+                    <th className="py-3.5 px-2 text-center">Nota 1 (25%)</th>
+                    <th className="py-3.5 px-2 text-center">Nota 2 (25%)</th>
+                    <th className="py-3.5 px-2 text-center">Nota 3 (25%)</th>
+                    <th className="py-3.5 px-2 text-center">Nota 4 (25%)</th>
+                    <th className="py-3.5 px-3 text-center">Promedio Final</th>
+                    <th className="py-3.5 px-2 text-center">Asistencia</th>
+                    <th className="py-3.5 px-3 text-right">Estado</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredSubjects.map((sub) => (
                     <tr
                       key={sub.id}
-                      className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition"
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition"
                     >
-                      <td className="py-3.5 px-3">
-                        <span className="font-bold text-slate-900 dark:text-white block">
+                      <td className="py-4 px-3">
+                        <span className="font-bold text-slate-900 dark:text-white block text-sm">
                           {sub.name}
                         </span>
-                        <span className="text-[11px] text-slate-500">{sub.code}</span>
+                        <span className="text-[11px] text-slate-500">{sub.code} • {sub.teacher}</span>
                       </td>
-                      <td className="py-3.5 px-2 text-center">
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                      <td className="py-4 px-2 text-center">
+                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                           {sub.category}
                         </span>
                       </td>
                       {[0, 1, 2, 3].map((idx) => {
                         const val = sub.grades[idx]?.value;
                         return (
-                          <td key={idx} className="py-3.5 px-2 text-center font-mono font-bold">
+                          <td key={idx} className="py-4 px-2 text-center font-mono font-bold tabular-nums">
                             {val !== undefined && val !== null ? (
                               <span
                                 className={cn(
-                                  "px-2 py-0.5 rounded",
+                                  "px-2.5 py-1 rounded-lg text-xs font-black",
                                   val >= 6.0
-                                    ? "text-blue-700 bg-blue-50 dark:text-blue-300"
+                                    ? "text-blue-700 bg-blue-50 dark:text-blue-300 dark:bg-blue-950/60"
                                     : val >= 4.0
-                                    ? "text-emerald-700 bg-emerald-50 dark:text-emerald-300"
-                                    : "text-rose-700 bg-rose-50 dark:text-rose-300"
+                                    ? "text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/60"
+                                    : "text-rose-700 bg-rose-50 dark:text-rose-300 dark:bg-rose-950/60"
                                 )}
                               >
                                 {val.toFixed(1)}
                               </span>
                             ) : (
-                              <span className="text-slate-300 dark:text-slate-600">—</span>
+                              <span className="text-slate-300 dark:text-slate-600 font-normal">—</span>
                             )}
                           </td>
                         );
                       })}
-                      <td className="py-3.5 px-3 text-center">
-                        <span className="font-mono font-black text-xs px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                      <td className="py-4 px-3 text-center">
+                        <span className="font-mono font-black text-sm px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 tabular-nums">
                           {sub.currentAvg.toFixed(1)}
                         </span>
                       </td>
-                      <td className="py-3.5 px-2 text-center font-mono text-slate-600 dark:text-slate-300">
+                      <td className="py-4 px-2 text-center font-mono font-bold text-slate-600 dark:text-slate-300 tabular-nums">
                         {sub.attendanceRate.toFixed(1)}%
                       </td>
-                      <td className="py-3.5 px-3 text-right">
-                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                      <td className="py-4 px-3 text-right">
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">
                           {sub.status}
                         </span>
                       </td>
