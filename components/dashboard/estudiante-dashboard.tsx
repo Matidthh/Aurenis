@@ -59,8 +59,12 @@ import {
   BarChart3,
   Zap,
   MessageCircle,
+  Info,
+  Headphones,
+  CalendarDays,
 } from "lucide-react";
 import { AcademicSummaryCard } from "./academic-summary-card";
+import { GraduationHeroIllustration } from "./graduation-illustration";
 import { cn } from "@/lib/utils/cn";
 import type {
   StudentAcademicRecord,
@@ -744,623 +748,566 @@ export function EstudianteDashboard({
   return (
     <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12">
       {/* ========================================================================= */}
-      {/* 1. SECCIÓN SUPERIOR: BIENVENIDA + FICHA DE PERFIL DEL ALUMNO */}
+      {/* VISTA PRINCIPAL: DASHBOARD REPLICADO EXACTO SEGÚN DISEÑO OFICIAL LPMM     */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
-        {/* Banner de Bienvenida (8 cols) */}
-        <motion.div
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-          className="lg:col-span-8 relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-50/90 via-blue-50/70 to-indigo-50/80 dark:from-[#0d1d3b] dark:via-[#0c1830] dark:to-[#101f3e] border border-blue-100 dark:border-blue-900/40 p-6 sm:p-8 flex flex-col justify-between shadow-xs"
-        >
-          {/* Acento sutil en degradado superior */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0c8ee9] via-indigo-500 to-sky-400" />
-
-          {/* Gráfico decorativo de fondo */}
-          <div className="absolute -right-6 -bottom-6 w-48 h-48 bg-gradient-to-br from-blue-400/10 to-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
-
-          <div className="space-y-2 relative z-10 max-w-xl">
-            <span className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <span>Hola, {firstName}</span>
-              <span className="inline-block">👋</span>
-            </span>
-
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-              Bienvenido a tu espacio académico
-            </h1>
-
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-normal leading-relaxed pt-1">
-              Aquí puedes revisar tu información académica, calificaciones, asistencia, horario y acceder a los recursos que necesitas.
-            </p>
-          </div>
-
-          <div className="pt-4 flex items-center gap-3 relative z-10 flex-wrap">
-            <button
-              type="button"
-              onClick={() => {
-                setIsQrModalOpen(true);
-                setTimeout(() => setQrScanned(true), 1200);
-              }}
-              className="px-3.5 py-2 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
-            >
-              <QrCode className="w-3.5 h-3.5" />
-              <span>Marcar Asistencia QR</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsCredentialModalOpen(true)}
-              className="px-3 py-2 rounded-xl bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
-            >
-              <IdCard className="w-3.5 h-3.5 text-[#0c8ee9]" />
-              <span>Mi Credencial Digital</span>
-            </button>
-          </div>
-        </motion.div>
-
-        {/* Ficha de Perfil Compacta (4 cols) */}
-        <motion.div
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, delay: 0.05 }}
-          className="lg:col-span-4 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 p-6 shadow-xs flex flex-col justify-between"
-        >
-          <div className="flex items-center gap-4">
-            <div className="relative shrink-0">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#0c8ee9] via-blue-600 to-indigo-700 text-white font-black text-xl flex items-center justify-center shadow-md shadow-[#0c8ee9]/25 ring-3 ring-blue-50 dark:ring-slate-800">
-                {firstName.charAt(0)}
-                {currentStudent.lastName ? currentStudent.lastName.charAt(0) : "R"}
-              </div>
-            </div>
-
-            <div className="space-y-1 min-w-0 flex-1">
-              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight truncate">
-                {activeStudentName}
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">
-                Estudiante · {activeCourseName}
-              </p>
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
-                Liceo Politécnico Marga Marga
-              </p>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/70 dark:border-emerald-800/70">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              En línea
-            </span>
-
-            <span className="text-[11px] font-semibold text-slate-400">
-              RUT: {activeStudentRut}
-            </span>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 2. PESTAÑAS PRINCIPALES DEL PORTAL */}
-      {/* ========================================================================= */}
-      <nav
-        aria-label="Navegación del portal escolar"
-        className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-2xl p-1.5 shadow-xs flex items-center gap-1 overflow-x-auto no-scrollbar"
-      >
-        {[
-          { id: "resumen", label: "Inicio", icon: Layers },
-          { id: "notas", label: "Mis Calificaciones", icon: Award, badge: overallAverage },
-          { id: "asistencia", label: "Mi Asistencia", icon: CalendarCheck, badge: `${currentStudent.overallAttendance}%` },
-          { id: "horario", label: "Mi Horario", icon: Clock },
-          { id: "asignaturas", label: "Mis Ramos", icon: BookOpen, badge: `${subjectsData.length}` },
-          { id: "comunicados", label: "Avisos Escolares", icon: Inbox },
-          { id: "reglamento", label: "Reglamento & Convivencia", icon: BookMarked },
-        ].map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`panel-${tab.id}`}
-              onClick={() => handleTabChange(tab.id as TabType)}
-              className={cn(
-                "px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
-                isActive
-                  ? "bg-[#0c8ee9] text-white shadow-xs"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-              )}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{tab.label}</span>
-              {tab.badge && (
-                <span
-                  className={cn(
-                    "text-[10px] font-black px-1.5 py-0.5 rounded-md",
-                    isActive
-                      ? "bg-white/20 text-white"
-                      : "bg-[#0c8ee9]/10 text-[#0c8ee9] dark:bg-[#0c8ee9]/20 dark:text-[#38bdf8]"
-                  )}
-                >
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* ========================================================================= */}
-      {/* 3. CONTENIDO SEGÚN LA PESTAÑA ACTIVA */}
-      {/* ========================================================================= */}
-
-      {/* 3.1. PESTAÑA: INICIO / RESUMEN COMERCIAL LIMPIO */}
       {activeTab === "resumen" && (
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-          className="space-y-6 sm:space-y-7"
-        >
-          {/* Fila de 5 Tarjetas de Acceso Rápido */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-            {/* 1. Mis Calificaciones */}
-            <div
-              onClick={() => handleTabChange("notas")}
-              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
-            >
-              <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
-                <Award className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                  Mis Calificaciones
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  Revisa tus notas y promedios
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          {/* ========================================================================= */}
+          {/* COLUMNA PRINCIPAL / IZQUIERDA (8 o 9 cols en pantallas grandes)           */}
+          {/* ========================================================================= */}
+          <div className="xl:col-span-8 2xl:col-span-9 space-y-6">
+            {/* 1. HERO BANNER DE BIENVENIDA CON ILUSTRACIÓN 3D */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#eef7ff] via-[#f1f8ff] to-[#e8f4fd] dark:from-[#0d1d3b] dark:via-[#0c1830] dark:to-[#101f3e] border border-blue-100/80 dark:border-blue-900/40 p-6 sm:p-7 flex flex-col md:flex-row items-center justify-between shadow-2xs gap-6">
+              <div className="space-y-2 max-w-xl z-10">
+                <span className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                  Hola, {firstName} <span className="inline-block">👋</span>
+                </span>
+                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                  Bienvenido a tu dashboard
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-normal leading-relaxed pt-1">
+                  Aquí puedes revisar tu información académica, calificaciones, asistencia y acceder a los recursos que necesitas.
                 </p>
               </div>
-              <div className="mt-4 self-end">
-                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5" />
+
+              {/* Ilustración 3D de Graduación y Libros Flotantes */}
+              <div className="shrink-0 z-10 w-48 sm:w-56 h-36 sm:h-44 flex items-center justify-center">
+                <GraduationHeroIllustration className="w-full h-full" />
+              </div>
+            </div>
+
+            {/* 2. FILA DE 4 TARJETAS DE NAVEGACIÓN RÁPIDA */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Tarjeta 1: Ver calificaciones */}
+              <div
+                onClick={() => handleTabChange("notas")}
+                className="group p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer min-h-[140px]"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-100/80 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-[#38bdf8] flex items-center justify-center mb-3">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                    Ver calificaciones
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    Revisa tus notas y avances académicos.
+                  </p>
+                </div>
+                <div className="mt-3 self-end">
+                  <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-slate-800 text-[#0c8ee9] group-hover:bg-[#0c8ee9] group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Tarjeta 2: Consultar asistencia */}
+              <div
+                onClick={() => handleTabChange("asistencia")}
+                className="group p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-emerald-500/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer min-h-[140px]"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                    Consultar asistencia
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    Revisa tu porcentaje y registro de asistencia.
+                  </p>
+                </div>
+                <div className="mt-3 self-end">
+                  <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-slate-800 text-[#0c8ee9] group-hover:bg-[#0c8ee9] group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Tarjeta 3: Ver horario */}
+              <div
+                onClick={() => handleTabChange("horario")}
+                className="group p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-purple-500/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer min-h-[140px]"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-purple-100/80 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3">
+                    <CalendarDays className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                    Ver horario
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    Consulta tus clases y actividades del día.
+                  </p>
+                </div>
+                <div className="mt-3 self-end">
+                  <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-slate-800 text-[#0c8ee9] group-hover:bg-[#0c8ee9] group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Tarjeta 4: Ver mis ramos */}
+              <div
+                onClick={() => handleTabChange("asignaturas")}
+                className="group p-5 rounded-2xl bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-amber-500/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer min-h-[140px]"
+              >
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-amber-100/80 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-sm text-slate-900 dark:text-white">
+                    Ver mis ramos
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-snug">
+                    Revisa tus asignaturas actuales.
+                  </p>
+                </div>
+                <div className="mt-3 self-end">
+                  <div className="w-7 h-7 rounded-full bg-blue-50 dark:bg-slate-800 text-[#0c8ee9] group-hover:bg-[#0c8ee9] group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* 2. Mi Asistencia */}
-            <div
-              onClick={() => handleTabChange("asistencia")}
-              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
-            >
-              <div className="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-[#38bdf8] flex items-center justify-center mb-3">
-                <CalendarCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                  Mi Asistencia
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  Consulta tu asistencia y justificaciones
-                </p>
-              </div>
-              <div className="mt-4 self-end">
-                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Mi Horario */}
-            <div
-              onClick={() => handleTabChange("horario")}
-              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
-            >
-              <div className="w-11 h-11 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3">
-                <Clock className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                  Mi Horario
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  Revisa tus clases y actividades del día
-                </p>
-              </div>
-              <div className="mt-4 self-end">
-                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-            </div>
-
-            {/* 4. Mis Ramos */}
-            <div
-              onClick={() => handleTabChange("asignaturas")}
-              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
-            >
-              <div className="w-11 h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3">
-                <BookOpen className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                  Mis Ramos
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  Accede a la información de tus asignaturas
-                </p>
-              </div>
-              <div className="mt-4 self-end">
-                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-            </div>
-
-            {/* 5. Boletín de Notas */}
-            <div
-              onClick={() => setIsCredentialModalOpen(true)}
-              className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
-            >
-              <div className="w-11 h-11 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-3">
-                <FileText className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                  Boletín de Notas
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                  Descarga tu boletín en formato PDF
-                </p>
-              </div>
-              <div className="mt-4 self-end">
-                <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-[#0c8ee9] group-hover:text-white text-slate-400 flex items-center justify-center transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Cuadrícula Principal (8 cols izquierda + 4 cols derecha) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Columna Izquierda (8 cols) */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* Resumen Académico con métricas clave */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-xs space-y-5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-[#0c8ee9]/10 text-[#0c8ee9] flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+            {/* 3. DOS SUB-COLUMNAS INFERIORES: RESUMEN ACADÉMICO / CALIFICACIONES + ACCESO RÁPIDO */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              {/* Sub-columna Izquierda (7 cols): Resumen Académico + Últimas Calificaciones */}
+              <div className="lg:col-span-7 space-y-5">
+                {/* Resumen Académico con 3 métricas */}
+                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">
                         Resumen Académico
                       </h2>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Indicadores clave de tu rendimiento este semestre
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleTabChange("notas")}
+                      className="text-xs font-semibold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Ver detalle</span>
+                      <span>→</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {/* Promedio General */}
+                    <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mb-1">
+                        <Award className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-xs font-medium">Promedio General</span>
+                      </div>
+                      <div className="flex items-baseline gap-2 my-1">
+                        <span className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                          {overallAverage}
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full border border-emerald-200/60">
+                          ↗ +0.2
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                        Escala chilena oficial (1.0 - 7.0)
+                      </p>
+                    </div>
+
+                    {/* Asistencia */}
+                    <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mb-1">
+                        <CalendarCheck className="w-3.5 h-3.5 text-[#0c8ee9]" />
+                        <span className="text-xs font-medium">Asistencia</span>
+                      </div>
+                      <div className="flex items-baseline gap-2 my-1">
+                        <span className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                          {currentStudent.overallAttendance}%
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded-full border border-emerald-200/60">
+                          ↗ +0.5%
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                        Meta MINEDUC (85%) cumplida
+                      </p>
+                    </div>
+
+                    {/* Ramos Aprobados */}
+                    <div className="p-3.5 rounded-xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800 flex flex-col justify-between">
+                      <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 mb-1">
+                        <BookOpen className="w-3.5 h-3.5 text-purple-600" />
+                        <span className="text-xs font-medium">Ramos Aprobados</span>
+                      </div>
+                      <div className="flex items-baseline gap-1 my-1">
+                        <span className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                          {passingSubjectsCount}/{subjectsData.length}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                        {passingSubjectsCount === subjectsData.length
+                          ? "Todos aprobando 🎉"
+                          : `Faltan ${subjectsData.length - passingSubjectsCount} ramo`}
                       </p>
                     </div>
                   </div>
+                </section>
 
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange("notas")}
-                    className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Ver detalle</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {/* Promedio General */}
-                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      Promedio General
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
-                        {overallAverage}
-                      </span>
-                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                        +0.2
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
-                      Escala oficial (1.0 - 7.0)
-                    </p>
-                  </div>
-
-                  {/* Asistencia */}
-                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      Asistencia
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
-                        {currentStudent.overallAttendance}%
-                      </span>
-                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded">
-                        +0.5%
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
-                      Meta MINEDUC cumplida
-                    </p>
-                  </div>
-
-                  {/* Ramos Aprobados */}
-                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      Ramos Aprobados
-                    </span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
-                        {passingSubjectsCount}/{subjectsData.length}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
-                      {passingSubjectsCount === subjectsData.length ? "Todos aprobando 🎉" : `Falta ${subjectsData.length - passingSubjectsCount} ramo`}
-                    </p>
-                  </div>
-
-                  {/* Horario Semanal */}
-                  <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 space-y-1">
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      Horario Semanal
-                    </span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-mono">
-                        {totalWeeklyHours || 36}
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
-                      horas pedagógicas
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Sección Inferior Izquierda: Últimas Calificaciones + Acceso Rápido */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Últimas Calificaciones */}
-                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-[#0c8ee9]" />
-                      <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
+                        <FileText className="w-4 h-4" />
+                      </div>
+                      <h3 className="font-bold text-sm text-slate-900 dark:text-white">
                         Últimas Calificaciones
                       </h3>
                     </div>
                     <button
                       type="button"
                       onClick={() => handleTabChange("notas")}
-                      className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
+                      className="text-xs font-semibold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
                     >
                       <span>Ver todas</span>
-                      <ChevronRight className="w-3 h-3" />
+                      <span>→</span>
                     </button>
                   </div>
 
-                  <div className="space-y-2.5">
-                    {subjectsData.slice(0, 4).map((sub) => {
-                      const latestGrade = sub.grades.find((g) => g.value !== null) || sub.grades[0];
-                      const val = latestGrade?.value ?? sub.currentAvg;
-                      return (
-                        <div
-                          key={sub.id}
-                          onClick={() => handleTabChange("notas")}
-                          className="p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-3 hover:border-[#0c8ee9]/40 transition cursor-pointer"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <span className="font-extrabold text-xs text-slate-900 dark:text-white block truncate">
-                              {sub.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400">
-                              {latestGrade?.label || "Evaluación"} · {latestGrade?.date || "Abril 2025"}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span
-                              className={cn(
-                                "font-mono font-black text-sm px-2.5 py-1 rounded-xl",
-                                val >= 6.0
-                                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400"
-                                  : val >= 4.0
-                                  ? "bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-[#38bdf8]"
-                                  : "bg-rose-50 dark:bg-rose-950/60 text-rose-600"
-                              )}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                          <th className="py-2 font-medium">Asignatura</th>
+                          <th className="py-2 font-medium">Evaluación</th>
+                          <th className="py-2 font-medium">Nota</th>
+                          <th className="py-2 font-medium text-right">Fecha</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100/80 dark:divide-slate-800/60">
+                        {subjectsData.slice(0, 4).map((sub) => {
+                          const latestGrade = sub.grades.find((g) => g.value !== null) || sub.grades[0];
+                          const val = latestGrade?.value ?? sub.currentAvg;
+                          return (
+                            <tr
+                              key={sub.id}
+                              onClick={() => handleTabChange("notas")}
+                              className="hover:bg-slate-50/60 dark:hover:bg-slate-900/40 transition cursor-pointer"
                             >
-                              {val.toFixed(1)}
-                            </span>
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-                          </div>
-                        </div>
-                      );
-                    })}
+                              <td className="py-2.5 font-bold text-slate-800 dark:text-slate-200 pr-2">
+                                {sub.name}
+                              </td>
+                              <td className="py-2.5 text-slate-500 dark:text-slate-400 pr-2">
+                                {latestGrade?.label || "Prueba Escrita"}
+                              </td>
+                              <td className="py-2.5 font-mono font-bold text-slate-900 dark:text-white pr-2">
+                                {val.toFixed(1)}
+                              </td>
+                              <td className="py-2.5 text-slate-400 dark:text-slate-500 text-right">
+                                {latestGrade?.date || "Abril 2025"}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 </section>
+              </div>
 
-                {/* Acceso Rápido */}
-                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+              {/* Sub-columna Derecha (5 cols): Acceso rápido */}
+              <div className="lg:col-span-5 space-y-4">
+                <section className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
                   <div className="flex items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-                    <Zap className="w-4 h-4 text-amber-500" />
-                    <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
+                    <Zap className="w-4 h-4 text-[#0c8ee9]" />
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white">
                       Acceso rápido
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-2.5">
+                    {/* Item 1: Solicitar apoyo escolar */}
                     <div
                       onClick={() => setIsSupportModalOpen(true)}
-                      className="p-3.5 rounded-2xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 hover:border-[#0c8ee9] transition cursor-pointer flex flex-col justify-between"
+                      className="p-3 rounded-xl bg-slate-50/60 dark:bg-slate-900/50 hover:bg-slate-100/80 dark:hover:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 transition cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <HeartHandshake className="w-4 h-4 text-[#0c8ee9]" />
-                        <ArrowRight className="w-3 h-3 text-[#0c8ee9]" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-sky-100/90 text-sky-600 flex items-center justify-center shrink-0">
+                          <HeartHandshake className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                            Solicitar apoyo escolar
+                          </h4>
+                          <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                            Canal de apoyo psicosocial y pedagógico
+                          </p>
+                        </div>
                       </div>
-                      <div className="mt-2">
-                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
-                          Solicitar apoyo escolar
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                          Canal psicosocial
-                        </span>
-                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
                     </div>
 
+                    {/* Item 2: Descargar boletín */}
                     <div
                       onClick={() => setIsCredentialModalOpen(true)}
-                      className="p-3.5 rounded-2xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-100 dark:border-purple-900/50 hover:border-purple-500 transition cursor-pointer flex flex-col justify-between"
+                      className="p-3 rounded-xl bg-slate-50/60 dark:bg-slate-900/50 hover:bg-slate-100/80 dark:hover:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 transition cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <FileText className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                        <ArrowRight className="w-3 h-3 text-purple-600" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-blue-100/90 text-[#0c8ee9] flex items-center justify-center shrink-0">
+                          <FileText className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                            Descargar boletín
+                          </h4>
+                          <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                            Obtén tu informe de calificaciones
+                          </p>
+                        </div>
                       </div>
-                      <div className="mt-2">
-                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
-                          Descargar boletín
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                          Informe semestral
-                        </span>
-                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
                     </div>
 
+                    {/* Item 3: Ver horario completo */}
                     <div
                       onClick={() => handleTabChange("horario")}
-                      className="p-3.5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between"
+                      className="p-3 rounded-xl bg-slate-50/60 dark:bg-slate-900/50 hover:bg-slate-100/80 dark:hover:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 transition cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <Calendar className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                        <ArrowRight className="w-3 h-3 text-emerald-600" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-purple-100/90 text-purple-600 flex items-center justify-center shrink-0">
+                          <CalendarDays className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                            Ver horario completo
+                          </h4>
+                          <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                            Consulta todas tus clases y actividades
+                          </p>
+                        </div>
                       </div>
-                      <div className="mt-2">
-                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
-                          Ver calendario
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                          Fechas y horario
-                        </span>
-                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
                     </div>
 
+                    {/* Item 4: Ver calendario de evaluaciones */}
                     <div
-                      onClick={() => handleTabChange("reglamento")}
-                      className="p-3.5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 hover:border-amber-500 transition cursor-pointer flex flex-col justify-between"
+                      onClick={() => handleTabChange("horario")}
+                      className="p-3 rounded-xl bg-slate-50/60 dark:bg-slate-900/50 hover:bg-slate-100/80 dark:hover:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 transition cursor-pointer"
                     >
-                      <div className="flex items-center justify-between">
-                        <BookOpen className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                        <ArrowRight className="w-3 h-3 text-amber-600" />
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-100/90 text-emerald-600 flex items-center justify-center shrink-0">
+                          <CalendarCheck className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                            Ver calendario de evaluaciones
+                          </h4>
+                          <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                            Revisa fechas importantes
+                          </p>
+                        </div>
                       </div>
-                      <div className="mt-2">
-                        <span className="font-bold text-xs text-slate-900 dark:text-white block">
-                          Ver manual de uso
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                          Guía y convivencia
-                        </span>
-                      </div>
+                      <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 shrink-0" />
                     </div>
                   </div>
                 </section>
               </div>
             </div>
+          </div>
 
-            {/* Columna Derecha (4 cols): Próximos Eventos + ¿Necesitas Ayuda? */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* Próximos Eventos */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-xs space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#0c8ee9]" />
-                    <h3 className="font-extrabold text-sm text-slate-900 dark:text-white">
-                      Próximos Eventos
-                    </h3>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange("horario")}
-                    className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
-                  >
-                    <span>Ver calendario</span>
-                    <ChevronRight className="w-3 h-3" />
-                  </button>
+          {/* ========================================================================= */}
+          {/* COLUMNA LATERAL DERECHA (WIDGETS ESTUDIANTILES)                           */}
+          {/* ========================================================================= */}
+          <div className="xl:col-span-4 2xl:col-span-3 space-y-5">
+            {/* 1. FICHA DE PERFIL DEL ALUMNO (GRADIENTE AZUL) */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500 p-5 text-white shadow-sm flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-white/20 border border-white/30 text-white font-black text-xl flex items-center justify-center shrink-0 shadow-inner">
+                {firstName.charAt(0)}
+                {currentStudent.lastName ? currentStudent.lastName.charAt(0) : "R"}
+              </div>
+
+              <div className="space-y-0.5 min-w-0 flex-1">
+                <h3 className="font-bold text-sm text-white tracking-tight truncate">
+                  {activeStudentName}
+                </h3>
+                <p className="text-[11px] text-blue-100 truncate">
+                  Estudiante • 1º Medio A
+                </p>
+                <p className="text-[11px] text-blue-100 truncate">
+                  Liceo Politécnico Marga Marga
+                </p>
+                <div className="pt-1">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/20 text-white border border-white/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    En línea
+                  </span>
                 </div>
+              </div>
+            </div>
 
-                <div className="space-y-3">
-                  {upcomingActivities.map((act) => (
-                    <div
-                      key={act.id}
-                      className="p-3.5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center gap-3"
-                    >
-                      {/* Fecha con Badge Tipo Calendario */}
-                      <div className="shrink-0 w-12 text-center p-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs">
-                        <span className="block font-black text-sm text-slate-900 dark:text-white leading-tight font-mono">
-                          {act.date.split(" ")[0] || "15"}
-                        </span>
-                        <span className="block text-[9px] font-bold uppercase text-slate-400 tracking-wider">
-                          {act.date.split(" ")[1] || "ABR"}
-                        </span>
-                      </div>
+            {/* 2. INFORMACIÓN IMPORTANTE */}
+            <section className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 shadow-xs space-y-3">
+              <div className="flex items-center gap-2">
+                <Info className="w-4 h-4 text-[#0c8ee9]" />
+                <h3 className="font-bold text-xs text-slate-900 dark:text-white">
+                  Información importante
+                </h3>
+              </div>
 
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1">
-                          <span className="font-extrabold text-xs text-slate-900 dark:text-white truncate">
-                            {act.title}
-                          </span>
-                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] shrink-0">
-                            {act.type === "Prueba Sumativa" ? "Evaluación" : "Tarea"}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">
-                          {act.subject}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+              <div className="p-3 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/40 flex items-start gap-2.5">
+                <div className="w-6 h-6 rounded-lg bg-[#0c8ee9]/15 text-[#0c8ee9] flex items-center justify-center shrink-0 mt-0.5">
+                  <MessageCircle className="w-3.5 h-3.5" />
                 </div>
-              </section>
+                <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed font-normal">
+                  Recuerda mantener tus datos actualizados y revisar periódicamente tus calificaciones y asistencia.
+                </p>
+              </div>
+            </section>
 
-              {/* ¿Necesitas ayuda? */}
-              <section className="bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 shadow-xs text-center flex flex-col items-center justify-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
-                  <MessageCircle className="w-6 h-6" />
+            {/* 3. PRÓXIMOS EVENTOS */}
+            <section className="bg-white dark:bg-[#0C1425] border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+                  <h3 className="font-bold text-xs text-slate-900 dark:text-white">
+                    Próximos eventos
+                  </h3>
                 </div>
-
-                <div className="space-y-1">
-                  <h4 className="font-black text-sm text-slate-900 dark:text-white">
-                    ¿Necesitas ayuda?
-                  </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                    Puedes solicitar apoyo escolar en cualquier momento desde el botón de abajo.
-                  </p>
-                </div>
-
                 <button
                   type="button"
-                  onClick={() => setIsSupportModalOpen(true)}
-                  className="w-full py-3 px-4 rounded-2xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                  onClick={() => handleTabChange("horario")}
+                  className="text-xs font-semibold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Solicitar apoyo escolar</span>
+                  <span>Ver calendario</span>
+                  <span>→</span>
                 </button>
-              </section>
-            </div>
-          </div>
+              </div>
 
-          {/* Pie de Página Institucional */}
-          <div className="pt-6 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
-            <span className="font-semibold">
-              AURENIS <span className="font-normal">· Gestión Académica</span>
-            </span>
-            <span className="italic">
-              Tu esfuerzo de hoy, construye tu mañana ✨
-            </span>
+              <div className="space-y-3">
+                {/* Evento 1: Prueba de Matemática */}
+                <div className="flex items-center gap-3">
+                  <div className="shrink-0 w-11 h-12 text-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center">
+                    <span className="block font-black text-sm text-slate-900 dark:text-white leading-none font-mono">
+                      15
+                    </span>
+                    <span className="block text-[9px] font-bold uppercase text-slate-400 tracking-wider mt-0.5">
+                      ABR
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                      <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                        Prueba de Matemática
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      08:00 - 09:30
+                    </p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      Matemática
+                    </p>
+                  </div>
+                </div>
+
+                {/* Evento 2: Entrega de trabajo grupal */}
+                <div className="flex items-center gap-3">
+                  <div className="shrink-0 w-11 h-12 text-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center">
+                    <span className="block font-black text-sm text-slate-900 dark:text-white leading-none font-mono">
+                      17
+                    </span>
+                    <span className="block text-[9px] font-bold uppercase text-slate-400 tracking-wider mt-0.5">
+                      ABR
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                        Entrega de trabajo grupal
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                      Lengua y Literatura
+                    </p>
+                  </div>
+                </div>
+
+                {/* Evento 3: Evaluación de Historia */}
+                <div className="flex items-center gap-3">
+                  <div className="shrink-0 w-11 h-12 text-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center">
+                    <span className="block font-black text-sm text-slate-900 dark:text-white leading-none font-mono">
+                      21
+                    </span>
+                    <span className="block text-[9px] font-bold uppercase text-slate-400 tracking-wider mt-0.5">
+                      ABR
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                      <span className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                        Evaluación de Historia
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      10:00 - 11:30
+                    </p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                      Historia, Geografía y Cs. Sociales
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* 4. ¿NECESITAS AYUDA? */}
+            <section className="bg-gradient-to-b from-[#f0f7ff] to-[#f8fbff] dark:from-slate-900/60 dark:to-slate-900/40 border border-blue-100/60 dark:border-slate-800 rounded-2xl p-5 shadow-xs text-center flex flex-col items-center justify-center space-y-3">
+              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-950/60 text-[#0c8ee9] flex items-center justify-center">
+                <Headphones className="w-5 h-5" />
+              </div>
+
+              <div className="space-y-1">
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                  ¿Necesitas ayuda?
+                </h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+                  Puedes solicitar apoyo escolar en cualquier momento desde el botón de abajo.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsSupportModalOpen(true)}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#0c8ee9] hover:bg-[#0b7ecc] active:scale-[0.98] text-white font-semibold text-xs transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <span>Solicitar apoyo escolar</span>
+                <span>→</span>
+              </button>
+            </section>
           </div>
-        </motion.div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* VISTA DETALLADA DE OTRAS PESTAÑAS CUANDO SE NAVEGA DESDE LOS ACCESOS      */}
+      {/* ========================================================================= */}
+      {activeTab !== "resumen" && (
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-slate-800 mb-6">
+          <button
+            type="button"
+            onClick={() => handleTabChange("resumen")}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-[#0c8ee9] hover:border-[#0c8ee9]/40 transition shadow-2xs cursor-pointer"
+          >
+            <span>← Volver al Inicio</span>
+          </button>
+          <span className="text-xs font-semibold text-slate-400 capitalize">
+            Módulo: {activeTab}
+          </span>
+        </div>
       )}
 
       {/* 3.2. PESTAÑA: MIS CALIFICACIONES */}

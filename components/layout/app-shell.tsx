@@ -162,7 +162,7 @@ export function AppShell({
         {/* Contenedor Central Responsivo */}
         <main
           id="main-content-container"
-          className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-200"
+          className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 transition-all duration-200"
         >
           {children}
         </main>

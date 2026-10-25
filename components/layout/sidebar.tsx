@@ -19,6 +19,12 @@ import {
   BookOpen,
   Inbox,
   BookMarked,
+  Home,
+  UserCheck,
+  Calendar,
+  CalendarDays,
+  FileText,
+  HeartHandshake,
 } from "lucide-react";
 import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import { NavItem, SchoolContextInfo } from "./types";
@@ -62,44 +68,44 @@ export function Sidebar({
         {
           title: "Inicio",
           href: `/${schoolSlug}/dashboard/estudiante?tab=resumen`,
-          icon: <LayoutDashboard className="w-5 h-5 shrink-0" />,
-          section: "Portal Estudiantil",
+          icon: <Home className="w-5 h-5 shrink-0" />,
+          section: "",
         },
         {
           title: "Mis Calificaciones",
           href: `/${schoolSlug}/dashboard/estudiante?tab=notas`,
           icon: <Award className="w-5 h-5 shrink-0" />,
-          section: "Académico",
+          section: "FUNCIONALIDADES",
         },
         {
           title: "Mi Asistencia",
           href: `/${schoolSlug}/dashboard/estudiante?tab=asistencia`,
-          icon: <CalendarCheck className="w-5 h-5 shrink-0" />,
-          section: "Académico",
+          icon: <UserCheck className="w-5 h-5 shrink-0" />,
+          section: "FUNCIONALIDADES",
         },
         {
           title: "Mi Horario",
           href: `/${schoolSlug}/dashboard/estudiante?tab=horario`,
-          icon: <Clock className="w-5 h-5 shrink-0" />,
-          section: "Académico",
+          icon: <Calendar className="w-5 h-5 shrink-0" />,
+          section: "FUNCIONALIDADES",
         },
         {
           title: "Mis Ramos",
           href: `/${schoolSlug}/dashboard/estudiante?tab=asignaturas`,
           icon: <BookOpen className="w-5 h-5 shrink-0" />,
-          section: "Académico",
+          section: "FUNCIONALIDADES",
         },
         {
-          title: "Avisos Escolares",
-          href: `/${schoolSlug}/dashboard/estudiante?tab=comunicados`,
-          icon: <Inbox className="w-5 h-5 shrink-0" />,
-          section: "Comunidad Escolar",
+          title: "Boletín de Notas",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=boletin`,
+          icon: <FileText className="w-5 h-5 shrink-0" />,
+          section: "FUNCIONALIDADES",
         },
         {
-          title: "Reglamento & RICE",
-          href: `/${schoolSlug}/dashboard/estudiante?tab=reglamento`,
-          icon: <BookMarked className="w-5 h-5 shrink-0" />,
-          section: "Institucional",
+          title: "Apoyo Escolar",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=apoyo`,
+          icon: <HeartHandshake className="w-5 h-5 shrink-0" />,
+          section: "FUNCIONALIDADES",
         },
       ];
     }
@@ -262,7 +268,7 @@ export function Sidebar({
           return (
             <div key={sectionName} className="space-y-1">
               <AnimatePresence initial={false}>
-                {!isCollapsed && (
+                {!isCollapsed && Boolean(sectionName) && (
                   <motion.div
                     key={`section-title-${sectionName}`}
                     initial={{ opacity: 0, height: 0 }}

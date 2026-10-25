@@ -30,7 +30,7 @@ export default async function EstudianteDashboardPage({
   const availableDemoStudents = !isStudentSelf ? listAvailableDemoStudents() : [];
 
   return (
-    <Page title="Dashboard Estudiantes">
+    <Page width="full">
       <EstudianteDashboard
         schoolSlug={schoolSlug}
         studentName={record.fullName || `${session?.firstName || ""} ${session?.lastName || ""}`.trim()}

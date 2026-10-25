@@ -266,16 +266,16 @@ export function Header({
             id="header-search-trigger"
             type="button"
             onClick={onOpenSearch}
-            className="w-full flex items-center justify-between px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 text-xs transition group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full flex items-center justify-between px-4 py-2 rounded-full bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/60 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-xs transition group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 shadow-2xs"
             aria-label="Buscar en la plataforma (Ctrl+K)"
           >
-            <div className="flex items-center gap-2 truncate">
-              <Search className="w-3.5 h-3.5 text-slate-400 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition" />
-              <span className="truncate hidden sm:inline">Buscar módulo, curso o vista...</span>
+            <div className="flex items-center gap-2.5 truncate">
+              <Search className="w-4 h-4 text-slate-400 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition" />
+              <span className="truncate hidden sm:inline">Buscar en la plataforma...</span>
               <span className="truncate sm:hidden">Buscar...</span>
             </div>
-            <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white dark:bg-slate-700 rounded border border-slate-200 dark:border-slate-600 shadow-2xs">
-              ⌘K
+            <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white dark:bg-slate-700 rounded border border-slate-200/80 dark:border-slate-600 shadow-2xs">
+              ⌘ K
             </kbd>
           </button>
         </div>
@@ -508,22 +508,24 @@ export function Header({
               aria-label="Abrir menú de usuario y perfil"
               aria-expanded={isUserMenuOpen}
             >
-              {/* Avatar con iniciales e indicador de estado */}
-              <div className="relative">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                  {user.firstName ? user.firstName[0] : "U"}
-                  {user.lastName ? user.lastName[0] : ""}
+              {/* Avatar circular con iniciales e indicador de estado */}
+              <div className="relative shrink-0">
+                <div className="w-8 h-8 rounded-full bg-[#1d6fe9] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                  {user.firstName ? user.firstName[0] : "M"}
+                  {user.lastName ? user.lastName[0] : "R"}
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
               </div>
 
-              {/* Información resumida en desktop */}
+              {/* Información de usuario en cabecera */}
               <div className="hidden sm:block text-left text-xs">
-                <span className="block font-semibold text-slate-900 dark:text-white truncate max-w-[110px] md:max-w-[130px]">
-                  {user.firstName} {user.lastName}
+                <span className="block font-bold text-slate-800 dark:text-white truncate max-w-[140px] md:max-w-[180px]">
+                  {user.firstName ? `${user.firstName} ${user.lastName || ""}`.trim() : "Maicol Matías Recabarren"}
                 </span>
-                <span className="block text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[110px] md:max-w-[130px]">
-                  {displayRoleTitle}
+                <span className="block text-[10px] text-slate-400 font-medium truncate max-w-[140px] md:max-w-[180px]">
+                  {isStudentRole
+                    ? `Estudiante • ${schoolContext?.schoolName || "Liceo Politécnico Marga Marga"}`
+                    : displayRoleTitle}
                 </span>
               </div>
               <ChevronDown className={cn("hidden sm:block w-3.5 h-3.5 text-slate-400 transition-transform", isUserMenuOpen && "rotate-180")} />
