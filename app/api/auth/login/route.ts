@@ -105,13 +105,16 @@ export async function POST(req: NextRequest) {
     // Si se solicitó un colegio, intentamos encontrar la membresía correspondiente
     let selectedMem: any = null;
     if (requestedSlug) {
+      const cleanSlug = requestedSlug.toLowerCase().trim();
       selectedMem = activeMemberships.find(
-        (m: any) => m.school?.slug?.toLowerCase() === requestedSlug || m.school?.id === requestedSlug
+        (m: any) =>
+          m.school?.slug?.toLowerCase() === cleanSlug ||
+          m.school?.id?.toLowerCase() === cleanSlug
       );
 
       // CRITICAL: Si se solicitó un colegio específico y el usuario NO pertenece a él, 
       // rechazamos el acceso por seguridad multi-tenant (Autor: Maicol R.)
-      if (!selectedMem && requestedSlug !== "system") {
+      if (!selectedMem && cleanSlug !== "system") {
         console.warn(`[Login Route] Intento de acceso a colegio ajeno: ${requestedSlug}`);
         return NextResponse.json(
           { error: "No tienes una cuenta activa en esta institución educativa." },
@@ -128,7 +131,11 @@ export async function POST(req: NextRequest) {
     if (selectedMem) {
       console.log(`[Login Route] Membresía seleccionada: ${selectedMem.school.slug}`);
       const mem = selectedMem;
-      const permissions = mem.role.permissions.map((rp: any) => rp.permission.code);
+      const permissions: string[] = Array.isArray(mem.role?.permissions)
+        ? mem.role.permissions
+            .map((rp: any) => (typeof rp === "string" ? rp : rp?.permission?.code || rp?.code))
+            .filter(Boolean)
+        : [];
 
       const token = await signSessionToken({
         sub: user.id,
@@ -154,7 +161,7 @@ export async function POST(req: NextRequest) {
       const roleUpper = (mem.role.name || "").toUpperCase();
       if (roleUpper === "STUDENT") roleSubpath = "/estudiante";
       else if (roleUpper === "TEACHER") roleSubpath = "/docente";
-      else if (roleUpper === "ADMIN" || roleUpper === "DIRECTOR") roleSubpath = "/directivo";
+      else if (roleUpper === "ADMIN" || roleUpper === "DIRECTOR" || roleUpper === "SCHOOL_ADMIN") roleSubpath = "/directivo";
       else if (roleUpper === "GUARDIAN") roleSubpath = "/apoderado";
       else if (roleUpper === "CONVIVENCIA") roleSubpath = "/convivencia";
 
@@ -205,7 +212,13 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: unknown) {
-    const statusCode = typeof (error as any)?.statusCode === "number" ? (error as any).statusCode : 401;
+    console.error("[Login Route Error]", error);
+    const statusCode =
+      typeof (error as any)?.statusCode === "number"
+        ? (error as any).statusCode
+        : (error as any)?.name === "UserServiceError"
+        ? 401
+        : 500;
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Error interno al iniciar sesión." },
       { status: statusCode, headers: getRateLimitHeaders(rateLimitResult) }

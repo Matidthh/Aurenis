@@ -305,12 +305,27 @@ export function filterNavItemsByRole<T extends { roles?: string[] }>(items: T[],
 
 /**
  * Verifica si una ruta es pública y no requiere sesión
+ * Autor: Maicol R. (Backend/Arquitectura) & Malcom Marcelo (Frontend)
  */
 export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/") return true;
   if (pathname === "/login" || pathname.startsWith("/login/")) return true;
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
   if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) return true;
+
+  // Endpoints públicos de autenticación y sesión inicial (no requieren sesión previa)
+  if (
+    pathname === "/api/auth/login" ||
+    pathname === "/api/auth/forgot-password" ||
+    pathname === "/api/auth/reset-password" ||
+    pathname.startsWith("/api/auth/reset-password/") ||
+    pathname === "/api/auth/google" ||
+    pathname === "/api/auth/refresh" ||
+    pathname === "/api/auth/logout" ||
+    pathname.startsWith("/api/auth/mfa/")
+  ) {
+    return true;
+  }
 
   if (pathname === "/system/design-system" || pathname.startsWith("/system/design-system")) return true;
   if (pathname === "/asistencia/scan" || pathname.startsWith("/asistencia/scan")) return true;

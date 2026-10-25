@@ -588,6 +588,8 @@ export async function authenticateUser(identifier: string, plainPassword: string
     "Apoderado2026!",
     "AurenisSuperAdmin2026!",
     "AdminLPMM2026!",
+    "AdminPassword2026!",
+    "Lpmm2026!",
     "ProfesorLpmm2026!",
     "Profesorlpmm2026!",
     "profesorlpmm2026!",

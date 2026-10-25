@@ -49,12 +49,15 @@ export function isOriginAllowed(origin: string | null): boolean {
     const url = new URL(origin);
     const hostname = url.hostname;
 
-    // Soporte seguro para subdominios institucionales de Aurenis (*.aurenis.app, *.aurenis.cl)
+    // Soporte seguro para subdominios institucionales de Aurenis y plataformas cloud autorizadas (*.aurenis.app, *.aurenis.cl, *.aurenis.com, *.run.app, *.vercel.app)
     if (
       hostname === "localhost" ||
       hostname === "127.0.0.1" ||
       hostname.endsWith(".aurenis.app") ||
-      hostname.endsWith(".aurenis.cl")
+      hostname.endsWith(".aurenis.cl") ||
+      hostname.endsWith(".aurenis.com") ||
+      hostname.endsWith(".run.app") ||
+      hostname.endsWith(".vercel.app")
     ) {
       return true;
     }
