@@ -296,6 +296,72 @@ const DEMO_USERS: Record<string, DemoUser> = {
       },
     ],
   },
+  "maicol.recabarren@lpmm.cl": {
+    id: "user-lpmm-maicol-recabarren",
+    email: "maicolcerda1234@gmail.com",
+    firstName: "Maicol Matías",
+    lastName: "Recabarren Cerda",
+    password: "Estudiantelpmm2026",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-maicol-recabarren",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-student",
+          name: DEFAULT_SCHOOL_ROLES.STUDENT,
+          displayName: "Estudiante 4° Medio E",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+        },
+      },
+    ],
+  },
+  "22.469.016-6": {
+    id: "user-lpmm-maicol-recabarren",
+    email: "maicolcerda1234@gmail.com",
+    firstName: "Maicol Matías",
+    lastName: "Recabarren Cerda",
+    password: "Estudiantelpmm2026",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-maicol-recabarren",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-student",
+          name: DEFAULT_SCHOOL_ROLES.STUDENT,
+          displayName: "Estudiante 4° Medio E",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+        },
+      },
+    ],
+  },
+  "224690166": {
+    id: "user-lpmm-maicol-recabarren",
+    email: "maicolcerda1234@gmail.com",
+    firstName: "Maicol Matías",
+    lastName: "Recabarren Cerda",
+    password: "Estudiantelpmm2026",
+    isSystemAdmin: false,
+    status: UserStatus.ACTIVE,
+    memberships: [
+      {
+        id: "mem-lpmm-maicol-recabarren",
+        isActive: true,
+        school: DEFAULT_DEMO_SCHOOL,
+        role: {
+          id: "role-lpmm-student",
+          name: DEFAULT_SCHOOL_ROLES.STUDENT,
+          displayName: "Estudiante 4° Medio E",
+          permissions: createRolePermissions(DEFAULT_SCHOOL_ROLES.STUDENT),
+        },
+      },
+    ],
+  },
   "yamir.ahumada@lpmm.cl": studentUser,
   "estudiante.1@lpmm.cl": studentUser,
   "apoderado.1@lpmm.cl": guardianUser,
@@ -338,7 +404,16 @@ export async function authenticateUser(identifier: string, plainPassword: string
   // 2. Verificación instantánea en los 312 estudiantes oficiales LPMM (<1ms)
   if (!user) {
     try {
-      const record = LPMM_STUDENTS_ACADEMIC_RECORDS[normalized] || LPMM_STUDENTS_ACADEMIC_RECORDS[cleanRut];
+      let record = LPMM_STUDENTS_ACADEMIC_RECORDS[normalized] || LPMM_STUDENTS_ACADEMIC_RECORDS[cleanRut];
+      if (!record) {
+        const foundEntry = Object.values(LPMM_STUDENTS_ACADEMIC_RECORDS).find((s: any) => {
+          const mEmail = s.email && s.email.toLowerCase() === normalized;
+          const mRut = s.rut && (s.rut.replace(/[\.\-]/g, "").toUpperCase() === cleanRut || s.rut.toLowerCase() === normalized);
+          const mName = s.fullName && s.fullName.toLowerCase() === normalized;
+          return mEmail || mRut || mName;
+        });
+        if (foundEntry) record = foundEntry;
+      }
       if (record) {
         user = {
           id: `user-lpmm-std-${record.num}`,
