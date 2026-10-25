@@ -52,6 +52,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const requestedSlug = validated.data.schoolSlug;
+
     console.log(`[Login Route] Iniciando login para ${validated.data.email} en ${requestedSlug || 'global'}`);
     const user = await authenticateUser(validated.data.email, validated.data.password, requestedSlug);
     console.log(`[Login Route] Autenticación de servicio exitosa para ${user.email}`);

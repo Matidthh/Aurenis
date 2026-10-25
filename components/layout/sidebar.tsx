@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   School,
@@ -12,6 +12,13 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  LayoutDashboard,
+  Award,
+  CalendarCheck,
+  Clock,
+  BookOpen,
+  Inbox,
+  BookMarked,
 } from "lucide-react";
 import { AurenisLogo } from "@/components/ui/aurenis-logo";
 import { NavItem, SchoolContextInfo } from "./types";
@@ -40,14 +47,148 @@ export function Sidebar({
   userRole,
 }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   // 1. Filtrado dinámico de ítems según rol del usuario conectado
   const activeRole = userRole || schoolContext?.roleName || (isSystemAdmin ? "SYSTEM_ADMIN" : undefined);
-  const visibleNavItems = filterNavItemsByRole(navItems, activeRole);
+  const isStudentContext = pathname?.includes("/dashboard/estudiante") || activeRole === "STUDENT";
+  const schoolSlug = schoolContext?.schoolSlug || (pathname ? pathname.split("/")[1] : "lpmm") || "lpmm";
 
-  // 2. Agrupar items permitidos por sección
-  const sections = Array.from(new Set(visibleNavItems.map((item) => item.section || "General")));
+  // 2. Resolver lista de navegación: Si estamos en el portal de alumno, garantizar los módulos estudiantiles
+  const resolvedNavItems = useMemo(() => {
+    if (isStudentContext) {
+      return [
+        {
+          title: "Inicio",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=resumen`,
+          icon: <LayoutDashboard className="w-5 h-5 shrink-0" />,
+          section: "Portal Estudiantil",
+        },
+        {
+          title: "Mis Calificaciones",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=notas`,
+          icon: <Award className="w-5 h-5 shrink-0" />,
+          section: "Académico",
+        },
+        {
+          title: "Mi Asistencia",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=asistencia`,
+          icon: <CalendarCheck className="w-5 h-5 shrink-0" />,
+          section: "Académico",
+        },
+        {
+          title: "Mi Horario",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=horario`,
+          icon: <Clock className="w-5 h-5 shrink-0" />,
+          section: "Académico",
+        },
+        {
+          title: "Mis Ramos",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=asignaturas`,
+          icon: <BookOpen className="w-5 h-5 shrink-0" />,
+          section: "Académico",
+        },
+        {
+          title: "Avisos Escolares",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=comunicados`,
+          icon: <Inbox className="w-5 h-5 shrink-0" />,
+          section: "Comunidad Escolar",
+        },
+        {
+          title: "Reglamento & RICE",
+          href: `/${schoolSlug}/dashboard/estudiante?tab=reglamento`,
+          icon: <BookMarked className="w-5 h-5 shrink-0" />,
+          section: "Institucional",
+        },
+      ];
+    }
+    return filterNavItemsByRole(navItems, activeRole);
+  }, [isStudentContext, schoolSlug, navItems, activeRole]);
+
+  // 3. Agrupar items permitidos por sección
+  const sections = Array.from(new Set(resolvedNavItems.map((item) => item.section || "General")));
+
+  // 4. Estado de pestaña activa con persistencia local y sincronización reactiva
+  const [currentActiveTab, setCurrentActiveTab] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const paramTab = searchParams?.get("tab");
+      if (paramTab) return paramTab;
+      try {
+        const saved = localStorage.getItem("aurenis_student_active_tab");
+        if (saved) return saved;
+      } catch {
+        // ignore
+      }
+    }
+    return searchParams?.get("tab") || "resumen";
+  });
+
+  useEffect(() => {
+    const paramTab = searchParams?.get("tab");
+    if (paramTab) {
+      setCurrentActiveTab(paramTab);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const handleTabSync = (e: Event) => {
+      const customEvent = e as CustomEvent<{ tab: string }>;
+      if (customEvent.detail?.tab) {
+        setCurrentActiveTab(customEvent.detail.tab);
+      }
+    };
+    window.addEventListener("aurenis:student-tab-change", handleTabSync);
+    return () => {
+      window.removeEventListener("aurenis:student-tab-change", handleTabSync);
+    };
+  }, []);
+
+  const checkIsItemActive = (href: string) => {
+    if (isStudentContext && href.includes("tab=")) {
+      try {
+        const itemTab = href.split("tab=")[1]?.split("&")[0];
+        return itemTab === currentActiveTab;
+      } catch {
+        return false;
+      }
+    }
+    return isRouteActive(pathname, href);
+  };
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    onCloseMobile();
+
+    // Link handling específico para módulos de estudiante con persistencia
+    if (href.includes("tab=")) {
+      const targetTab = href.split("tab=")[1]?.split("&")[0];
+      if (targetTab) {
+        try {
+          localStorage.setItem("aurenis_student_active_tab", targetTab);
+        } catch {
+          // ignore
+        }
+        setCurrentActiveTab(targetTab);
+
+        // Si ya estamos en el dashboard de estudiante o en el dashboard general, evitar recarga
+        // de servidor RSC para erradicar cualquier riesgo de pérdida de cookie en iframes/redirección a login
+        const isAlreadyOnDashboard =
+          pathname?.includes("/dashboard/estudiante") ||
+          pathname?.endsWith("/dashboard") ||
+          pathname?.includes("/dashboard");
+
+        if (isAlreadyOnDashboard) {
+          e.preventDefault();
+          window.history.pushState(null, "", href);
+          window.dispatchEvent(
+            new CustomEvent("aurenis:student-tab-change", {
+              detail: { tab: targetTab },
+            })
+          );
+        }
+      }
+    }
+  };
 
   const sidebarContent = (
     <div className="flex flex-col h-full select-none">
@@ -116,7 +257,7 @@ export function Sidebar({
       {/* Navegación Modular Filtrada */}
       <nav id="sidebar-nav" className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
         {sections.map((sectionName) => {
-          const sectionItems = visibleNavItems.filter((i) => (i.section || "General") === sectionName);
+          const sectionItems = resolvedNavItems.filter((i) => (i.section || "General") === sectionName);
 
           return (
             <div key={sectionName} className="space-y-1">
@@ -136,7 +277,7 @@ export function Sidebar({
               </AnimatePresence>
 
               {sectionItems.map((item) => {
-                const isActive = isRouteActive(pathname, item.href);
+                const isActive = checkIsItemActive(item.href);
 
                 return (
                   <div
@@ -148,7 +289,7 @@ export function Sidebar({
                     <Link
                       id={`sidebar-link-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
                       href={item.href}
-                      onClick={() => onCloseMobile()}
+                      onClick={(e) => handleLinkClick(e, item.href)}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors duration-150 group z-10 min-h-[44px] touch-manipulation",

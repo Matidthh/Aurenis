@@ -7,10 +7,13 @@ import { listAvailableDemoStudents } from "@/lib/services/student-dashboard.serv
 
 export default async function EstudianteDashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ schoolSlug: string }>;
+  searchParams?: Promise<{ tab?: string }>;
 }) {
   const { schoolSlug } = await params;
+  const { tab } = (await searchParams) || {};
   await requireTenantContext(schoolSlug);
   const session = await getSession();
 
@@ -37,6 +40,7 @@ export default async function EstudianteDashboardPage({
         initialRecord={record}
         isStudentSelf={isStudentSelf}
         availableDemoStudents={availableDemoStudents}
+        activeTab={tab as any}
       />
     </Page>
   );

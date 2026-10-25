@@ -7,10 +7,13 @@ import { RoleDashboardShell, RoleType } from "@/components/dashboard/role-dashbo
 
 export default async function TenantDashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ schoolSlug: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }) {
   const { schoolSlug } = await params;
+  const { tab } = await searchParams;
   const tenantCtx = await requireTenantContext(schoolSlug);
   const session = await getSession();
 
@@ -21,6 +24,11 @@ export default async function TenantDashboardPage({
   else if (activeRoleName === "STUDENT") defaultRole = "ESTUDIANTE";
   else if (activeRoleName === "GUARDIAN") defaultRole = "APODERADO";
   else if (activeRoleName === "CONVIVENCIA") defaultRole = "CONVIVENCIA";
+
+  // Si se solicita una pestaña de alumno, conmutar directamente a la vista de estudiante
+  if (["notas", "asistencia", "horario", "asignaturas", "comunicados", "reglamento"].includes(tab || "")) {
+    defaultRole = "ESTUDIANTE";
+  }
 
   const resolvedUserName =
     session?.firstName && session?.lastName
@@ -44,6 +52,7 @@ export default async function TenantDashboardPage({
           userEmail={session?.email}
           userRole={activeRoleName}
           schoolName={tenantCtx.schoolName}
+          activeTab={tab}
         />
       </div>
     </Page>

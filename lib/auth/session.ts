@@ -10,10 +10,13 @@ export const SESSION_EXPIRY = "7d"; // 7 días de duración de sesión
 export const JWT_ISSUER = "aurenis-auth";
 export const JWT_AUDIENCE = "aurenis-platform";
 
+const isProduction = process.env.NODE_ENV === "production";
+const isSecureHttps = isProduction && (process.env.NEXT_PUBLIC_APP_URL?.startsWith("https") || false);
+
 export const SESSION_COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: true,
-  sameSite: "none" as const,
+  secure: isSecureHttps,
+  sameSite: (isSecureHttps ? "none" : "lax") as "none" | "lax",
   path: "/",
 };
 

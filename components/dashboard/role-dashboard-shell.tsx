@@ -28,6 +28,8 @@ interface RoleDashboardShellProps {
   userEmail?: string;
   userRole?: string;
   schoolName?: string;
+  activeTab?: any;
+  onTabChange?: (tab: any) => void;
 }
 
 interface RoleTabConfig {
@@ -89,6 +91,8 @@ export function RoleDashboardShell({
   userEmail,
   userRole,
   schoolName = "Liceo Politécnico Marga Marga",
+  activeTab,
+  onTabChange,
 }: RoleDashboardShellProps) {
   const [selectedRole, setSelectedRole] = useState<RoleType>(defaultRole);
 
@@ -240,14 +244,16 @@ export function RoleDashboardShell({
               guardianName={userName || currentTabConfig.userDefaultName}
             />
           )}
-          {selectedRole === "ESTUDIANTE" && (
-            <EstudianteDashboard
-              schoolSlug={schoolSlug}
-              studentName={userName || currentTabConfig.userDefaultName}
-              studentEmail={userEmail}
-              isStudentSelf={userRole === "STUDENT"}
-            />
-          )}
+            {selectedRole === "ESTUDIANTE" && (
+              <EstudianteDashboard
+                schoolSlug={schoolSlug}
+                studentName={userName || currentTabConfig.userDefaultName}
+                studentEmail={userEmail}
+                isStudentSelf={userRole === "STUDENT"}
+                activeTab={activeTab}
+                onTabChange={onTabChange}
+              />
+            )}
         </motion.div>
       </AnimatePresence>
     </div>

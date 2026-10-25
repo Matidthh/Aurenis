@@ -1,40 +1,40 @@
 "use client";
 
 import React from "react";
-import { Zap, FileCheck, Scale, ShieldCheck } from "lucide-react";
+import { Users, GraduationCap, BookOpen, BarChart3 } from "lucide-react";
 
 export function InstitutionalStats() {
   const stats = [
     {
-      tag: "Rendimiento",
-      value: "0.1s",
-      title: "Respuesta en Digitación",
-      description: "Ingreso de calificaciones y asistencia sin latencia.",
-      icon: Zap,
+      tag: "Comunidad",
+      value: "248+",
+      title: "Estudiantes activos",
+      description: "Alumnos matriculados en el periodo actual.",
+      icon: Users,
       color: "blue",
     },
     {
-      tag: "Normativa",
-      value: "100%",
-      title: "Alineación Circular N° 30",
-      description: "Registro estandarizado según directrices SuperEduc.",
-      icon: FileCheck,
+      tag: "Docencia",
+      value: "18",
+      title: "Docentes registrados",
+      description: "Profesores y asistentes de la educación.",
+      icon: GraduationCap,
       color: "emerald",
     },
     {
-      tag: "Evaluación",
-      value: "Dual",
-      title: "Motor Decreto 67",
-      description: "Cálculo en modo Simple o Ponderado por porcentaje.",
-      icon: Scale,
+      tag: "Académico",
+      value: "32",
+      title: "Cursos disponibles",
+      description: "Desde Pre-Kinder hasta Cuarto Medio.",
+      icon: BookOpen,
       color: "indigo",
     },
     {
-      tag: "Seguridad",
-      value: "RBAC",
-      title: "Control de Acceso y Datos",
-      description: "PostgreSQL, sesiones JWT y permisos por rol.",
-      icon: ShieldCheck,
+      tag: "Rendimiento",
+      value: "6.7",
+      title: "Promedio general",
+      description: "Rendimiento académico institucional consolidado.",
+      icon: BarChart3,
       color: "purple",
     },
   ];
@@ -43,6 +43,14 @@ export function InstitutionalStats() {
     <section id="metricas" className="relative w-full bg-[#F8F8F5] text-slate-900 py-12 sm:py-16 overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-10 relative z-10">
         
+        {/* Píldora de Título */}
+        <div className="flex items-center justify-center mb-8">
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-slate-700 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+            Indicadores Institucionales
+          </span>
+        </div>
+
         {/* Rejilla de Tarjetas */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {stats.map((st, i) => {

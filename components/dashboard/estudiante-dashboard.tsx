@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Award,
@@ -102,6 +103,8 @@ export interface EstudianteDashboardProps {
   initialRecord?: StudentAcademicRecord;
   isStudentSelf?: boolean;
   availableDemoStudents?: DemoStudentSummary[];
+  activeTab?: TabType;
+  onTabChange?: (tab: TabType) => void;
 }
 
 type TabType =
@@ -353,6 +356,8 @@ export function EstudianteDashboard({
   initialRecord,
   isStudentSelf = false,
   availableDemoStudents = [],
+  activeTab: propsActiveTab,
+  onTabChange,
 }: EstudianteDashboardProps) {
   // Inicialización limpia del registro del estudiante con respaldo resiliente
   const [currentStudent, setCurrentStudent] = useState<StudentAcademicRecord>(() => {
@@ -424,8 +429,94 @@ export function EstudianteDashboard({
       ? currentStudent.subjects
       : DEFAULT_STUDENT_SUBJECTS;
 
-  // Estados de navegación
-  const [activeTab, setActiveTab] = useState<TabType>("resumen");
+  // Estados de navegación con persistencia local y sincronización con el Sidebar
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const VALID_STUDENT_TABS: TabType[] = [
+    "resumen",
+    "notas",
+    "asistencia",
+    "horario",
+    "asignaturas",
+    "comunicados",
+    "reglamento",
+  ];
+
+  const [internalTab, setInternalTab] = useState<TabType>(() => {
+    if (propsActiveTab && VALID_STUDENT_TABS.includes(propsActiveTab)) {
+      return propsActiveTab;
+    }
+    if (typeof window !== "undefined") {
+      const urlTab = searchParams.get("tab") as TabType | null;
+      if (urlTab && VALID_STUDENT_TABS.includes(urlTab)) {
+        return urlTab;
+      }
+      try {
+        const savedTab = localStorage.getItem("aurenis_student_active_tab") as TabType | null;
+        if (savedTab && VALID_STUDENT_TABS.includes(savedTab)) {
+          return savedTab;
+        }
+      } catch {
+        // Ignorar excepciones de localStorage
+      }
+    }
+    return "resumen";
+  });
+
+  const activeTab = propsActiveTab || internalTab;
+
+  const handleTabChange = useCallback(
+    (tab: TabType) => {
+      if (!VALID_STUDENT_TABS.includes(tab)) return;
+      setInternalTab(tab);
+      if (onTabChange) onTabChange(tab);
+
+      // Persistir pestaña en localStorage para que no se pierda al navegar o refrescar
+      try {
+        localStorage.setItem("aurenis_student_active_tab", tab);
+      } catch {
+        // Ignorar
+      }
+
+      // Sincronizar URL limpia en el historial del navegador sin forzar llamada al servidor
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tab", tab);
+      const newUrl = `?${params.toString()}`;
+      if (typeof window !== "undefined" && window.location.search !== newUrl) {
+        window.history.replaceState(null, "", newUrl);
+      }
+    },
+    [onTabChange, searchParams]
+  );
+
+  // Escuchar eventos globales emitidos por el Sidebar para conmutar módulos instantáneamente sin recarga de servidor
+  useEffect(() => {
+    const handleSidebarTabEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<{ tab: TabType }>;
+      if (customEvent.detail?.tab && VALID_STUDENT_TABS.includes(customEvent.detail.tab)) {
+        handleTabChange(customEvent.detail.tab);
+      }
+    };
+
+    window.addEventListener("aurenis:student-tab-change", handleSidebarTabEvent);
+    return () => {
+      window.removeEventListener("aurenis:student-tab-change", handleSidebarTabEvent);
+    };
+  }, [handleTabChange]);
+
+  // Sincronizar si propsActiveTab o searchParams cambian externamente
+  useEffect(() => {
+    if (propsActiveTab && VALID_STUDENT_TABS.includes(propsActiveTab)) {
+      setInternalTab(propsActiveTab);
+    } else {
+      const urlTab = searchParams.get("tab") as TabType | null;
+      if (urlTab && VALID_STUDENT_TABS.includes(urlTab)) {
+        setInternalTab(urlTab);
+      }
+    }
+  }, [propsActiveTab, searchParams]);
+
   const [notesViewMode, setNotesViewMode] = useState<"cards" | "table">("cards");
   const [subjectSearch, setSubjectSearch] = useState("");
 
@@ -774,7 +865,7 @@ export function EstudianteDashboard({
               role="tab"
               aria-selected={isActive}
               aria-controls={`panel-${tab.id}`}
-              onClick={() => setActiveTab(tab.id as TabType)}
+              onClick={() => handleTabChange(tab.id as TabType)}
               className={cn(
                 "px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c8ee9]",
                 isActive
@@ -817,7 +908,7 @@ export function EstudianteDashboard({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
             {/* 1. Mis Calificaciones */}
             <div
-              onClick={() => setActiveTab("notas")}
+              onClick={() => handleTabChange("notas")}
               className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
             >
               <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
@@ -840,7 +931,7 @@ export function EstudianteDashboard({
 
             {/* 2. Mi Asistencia */}
             <div
-              onClick={() => setActiveTab("asistencia")}
+              onClick={() => handleTabChange("asistencia")}
               className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
             >
               <div className="w-11 h-11 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-[#0c8ee9] dark:text-[#38bdf8] flex items-center justify-center mb-3">
@@ -863,7 +954,7 @@ export function EstudianteDashboard({
 
             {/* 3. Mi Horario */}
             <div
-              onClick={() => setActiveTab("horario")}
+              onClick={() => handleTabChange("horario")}
               className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
             >
               <div className="w-11 h-11 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-3">
@@ -886,7 +977,7 @@ export function EstudianteDashboard({
 
             {/* 4. Mis Ramos */}
             <div
-              onClick={() => setActiveTab("asignaturas")}
+              onClick={() => handleTabChange("asignaturas")}
               className="group p-5 rounded-3xl bg-white dark:bg-[#0C1425] border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:border-[#0c8ee9]/50 hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
             >
               <div className="w-11 h-11 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-3">
@@ -954,7 +1045,7 @@ export function EstudianteDashboard({
 
                   <button
                     type="button"
-                    onClick={() => setActiveTab("notas")}
+                    onClick={() => handleTabChange("notas")}
                     className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>Ver detalle</span>
@@ -1044,7 +1135,7 @@ export function EstudianteDashboard({
                     </div>
                     <button
                       type="button"
-                      onClick={() => setActiveTab("notas")}
+                      onClick={() => handleTabChange("notas")}
                       className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
                     >
                       <span>Ver todas</span>
@@ -1059,7 +1150,7 @@ export function EstudianteDashboard({
                       return (
                         <div
                           key={sub.id}
-                          onClick={() => setActiveTab("notas")}
+                          onClick={() => handleTabChange("notas")}
                           className="p-3 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-3 hover:border-[#0c8ee9]/40 transition cursor-pointer"
                         >
                           <div className="min-w-0 flex-1">
@@ -1139,7 +1230,7 @@ export function EstudianteDashboard({
                     </div>
 
                     <div
-                      onClick={() => setActiveTab("horario")}
+                      onClick={() => handleTabChange("horario")}
                       className="p-3.5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 hover:border-emerald-500 transition cursor-pointer flex flex-col justify-between"
                     >
                       <div className="flex items-center justify-between">
@@ -1157,7 +1248,7 @@ export function EstudianteDashboard({
                     </div>
 
                     <div
-                      onClick={() => setActiveTab("reglamento")}
+                      onClick={() => handleTabChange("reglamento")}
                       className="p-3.5 rounded-2xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900/50 hover:border-amber-500 transition cursor-pointer flex flex-col justify-between"
                     >
                       <div className="flex items-center justify-between">
@@ -1191,7 +1282,7 @@ export function EstudianteDashboard({
                   </div>
                   <button
                     type="button"
-                    onClick={() => setActiveTab("horario")}
+                    onClick={() => handleTabChange("horario")}
                     className="text-xs font-bold text-[#0c8ee9] hover:underline flex items-center gap-0.5 cursor-pointer"
                   >
                     <span>Ver calendario</span>
@@ -2062,7 +2153,7 @@ export function EstudianteDashboard({
                           type="button"
                           onClick={() => {
                             setSubjectSearch(sub.name);
-                            setActiveTab("notas");
+                            handleTabChange("notas");
                           }}
                           className="text-indigo-600 dark:text-indigo-400 font-bold text-xs hover:underline flex items-center gap-1 cursor-pointer"
                         >
