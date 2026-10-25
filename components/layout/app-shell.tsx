@@ -166,6 +166,7 @@ export function AppShell({
         >
           {children}
         </main>
+        
       </div>
 
       {/* 3. Paleta de Comandos / Búsqueda SPA */}
