@@ -32,8 +32,15 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Aurenis",
-  description: "Multi-tenant academic management platform for schools, teachers, students, and administrators.",
+  title: {
+    default: "Aurenis — Plataforma Integral de Gestión Escolar y Académica Multi-Tenant",
+    template: "%s | Aurenis",
+  },
+  description: "Sistema de gestión escolar, libro de clases digital Decreto 67, asistencia y portales para colegios, profesores, apoderados y estudiantes en Chile.",
+  keywords: ["gestion escolar", "libro de clases digital", "decreto 67", "aurenis", "colegios chile", "lpmm", "asistencia escolar", "calificaciones"],
+  verification: {
+    google: "google1a043c5bc8a45fb4",
+  },
   icons: {
     icon: [
       { url: "/logonuevo.png", type: "image/png" },
@@ -42,8 +49,17 @@ export const metadata: Metadata = {
     apple: "/logonuevo.png",
   },
   openGraph: {
-    title: "Aurenis",
-    description: "Multi-tenant academic management platform for schools, teachers, students, and administrators.",
+    type: "website",
+    locale: "es_CL",
+    url: "https://ais-dev-4mfjtpundvddavjyfs2o6y-344169282725.us-east1.run.app",
+    title: "Aurenis — Plataforma Integral de Gestión Escolar y Académica Multi-Tenant",
+    description: "Sistema líder de gestión escolar, libro digital Decreto 67 y portales interactivos para establecimientos educacionales.",
+    siteName: "Aurenis",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aurenis — Plataforma de Gestión Escolar",
+    description: "Libro de clases digital y gestión académica multi-tenant en Chile.",
   },
 };
 
