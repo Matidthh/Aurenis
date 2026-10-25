@@ -353,19 +353,19 @@ export function Sidebar({
                                 aria-hidden="true"
                               />
                             )}
-                            {item.badge && (
+                            {(item as NavItem).badge && (
                               <span
                                 className={cn(
                                   "px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0",
-                                  item.badgeVariant === "brand" &&
+                                  (item as NavItem).badgeVariant === "brand" &&
                                     "bg-brand-100 text-brand-700 dark:bg-brand-900 dark:text-brand-200",
-                                  item.badgeVariant === "success" &&
+                                  (item as NavItem).badgeVariant === "success" &&
                                     "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300",
-                                  (!item.badgeVariant || item.badgeVariant === "neutral") &&
+                                  (!(item as NavItem).badgeVariant || (item as NavItem).badgeVariant === "neutral") &&
                                     "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
                                 )}
                               >
-                                {item.badge}
+                                {(item as NavItem).badge}
                               </span>
                             )}
                           </motion.div>
