@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://ais-dev-4mfjtpundvddavjyfs2o6y-344169282725.us-east1.run.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://aurenis.app";
 
   return [
     {
@@ -42,3 +42,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 }
+
