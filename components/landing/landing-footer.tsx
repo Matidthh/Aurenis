@@ -16,7 +16,7 @@ export function LandingFooter() {
           {/* Columna 1: Marca y Misión */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="inline-block">
-              <AurenisLogo className="w-10 h-10" textClassName="text-white text-xl font-black tracking-tight" />
+              <AurenisLogo className="w-12 h-12" textClassName="text-white text-2xl font-black tracking-tight" />
             </Link>
 
             <p className="text-slate-500 leading-relaxed max-w-sm text-sm">
@@ -76,8 +76,8 @@ export function LandingFooter() {
           </div>
 
           <div className="flex items-center gap-6">
-            <span>Política de Privacidad</span>
-            <span>Términos de Servicio</span>
+            <Link href="/privacidad" className="hover:text-white transition">Política de Privacidad</Link>
+            <Link href="/terminos" className="hover:text-white transition">Términos de Servicio</Link>
             <span className="flex items-center gap-1">
               Hecho con <Heart className="w-3 h-3 text-red-500 fill-red-500" /> en Chile
             </span>

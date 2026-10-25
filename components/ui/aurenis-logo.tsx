@@ -24,12 +24,7 @@ export function AurenisLogo({
   subtitle,
   preferSvg = false,
 }: AurenisLogoProps) {
-  const [imageError, setImageError] = useState(false);
-  const logoSrc = imageError
-    ? "/aurenis-logo.svg"
-    : preferSvg
-    ? "/aurenis-logo.svg"
-    : "/logonuevo.png";
+  const logoSrc = "/logonuevo.png";
 
   const imageElement = (
     <div
@@ -43,7 +38,6 @@ export function AurenisLogo({
         sizes="(max-width: 768px) 48px, 64px"
         className={cn("transition-transform duration-200", imageClassName)}
         referrerPolicy="no-referrer"
-        onError={() => setImageError(true)}
         priority
       />
     </div>

@@ -231,7 +231,7 @@ export function Header({
           <div className="flex md:hidden items-center">
             <AurenisLogo
               showText={false}
-              className="w-7 h-7"
+              className="w-9 h-9"
             />
           </div>
 

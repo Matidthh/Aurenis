@@ -96,7 +96,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg"
           >
             <AurenisLogo
-              className="w-8 h-8 sm:w-9 sm:h-9"
+              className="w-10 h-10 sm:w-11 sm:h-11"
               textClassName="text-slate-900 dark:text-white text-lg sm:text-xl font-black tracking-tight"
             />
           </Link>
