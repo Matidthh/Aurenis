@@ -61,7 +61,7 @@ interface CriticalCourseItem {
 
 export function DirectivoDashboard({
   schoolSlug,
-  schoolName = "Liceo Politécnico Marga Marga",
+  schoolName = "Colegio Bicentenario Aurenis",
   totalStudents = 640,
   totalTeachers = 42,
   averageAttendance = 94.2,
@@ -371,7 +371,7 @@ export function DirectivoDashboard({
                 Especialidades y Ramas Formativas
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Liceo Politécnico Marga Marga · Módulos de Formación Diferenciada
+                Colegio Bicentenario Aurenis · Módulos de Formación Académica
               </p>
             </div>
           </div>

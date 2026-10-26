@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 
@@ -22,21 +22,20 @@ export function AurenisLogo({
   subtitleClassName = "text-[10px] uppercase font-bold tracking-wider text-brand-600 dark:text-brand-400",
   showText = true,
   subtitle,
-  preferSvg = false,
 }: AurenisLogoProps) {
   const logoSrc = "/logonuevo.png";
 
   const imageElement = (
     <div
-      className={cn("relative flex items-center justify-center shrink-0 select-none", className)}
+      className={cn("relative flex items-center justify-center shrink-0 select-none overflow-hidden", className)}
       suppressHydrationWarning
     >
       <Image
         src={logoSrc}
         alt="Aurenis Logo"
-        fill
-        sizes="(max-width: 768px) 48px, 64px"
-        className={cn("transition-transform duration-200", imageClassName)}
+        width={160}
+        height={160}
+        className={cn("w-full h-full object-contain transition-transform duration-200", imageClassName)}
         referrerPolicy="no-referrer"
         priority
       />

@@ -8,7 +8,7 @@ import { HowWeMigrateSection } from "@/components/landing/how-we-migrate-section
 import { PricingPlans } from "@/components/landing/pricing-plans";
 import { FaqSection } from "@/components/landing/faq-section";
 import { FinalCtaSection } from "@/components/landing/final-cta-section";
-import { LandingFooter } from "@/components/landing/landing-footer";
+import { LandingFooter } from "./landing-footer";
 import { getBookingUrl } from "@/lib/booking";
 
 export function LandingClientPage() {

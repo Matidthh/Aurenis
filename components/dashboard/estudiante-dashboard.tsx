@@ -1137,7 +1137,7 @@ export function EstudianteDashboard({
                   Estudiante • 1º Medio A
                 </p>
                 <p className="text-[11px] text-blue-100 truncate">
-                  Liceo Politécnico Marga Marga
+                  Colegio Bicentenario Aurenis
                 </p>
                 <div className="pt-1">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/20 text-white border border-white/20">

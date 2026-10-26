@@ -93,7 +93,7 @@ export function ApoderadoDashboard({
     <div className="space-y-6">
       {/* 1. Header Contextual para Familias & Apoderados */}
       <ContextualHeader
-        schoolName="Liceo Politécnico Marga Marga"
+        schoolName="Colegio Bicentenario Aurenis"
         institutionalCode="RBD 10240"
         academicYear="2026"
         term="1er Semestre"

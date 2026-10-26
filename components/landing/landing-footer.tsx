@@ -2,74 +2,96 @@
 
 import React from "react";
 import Link from "next/link";
-import { AurenisLogo } from "@/components/ui/aurenis-logo";
-import { Heart, Mail, MapPin } from "lucide-react";
+import { AurenisLogo } from "../ui/aurenis-logo";
+import { Rocket, ArrowRight, ShieldCheck } from "lucide-react";
 
-export function LandingFooter() {
+export const LandingFooter = () => {
   return (
-    <footer className="w-full bg-slate-950 text-slate-400 pt-32 pb-12 border-t border-slate-900">
-      {/* SVG Curve - Pronounced "U" shape downward */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-0 -translate-y-full">
-        <svg className="relative block w-full h-32" viewBox="0 0 1440 120" preserveAspectRatio="none">
-          <path d="M0,0 C300,150 1140,150 1440,0 L1440,120 L0,120 Z" className="fill-slate-950" />
+    <footer className="w-full bg-[#030711] text-slate-300 pt-32 pb-8 relative overflow-hidden">
+      {/* Wave Curve at the top */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-none -translate-y-full pointer-events-none">
+        <svg
+          className="relative block w-full h-24 sm:h-32 text-[#030711]"
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,120 C300,0 1140,0 1440,120 L1440,120 L0,120 Z"
+            fill="currentColor"
+          />
         </svg>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-slate-900">
-          {/* Columna 1: Marca y Misión */}
-          <div className="space-y-6">
-            <Link href="/" className="inline-block hover:opacity-90 transition">
-              <AurenisLogo className="w-14 h-14" textClassName="text-white text-2xl font-black tracking-tight" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
+          
+          {/* Left Column: Brand & Social */}
+          <div className="lg:col-span-3 space-y-6">
+            <Link href="/" className="inline-flex items-center gap-3">
+              <AurenisLogo className="w-10 h-10" textClassName="text-white text-xl font-black" />
             </Link>
-            <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
-              AURENIS es la solución líder para la gestión escolar en Chile. 
-              Modernizamos la administración pedagógica con tecnología de alta velocidad.
+            <p className="text-slate-400 text-sm leading-relaxed max-w-[280px]">
+              La solución para una gestión académica más simple, organizada y segura.
             </p>
-            <div className="flex gap-4">
-               <a href="mailto:contacto@aurenis.app" className="hover:text-white transition"><Mail className="w-5 h-5" /></a>
-               <a href="#" className="hover:text-white transition"><MapPin className="w-5 h-5" /></a>
+            <div className="flex gap-3">
+              <a href="#" className="p-2 rounded-lg bg-[#1e293b]/50 hover:bg-[#1e293b] transition text-slate-400 hover:text-white"><Instagram className="w-5 h-5" /></a>
+              <a href="#" className="p-2 rounded-lg bg-[#1e293b]/50 hover:bg-[#1e293b] transition text-slate-400 hover:text-white"><Linkedin className="w-5 h-5" /></a>
+              <a href="#" className="p-2 rounded-lg bg-[#1e293b]/50 hover:bg-[#1e293b] transition text-slate-400 hover:text-white"><Youtube className="w-5 h-5" /></a>
             </div>
           </div>
 
-          {/* Columna 2: Plataforma */}
-          <div className="space-y-4">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider">Plataforma</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/select-school" className="hover:text-white transition">Libro de Clases Digital</Link></li>
-              <li><Link href="/select-school" className="hover:text-white transition">Asistencia</Link></li>
-              <li><Link href="/select-school" className="hover:text-white transition">Gestión de Notas</Link></li>
-              <li><Link href="/select-school" className="hover:text-white transition">Reportes SAT</Link></li>
+          {/* Navigation Columns */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-bold text-white text-sm">Producto</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li><Link href="#" className="hover:text-white transition">Inicio</Link></li>
+              <li><Link href="#" className="hover:text-white transition">Dashboard</Link></li>
+              <li><Link href="#" className="hover:text-white transition">Gestión académica</Link></li>
+              <li><Link href="#" className="hover:text-white transition">Funcionalidades</Link></li>
             </ul>
           </div>
 
-          {/* Columna 3: Compañía */}
-          <div className="space-y-4">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider">Compañía</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/login" className="hover:text-white transition">Soporte Técnico</Link></li>
-              <li><Link href="/login" className="hover:text-white transition">Portal de Ayuda</Link></li>
-              <li><Link href="/privacidad" className="hover:text-white transition">Política de Privacidad</Link></li>
-              <li><Link href="/terminos" className="hover:text-white transition">Términos de Servicio</Link></li>
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-bold text-white text-sm">Recursos</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li><Link href="#" className="hover:text-white transition">Centro de ayuda</Link></li>
+              <li><Link href="#" className="hover:text-white transition">Documentación</Link></li>
+              <li><Link href="#" className="hover:text-white transition">Preguntas frecuentes</Link></li>
             </ul>
           </div>
 
-          {/* Columna 4: Suscripción / Acción */}
-          <div className="space-y-4">
-            <h4 className="font-bold text-white text-sm uppercase tracking-wider">Comunidad</h4>
-            <p className="text-sm">¿Interesado en modernizar tu colegio?</p>
-            <Link href="/login" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg text-sm transition">
-              Solicitar Demostración
-            </Link>
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="font-bold text-white text-sm">Empresa</h4>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li><Link href="#" className="hover:text-white transition">Sobre AURENIS</Link></li>
+              <li><Link href="#" className="hover:text-white transition">Contacto</Link></li>
+            </ul>
+          </div>
+
+          {/* Right Column: CTA Card */}
+          <div className="lg:col-span-3">
+            <div className="bg-[#1e293b]/30 p-6 rounded-2xl border border-[#334155] space-y-4">
+              <div className="w-10 h-10 rounded-full bg-blue-900/30 text-blue-400 flex items-center justify-center">
+                <Rocket className="w-5 h-5" />
+              </div>
+              <h4 className="font-bold text-white text-sm">¿Listo para transformar tu gestión académica?</h4>
+              <p className="text-xs text-slate-400">Agenda una videollamada y descubre cómo AURENIS puede ayudarte.</p>
+              <Link href="/login" className="w-full justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold flex items-center gap-2 transition">
+                Solicitar Demo <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Footer Bottom */}
-        <div className="pt-10 flex flex-col sm:flex-row justify-between items-center gap-6 text-xs text-slate-500">
+        <div className="pt-8 border-t border-[#334155] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
           <p>© 2026 AURENIS. Todos los derechos reservados.</p>
-          <p className="flex items-center gap-1">
-            Hecho con <Heart className="w-4 h-4 text-red-500 fill-red-500" /> en Chile.
-          </p>
+          <div className="flex items-center gap-2 bg-[#1e293b]/50 px-3 py-1 rounded-full text-slate-300">
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
+            Plataforma de gestión académica
+          </div>
         </div>
       </div>
     </footer>

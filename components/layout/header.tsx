@@ -524,7 +524,7 @@ export function Header({
                 </span>
                 <span className="block text-[10px] text-slate-400 font-medium truncate max-w-[140px] md:max-w-[180px]">
                   {isStudentRole
-                    ? `Estudiante • ${schoolContext?.schoolName || "Liceo Politécnico Marga Marga"}`
+                    ? `Estudiante • ${schoolContext?.schoolName || "Colegio Bicentenario Aurenis"}`
                     : displayRoleTitle}
                 </span>
               </div>

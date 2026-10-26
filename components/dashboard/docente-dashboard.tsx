@@ -397,7 +397,7 @@ export function DocenteDashboard({
 
       {/* 1. Header Contextual para Docentes */}
       <ContextualHeader
-        schoolName="Liceo Politécnico Marga Marga"
+        schoolName="Colegio Bicentenario Aurenis"
         institutionalCode="RBD 10240"
         academicYear="2026"
         term="1er Semestre"

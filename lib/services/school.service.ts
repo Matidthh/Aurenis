@@ -221,7 +221,7 @@ export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
     slug: "lpmm",
     subdomain: "lpmm.aurenis.app",
     customDomain: "portal.lpmm.cl",
-    institutionalCode: "LPMM-8921",
+    institutionalCode: "LPMM-10240",
     city: "Quilpué / Marga Marga",
     country: "Chile",
     status: "ACTIVE",

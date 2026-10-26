@@ -90,7 +90,7 @@ export function RoleDashboardShell({
   userName,
   userEmail,
   userRole,
-  schoolName = "Liceo Politécnico Marga Marga",
+  schoolName = "Colegio Bicentenario Aurenis",
   activeTab,
   onTabChange,
 }: RoleDashboardShellProps) {
