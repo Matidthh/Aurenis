@@ -43,8 +43,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logonuevo.png", type: "image/png" },
-      { url: "/aurenis-logo.svg", type: "image/svg+xml" }
+      { url: "/logonuevo.png", type: "image/png" }
     ],
     apple: "/logonuevo.png",
   },

@@ -535,7 +535,7 @@ export function Sidebar({
         initial={false}
         animate={{ width: isCollapsed ? 80 : 256 }}
         transition={{ type: "spring", stiffness: 320, damping: 32 }}
-        className="hidden md:flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 h-screen sticky top-0 z-40 overflow-y-auto"
+        className="hidden md:flex flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 min-h-screen z-40"
       >
         {sidebarContent}
       </motion.aside>
