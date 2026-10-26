@@ -35,11 +35,6 @@ export const LandingFooter = () => {
             <p className="text-slate-400 text-sm leading-relaxed max-w-[280px]">
               La solución para una gestión académica más simple, organizada y segura.
             </p>
-            <div className="flex gap-3">
-              <a href="#" className="p-2 rounded-lg bg-[#1e293b]/50 hover:bg-[#1e293b] transition text-slate-400 hover:text-white"><Instagram className="w-5 h-5" /></a>
-              <a href="#" className="p-2 rounded-lg bg-[#1e293b]/50 hover:bg-[#1e293b] transition text-slate-400 hover:text-white"><Linkedin className="w-5 h-5" /></a>
-              <a href="#" className="p-2 rounded-lg bg-[#1e293b]/50 hover:bg-[#1e293b] transition text-slate-400 hover:text-white"><Youtube className="w-5 h-5" /></a>
-            </div>
           </div>
 
           {/* Navigation Columns */}
