@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { getSession } from "@/lib/auth/session";
 import { getSchoolBySlug } from "@/lib/services/school.service";
+import { InstitutionalPortal } from "@/components/school/institutional-portal";
 
 interface SchoolIndexPageProps {
   params: Promise<{
@@ -80,7 +81,7 @@ export default async function SchoolIndexPage({ params }: SchoolIndexPageProps) 
   // 3. Determinación infalible de si la petición proviene de un subdominio institucional dedicado
   const isSubdomain = Boolean(
     detectedSubdomain ||
-    (school?.subdomain && rawHost.toLowerCase().includes(school.subdomain.split(".")[0]))
+      (school?.subdomain && rawHost.toLowerCase().includes(school.subdomain.split(".")[0]))
   );
 
   // 4. Verificación de autorización de sesión en la institución solicitada
@@ -103,11 +104,9 @@ export default async function SchoolIndexPage({ params }: SchoolIndexPageProps) 
 
   // CASO A: Usuario autenticado con membresía válida en este establecimiento
   if (isAuthorized) {
-    // Si accede desde colegio.aurenis.app, la URL resultante es limpia (/dashboard/estudiante) sin requerir slug ni parámetros manuales
     if (isSubdomain) {
       redirect(`/dashboard${roleSubpath}`);
     }
-    // Si accede desde la raíz común (aurenis.app/colegio)
     redirect(`/${canonicalSlug}/dashboard${roleSubpath}`);
   }
 
@@ -119,12 +118,7 @@ export default async function SchoolIndexPage({ params }: SchoolIndexPageProps) 
     redirect("/select-school");
   }
 
-  // CASO C: Usuario no autenticado (visita inicial a colegio.aurenis.app)
-  // En subdominio no requiere ningún parámetro manual (?school=...); el portal login reconoce el colegio por el host
-  if (isSubdomain) {
-    redirect("/login");
-  }
-
-  // En dominio raíz estándar sin subdominio se pasa el parámetro para pre-seleccionar el colegio en la UI
-  redirect(`/login?school=${encodeURIComponent(canonicalSlug)}`);
+  // CASO C: Usuario no autenticado que visita colegio.aurenis.app
+  // Renderizamos el Portal Institucional autónomo con identidad del colegio
+  return <InstitutionalPortal school={school} isSubdomainMode={isSubdomain} />;
 }

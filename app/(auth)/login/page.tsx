@@ -263,7 +263,7 @@ const AVAILABLE_SCHOOLS: SchoolOption[] = [
     subdomain: "lpmm.aurenis.app",
     domainSuffix: "@lpmm.cl",
     code: "RBD 10240",
-    city: "Quilpué / Melipilla",
+    city: "Quilpué / Marga Marga",
     color: "from-blue-600 to-indigo-700",
   },
   {
@@ -277,6 +277,16 @@ const AVAILABLE_SCHOOLS: SchoolOption[] = [
     color: "from-emerald-600 to-teal-700",
   },
   {
+    slug: "colegio-santa-maria",
+    name: "Colegio Santa María",
+    shortName: "Santa María",
+    subdomain: "santamaria.aurenis.app",
+    domainSuffix: "@santamaria.cl",
+    code: "RBD 10255",
+    city: "Valparaíso",
+    color: "from-purple-600 to-violet-700",
+  },
+  {
     slug: "colegio-alerce-real",
     name: "Colegio Alerce Real",
     shortName: "Alerce Real",
@@ -285,6 +295,16 @@ const AVAILABLE_SCHOOLS: SchoolOption[] = [
     code: "RBD 10250",
     city: "Puerto Montt",
     color: "from-amber-600 to-orange-700",
+  },
+  {
+    slug: "cba",
+    name: "Colegio Bicentenario Aurenis",
+    shortName: "CBA",
+    subdomain: "cba.aurenis.app",
+    domainSuffix: "@cbaurenis.cl",
+    code: "RBD 10260",
+    city: "Viña del Mar",
+    color: "from-blue-600 to-cyan-700",
   },
 ];
 
@@ -314,9 +334,25 @@ function LoginContent() {
         foundSub = parts[0];
       }
 
+      // Soporte para parámetro URL ?tenant=... o ?subdomain=... para simulación en dev
+      const searchSub = new URLSearchParams(window.location.search).get("subdomain") || new URLSearchParams(window.location.search).get("tenant");
+      if (!foundSub && searchSub && !RESERVED.includes(searchSub.toLowerCase())) {
+        foundSub = searchSub.toLowerCase().trim();
+      }
+
       if (foundSub) {
         setDetectedSubdomain(foundSub);
-        setSelectedSchoolSlug(foundSub);
+        // Mapear alias automático de subdominio (ej: sanjose -> colegio-san-jose)
+        const matchedBySub = AVAILABLE_SCHOOLS.find(
+          (s) =>
+            s.subdomain === `${foundSub}.aurenis.app` ||
+            s.subdomain.startsWith(`${foundSub}.`) ||
+            s.slug === foundSub ||
+            (foundSub === "sanjose" && s.slug === "colegio-san-jose") ||
+            (foundSub === "santamaria" && s.slug === "colegio-santa-maria") ||
+            (foundSub === "alerce" && s.slug === "colegio-alerce-real")
+        );
+        setSelectedSchoolSlug(matchedBySub ? matchedBySub.slug : foundSub);
       } else if (schoolParam) {
         setSelectedSchoolSlug(schoolParam);
       }
@@ -324,7 +360,16 @@ function LoginContent() {
   }, [schoolParam]);
 
   const activeSchoolSlug = selectedSchoolSlug || schoolParam || detectedSubdomain || "lpmm";
-  const currentSchool = AVAILABLE_SCHOOLS.find((s) => s.slug === activeSchoolSlug) || AVAILABLE_SCHOOLS[0];
+  const currentSchool = AVAILABLE_SCHOOLS.find(
+    (s) =>
+      s.slug === activeSchoolSlug ||
+      s.subdomain === `${activeSchoolSlug}.aurenis.app` ||
+      s.subdomain.startsWith(`${activeSchoolSlug}.`) ||
+      (activeSchoolSlug === "sanjose" && s.slug === "colegio-san-jose") ||
+      (activeSchoolSlug === "santamaria" && s.slug === "colegio-santa-maria") ||
+      (activeSchoolSlug === "alerce" && s.slug === "colegio-alerce-real") ||
+      (activeSchoolSlug === "cba" && s.slug === "cba")
+  ) || AVAILABLE_SCHOOLS[0];
 
   // Form states
   const [identifier, setIdentifier] = useState("");

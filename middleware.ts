@@ -213,6 +213,37 @@ interface TenantIsolationParams {
   corsHeaders: Record<string, string>;
 }
 
+/**
+ * Mapeo canónico de alias de subdominios institucionales a slugs canónicos
+ * Autor: 👑 Maicol R. (Arquitectura & Backend) & 🛡️ Frank M. (Seguridad Multi-Tenant)
+ */
+const SUBDOMAIN_TO_SLUG_ALIASES: Record<string, string> = {
+  lpmm: "lpmm",
+  sanjose: "colegio-san-jose",
+  "colegio-san-jose": "colegio-san-jose",
+  santamaria: "colegio-santa-maria",
+  "colegio-santa-maria": "colegio-santa-maria",
+  alerce: "colegio-alerce-real",
+  "colegio-alerce-real": "colegio-alerce-real",
+  cba: "cba",
+  "colegio-bicentenario": "cba",
+};
+
+/**
+ * Valida si dos identificadores de colegio corresponden a la misma entidad institucional
+ * Previene falsos positivos en BOLA/IDOR para subdominios (ej. sanjose.aurenis.app -> colegio-san-jose)
+ */
+function areSchoolIdentifiersEquivalent(a?: string | null, b?: string | null): boolean {
+  if (!a || !b) return false;
+  const cleanA = a.toLowerCase().trim();
+  const cleanB = b.toLowerCase().trim();
+  if (cleanA === cleanB) return true;
+
+  const canonA = SUBDOMAIN_TO_SLUG_ALIASES[cleanA] || cleanA;
+  const canonB = SUBDOMAIN_TO_SLUG_ALIASES[cleanB] || cleanB;
+  return canonA === canonB;
+}
+
 function enforceTenantIsolation({
   request,
   session,
@@ -235,10 +266,20 @@ function enforceTenantIsolation({
       return unauthRes;
     }
 
+    // Permitir acceso público a la página de bienvenida / portal institucional del colegio
+    const canonicalTarget = SUBDOMAIN_TO_SLUG_ALIASES[targetIdentifier] || targetIdentifier;
+    if (
+      pathname === "/" ||
+      pathname === `/${targetIdentifier}` ||
+      pathname === `/${canonicalTarget}`
+    ) {
+      return null;
+    }
+
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("returnUrl", pathname);
     if (targetIdentifier && !RESERVED_ROOT_PATHS.has(targetIdentifier)) {
-      loginUrl.searchParams.set("school", targetIdentifier);
+      loginUrl.searchParams.set("school", canonicalTarget);
     }
     const redirectRes = NextResponse.redirect(loginUrl);
     if (hadInvalidToken) redirectRes.cookies.delete(SESSION_COOKIE_NAME);
@@ -271,8 +312,9 @@ function enforceTenantIsolation({
 
   // D. Prevención BOLA/IDOR: Verificar que el tenant de la URL corresponda a la sesión del usuario
   const isAuthorized = isApi
-    ? session.schoolId === targetIdentifier || session.schoolSlug === targetIdentifier
-    : session.schoolSlug === targetIdentifier;
+    ? session.schoolId === targetIdentifier ||
+      areSchoolIdentifiersEquivalent(session.schoolSlug, targetIdentifier)
+    : areSchoolIdentifiersEquivalent(session.schoolSlug, targetIdentifier);
 
   if (!isAuthorized) {
     if (isApi) {
@@ -404,7 +446,22 @@ export async function middleware(request: NextRequest) {
   const host = rawHost.split(":")[0].toLowerCase().trim();
   let tenantSubdomain: string | null = null;
   const hostParts = host.split(".");
-  const RESERVED_SUBDOMAINS = new Set(["www", "app", "api", "admin", "auth", "mail", "system", "us-east1", "us-east4", "us-east5", "us-central1", "southamerica-east1", "southamerica-west1"]);
+  const RESERVED_SUBDOMAINS = new Set([
+    "www",
+    "app",
+    "api",
+    "admin",
+    "auth",
+    "mail",
+    "system",
+    "status",
+    "us-east1",
+    "us-east4",
+    "us-east5",
+    "us-central1",
+    "southamerica-east1",
+    "southamerica-west1",
+  ]);
 
   // Detectamos subdominios solo en dominios oficiales o locales
   if (host.endsWith(".aurenis.app") || host.endsWith(".aurenis.com") || host.endsWith(".aurenis.cl")) {
@@ -423,7 +480,6 @@ export async function middleware(request: NextRequest) {
     }
   } else if (host.endsWith(".run.app")) {
     // Para Cloud Run, el subdominio de tenant solo es válido si es el primer segmento y NO es un identificador técnico de AIS/GCP
-    // Ejemplo: lpmm.run.app (OK), ais-dev-xyz.us-east5.run.app (IGNORAR como tenant)
     if (hostParts.length === 3) {
       const sub = hostParts[0].toLowerCase();
       if (!RESERVED_SUBDOMAINS.has(sub) && !sub.startsWith("ais-")) {
@@ -432,31 +488,52 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Soporte para parámetro URL ?tenant=... o ?subdomain=... para simulación perimetral en dev/test
+  const queryTenant = request.nextUrl.searchParams.get("subdomain") || request.nextUrl.searchParams.get("tenant");
+  if (!tenantSubdomain && queryTenant && !RESERVED_SUBDOMAINS.has(queryTenant.toLowerCase())) {
+    tenantSubdomain = queryTenant.toLowerCase().trim();
+  }
+
+  const canonicalTenantSlug = tenantSubdomain
+    ? SUBDOMAIN_TO_SLUG_ALIASES[tenantSubdomain] || tenantSubdomain
+    : null;
+
   // Excluir de reescritura de subdominio: rutas reservadas del sistema y autenticación (/login, /forgot-password, /select-school, /api, etc.)
   const firstPathSegment = pathname.split("/")[1] || "";
   const isAuthOrSystemPath = RESERVED_ROOT_PATHS.has(firstPathSegment) && firstPathSegment !== "";
 
-  if (tenantSubdomain && !isAuthOrSystemPath && !pathname.startsWith(`/${tenantSubdomain}`) && !pathname.startsWith("/_next") && !pathname.startsWith("/api/")) {
-    const rewriteUrl = new URL(`/${tenantSubdomain}${pathname === "/" ? "" : pathname}`, request.url);
+  if (
+    canonicalTenantSlug &&
+    !isAuthOrSystemPath &&
+    !pathname.startsWith(`/${canonicalTenantSlug}`) &&
+    !pathname.startsWith(`/${tenantSubdomain}`) &&
+    !pathname.startsWith("/_next") &&
+    !pathname.startsWith("/api/")
+  ) {
+    const rewriteUrl = new URL(`/${canonicalTenantSlug}${pathname === "/" ? "" : pathname}`, request.url);
     rewriteUrl.search = request.nextUrl.search;
-    
+
     const { session, hadInvalidToken } = await verifySessionToken(request);
     const requestHeaders = sanitizeAndInjectHeaders(request, session);
     requestHeaders.set("x-request-id", requestId);
     requestHeaders.set("x-nonce", cspNonce);
-    requestHeaders.set("x-tenant-subdomain", tenantSubdomain);
+    requestHeaders.set("x-tenant-subdomain", tenantSubdomain!);
+    requestHeaders.set("x-tenant-slug", canonicalTenantSlug);
 
-    const tenantBlock = enforceTenantIsolation({
-      request,
-      session,
-      targetIdentifier: tenantSubdomain,
-      isApi: false,
-      hadInvalidToken,
-      corsHeaders,
-    });
+    // Si es una ruta protegida interna (ej: /dashboard, /asistencia), validar aislamiento
+    if (pathname !== "/") {
+      const tenantBlock = enforceTenantIsolation({
+        request,
+        session,
+        targetIdentifier: canonicalTenantSlug,
+        isApi: false,
+        hadInvalidToken,
+        corsHeaders,
+      });
 
-    if (tenantBlock) {
-      return applySecurityHeaders(tenantBlock, cspNonce);
+      if (tenantBlock) {
+        return applySecurityHeaders(tenantBlock, cspNonce);
+      }
     }
 
     const rewriteRes = NextResponse.rewrite(rewriteUrl, {

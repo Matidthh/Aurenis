@@ -32,6 +32,7 @@ import { ContextualHeader } from "./contextual-header";
 import { AcademicSummaryCard } from "./academic-summary-card";
 import { AdaptiveTable } from "./adaptive-table";
 import { cn } from "@/lib/utils/cn";
+import { DynamicQRAttendanceModal } from "@/components/attendance/dynamic-qr-attendance-modal";
 
 export interface DocenteDashboardProps {
   schoolSlug: string;
@@ -341,6 +342,7 @@ export function DocenteDashboard({
   )?.id || "t-eduardo-soto";
 
   const [selectedTeacherId, setSelectedTeacherId] = useState<string>(defaultMatching);
+  const [isQRModalOpen, setIsQRModalOpen] = useState<boolean>(false);
 
   const currentTeacher =
     OFFICIAL_LPMM_TEACHERS.find((t) => t.id === selectedTeacherId) ||
@@ -411,13 +413,14 @@ export function DocenteDashboard({
               <Mail className="w-3.5 h-3.5 text-indigo-300" />
               <span>{activeEmail}</span>
             </div>
-            <Link
-              href={`/${schoolSlug}/attendance`}
-              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-md shadow-blue-500/20 min-h-[44px]"
+            <button
+              type="button"
+              onClick={() => setIsQRModalOpen(true)}
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-md shadow-blue-500/20 min-h-[44px] cursor-pointer"
             >
               <QrCode className="w-4 h-4" />
               <span>Pase Asistencia QR</span>
-            </Link>
+            </button>
             <Link
               href={`/${schoolSlug}/grades`}
               className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/20 transition flex items-center gap-2 backdrop-blur-md min-h-[44px]"
@@ -603,10 +606,11 @@ export function DocenteDashboard({
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   {c.studentsCount} estudiantes
                 </span>
-                <Link
-                  href={`/${schoolSlug}/attendance`}
+                <button
+                  type="button"
+                  onClick={() => setIsQRModalOpen(true)}
                   className={cn(
-                    "px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5",
+                    "px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer",
                     c.isCurrentBlock
                       ? "bg-blue-600 hover:bg-blue-500 text-white shadow-sm"
                       : "bg-slate-200/80 dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-blue-600 hover:text-white"
@@ -614,7 +618,7 @@ export function DocenteDashboard({
                 >
                   <QrCode className="w-3.5 h-3.5" />
                   <span>{c.attendanceDone ? "Ver Lista" : "Tomar QR"}</span>
-                </Link>
+                </button>
               </div>
             </div>
           ))}
@@ -677,6 +681,17 @@ export function DocenteDashboard({
             ),
           },
         ]}
+      />
+
+      {/* Modal de Asistencia QR Dinámica en Vivo */}
+      <DynamicQRAttendanceModal
+        schoolSlug={schoolSlug}
+        teacherName={activeName}
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+        defaultCourseId="course-lpmm-4e"
+        defaultCourseName="4° Medio E - Técnico Profesional"
+        defaultSubjectId="DBDR-4E"
       />
     </div>
   );

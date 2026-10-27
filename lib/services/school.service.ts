@@ -213,7 +213,20 @@ export interface SchoolDataWithSubscription {
   };
 }
 
-// Catálogo de instituciones (LPMM - Liceo Politécnico Marga Marga como institución oficial)
+// Mapeo canónico de alias de subdominio a slug institucional
+export const SUBDOMAIN_TO_SLUG_ALIASES: Record<string, string> = {
+  lpmm: "lpmm",
+  sanjose: "colegio-san-jose",
+  "colegio-san-jose": "colegio-san-jose",
+  santamaria: "colegio-santa-maria",
+  "colegio-santa-maria": "colegio-santa-maria",
+  alerce: "colegio-alerce-real",
+  "colegio-alerce-real": "colegio-alerce-real",
+  cba: "cba",
+  "colegio-bicentenario": "cba",
+};
+
+// Catálogo de instituciones registradas oficialmente en la plataforma AURENIS
 export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
   {
     id: "school-lpmm-001",
@@ -221,7 +234,7 @@ export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
     slug: "lpmm",
     subdomain: "lpmm.aurenis.app",
     customDomain: "portal.lpmm.cl",
-    institutionalCode: "LPMM-10240",
+    institutionalCode: "LPMM-10240 (RBD 10240)",
     city: "Quilpué / Marga Marga",
     country: "Chile",
     status: "ACTIVE",
@@ -250,53 +263,219 @@ export const SCHOOLS_CATALOG: SchoolDataWithSubscription[] = [
       subjects: 300,
     },
   },
+  {
+    id: "school-csj-001",
+    name: "Colegio San José de Las Condes",
+    slug: "colegio-san-jose",
+    subdomain: "sanjose.aurenis.app",
+    customDomain: "portal.sanjose.cl",
+    institutionalCode: "CSJ-001 (RBD 10245)",
+    city: "Santiago",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "PRO",
+      status: "ACTIVE",
+      maxStudents: 950,
+      currentStudents: 620,
+      monthlyFeeClp: 290000,
+      billingCycle: "ANNUAL",
+      renewalDate: "2027-03-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-03-01",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#059669",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 28,
+      courses: 16,
+      subjects: 48,
+    },
+  },
+  {
+    id: "school-csm-999",
+    name: "Colegio Santa María",
+    slug: "colegio-santa-maria",
+    subdomain: "santamaria.aurenis.app",
+    customDomain: "portal.santamaria.cl",
+    institutionalCode: "CSM-999 (RBD 10255)",
+    city: "Valparaíso",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "PRO",
+      status: "ACTIVE",
+      maxStudents: 750,
+      currentStudents: 510,
+      monthlyFeeClp: 260000,
+      billingCycle: "MONTHLY",
+      renewalDate: "2026-11-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-10-01",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#7C3AED",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 24,
+      courses: 14,
+      subjects: 42,
+    },
+  },
+  {
+    id: "school-car-002",
+    name: "Colegio Alerce Real",
+    slug: "colegio-alerce-real",
+    subdomain: "alerce.aurenis.app",
+    customDomain: "portal.alerce.cl",
+    institutionalCode: "CAR-002 (RBD 10250)",
+    city: "Puerto Montt",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "ENTERPRISE",
+      status: "ACTIVE",
+      maxStudents: 1100,
+      currentStudents: 780,
+      monthlyFeeClp: 350000,
+      billingCycle: "ANNUAL",
+      renewalDate: "2027-04-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-04-01",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#D97706",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 30,
+      courses: 18,
+      subjects: 54,
+    },
+  },
+  {
+    id: "school-cba-003",
+    name: "Colegio Bicentenario Aurenis",
+    slug: "cba",
+    subdomain: "cba.aurenis.app",
+    customDomain: "portal.cbaurenis.cl",
+    institutionalCode: "CBA-003 (RBD 10260)",
+    city: "Viña del Mar",
+    country: "Chile",
+    status: "ACTIVE",
+    subscription: {
+      plan: "ENTERPRISE",
+      status: "ACTIVE",
+      maxStudents: 1500,
+      currentStudents: 920,
+      monthlyFeeClp: 420000,
+      billingCycle: "ANNUAL",
+      renewalDate: "2027-05-01",
+      isPaymentUpToDate: true,
+      lastPaymentDate: "2026-05-01",
+    },
+    settings: {
+      termType: "SEMESTER",
+      minPassingGrade: 4.0,
+      minGrade: 1.0,
+      maxGrade: 7.0,
+      primaryColor: "#2563EB",
+      gradeScalePrecision: 1,
+    },
+    _count: {
+      memberships: 35,
+      courses: 22,
+      subjects: 66,
+    },
+  },
 ];
 
 /**
  * Obtener detalles institucionales por slug o subdominio
+ * Soporta resolución automática de subdominios *.aurenis.app, *.aurenis.com, *.aurenis.cl
  */
 export async function getSchoolBySlug(slugOrSubdomain: string) {
-  // Limpiar slug o subdominio (ej: cordillera.aurenis.app -> cordillera o liceo-cordillera)
-  const cleanKey = slugOrSubdomain.toLowerCase().replace(".aurenis.app", "").replace(".aurenis.com", "");
+  if (!slugOrSubdomain) return SCHOOLS_CATALOG[0];
+
+  // Limpiar slug o subdominio (ej: lpmm.aurenis.app -> lpmm)
+  const cleanKey = slugOrSubdomain
+    .toLowerCase()
+    .replace(".aurenis.app", "")
+    .replace(".aurenis.com", "")
+    .replace(".aurenis.cl", "")
+    .replace("portal.", "")
+    .trim();
+
+  // Resolver alias canónico (ej: 'sanjose' -> 'colegio-san-jose')
+  const canonicalSlug = SUBDOMAIN_TO_SLUG_ALIASES[cleanKey] || cleanKey;
 
   if (isDatabaseConfigured()) {
     try {
       const school = await prisma.school.findFirst({
         where: {
-          OR: [{ slug: cleanKey }, { slug: slugOrSubdomain }],
+          OR: [
+            { slug: canonicalSlug },
+            { slug: cleanKey },
+            { slug: slugOrSubdomain },
+            { id: cleanKey },
+          ],
         },
         select: SELECT_SCHOOL_SUMMARY,
       });
-      if (school) return school as unknown as SchoolDataWithSubscription;
+      if (school) {
+        return {
+          ...school,
+          subdomain: `${school.slug}.aurenis.app`,
+        } as unknown as SchoolDataWithSubscription;
+      }
     } catch {
-      // Fallback a demo si falla la conexión
+      // Fallback a catálogo en memoria si falla la base de datos
     }
   }
 
+  // Búsqueda en catálogo estático
   const found = SCHOOLS_CATALOG.find(
     (s) =>
+      s.slug === canonicalSlug ||
       s.slug === cleanKey ||
       s.slug === slugOrSubdomain ||
-      s.subdomain.startsWith(cleanKey) ||
-      s.id === slugOrSubdomain
+      s.subdomain === `${cleanKey}.aurenis.app` ||
+      s.subdomain.startsWith(`${cleanKey}.`) ||
+      s.id === slugOrSubdomain ||
+      s.id === cleanKey
   );
 
   if (found) return found;
 
-  // Si no está en el catálogo fijo ni en BD, generamos una instancia institucional activa
-  // para permitir onboarding y acceso inmediato a nuevas instituciones
+  // Si no está registrado en el catálogo fijo ni en BD, se provisiona una instancia institucional activa
+  // automatizada para garantizar disponibilidad y acceso sin errores 404
   const formattedName = cleanKey
     .split(/[-_]/)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 
-  return {
+  const autoCreatedSchool: SchoolDataWithSubscription = {
     id: `sch_${cleanKey}`,
-    name: formattedName.length > 2 ? formattedName : cleanKey.toUpperCase(),
+    name: formattedName.length > 2 ? `Colegio ${formattedName}` : `Colegio ${cleanKey.toUpperCase()}`,
     slug: cleanKey,
     subdomain: `${cleanKey}.aurenis.app`,
-    customDomain: null,
-    institutionalCode: `RBD-${cleanKey.substring(0, 4).toUpperCase()}`,
+    customDomain: `portal.${cleanKey}.cl`,
+    institutionalCode: `RBD-${cleanKey.substring(0, 5).toUpperCase()}`,
     city: "Chile",
     country: "Chile",
     status: "ACTIVE" as const,
@@ -324,7 +503,9 @@ export async function getSchoolBySlug(slugOrSubdomain: string) {
       courses: 6,
       subjects: 18,
     },
-  } as SchoolDataWithSubscription;
+  };
+
+  return autoCreatedSchool;
 }
 
 /**
