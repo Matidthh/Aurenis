@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_CL",
-    url: "https://ais-dev-4mfjtpundvddavjyfs2o6y-344169282725.us-east1.run.app",
+    url: "https://aurenis.app",
     title: "Aurenis — Plataforma Integral de Gestión Escolar y Académica Multi-Tenant",
     description: "Sistema líder de gestión escolar, libro digital Decreto 67 y portales interactivos para establecimientos educacionales.",
     siteName: "Aurenis",
@@ -69,6 +69,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${plusJakartaSans.variable} ${caveat.variable}`} suppressHydrationWarning>
+      <head>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Aurenis",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "All",
+            "description": "Sistema de gestión escolar, libro de clases digital, asistencia y portales para colegios en Chile.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "CLP"
+            }
+          })}
+        </script>
+      </head>
       <body className="antialiased min-h-screen" suppressHydrationWarning>
         <ChunkErrorListener />
         <MotionProvider>
