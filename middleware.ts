@@ -27,6 +27,7 @@ const RESERVED_ROOT_PATHS = new Set([
   "",
   "login",
   "forgot-password",
+  "reset-password",
   "select-school",
   "system",
   "api",
@@ -36,11 +37,18 @@ const RESERVED_ROOT_PATHS = new Set([
   "favicon.ico",
   "terms",
   "privacy",
+  "terminos",
+  "privacidad",
   "about",
   "contact",
   "resenas",
   "asistencia",
   "sobre-nosotros",
+  "libro-de-clases-digital",
+  "decreto-67",
+  "sige",
+  "articulos",
+  "blog",
 ]);
 
 /**

@@ -33,32 +33,59 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Aurenis — Plataforma Integral de Gestión Escolar y Académica Multi-Tenant",
+    default: "Aurenis | Libro de Clases Digital y Gestión Académica Decreto 67",
     template: "%s | Aurenis",
   },
-  description: "Sistema de gestión escolar, libro de clases digital Decreto 67, asistencia y portales para colegios, profesores, apoderados y estudiantes en Chile.",
-  keywords: ["gestion escolar", "libro de clases digital", "decreto 67", "aurenis", "colegios chile", "lpmm", "asistencia escolar", "calificaciones"],
+  description:
+    "Plataforma integral de gestión escolar y académica en Chile: Libro de clases digital certificado bajo Circular 30, evaluación Decreto 67, asistencia e interoperabilidad con SIGE.",
+  keywords: [
+    "Aurenis",
+    "Libro de Clases Digital",
+    "Circular 30",
+    "Decreto 67",
+    "SIGE",
+    "MINEDUC",
+    "Superintendencia de Educación",
+    "Gestión escolar Chile",
+    "Evaluación dual",
+    "Subvención SEP software",
+    "Asistencia escolar",
+    "Colegios Chile",
+  ],
+  authors: [{ name: "Equipo Aurenis & Liceo Politécnico Marga Marga" }],
+  creator: "Aurenis Cloud Education",
+  publisher: "Aurenis Cloud Education",
+  metadataBase: new URL("https://aurenis.app"),
+  alternates: {
+    canonical: "https://aurenis.app",
+  },
   verification: {
     google: "google1a043c5bc8a45fb4",
   },
   icons: {
-    icon: [
-      { url: "/logonuevo.png", type: "image/png" }
-    ],
+    icon: [{ url: "/logonuevo.png", type: "image/png" }],
     apple: "/logonuevo.png",
   },
   openGraph: {
     type: "website",
     locale: "es_CL",
     url: "https://aurenis.app",
-    title: "Aurenis — Plataforma Integral de Gestión Escolar y Académica Multi-Tenant",
-    description: "Sistema líder de gestión escolar, libro digital Decreto 67 y portales interactivos para establecimientos educacionales.",
+    title: "Aurenis | Libro de Clases Digital y Gestión Académica Decreto 67",
+    description:
+      "Plataforma de gestión escolar y libro de clases digital para Chile: cumplimiento Circular 30, Decreto 67 y sincronización SIGE.",
     siteName: "Aurenis",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aurenis — Plataforma de Gestión Escolar",
-    description: "Libro de clases digital y gestión académica multi-tenant en Chile.",
+    title: "Aurenis | Libro de Clases Digital y Gestión Académica Decreto 67",
+    description:
+      "Libro de clases digital, evaluación Decreto 67 y gestión escolar multi-tenant para establecimientos educacionales de Chile.",
+  },
+  other: {
+    "geo.region": "CL-VS",
+    "geo.placename": "Quilpué, Región de Valparaíso, Chile",
+    "geo.position": "-33.0489;-71.4429",
+    "ICBM": "-33.0489, -71.4429",
   },
 };
 

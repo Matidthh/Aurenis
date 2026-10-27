@@ -313,6 +313,14 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
   if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) return true;
   if (pathname === "/sobre-nosotros" || pathname.startsWith("/sobre-nosotros/")) return true;
+  if (pathname === "/libro-de-clases-digital" || pathname.startsWith("/libro-de-clases-digital/")) return true;
+  if (pathname === "/decreto-67" || pathname.startsWith("/decreto-67/")) return true;
+  if (pathname === "/sige" || pathname.startsWith("/sige/")) return true;
+  if (pathname === "/articulos" || pathname.startsWith("/articulos/")) return true;
+  if (pathname === "/blog" || pathname.startsWith("/blog/")) return true;
+  if (pathname === "/terminos" || pathname.startsWith("/terminos/")) return true;
+  if (pathname === "/privacidad" || pathname.startsWith("/privacidad/")) return true;
+  if (pathname === "/prototipo-figma" || pathname.startsWith("/prototipo-figma/")) return true;
 
   // Endpoints públicos de autenticación y sesión inicial (no requieren sesión previa)
   if (
