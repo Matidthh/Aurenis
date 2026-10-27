@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/modal";
 import { cn } from "@/lib/utils/cn";
 import { PasswordStrengthMeter } from "@/components/auth/password-strength-meter";
+import { signInWithGooglePopup } from "@/lib/auth/google-auth";
 
 interface DemoAccount {
   id: string;
@@ -632,8 +633,16 @@ function LoginContent() {
     }
   }
 
-  async function handleExecuteGoogleLogin(emailToUse: string) {
-    if (!emailToUse || !emailToUse.includes("@")) {
+  async function handleExecuteGoogleLogin({
+    email,
+    name,
+    idToken,
+  }: {
+    email: string;
+    name?: string | null;
+    idToken?: string;
+  }) {
+    if (!email || !email.includes("@")) {
       setGoogleError("Por favor ingresa un correo electrónico institucional de Google válido.");
       return;
     }
@@ -643,7 +652,12 @@ function LoginContent() {
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailToUse.trim() }),
+        body: JSON.stringify({
+          email: email.trim(),
+          name: name || undefined,
+          idToken: idToken || undefined,
+          schoolSlug: activeSchoolSlug,
+        }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
@@ -654,9 +668,9 @@ function LoginContent() {
         const rawUser = data.user;
         const sessionUser: any = {
           userId: rawUser.id || "user-" + Date.now(),
-          email: rawUser.email || emailToUse,
-          firstName: rawUser.name?.split(" ")[0] || "Google",
-          lastName: rawUser.name?.split(" ").slice(1).join(" ") || "User",
+          email: rawUser.email || email,
+          firstName: rawUser.firstName || rawUser.name?.split(" ")[0] || "Google",
+          lastName: rawUser.lastName || rawUser.name?.split(" ").slice(1).join(" ") || "User",
           isSystemAdmin: !!rawUser.isSystemAdmin,
           activeSchoolId: rawUser.activeSchool?.id,
           activeSchoolSlug: rawUser.activeSchool?.slug,
@@ -684,8 +698,36 @@ function LoginContent() {
     }
   }
 
+  async function handleGooglePopupLogin() {
+    setGoogleLoading(true);
+    setGoogleError(null);
+    try {
+      const result = await signInWithGooglePopup();
+      if (!result.ok) {
+        setGoogleError(result.error || "No se completó la autenticación con Google.");
+        setIsGoogleModalOpen(true);
+        setGoogleLoading(false);
+        return;
+      }
+
+      if (result.user?.email) {
+        await handleExecuteGoogleLogin({
+          email: result.user.email,
+          name: result.user.displayName,
+          idToken: result.idToken,
+        });
+      } else {
+        throw new Error("No se pudo obtener el correo asociado a tu cuenta de Google.");
+      }
+    } catch (err: unknown) {
+      setGoogleError(err instanceof Error ? err.message : "Error inesperado al conectar con Google.");
+      setIsGoogleModalOpen(true);
+      setGoogleLoading(false);
+    }
+  }
+
   function handleGoogleLogin() {
-    setIsGoogleModalOpen(true);
+    handleGooglePopupLogin();
   }
 
   return (
@@ -1124,11 +1166,21 @@ function LoginContent() {
           {/* Botón SSO: Continuar con Google */}
           <button
             type="button"
+            disabled={googleLoading || isLoading}
             onClick={handleGoogleLogin}
-            className="w-full h-11 sm:h-12 rounded-xl border border-[#E2E8F0] bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0F172A] font-medium text-sm transition-all flex items-center justify-center gap-2.5 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            className="w-full h-11 sm:h-12 rounded-xl border border-[#E2E8F0] bg-white hover:bg-slate-50 active:bg-slate-100 text-[#0F172A] font-medium text-sm transition-all flex items-center justify-center gap-2.5 shadow-2xs cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <GoogleIcon className="w-4 h-4" />
-            <span>Continuar con Google</span>
+            {googleLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-brand-600" />
+                <span>Conectando con Google...</span>
+              </>
+            ) : (
+              <>
+                <GoogleIcon className="w-4 h-4" />
+                <span>Continuar con Google</span>
+              </>
+            )}
           </button>
 
           {/* Enlace de Contacto Institucional */}
@@ -1289,6 +1341,39 @@ function LoginContent() {
               </div>
             )}
 
+            {/* Botón principal: Apertura interactiva de popup Google */}
+            <div>
+              <button
+                type="button"
+                disabled={googleLoading}
+                onClick={handleGooglePopupLogin}
+                className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium text-xs transition flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-60"
+              >
+                {googleLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Conectando con Google...</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-1 rounded bg-white">
+                      <GoogleIcon className="w-3.5 h-3.5" />
+                    </div>
+                    <span>Abrir ventana oficial de Google Sign-In</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="relative my-3 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200" />
+              </div>
+              <span className="relative bg-white px-2 text-[10px] uppercase font-semibold text-slate-400">
+                o ingresa tu correo institucional
+              </span>
+            </div>
+
             <div className="space-y-2">
               <label className="block text-xs font-medium text-slate-700">
                 Correo institucional Google Workspace
@@ -1304,8 +1389,8 @@ function LoginContent() {
                 <button
                   type="button"
                   disabled={googleLoading || !googleEmailInput}
-                  onClick={() => handleExecuteGoogleLogin(googleEmailInput)}
-                  className="h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-xs"
+                  onClick={() => handleExecuteGoogleLogin({ email: googleEmailInput })}
+                  className="h-10 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer shadow-xs"
                 >
                   {googleLoading ? (
                     <>
@@ -1333,7 +1418,7 @@ function LoginContent() {
                     disabled={googleLoading}
                     onClick={() => {
                       setGoogleEmailInput(acc.email);
-                      handleExecuteGoogleLogin(acc.email);
+                      handleExecuteGoogleLogin({ email: acc.email });
                     }}
                     className="w-full text-left px-3 py-2 rounded-lg bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition text-xs flex items-center justify-between text-slate-700 font-medium cursor-pointer"
                   >

@@ -148,7 +148,7 @@ const guardianUser: DemoUser = {
   ],
 };
 
-const DEMO_USERS: Record<string, DemoUser> = {
+export const DEMO_USERS: Record<string, DemoUser> = {
   "admin@aurenis.com": {
     id: "usr_system_admin_demo",
     email: "admin@aurenis.com",
