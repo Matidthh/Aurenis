@@ -208,6 +208,11 @@ export function LandingFooter() {
                 </div>
                 <ul className="space-y-2.5 text-sm text-slate-400">
                   <li>
+                    <Link href="/sobre-nosotros" className="hover:text-white transition-colors duration-150">
+                      Sobre Nosotros
+                    </Link>
+                  </li>
+                  <li>
                     <button
                       type="button"
                       onClick={() => openLegalModal("terms")}
@@ -428,47 +433,67 @@ export function LandingFooter() {
                   <div className="p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/20 text-blue-200 flex items-start gap-3">
                     <ShieldCheck className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                     <p className="text-xs leading-relaxed">
-                      AURENIS cumple los lineamientos de la <strong>Circular N° 482</strong> de la Superintendencia de Educación y las exigencias de la <strong>Ley N° 19.628</strong> sobre Protección de la Vida Privada.
+                      AURENIS (desarrollado por <strong>Softium Studios</strong>) cumple los lineamientos de la <strong>Circular N° 482</strong> de la Superintendencia de Educación y las exigencias de la <strong>Ley N° 19.628</strong> sobre Protección de la Vida Privada en Chile.
                     </p>
                   </div>
 
                   <div>
                     <h4 className="text-sm sm:text-base font-bold text-white mb-1.5 flex items-center gap-2">
                       <Lock className="w-4 h-4 text-emerald-400" />
-                      1. Protección Especial de Niños, Niñas y Adolescentes (NNA)
+                      1. Nuestro Compromiso
                     </h4>
                     <p className="text-slate-300">
-                      Reconocemos el carácter sensible de los datos escolares de menores de edad. Los registros académicos, conductuales y de asistencia son tratados bajo el principio de minimización de datos y reservados exclusivamente para fines pedagógicos e institucionales legítimos.
+                      Tratamos la información personal de forma responsable, transparente y limitada a finalidades autorizadas. La protección de los datos de estudiantes, docentes y apoderados forma parte indivisible del diseño arquitectónico de AURENIS.
                     </p>
                   </div>
 
                   <div>
                     <h4 className="text-sm sm:text-base font-bold text-white mb-1.5 flex items-center gap-2">
                       <Lock className="w-4 h-4 text-emerald-400" />
-                      2. Aislamiento Multi-Tenant (Protección BOLA / IDOR)
+                      2. Información que Puede Tratarse
                     </h4>
                     <p className="text-slate-300">
-                      La base de datos relacional y las rutas de API aíslan rigurosamente la información por identificador de colegio (schoolId). Ningún usuario, directivo o estudiante de un establecimiento puede acceder, consultar o inferir datos de otro colegio.
+                      Datos de identificación (nombre, identificador institucional), datos de acceso (credenciales criptográficas bcryptjs), registros académicos bajo Decreto 67 (calificaciones, asistencia) y datos técnicos de sesión estrictamente operacionales.
                     </p>
                   </div>
 
                   <div>
                     <h4 className="text-sm sm:text-base font-bold text-white mb-1.5 flex items-center gap-2">
                       <Lock className="w-4 h-4 text-emerald-400" />
-                      3. Confidencialidad y No Comercialización
+                      3. Finalidades del Tratamiento
                     </h4>
                     <p className="text-slate-300">
-                      Bajo ninguna circunstancia AURENIS vende, arrienda, comercializa o cede datos escolares a terceras partes con fines comerciales o publicitarios. La información pertenece en su totalidad al establecimiento educacional y a su comunidad escolar.
+                      Uso exclusivo para la gestión académica escolar contratada. Prohibición estricta de publicidad personalizada, comercialización o venta de datos de menores de edad (NNA).
                     </p>
                   </div>
 
                   <div>
                     <h4 className="text-sm sm:text-base font-bold text-white mb-1.5 flex items-center gap-2">
                       <Lock className="w-4 h-4 text-emerald-400" />
-                      4. Derechos de Acceso y Rectificación
+                      4. Responsabilidades: Establecimiento y AURENIS / Softium Studios
                     </h4>
                     <p className="text-slate-300">
-                      Apoderados y directivos debidamente acreditados pueden solicitar la rectificación de antecedentes a través del equipo directivo de su colegio o directamente al correo <strong className="text-white">contact@aurenis.app</strong>.
+                      El colegio define las finalidades legítimas como Responsable del Tratamiento. AURENIS y el equipo técnico de Softium Studios actúan como Encargados del Tratamiento (Data Processor) bajo directrices oficiales.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm sm:text-base font-bold text-white mb-1.5 flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-emerald-400" />
+                      5. Acceso RBAC, Aislamiento Multi-Tenant y Seguridad
+                    </h4>
+                    <p className="text-slate-300">
+                      Aislamiento lógico por colegio (schoolId) contra vulnerabilidades BOLA/IDOR, cifrado de comunicaciones TLS/HTTPS, control riguroso de roles y auditoría inmutable de calificaciones.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-sm sm:text-base font-bold text-white mb-1.5 flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-emerald-400" />
+                      6. Derechos, Solicitudes y Contacto
+                    </h4>
+                    <p className="text-slate-300">
+                      Titulares y apoderados pueden ejercer derechos de acceso y rectificación directamente a través del colegio o al correo oficial: <strong className="text-white">contact@aurenis.app</strong>.
                     </p>
                   </div>
                 </div>
@@ -476,11 +501,14 @@ export function LandingFooter() {
             </div>
 
             {/* Footer del Modal */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800 bg-[#0B1A38]/90">
-              <span className="text-xs text-slate-400 flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-blue-400" />
-                Vigencia: Año Escolar 2026
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-t border-slate-800 bg-[#0B1A38]/90">
+              <Link
+                href="/privacidad"
+                onClick={() => setLegalModalOpen(false)}
+                className="text-xs text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-4"
+              >
+                Ver texto legal completo de la política (12 puntos)
+              </Link>
               <button
                 type="button"
                 onClick={() => setLegalModalOpen(false)}

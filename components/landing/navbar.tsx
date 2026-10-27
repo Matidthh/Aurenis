@@ -55,6 +55,10 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
 
   function handleScrollTo(id: string) {
     setIsMobileMenuOpen(false);
+    if (typeof window !== "undefined" && window.location.pathname !== "/") {
+      window.location.href = `/#${id}`;
+      return;
+    }
     if (id === "inicio") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -128,7 +132,12 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
           >
             FAQ
           </button>
-
+          <Link
+            href="/sobre-nosotros"
+            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02]"
+          >
+            Sobre Nosotros
+          </Link>
         </nav>
 
         {/* 3. Acciones del Header: Iniciar sesión + Botón Cotizar/Demo */}
@@ -181,9 +190,9 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
       {mounted && isMobileMenuOpen && (
         <div
           id="navbar-mobile-drawer"
-          className="md:hidden fixed inset-x-0 top-[65px] bottom-0 bg-white/98 dark:bg-slate-900/98 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 p-6 overflow-y-auto flex flex-col justify-between z-50 animate-in fade-in slide-in-from-top-4 duration-200"
+          className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-6 flex flex-col z-[60] animate-in fade-in slide-in-from-top-4 duration-200 min-h-[calc(100vh-65px)] overflow-y-auto"
         >
-          <div className="space-y-3">
+          <div className="space-y-3 pb-6 border-b border-slate-200 dark:border-slate-800">
             <button
               onClick={() => handleScrollTo("problema-solucion")}
               className="w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-slate-900 dark:text-white hover:bg-blue-50 dark:hover:bg-slate-800 transition cursor-pointer"
@@ -208,10 +217,16 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
             >
               FAQ
             </button>
-
+            <Link
+              href="/sobre-nosotros"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-left py-2.5 px-3 rounded-xl text-base font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+            >
+              Sobre Nosotros
+            </Link>
           </div>
 
-          <div className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="pt-6 space-y-3">
             <Link href="/login?school=lpmm" onClick={() => setIsMobileMenuOpen(false)} className="block w-full">
               <Button variant="outline" className="w-full justify-center py-3 text-sm font-semibold">
                 Iniciar sesión

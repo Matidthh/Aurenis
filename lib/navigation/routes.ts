@@ -312,6 +312,7 @@ export function isPublicRoute(pathname: string): boolean {
   if (pathname === "/login" || pathname.startsWith("/login/")) return true;
   if (pathname === "/forgot-password" || pathname.startsWith("/forgot-password/")) return true;
   if (pathname === "/reset-password" || pathname.startsWith("/reset-password/")) return true;
+  if (pathname === "/sobre-nosotros" || pathname.startsWith("/sobre-nosotros/")) return true;
 
   // Endpoints públicos de autenticación y sesión inicial (no requieren sesión previa)
   if (
