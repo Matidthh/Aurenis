@@ -40,6 +40,7 @@ const RESERVED_ROOT_PATHS = new Set([
   "contact",
   "resenas",
   "asistencia",
+  "sobre-nosotros",
 ]);
 
 /**
