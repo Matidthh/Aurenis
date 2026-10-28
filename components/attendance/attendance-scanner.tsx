@@ -244,7 +244,7 @@ export function AttendanceScanner({ schoolSlug }: AttendanceScannerProps) {
                 ) : (
                   <Button
                     onClick={stopCamera}
-                    variant="destructive"
+                    variant="danger"
                     className="w-full rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2"
                   >
                     <VideoOff className="w-4 h-4" />
