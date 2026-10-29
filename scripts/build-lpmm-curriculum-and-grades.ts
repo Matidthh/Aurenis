@@ -145,7 +145,7 @@ function getSubjectTeacher(courseCode: string, rawSubj: string, category: "Plan 
       return { name: "Prof. Juan Gutiérrez", email: "juan.gutierrez@edumargamarga.gob.cl" };
     }
     if (rawSubj.includes("ADM. BBDD")) {
-      return { name: "Prof. Julio Molina", email: "julio.molina@edumargamarga.gob.cl" };
+      return { name: "Prof. Julio Molina", email: "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL" };
     }
     if (rawSubj.includes("EMPRENDIMIENTO")) {
       return { name: "Prof. Marisol García", email: "marisol.garcia@edumargamarga.gob.cl" };
