@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^7.10.0",
     "@types/jszip": "^3.4.1",
     "@upstash/ratelimit": "^2.2.0",
     "@upstash/redis": "^1.38.4",
