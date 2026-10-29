@@ -41,7 +41,7 @@ export interface AnnouncementItem {
 
 interface AnnouncementsProps {
   schoolSlug: string;
-  userRole?: "ESTUDIANTE" | "DOCENTE" | "DIRECTIVO" | "APODERADO";
+  userRole?: "ESTUDIANTE" | "DOCENTE" | "DIRECTIVO" | "APODERADO" | "CONVIVENCIA" | string;
   userName?: string;
   onSelectAnnouncement?: (announcement: AnnouncementItem) => void;
 }
@@ -147,8 +147,8 @@ export function Announcements({
     }
   }, [announcements, storageKey]);
 
-  // Can post check (Teachers, Directors, Staff)
-  const canPost = userRole === "DOCENTE" || userRole === "DIRECTIVO" || userRole === "APODERADO";
+  // Can post check (Teachers, Directors, Convivencia, Staff)
+  const canPost = userRole === "DOCENTE" || userRole === "DIRECTIVO" || userRole === "APODERADO" || userRole === "CONVIVENCIA";
 
   // Post new announcement
   const handlePostAnnouncement = (newAnn: {

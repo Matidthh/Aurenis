@@ -134,7 +134,7 @@ export function listAvailableDemoStudents(): {
     "gianella.ahumada@lpmm.cl", // 1° Medio A
     "carmen.baleizan@lpmm.cl", // 3° Medio A (Párvulos)
     "nallely.caicea@lpmm.cl", // 3° Medio C (Enfermería)
-    "priscila.abarca@lpmm.cl", // 4° Medio E (Programación)
+    "Priscila.abarcaveliz@gmail.com", // 4° Medio E (Programación)
   ];
 
   return sampledKeys.map((email) => {

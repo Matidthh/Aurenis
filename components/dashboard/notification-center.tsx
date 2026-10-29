@@ -45,7 +45,7 @@ export interface NotificationItem {
 
 interface NotificationCenterProps {
   schoolSlug: string;
-  userRole?: "ESTUDIANTE" | "DOCENTE" | "DIRECTIVO" | "APODERADO";
+  userRole?: "ESTUDIANTE" | "DOCENTE" | "DIRECTIVO" | "APODERADO" | "CONVIVENCIA" | string;
   userName?: string;
 }
 
