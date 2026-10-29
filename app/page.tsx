@@ -1,5 +1,7 @@
-import { redirect } from "next/navigation";
+import { LandingClientPage } from "@/components/landing/landing-client-page";
 
 export default function HomePage() {
-  redirect("/lpmm");
+  return <LandingClientPage />;
 }
+
+

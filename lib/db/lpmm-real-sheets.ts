@@ -18580,7 +18580,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Labraña Olmos Jessy Ximena",
       "firstName": "Jessy Ximena",
       "lastName": "Labraña Olmos",
-      "email": "jessylabraña5@gmail.com",
+      "email": "jessy.labrana@lpmm.cl",
       "rut": "22.369.002-2",
       "notes": [
         6.4,
@@ -18654,7 +18654,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "López Añasco Alejandra Constanza",
       "firstName": "Alejandra Constanza",
       "lastName": "López Añasco",
-      "email": "lopezalecco@gmail.com",
+      "email": "alejandra.lopez@lpmm.cl",
       "rut": "22.369.003-3",
       "notes": [
         6.7,
@@ -18730,7 +18730,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Martínez Valdebenito Jean Ignacio",
       "firstName": "Jean Ignacio",
       "lastName": "Martínez Valdebenito",
-      "email": "jeancp7777m@gmail.com",
+      "email": "jean.martinez@lpmm.cl",
       "rut": "22.369.004-4",
       "notes": [
         6,
@@ -18879,7 +18879,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Mardones Diego Ignacio",
       "firstName": "Diego Ignacio",
       "lastName": "Núñez Mardones",
-      "email": "diegoking288@gmail.com",
+      "email": "diego.nunez@lpmm.cl",
       "rut": "22.369.006-6",
       "notes": [
         4.3,
@@ -18956,7 +18956,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ponce Figueroa Vicente Andrés",
       "firstName": "Vicente Andrés",
       "lastName": "Ponce Figueroa",
-      "email": "vixitoPoncefigueroa2009@gmail.com",
+      "email": "vicente.ponce@lpmm.cl",
       "rut": "22.369.007-7",
       "notes": [
         5.8,
@@ -19033,7 +19033,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ramírez Ibarra Benjamín Antonio",
       "firstName": "Benjamín Antonio",
       "lastName": "Ramírez Ibarra",
-      "email": "benjaminramirez821292@gmail.com",
+      "email": "benjamin.ramirez@lpmm.cl",
       "rut": "22.369.008-8",
       "notes": [
         5.7,
@@ -19108,7 +19108,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Rivero Lobos Maitthe Belén",
       "firstName": "Maitthe Belén",
       "lastName": "Rivero Lobos",
-      "email": "Xulimai.lobos@gmail.com",
+      "email": "maitthe.rivero@lpmm.cl",
       "rut": "22.369.009-9",
       "notes": [
         5,
@@ -19185,7 +19185,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ruiz Espinoza Martín Adolfo",
       "firstName": "Martín Adolfo",
       "lastName": "Ruiz Espinoza",
-      "email": "marvizgasparcabrales@gmail.com",
+      "email": "martin.ruiz@lpmm.cl",
       "rut": "22.369.010-0",
       "notes": [
         4.3,
@@ -19262,7 +19262,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Ruiz Sáez Christopher Damián",
       "firstName": "Christopher Damián",
       "lastName": "Ruiz Sáez",
-      "email": "niamexdxd@gmail.com",
+      "email": "christopher.ruiz@lpmm.cl",
       "rut": "22.369.011-1",
       "notes": [
         7,
@@ -19340,7 +19340,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Sanhueza Cabello Miguel Jesus",
       "firstName": "Miguel Jesus",
       "lastName": "Sanhueza Cabello",
-      "email": "miguel2+sanhueza@gmail.com",
+      "email": "miguel.sanhueza@lpmm.cl",
       "rut": "22.369.012-2",
       "notes": [
         7,
@@ -19418,7 +19418,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Schiller Pérez Elías Joel",
       "firstName": "Elías Joel",
       "lastName": "Schiller Pérez",
-      "email": "treintiseisytreintiseisanny8@gmail.com",
+      "email": "elias.schiller@lpmm.cl",
       "rut": "22.369.013-3",
       "notes": [
         6.8,
@@ -19494,7 +19494,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vergara Olmos Matías Antonio",
       "firstName": "Matías Antonio",
       "lastName": "Vergara Olmos",
-      "email": "matiarelano602@gmail.com",
+      "email": "matias.vergara@lpmm.cl",
       "rut": "22.369.014-4",
       "notes": [
         5.8,
@@ -19570,7 +19570,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Vivanco Palacios Sergio Sebastián",
       "firstName": "Sergio Sebastián",
       "lastName": "Vivanco Palacios",
-      "email": "sergiovivanco345@gmail.com",
+      "email": "sergio.vivanco@lpmm.cl",
       "rut": "22.369.015-5",
       "notes": [
         5,
@@ -19647,7 +19647,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Varas López Felipe Benjamín",
       "firstName": "Felipe Benjamín",
       "lastName": "Varas López",
-      "email": "FELIPEVARALO12@GMAIL.COM",
+      "email": "felipe.varas@lpmm.cl",
       "rut": "22.369.016-6",
       "notes": [
         4.1,
@@ -19800,7 +19800,7 @@ export const LPMM_OFFICIAL_SHEETS_DATA: Record<
       "fullName": "Núñez Santibáñez Elías Moisés",
       "firstName": "Elías Moisés",
       "lastName": "Núñez Santibáñez",
-      "email": "en4832775@gmail.com",
+      "email": "elias.nunez@lpmm.cl",
       "rut": "22.369.018-8",
       "notes": [
         5.5,

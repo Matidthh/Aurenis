@@ -30,23 +30,9 @@ export async function requireTenantContext(schoolSlug: string): Promise<TenantCo
   const subscriptionInfo = matchedCatalog.subscription;
   const isSuspended = matchedCatalog.status === "SUSPENDED" || subscriptionInfo.status === "SUSPENDED_PAYMENT";
 
-  // Si no hay sesión activa, proveer contexto demo institucional activo para exploración fluida
+  // Si no hay sesión activa, redirigir limpiamente al inicio de sesión institucional
   if (!session) {
-    return {
-      schoolId: matchedCatalog.id,
-      schoolSlug: matchedCatalog.slug,
-      schoolName: matchedCatalog.name,
-      subdomain: matchedCatalog.subdomain,
-      customDomain: matchedCatalog.customDomain,
-      userId: "usr_demo_active",
-      membershipId: "mem_demo_active",
-      roleName: "SCHOOL_ADMIN",
-      permissions: ["*"],
-      timezone: "America/Santiago",
-      isSuspended,
-      suspensionReason: isSuspended ? "Suscripción institucional suspendida por pago pendiente." : null,
-      subscription: subscriptionInfo,
-    };
+    redirect(`/login?school=${encodeURIComponent(schoolSlug)}`);
   }
 
   // Si el usuario es SystemAdmin, tiene acceso irrestricto de inspección

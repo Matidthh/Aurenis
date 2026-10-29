@@ -266,9 +266,13 @@ function enforceTenantIsolation({
       return unauthRes;
     }
 
-    // Permitir acceso público / modo demo a la interfaz de usuario del tenant
+    // Permitir acceso público a la página de bienvenida / portal institucional del colegio
     const canonicalTarget = SUBDOMAIN_TO_SLUG_ALIASES[targetIdentifier] || targetIdentifier;
-    if (!RESERVED_ROOT_PATHS.has(targetIdentifier)) {
+    if (
+      pathname === "/" ||
+      pathname === `/${targetIdentifier}` ||
+      pathname === `/${canonicalTarget}`
+    ) {
       return null;
     }
 
