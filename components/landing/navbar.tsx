@@ -82,8 +82,8 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
       className={cn(
         "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300",
         mounted && isScrolled
-          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm border-b border-slate-200/90 dark:border-slate-800/90 py-3.5"
-          : "bg-[#F8F8F5]/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/60 py-4"
+          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/90 py-3.5"
+          : "bg-white/90 backdrop-blur-md border-b border-slate-200/60 py-4"
       )}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-between">
@@ -101,7 +101,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
           >
             <AurenisLogo
               className="w-10 h-10 sm:w-11 sm:h-11"
-              textClassName="text-slate-900 dark:text-white text-lg sm:text-xl font-black tracking-tight"
+              textClassName="text-slate-900 text-lg sm:text-xl font-black tracking-tight"
             />
           </Link>
         </div>
@@ -110,31 +110,31 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
         <nav className="hidden md:flex items-center gap-6 lg:gap-8" aria-label="Navegación principal">
           <button
             onClick={() => handleScrollTo("problema-solucion")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+            className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Gestión Docente
           </button>
           <button
             onClick={() => handleScrollTo("migracion")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+            className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Migración
           </button>
           <button
             onClick={() => handleScrollTo("planes")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+            className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-all hover:scale-[1.02] cursor-pointer"
           >
             Planes
           </button>
           <button
             onClick={() => handleScrollTo("faq")}
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02] cursor-pointer"
+            className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-all hover:scale-[1.02] cursor-pointer"
           >
             FAQ
           </button>
           <Link
             href="/sobre-nosotros"
-            className="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-[1.02]"
+            className="text-sm font-semibold text-slate-700 hover:text-blue-600 transition-all hover:scale-[1.02]"
           >
             Sobre Nosotros
           </Link>
@@ -147,7 +147,7 @@ export function LandingNavbar({ onOpenDemoModal, onOpenQuoteModal }: LandingNavb
               id="navbar-btn-login"
               variant="outline"
               size="sm"
-              className="hidden sm:inline-flex rounded-xl text-xs font-semibold px-4 py-2"
+              className="hidden sm:inline-flex rounded-xl text-xs font-semibold px-4 py-2 text-slate-700"
             >
               Iniciar sesión
             </Button>

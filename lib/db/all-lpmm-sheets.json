@@ -22347,9 +22347,11 @@
           "INGLÉS": [
             6.9,
             7,
-            7
+            7,
+            6.5
           ],
           "MATEMÁTICA": [
+            1,
             1,
             1
           ],
@@ -22362,6 +22364,7 @@
           "ED. CIUDADANA": [
             7,
             7,
+            7,
             7
           ],
           "FILOSOFÍA": [
@@ -22369,12 +22372,15 @@
             6.6,
             3,
             7,
-            6.4
+            6.4,
+            2.7
           ],
           "ELECTIVO": [
             5.7,
             6.5,
-            5.4
+            5.4,
+            2,
+            2
           ],
           "PROGRAMACIÓN BBDD": [
             6,
@@ -22387,39 +22393,47 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             4.5,
             6.5,
+            6,
             6
           ],
           "SISTEMA OPERATIVO": [
             7,
             6.3,
-            5
+            5,
+            4,
+            6,
+            1.8
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             6.6,
             6.1,
             6.5,
-            6
+            6,
+            6,
+            7
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             6.3,
             6.3,
             6.4,
-            3
+            3,
+            4.1,
+            3.9
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 5.5,
-          "INGLÉS": 6.9,
+          "INGLÉS": 6.5,
           "MATEMÁTICA": 1,
           "CS. CIUDADANÍA": 5,
           "ED. CIUDADANA": 7,
-          "FILOSOFÍA": 6.4,
-          "ELECTIVO": 5.8,
+          "FILOSOFÍA": 4.5,
+          "ELECTIVO": 2,
           "PROGRAMACIÓN BBDD": 3.9,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.6,
-          "SISTEMA OPERATIVO": 6.1,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.3,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 3
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6,
+          "SISTEMA OPERATIVO": 3.9,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.5,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 3.6
         }
       },
       {
@@ -22439,7 +22453,8 @@
           "INGLÉS": [
             7,
             7,
-            7
+            7,
+            6.8
           ],
           "MATEMÁTICA": [
             4.2,
@@ -22454,16 +22469,20 @@
           "ED. CIUDADANA": [
             7,
             6.7,
-            6.4
+            6.4,
+            7
           ],
           "FILOSOFÍA": [
             2,
             6.6,
             6.4,
             7,
-            6.4
+            6.4,
+            5.6
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -22479,9 +22498,13 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             7,
+            7,
             7
           ],
           "SISTEMA OPERATIVO": [
+            7,
+            7,
+            7,
             7,
             7
           ],
@@ -22489,28 +22512,31 @@
             5.8,
             7,
             6,
-            5.5
+            5.5,
+            6,
+            6.3
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             7,
             6.5,
-            5.2
+            5.2,
+            7
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 6.5,
-          "INGLÉS": 7,
+          "INGLÉS": 6.8,
           "MATEMÁTICA": 4.6,
           "CS. CIUDADANÍA": 6.5,
-          "ED. CIUDADANA": 6.7,
-          "FILOSOFÍA": 6.4,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 6,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 7,
           "SOPORTE USUARIO Y PRODUCTIVIDAD": 7,
           "SISTEMA OPERATIVO": 7,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 5.2
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.1,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.1
         }
       },
       {
@@ -22530,12 +22556,14 @@
           "INGLÉS": [
             6.4,
             6.8,
-            7
+            7,
+            6.8
           ],
           "MATEMÁTICA": [
             5.6,
             6.1,
-            6.2
+            6.2,
+            7
           ],
           "CS. CIUDADANÍA": [
             5.3,
@@ -22546,16 +22574,21 @@
           "ED. CIUDADANA": [
             6,
             7,
-            6.4
+            6.4,
+            7
           ],
           "FILOSOFÍA": [
             6.6,
             7,
             7,
             7,
+            7,
+            4.1,
             7
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -22571,7 +22604,8 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             6.5,
-            6
+            6,
+            7
           ],
           "SISTEMA OPERATIVO": [
             7,
@@ -22582,28 +22616,33 @@
             6.4,
             7,
             7,
-            5.1
+            5.1,
+            5.5,
+            7,
+            6.7
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             6.1,
             7,
-            7
+            7,
+            7,
+            5.1
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 6.5,
-          "INGLÉS": 6.7,
-          "MATEMÁTICA": 5.9,
+          "INGLÉS": 6.8,
+          "MATEMÁTICA": 7,
           "CS. CIUDADANÍA": 7,
-          "ED. CIUDADANA": 6.4,
-          "FILOSOFÍA": 7,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 6,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.5,
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 7,
           "SISTEMA OPERATIVO": 7,
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.4,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 7
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.3
         }
       },
       {
@@ -22623,12 +22662,14 @@
           "INGLÉS": [
             6.5,
             6.8,
-            7
+            7,
+            6.8
           ],
           "MATEMÁTICA": [
             4.6,
             6.6,
-            6.5
+            6.5,
+            7
           ],
           "CS. CIUDADANÍA": [
             4,
@@ -22639,19 +22680,24 @@
           "ED. CIUDADANA": [
             7,
             7,
-            5.5
+            5.5,
+            7
           ],
           "FILOSOFÍA": [
             5.5,
             6.8,
             7,
             7,
-            6.7
+            6.7,
+            4.1,
+            7
           ],
           "ELECTIVO": [
             6.7,
             7,
-            7
+            7,
+            7,
+            2
           ],
           "PROGRAMACIÓN BBDD": [
             5.5,
@@ -22664,40 +22710,48 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             6,
             4,
-            6
+            6,
+            5.5
           ],
           "SISTEMA OPERATIVO": [
             7,
             6.5,
-            6.5
+            6.5,
+            5.5,
+            5,
+            5
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             5.8,
             7,
             6.8,
             5.2,
-            5.2
+            5.2,
+            5.3,
+            5.8
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             5.8,
             6.5,
             6.4,
-            4.5
+            4.5,
+            4.7,
+            5.7
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 5.7,
-          "INGLÉS": 6.7,
-          "MATEMÁTICA": 5.9,
+          "INGLÉS": 6.8,
+          "MATEMÁTICA": 7,
           "CS. CIUDADANÍA": 7,
-          "ED. CIUDADANA": 6.5,
-          "FILOSOFÍA": 6.7,
-          "ELECTIVO": 6.9,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 5.9,
+          "ELECTIVO": 4.5,
           "PROGRAMACIÓN BBDD": 4.1,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.3,
-          "SISTEMA OPERATIVO": 6.6,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.5
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.5,
+          "SISTEMA OPERATIVO": 5.1,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.5,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.9
         }
       },
       {
@@ -22715,12 +22769,14 @@
           "INGLÉS": [
             6.9,
             7,
-            6.8
+            6.8,
+            7
           ],
           "MATEMÁTICA": [
             4.2,
             5.1,
-            5.7
+            5.7,
+            2.5
           ],
           "CS. CIUDADANÍA": [
             4.5,
@@ -22731,13 +22787,15 @@
           "ED. CIUDADANA": [
             6,
             6.5,
-            7
+            7,
+            6.5
           ],
           "FILOSOFÍA": [
             6,
             7,
             6.4,
-            6
+            6,
+            7
           ],
           "ELECTIVO": [
             6,
@@ -22755,39 +22813,48 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             4,
+            5,
             5
           ],
           "SISTEMA OPERATIVO": [
             7,
             3,
-            4
+            4,
+            5,
+            4,
+            1.8
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             6.8,
             4.1,
             4,
             4,
-            4.1
+            4.1,
+            4,
+            5.3,
+            6.4
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             5.8,
             6.5,
             6,
+            7,
+            7,
             7
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 6.3,
-          "INGLÉS": 6.9,
-          "MATEMÁTICA": 5,
+          "INGLÉS": 7,
+          "MATEMÁTICA": 2.5,
           "CS. CIUDADANÍA": 6.5,
           "ED. CIUDADANA": 6.5,
-          "FILOSOFÍA": 6.3,
+          "FILOSOFÍA": 7,
           "ELECTIVO": 6.5,
           "PROGRAMACIÓN BBDD": 7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.3,
-          "SISTEMA OPERATIVO": 4.6,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 4.6,
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5,
+          "SISTEMA OPERATIVO": 3.6,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.2,
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 7
         }
       },
@@ -22808,12 +22875,14 @@
           "INGLÉS": [
             4,
             6.8,
-            6
+            6,
+            7
           ],
           "MATEMÁTICA": [
             3.6,
             6,
-            6.3
+            6.3,
+            1.7
           ],
           "CS. CIUDADANÍA": [
             3.5,
@@ -22824,7 +22893,8 @@
           "ED. CIUDADANA": [
             5.5,
             7,
-            4
+            4,
+            7
           ],
           "FILOSOFÍA": [
             5,
@@ -22836,7 +22906,9 @@
           "ELECTIVO": [
             6,
             6.5,
-            6
+            6,
+            2,
+            2
           ],
           "PROGRAMACIÓN BBDD": [
             6.3,
@@ -22849,38 +22921,47 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             6,
             4,
-            6
+            6,
+            5.5
           ],
           "SISTEMA OPERATIVO": [
             7,
             6.5,
-            5
+            5,
+            4,
+            4,
+            3
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             5.2,
             5.1,
             5.8,
             5,
-            4.9
+            4.9,
+            3.8,
+            5.6,
+            6.4
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             6.6,
             6.1,
             6.6,
-            4.6
+            4.6,
+            6.5,
+            2.7
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 2.7,
-          "INGLÉS": 5.6,
-          "MATEMÁTICA": 5.3,
+          "INGLÉS": 7,
+          "MATEMÁTICA": 1.7,
           "CS. CIUDADANÍA": 6,
-          "ED. CIUDADANA": 5.5,
+          "ED. CIUDADANA": 7,
           "FILOSOFÍA": 5.8,
-          "ELECTIVO": 6.1,
+          "ELECTIVO": 2,
           "PROGRAMACIÓN BBDD": 6.2,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.3,
-          "SISTEMA OPERATIVO": 6.1,
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.5,
+          "SISTEMA OPERATIVO": 3.6,
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.2,
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.6
         }
@@ -22902,12 +22983,14 @@
           "INGLÉS": [
             6.9,
             6.8,
+            7,
             7
           ],
           "MATEMÁTICA": [
             6.6,
             6.6,
-            6.3
+            6.3,
+            6.8
           ],
           "CS. CIUDADANÍA": [
             4.3,
@@ -22918,16 +23001,21 @@
           "ED. CIUDADANA": [
             6,
             7,
-            6.4
+            6.4,
+            7
           ],
           "FILOSOFÍA": [
             6.8,
             7,
             7,
             7,
-            6.7
+            6.7,
+            5.6,
+            7
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -22943,40 +23031,50 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             7,
-            7
+            7,
+            7,
+            6.3
           ],
           "SISTEMA OPERATIVO": [
             7,
             7,
-            7
+            7,
+            5,
+            6,
+            6.5
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             7,
             5.1,
             6.5,
             7,
-            7
+            7,
+            6,
+            6.3,
+            5.3
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             6.6,
             7,
             7,
-            4
+            4,
+            7,
+            6.2
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 3.6,
-          "INGLÉS": 6.9,
-          "MATEMÁTICA": 6.5,
+          "INGLÉS": 7,
+          "MATEMÁTICA": 6.8,
           "CS. CIUDADANÍA": 7,
-          "ED. CIUDADANA": 6.4,
-          "FILOSOFÍA": 6.7,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 6.4,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 7,
-          "SISTEMA OPERATIVO": 7,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.5,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.6,
+          "SISTEMA OPERATIVO": 5.8,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.8,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 5.7
         }
       },
       {
@@ -23001,7 +23099,8 @@
           "MATEMÁTICA": [
             5,
             5,
-            6
+            6,
+            3.7
           ],
           "CS. CIUDADANÍA": [
             4.8,
@@ -23012,13 +23111,16 @@
           "ED. CIUDADANA": [
             5.5,
             6,
-            5.7
+            5.7,
+            6.5
           ],
           "FILOSOFÍA": [
             5.5,
             6.6,
             6,
-            7
+            7,
+            6.7,
+            6.7
           ],
           "ELECTIVO": [
             6,
@@ -23036,40 +23138,48 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             5.5,
             5.5,
+            6,
             6
           ],
           "SISTEMA OPERATIVO": [
             7,
             5.5,
-            6
+            6,
+            6,
+            6,
+            7
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             6,
             3.9,
             5.5,
             4.5,
-            5.6
+            5.6,
+            5,
+            6.1
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             6.6,
             7,
-            5.8
+            5.8,
+            6.7,
+            5.9
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 6,
           "INGLÉS": 6.6,
-          "MATEMÁTICA": 5.3,
+          "MATEMÁTICA": 3.7,
           "CS. CIUDADANÍA": 6.3,
-          "ED. CIUDADANA": 5.7,
-          "FILOSOFÍA": 6.2,
+          "ED. CIUDADANA": 6.5,
+          "FILOSOFÍA": 6.7,
           "ELECTIVO": 6,
           "PROGRAMACIÓN BBDD": 6.6,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.6,
-          "SISTEMA OPERATIVO": 6.1,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.1,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 5.8
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6,
+          "SISTEMA OPERATIVO": 6.3,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.5,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.1
         }
       },
       {
@@ -23089,12 +23199,14 @@
           "INGLÉS": [
             5.8,
             6.8,
-            5
+            5,
+            6.8
           ],
           "MATEMÁTICA": [
             4.8,
             4.8,
-            5.3
+            5.3,
+            3.7
           ],
           "CS. CIUDADANÍA": [
             1.5,
@@ -23105,14 +23217,16 @@
           "ED. CIUDADANA": [
             6.5,
             7,
-            6
+            6,
+            7
           ],
           "FILOSOFÍA": [
             5,
             6.8,
             3,
             7,
-            7
+            7,
+            3.6
           ],
           "ELECTIVO": [
             6,
@@ -23130,40 +23244,49 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             6,
-            7
+            7,
+            6
           ],
           "SISTEMA OPERATIVO": [
             7,
             6,
-            7
+            7,
+            4,
+            5,
+            4
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             6.3,
             6.9,
             6,
             7,
-            4.1
+            4.1,
+            5.5,
+            6.7,
+            7
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             6.6,
             5.7,
             7,
-            6.7
+            6.7,
+            4.5,
+            5.4
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 5,
-          "INGLÉS": 5.8,
-          "MATEMÁTICA": 4.9,
+          "INGLÉS": 6.8,
+          "MATEMÁTICA": 3.7,
           "CS. CIUDADANÍA": 5.5,
-          "ED. CIUDADANA": 6.5,
-          "FILOSOFÍA": 7,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 5.3,
           "ELECTIVO": 6.6,
           "PROGRAMACIÓN BBDD": 4,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.6,
-          "SISTEMA OPERATIVO": 6.6,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.7
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6,
+          "SISTEMA OPERATIVO": 4.3,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.4,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 5.5
         }
       },
       {
@@ -23183,12 +23306,14 @@
           "INGLÉS": [
             6.5,
             7,
-            7
+            7,
+            6.5
           ],
           "MATEMÁTICA": [
             1,
             2.6,
-            6
+            6,
+            3.8
           ],
           "CS. CIUDADANÍA": [
             4,
@@ -23199,14 +23324,16 @@
           "ED. CIUDADANA": [
             7,
             7,
-            6.7
+            6.7,
+            7
           ],
           "FILOSOFÍA": [
             4,
             6.5,
             5.5,
             5.3,
-            7
+            7,
+            4
           ],
           "ELECTIVO": [
             7,
@@ -23224,40 +23351,48 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             4,
             5.5,
-            5.5
+            5.5,
+            6.2
           ],
           "SISTEMA OPERATIVO": [
             7,
             7,
-            6.5
+            6.5,
+            7,
+            7,
+            6
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             5.5,
             7,
             6.8,
             5,
-            5.6
+            5.6,
+            3.8,
+            6.3,
+            6.4
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             4.5,
             5.8,
             7,
-            6.1
+            6.1,
+            6.4
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 3.3,
-          "INGLÉS": 6.8,
-          "MATEMÁTICA": 3.2,
+          "INGLÉS": 6.5,
+          "MATEMÁTICA": 3.8,
           "CS. CIUDADANÍA": 6.3,
-          "ED. CIUDADANA": 6.9,
-          "FILOSOFÍA": 7,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 5.5,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 6,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5,
-          "SISTEMA OPERATIVO": 6.8,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.9,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.1
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.2,
+          "SISTEMA OPERATIVO": 6.6,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.5,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.2
         }
       },
       {
@@ -23277,9 +23412,11 @@
           "INGLÉS": [
             7,
             7,
+            7,
             7
           ],
           "MATEMÁTICA": [
+            7,
             7,
             7,
             7
@@ -23293,16 +23430,20 @@
           "ED. CIUDADANA": [
             7,
             7,
-            6.7
+            6.7,
+            7
           ],
           "FILOSOFÍA": [
             7,
             7,
             7,
             7,
-            7
+            7,
+            6
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -23318,26 +23459,34 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             7,
-            7
+            7,
+            6.8
           ],
           "SISTEMA OPERATIVO": [
             7,
             7,
-            6.5
+            6.5,
+            6,
+            6,
+            6
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             7,
             6.4,
             7,
             4.5,
-            7
+            7,
+            6,
+            6,
+            5.8
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             7,
             7,
             6.4,
-            7
+            7,
+            6.2
           ]
         },
         "subjectAverages": {
@@ -23345,14 +23494,14 @@
           "INGLÉS": 7,
           "MATEMÁTICA": 7,
           "CS. CIUDADANÍA": 7,
-          "ED. CIUDADANA": 6.9,
-          "FILOSOFÍA": 7,
+          "ED. CIUDADANA": 7,
+          "FILOSOFÍA": 6.5,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 7,
-          "SISTEMA OPERATIVO": 6.8,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.3,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.7
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.8,
+          "SISTEMA OPERATIVO": 6,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.9,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.5
         }
       },
       {
@@ -23372,10 +23521,12 @@
           "INGLÉS": [
             7,
             7,
+            7,
             7
           ],
           "MATEMÁTICA": [
             6.5,
+            7,
             7,
             7
           ],
@@ -23395,9 +23546,12 @@
             7,
             7,
             7,
+            7,
             7
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -23413,9 +23567,14 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             6.5,
             6.5,
+            7,
+            7,
             7
           ],
           "SISTEMA OPERATIVO": [
+            7,
+            7,
+            7,
             7,
             7,
             7
@@ -23425,29 +23584,33 @@
             7,
             6.9,
             7,
-            5.9
+            5.9,
+            5.5,
+            6.7,
+            6.7
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             6.1,
             7,
             7,
-            7
+            7,
+            6.6
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 6.7,
           "INGLÉS": 7,
-          "MATEMÁTICA": 6.8,
+          "MATEMÁTICA": 7,
           "CS. CIUDADANÍA": 6.7,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.6,
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 7,
           "SISTEMA OPERATIVO": 7,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.7,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 7
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 6.3,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 6.8
         }
       },
       {
@@ -23467,12 +23630,14 @@
           "INGLÉS": [
             6.6,
             7,
+            7,
             7
           ],
           "MATEMÁTICA": [
             4,
             2.1,
-            4
+            4,
+            1.9
           ],
           "CS. CIUDADANÍA": [
             4.5,
@@ -23483,16 +23648,21 @@
           "ED. CIUDADANA": [
             6.6,
             7,
-            6.4
+            6.4,
+            6.5
           ],
           "FILOSOFÍA": [
             6.4,
             6.6,
             7,
             6,
-            6.4
+            6.4,
+            6.5,
+            7
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -23507,40 +23677,49 @@
           ],
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             6,
-            5
+            5,
+            6.6
           ],
           "SISTEMA OPERATIVO": [
             7,
             6.5,
-            7
+            7,
+            7,
+            7,
+            5
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             7,
             4.5,
             7,
             4,
-            4.5
+            4.5,
+            4,
+            6.3,
+            6.7
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             5.8,
             4,
             5,
-            4
+            4,
+            6,
+            4.5
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 5.3,
-          "INGLÉS": 6.8,
-          "MATEMÁTICA": 3.3,
+          "INGLÉS": 7,
+          "MATEMÁTICA": 1.9,
           "CS. CIUDADANÍA": 4.5,
-          "ED. CIUDADANA": 6.6,
-          "FILOSOFÍA": 6.4,
+          "ED. CIUDADANA": 6.5,
+          "FILOSOFÍA": 6.6,
           "ELECTIVO": 7,
           "PROGRAMACIÓN BBDD": 6,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 5.5,
-          "SISTEMA OPERATIVO": 6.8,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.4,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.6,
+          "SISTEMA OPERATIVO": 6.3,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.6,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.8
         }
       },
       {
@@ -23564,7 +23743,8 @@
           "MATEMÁTICA": [
             7,
             7,
-            7
+            7,
+            5.1
           ],
           "CS. CIUDADANÍA": [
             6.7,
@@ -23575,13 +23755,16 @@
           "ED. CIUDADANA": [
             6,
             7,
-            6.4
+            6.4,
+            6.5
           ],
           "FILOSOFÍA": [
             6,
             6.2,
             6.1,
             7,
+            7,
+            6.5,
             7
           ],
           "ELECTIVO": [
@@ -23600,11 +23783,15 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             6.5,
             6,
-            6
+            6,
+            6.5
           ],
           "SISTEMA OPERATIVO": [
             7,
             7,
+            6,
+            6,
+            6,
             6
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
@@ -23612,28 +23799,33 @@
             7,
             5.5,
             5,
-            5.6
+            5.6,
+            3.4,
+            6.3,
+            4.4
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             5.8,
             6.5,
-            4.6
+            4.6,
+            4.8,
+            3.9
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 4.3,
           "INGLÉS": 6.1,
-          "MATEMÁTICA": 7,
+          "MATEMÁTICA": 5.1,
           "CS. CIUDADANÍA": 6.3,
-          "ED. CIUDADANA": 6.4,
-          "FILOSOFÍA": 7,
+          "ED. CIUDADANA": 6.5,
+          "FILOSOFÍA": 6.8,
           "ELECTIVO": 6.7,
           "PROGRAMACIÓN BBDD": 3.8,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.1,
-          "SISTEMA OPERATIVO": 6.6,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.7,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.6
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.5,
+          "SISTEMA OPERATIVO": 6,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 4.7,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.4
         }
       },
       {
@@ -23653,7 +23845,8 @@
           "INGLÉS": [
             5.3,
             5.3,
-            6
+            6,
+            4.5
           ],
           "MATEMÁTICA": [
             5.6,
@@ -23676,7 +23869,8 @@
             4.5,
             7,
             6.3,
-            7
+            7,
+            6
           ],
           "ELECTIVO": [
             7,
@@ -23694,40 +23888,48 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             6,
             7,
-            6.5
+            6.5,
+            6
           ],
           "SISTEMA OPERATIVO": [
             7,
             7,
-            7
+            7,
+            7,
+            7,
+            5
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             5,
             3.4,
             7,
             6.5,
-            4
+            4,
+            5.3,
+            5.6
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             7,
             7,
             6.5,
-            2.3
+            2.3,
+            7,
+            6.63
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 4.8,
-          "INGLÉS": 5.5,
+          "INGLÉS": 4.5,
           "MATEMÁTICA": 5.9,
           "CS. CIUDADANÍA": 6,
           "ED. CIUDADANA": 6.2,
-          "FILOSOFÍA": 7,
+          "FILOSOFÍA": 6.5,
           "ELECTIVO": 6.5,
           "PROGRAMACIÓN BBDD": 7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.5,
-          "SISTEMA OPERATIVO": 7,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.1,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 2.3
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6,
+          "SISTEMA OPERATIVO": 6.3,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.4,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 5.3
         }
       },
       {
@@ -23747,7 +23949,8 @@
           "INGLÉS": [
             6,
             7,
-            7
+            7,
+            6.5
           ],
           "MATEMÁTICA": [
             3.5,
@@ -23763,7 +23966,8 @@
           "ED. CIUDADANA": [
             6.6,
             7,
-            6
+            6,
+            7
           ],
           "FILOSOFÍA": [
             6.3,
@@ -23782,45 +23986,55 @@
             1,
             4.1,
             4,
-            4.7
+            4.7,
+            4.8
           ],
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             5.5,
             4.3,
-            4
+            4,
+            6,
+            7
           ],
           "SISTEMA OPERATIVO": [
             7,
             3.5,
-            6.5
+            6.5,
+            4,
+            6,
+            7
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             5.5,
             7,
             5.8,
             6,
-            4.1
+            4.1,
+            5.6,
+            6.1
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             5.8,
             1,
             6.4,
-            4
+            4,
+            4.8,
+            5.8
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 3.7,
-          "INGLÉS": 6.6,
+          "INGLÉS": 6.5,
           "MATEMÁTICA": 2.6,
           "CS. CIUDADANÍA": 4.5,
-          "ED. CIUDADANA": 6.5,
+          "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 6.7,
           "PROGRAMACIÓN BBDD": 4.7,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 4.6,
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.5,
           "SISTEMA OPERATIVO": 5.6,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.6,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.8,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.8
         }
       },
       {
@@ -23840,12 +24054,14 @@
           "INGLÉS": [
             7,
             7,
-            7
+            7,
+            6
           ],
           "MATEMÁTICA": [
             1.2,
             3,
-            7
+            7,
+            3
           ],
           "CS. CIUDADANÍA": [
             2.8,
@@ -23863,12 +24079,15 @@
             6.5,
             7,
             7,
-            6.7
+            6.7,
+            6.3
           ],
           "ELECTIVO": [
             5.2,
             6.5,
-            4
+            4,
+            5.5,
+            5.5
           ],
           "PROGRAMACIÓN BBDD": [
             3.5,
@@ -23881,40 +24100,49 @@
           "SOPORTE USUARIO Y PRODUCTIVIDAD": [
             7,
             6,
-            6.5
+            6.5,
+            7
           ],
           "SISTEMA OPERATIVO": [
             7,
             5,
-            5.5
+            5.5,
+            5,
+            3,
+            4
           ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             5.9,
             6.4,
             6.5,
             6,
-            4.1
+            4.1,
+            3.7,
+            6.7,
+            5
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
             4.2,
             4.4,
             5.5,
-            5.8
+            5.8,
+            5.3,
+            2.7
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 4,
-          "INGLÉS": 7,
-          "MATEMÁTICA": 3.7,
+          "INGLÉS": 6,
+          "MATEMÁTICA": 3,
           "CS. CIUDADANÍA": 6,
           "ED. CIUDADANA": 7,
-          "FILOSOFÍA": 6.7,
-          "ELECTIVO": 5.2,
+          "FILOSOFÍA": 6.5,
+          "ELECTIVO": 5.5,
           "PROGRAMACIÓN BBDD": 5.1,
-          "SOPORTE USUARIO Y PRODUCTIVIDAD": 6.5,
-          "SISTEMA OPERATIVO": 5.8,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.7,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 5.8
+          "SOPORTE USUARIO Y PRODUCTIVIDAD": 7,
+          "SISTEMA OPERATIVO": 4,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.1,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.6
         }
       },
       {
@@ -23934,7 +24162,8 @@
           "INGLÉS": [
             5.3,
             6.8,
-            7
+            7,
+            6.8
           ],
           "CS. CIUDADANÍA": [
             3.2,
@@ -23944,7 +24173,8 @@
           ],
           "ED. CIUDADANA": [
             4,
-            6.7
+            6.7,
+            7
           ],
           "FILOSOFÍA": [
             3.2,
@@ -23963,27 +24193,37 @@
             1.5,
             3
           ],
+          "SISTEMA OPERATIVO": [
+            5,
+            4,
+            4
+          ],
           "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": [
             6,
             5.7,
             5.5,
             6.1,
-            5.2
+            5.2,
+            6,
+            4.4
           ],
           "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": [
-            4.9
+            4.9,
+            4,
+            2.9
           ]
         },
         "subjectAverages": {
           "LENGUAJE": 4.7,
-          "INGLÉS": 6.3,
+          "INGLÉS": 6.8,
           "CS. CIUDADANÍA": 5.3,
-          "ED. CIUDADANA": 5.3,
+          "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 6.3,
           "PROGRAMACIÓN BBDD": 2.8,
-          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.7,
-          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 4.9
+          "SISTEMA OPERATIVO": 4.3,
+          "INSTALACIÓN Y CONF. EQUIPOS INFORMÁTICOS": 5.2,
+          "INSTALACIÓN DE REDES DE ÁREA LOCAL E INALÁMBRICA": 3.9
         }
       }
     ]
@@ -29873,22 +30113,28 @@
         "subjectGrades": {
           "LENGUAJE": [
             7,
-            7
+            7,
+            6.5
           ],
           "INGLÉS": [
             6.4,
-            7
+            7,
+            6.6,
+            6.8
           ],
           "MATEMÁTICA": [
             6.3,
             6.5,
+            7,
             7
           ],
           "CS. CIUDADANÍA": [
             6.7,
             7,
             6.5,
-            5.4
+            7,
+            5.4,
+            7
           ],
           "ED. CIUDADANA": [
             6.7,
@@ -29908,57 +30154,81 @@
           "ELECTIVO": [
             7,
             7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6,
             5.9,
             6,
+            7,
+            5,
+            6.8,
+            7,
+            7,
             7
           ],
           "EMPRENDIMIENTO": [
             7,
             7,
-            6.8
+            6.8,
+            6.6,
+            7,
+            7,
+            7
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             7,
             7,
+            7,
+            6.5,
+            6.7,
+            6.6,
             7
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             6,
             6.1,
-            6.5
+            6.5,
+            6.5,
+            6.7,
+            6.6,
+            7
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             6.4,
             6.6,
-            6.8
+            6.8,
+            6.5,
+            6.7,
+            6.6,
+            7
           ],
           "ADM. BBDD": [
             7,
             7,
-            7
+            7,
+            6.5,
+            6.5
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 7,
+          "LENGUAJE": 6.5,
           "INGLÉS": 6.7,
-          "MATEMÁTICA": 6.6,
-          "CS. CIUDADANÍA": 5.4,
+          "MATEMÁTICA": 7,
+          "CS. CIUDADANÍA": 6.4,
           "ED. CIUDADANA": 6,
           "FILOSOFÍA": 7,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.2,
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.5,
           "EMPRENDIMIENTO": 6.9,
-          "PRO. ORIENTADA A OBJETO": 7,
-          "DISEÑO DE BBDD RELACIONADAS": 6.4,
+          "PRO. ORIENTADA A OBJETO": 6.7,
+          "DISEÑO DE BBDD RELACIONADAS": 6.7,
           "DISEÑO DE APLICACIONES WEB": 6.7,
-          "ADM. BBDD": 7
+          "ADM. BBDD": 6.5
         }
       },
       {
@@ -29967,37 +30237,51 @@
         "subjectGrades": {
           "LENGUAJE": [
             5.4,
-            4.5
+            4.5,
+            5.4
           ],
           "INGLÉS": [
             4.8,
-            4.8
+            4.8,
+            5.6,
+            5.3
           ],
           "MATEMÁTICA": [
             2,
+            1,
+            1,
             1
           ],
           "CS. CIUDADANÍA": [
             6.5,
             7,
             6,
-            4
+            4,
+            4,
+            1.8,
+            6.3
           ],
           "ED. CIUDADANA": [
             6.8,
             6,
-            6
+            6,
+            7
           ],
           "FILOSOFÍA": [
             5.3,
+            5.6,
+            5.6,
+            6,
             2,
-            6.2
+            6.2,
+            7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6.1,
             5.9,
             6.1,
-            6.2
+            6.2,
+            6.9
           ],
           "EMPRENDIMIENTO": [
             4.5,
@@ -30009,39 +30293,50 @@
             5.5,
             4.1,
             7,
-            6
+            6,
+            5.2,
+            6.1,
+            5.6
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             5.5,
             4.5,
             7,
-            5.8
+            5.8,
+            5.2,
+            6.1,
+            5.6
           ],
           "DISEÑO DE APLICACIONES WEB": [
             5.5,
             6.5,
             7,
-            6.5
+            6.5,
+            7,
+            6.1,
+            5.6
           ],
           "ADM. BBDD": [
             2.8,
             5.5,
-            6
+            6,
+            5.5,
+            7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.9,
-          "INGLÉS": 4.8,
-          "MATEMÁTICA": 1.5,
+          "LENGUAJE": 5.4,
+          "INGLÉS": 5.4,
+          "MATEMÁTICA": 1,
           "CS. CIUDADANÍA": 4,
-          "ED. CIUDADANA": 6,
-          "FILOSOFÍA": 4.1,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6,
+          "ED. CIUDADANA": 6.5,
+          "FILOSOFÍA": 5,
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.9,
           "EMPRENDIMIENTO": 6.2,
           "PRO. ORIENTADA A OBJETO": 5.6,
-          "DISEÑO DE BBDD RELACIONADAS": 5.7,
-          "DISEÑO DE APLICACIONES WEB": 6.3,
-          "ADM. BBDD": 4.7
+          "DISEÑO DE BBDD RELACIONADAS": 5.6,
+          "DISEÑO DE APLICACIONES WEB": 6.2,
+          "ADM. BBDD": 6.2
         }
       },
       {
@@ -30050,24 +30345,30 @@
         "subjectGrades": {
           "LENGUAJE": [
             4.3,
-            6.7
+            6.7,
+            6
           ],
           "INGLÉS": [
             4.6,
-            5.6
+            5.6,
+            6.2,
+            6
           ],
           "MATEMÁTICA": [
             5.8,
             4,
             7,
-            4.8
+            4.8,
+            7
           ],
           "CS. CIUDADANÍA": [
             6.3,
             7,
             6.3,
             6.1,
-            6.5
+            6.5,
+            4,
+            7
           ],
           "ED. CIUDADANA": [
             6.2,
@@ -30093,52 +30394,74 @@
             5.8,
             5.2,
             5.4,
-            6
+            6,
+            6.5,
+            6,
+            6.5,
+            6.8,
+            5.6
           ],
           "EMPRENDIMIENTO": [
             4.7,
             6.5,
             6.8,
-            7
+            7,
+            5.6,
+            5.3,
+            6
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             6,
             3.5,
-            5.8
+            5.8,
+            6.6,
+            6.6,
+            6,
+            5.9
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             3.6,
             6.4,
+            5.9,
+            6.6,
+            6.6,
+            6,
             5.9
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             4.1,
             5.9,
-            5.8
+            5.8,
+            6.6,
+            6.6,
+            6,
+            5.9
           ],
           "ADM. BBDD": [
             6.3,
             6.1,
-            7
+            7,
+            7,
+            6.5
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 5.5,
-          "INGLÉS": 5.1,
-          "MATEMÁTICA": 4.8,
-          "CS. CIUDADANÍA": 6.3,
+          "LENGUAJE": 6,
+          "INGLÉS": 6.1,
+          "MATEMÁTICA": 5.9,
+          "CS. CIUDADANÍA": 5.9,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 6.8,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.6,
-          "EMPRENDIMIENTO": 7,
-          "PRO. ORIENTADA A OBJETO": 5.5,
-          "DISEÑO DE BBDD RELACIONADAS": 5.7,
-          "DISEÑO DE APLICACIONES WEB": 5.7,
-          "ADM. BBDD": 6.4
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.2,
+          "EMPRENDIMIENTO": 5.9,
+          "PRO. ORIENTADA A OBJETO": 6.2,
+          "DISEÑO DE BBDD RELACIONADAS": 6.2,
+          "DISEÑO DE APLICACIONES WEB": 6.2,
+          "ADM. BBDD": 6.7
         }
       },
       {
@@ -30147,23 +30470,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             5.5,
-            6.8
+            6.8,
+            5.8
           ],
           "INGLÉS": [
             6.2,
-            7
+            7,
+            5.3,
+            4
           ],
           "MATEMÁTICA": [
             5.4,
             6.1,
             7,
-            2.1
+            2.1,
+            5.5,
+            4
           ],
           "CS. CIUDADANÍA": [
             4.7,
             7,
             5.3,
-            3.4
+            4,
+            3.4,
+            6.3,
+            7
           ],
           "ED. CIUDADANA": [
             6.7,
@@ -30183,58 +30514,81 @@
           "ELECTIVO": [
             7,
             7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6.4,
             5.2,
             4.8,
-            5.4
+            5.4,
+            5.8,
+            6,
+            6.7,
+            6.9,
+            7
           ],
           "EMPRENDIMIENTO": [
             5.1,
             7,
             6,
-            5.8
+            5.8,
+            7,
+            7,
+            7
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             6.5,
             7,
-            7
+            7,
+            6.5,
+            6.7,
+            5.5,
+            6.7
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             4.1,
             6.1,
-            6
+            6,
+            6.5,
+            6.7,
+            5.3,
+            6.7
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             4.5,
             5.5,
-            6
+            6,
+            6.5,
+            6.7,
+            5.3,
+            6.7
           ],
           "ADM. BBDD": [
             6.5,
             6,
+            7,
+            5.5,
             7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 6.1,
-          "INGLÉS": 6.6,
-          "MATEMÁTICA": 2.1,
-          "CS. CIUDADANÍA": 3.4,
+          "LENGUAJE": 5.8,
+          "INGLÉS": 4.6,
+          "MATEMÁTICA": 3.8,
+          "CS. CIUDADANÍA": 5.1,
           "ED. CIUDADANA": 6,
           "FILOSOFÍA": 4,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.4,
-          "EMPRENDIMIENTO": 5.8,
-          "PRO. ORIENTADA A OBJETO": 6.8,
-          "DISEÑO DE BBDD RELACIONADAS": 5.8,
-          "DISEÑO DE APLICACIONES WEB": 5.7,
-          "ADM. BBDD": 6.5
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.4,
+          "EMPRENDIMIENTO": 6.7,
+          "PRO. ORIENTADA A OBJETO": 6.3,
+          "DISEÑO DE BBDD RELACIONADAS": 6.3,
+          "DISEÑO DE APLICACIONES WEB": 6.3,
+          "ADM. BBDD": 6.2
         }
       },
       {
@@ -30243,24 +30597,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             5,
-            4.8
+            4.8,
+            6.3
           ],
           "INGLÉS": [
             4.4,
-            4.4
+            4.4,
+            6.1,
+            4.7
           ],
           "MATEMÁTICA": [
             4.5,
             6.1,
             6.3,
-            5
+            5,
+            7,
+            7
           ],
           "CS. CIUDADANÍA": [
             6.7,
             6,
             6.3,
             2.8,
-            4.6
+            4.6,
+            5.5,
+            6.3
           ],
           "ED. CIUDADANA": [
             7,
@@ -30286,52 +30647,74 @@
             7,
             4.9,
             2.4,
-            7
+            7,
+            6.3,
+            6.8,
+            7,
+            7,
+            6.6
           ],
           "EMPRENDIMIENTO": [
             6.3,
             6,
             7,
-            6.2
+            6.2,
+            7,
+            6.7,
+            6.3
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             4.1,
             6.5,
+            6.5,
+            6.2,
+            6.3,
+            6.1,
             6.5
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             5.7,
             6.3,
+            6.5,
+            6.2,
+            6.3,
+            6.1,
             6.5
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             7,
             4.6,
-            6.6
+            6.6,
+            6.2,
+            6.3,
+            6.1,
+            6.5
           ],
           "ADM. BBDD": [
             6.5,
             7,
-            6
+            6,
+            7,
+            7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.9,
-          "INGLÉS": 4.4,
-          "MATEMÁTICA": 5,
-          "CS. CIUDADANÍA": 3.7,
+          "LENGUAJE": 6.3,
+          "INGLÉS": 5.4,
+          "MATEMÁTICA": 6.3,
+          "CS. CIUDADANÍA": 4.8,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 6.6,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.3,
-          "EMPRENDIMIENTO": 6.2,
-          "PRO. ORIENTADA A OBJETO": 6,
-          "DISEÑO DE BBDD RELACIONADAS": 6.3,
-          "DISEÑO DE APLICACIONES WEB": 6.3,
-          "ADM. BBDD": 6.5
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.7,
+          "EMPRENDIMIENTO": 6.5,
+          "PRO. ORIENTADA A OBJETO": 6.2,
+          "DISEÑO DE BBDD RELACIONADAS": 6.2,
+          "DISEÑO DE APLICACIONES WEB": 6.2,
+          "ADM. BBDD": 7
         }
       },
       {
@@ -30340,24 +30723,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             6.1,
-            6.2
+            6.2,
+            6.3
           ],
           "INGLÉS": [
             6.2,
-            6.5
+            6.5,
+            4.8,
+            3.5
           ],
           "MATEMÁTICA": [
             6,
             5,
             5.5,
-            2.3
+            2.3,
+            4.8,
+            5
           ],
           "CS. CIUDADANÍA": [
             1.5,
             5,
             4.7,
             2.8,
-            4.4
+            4.4,
+            6.3,
+            6.5
           ],
           "ED. CIUDADANA": [
             7,
@@ -30384,53 +30774,73 @@
             6.3,
             6.1,
             7,
-            5.4
+            5.4,
+            5.5,
+            7,
+            6.5,
+            5.6
           ],
           "EMPRENDIMIENTO": [
             3.3,
             5,
             5.8,
-            5.8
+            5.8,
+            5.6,
+            5.3,
+            6
           ],
           "PRO. ORIENTADA A OBJETO": [
             6.7,
             7,
             5.5,
-            6.4
+            6.4,
+            6.6,
+            6.3,
+            4.8,
+            5.6
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             6.7,
             7,
             6.7,
-            6.8
+            6.8,
+            6.1,
+            6.3,
+            4.8,
+            5.6
           ],
           "DISEÑO DE APLICACIONES WEB": [
             6.7,
             7,
             6.5,
-            6.8
+            6.8,
+            6.3,
+            6.3,
+            4.8,
+            5.6
           ],
           "ADM. BBDD": [
             5.5,
             7,
             6,
-            4.5
+            4.5,
+            6.5
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 6.1,
-          "INGLÉS": 6.3,
-          "MATEMÁTICA": 2.3,
-          "CS. CIUDADANÍA": 3.6,
+          "LENGUAJE": 6.3,
+          "INGLÉS": 4.1,
+          "MATEMÁTICA": 4,
+          "CS. CIUDADANÍA": 5,
           "ED. CIUDADANA": 6,
           "FILOSOFÍA": 3.9,
           "ELECTIVO": 6.6,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.4,
-          "EMPRENDIMIENTO": 5.8,
-          "PRO. ORIENTADA A OBJETO": 6.4,
-          "DISEÑO DE BBDD RELACIONADAS": 6.8,
-          "DISEÑO DE APLICACIONES WEB": 6.7,
-          "ADM. BBDD": 4.5
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6,
+          "EMPRENDIMIENTO": 5.6,
+          "PRO. ORIENTADA A OBJETO": 5.8,
+          "DISEÑO DE BBDD RELACIONADAS": 5.7,
+          "DISEÑO DE APLICACIONES WEB": 5.7,
+          "ADM. BBDD": 5.5
         }
       },
       {
@@ -30439,23 +30849,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             4.5,
-            4.5
+            4.5,
+            5.9
           ],
           "INGLÉS": [
-            4
+            4,
+            4,
+            6.1,
+            5.1
           ],
           "MATEMÁTICA": [
             5,
             1.7,
             5.9,
-            3.8
+            3.8,
+            1.8,
+            2.3
           ],
           "CS. CIUDADANÍA": [
             6.7,
             6,
             6.4,
             2.8,
-            4.6
+            4.6,
+            6.5,
+            6.3
           ],
           "ED. CIUDADANA": [
             6.5,
@@ -30475,58 +30893,82 @@
           "ELECTIVO": [
             6.8,
             6,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6.1,
             6.6,
             5.7,
-            5.6
+            5.6,
+            4.7,
+            6.8,
+            7,
+            7,
+            6.7
           ],
           "EMPRENDIMIENTO": [
             5.7,
             6,
             7,
-            6.6
+            6.6,
+            7,
+            6.7,
+            6.3
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             4.5,
             5.5,
-            5.6
+            5.6,
+            6.2,
+            6.6,
+            6.1,
+            6.6
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             6,
             6.7,
-            6.5
+            6.5,
+            6.2,
+            6.5,
+            6.1,
+            6.6
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             7,
             6.3,
-            6.8
+            6.8,
+            6.2,
+            6.5,
+            6.1,
+            6.6
           ],
           "ADM. BBDD": [
             6.8,
             7,
-            7
+            7,
+            6.5,
+            6.5
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.5,
-          "INGLÉS": 4,
-          "MATEMÁTICA": 3.8,
-          "CS. CIUDADANÍA": 3.7,
+          "LENGUAJE": 5.9,
+          "INGLÉS": 5.6,
+          "MATEMÁTICA": 2.6,
+          "CS. CIUDADANÍA": 5,
           "ED. CIUDADANA": 5,
           "FILOSOFÍA": 3.9,
-          "ELECTIVO": 6.6,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6,
+          "ELECTIVO": 7,
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.4,
           "EMPRENDIMIENTO": 6.6,
-          "PRO. ORIENTADA A OBJETO": 5.6,
-          "DISEÑO DE BBDD RELACIONADAS": 6.5,
-          "DISEÑO DE APLICACIONES WEB": 6.7,
-          "ADM. BBDD": 6.9
+          "PRO. ORIENTADA A OBJETO": 6.3,
+          "DISEÑO DE BBDD RELACIONADAS": 6.3,
+          "DISEÑO DE APLICACIONES WEB": 6.3,
+          "ADM. BBDD": 6.5
         }
       },
       {
@@ -30535,24 +30977,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             4.9,
-            4.6
+            4.6,
+            3.2
           ],
           "INGLÉS": [
             4.4,
-            4.4
+            4.4,
+            5.8,
+            4.1
           ],
           "MATEMÁTICA": [
             5,
             6,
             6.1,
-            2.8
+            2.8,
+            4.5,
+            7
           ],
           "CS. CIUDADANÍA": [
             4.8,
             6,
             6.2,
             2.8,
-            4.6
+            4.6,
+            5,
+            6.3
           ],
           "ED. CIUDADANA": [
             7,
@@ -30578,52 +31027,74 @@
             6.1,
             5.8,
             5.5,
-            6.5
+            6.5,
+            5.8,
+            6.8,
+            7,
+            6.8,
+            6.7
           ],
           "EMPRENDIMIENTO": [
             3.6,
             6,
             7,
-            6.2
+            6.2,
+            7,
+            6.7,
+            6.3
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             3.1,
             7,
-            5.7
+            5.7,
+            6.2,
+            6.6,
+            5.8,
+            6.5
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             6.3,
             6.3,
+            6.5,
+            6.2,
+            6.5,
+            5.8,
             6.5
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             6.8,
             6.5,
-            6.8
+            6.8,
+            7,
+            6.5,
+            5.8,
+            6.5
           ],
           "ADM. BBDD": [
             6,
+            6.5,
+            7,
             6.5,
             7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.7,
-          "INGLÉS": 4.4,
-          "MATEMÁTICA": 2.8,
-          "CS. CIUDADANÍA": 3.7,
+          "LENGUAJE": 3.2,
+          "INGLÉS": 4.9,
+          "MATEMÁTICA": 4.7,
+          "CS. CIUDADANÍA": 4.6,
           "ED. CIUDADANA": 6,
           "FILOSOFÍA": 3.9,
           "ELECTIVO": 6.7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.9,
-          "EMPRENDIMIENTO": 6.2,
-          "PRO. ORIENTADA A OBJETO": 5.7,
-          "DISEÑO DE BBDD RELACIONADAS": 6.5,
-          "DISEÑO DE APLICACIONES WEB": 6.7,
-          "ADM. BBDD": 6.5
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.6,
+          "EMPRENDIMIENTO": 6.5,
+          "PRO. ORIENTADA A OBJETO": 6.2,
+          "DISEÑO DE BBDD RELACIONADAS": 6.2,
+          "DISEÑO DE APLICACIONES WEB": 6.4,
+          "ADM. BBDD": 6.7
         }
       },
       {
@@ -30632,24 +31103,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             5.5,
-            6
+            6,
+            5.4
           ],
           "INGLÉS": [
             5,
-            5
+            5,
+            4.1,
+            4.2
           ],
           "MATEMÁTICA": [
             4,
             1,
             4,
-            2.8
+            2.8,
+            6,
+            1.8
           ],
           "CS. CIUDADANÍA": [
             6,
             4,
             6,
             4.5,
-            4.1
+            4.1,
+            3.7,
+            7
           ],
           "ED. CIUDADANA": [
             5.9,
@@ -30669,58 +31147,82 @@
           "ELECTIVO": [
             7,
             6,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6.4,
             5.9,
             3.8,
-            5.2
+            5.2,
+            4.5,
+            5,
+            7,
+            6.5,
+            3.9
           ],
           "EMPRENDIMIENTO": [
             6,
             6,
             5.8,
-            6.2
+            6.2,
+            5.6,
+            2.2,
+            4
           ],
           "PRO. ORIENTADA A OBJETO": [
             6.1,
             3.1,
             4.4,
-            5
+            5,
+            4.5,
+            4.3,
+            4.1,
+            4.5
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             6.1,
             2,
             6,
-            5.1
+            5.1,
+            4.5,
+            4.4,
+            4.1,
+            4.5
           ],
           "DISEÑO DE APLICACIONES WEB": [
             6.1,
             7,
             5.3,
-            6.3
+            6.3,
+            4.5,
+            4.4,
+            4.1,
+            4.5
           ],
           "ADM. BBDD": [
             7,
             6,
-            6
+            6,
+            6,
+            7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 5.7,
-          "INGLÉS": 5,
-          "MATEMÁTICA": 2.8,
-          "CS. CIUDADANÍA": 4.3,
+          "LENGUAJE": 5.4,
+          "INGLÉS": 4.1,
+          "MATEMÁTICA": 3.5,
+          "CS. CIUDADANÍA": 4.8,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
-          "ELECTIVO": 6.6,
+          "ELECTIVO": 7,
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.3,
-          "EMPRENDIMIENTO": 6.2,
-          "PRO. ORIENTADA A OBJETO": 4.6,
-          "DISEÑO DE BBDD RELACIONADAS": 4.8,
-          "DISEÑO DE APLICACIONES WEB": 6.1,
-          "ADM. BBDD": 6.3
+          "EMPRENDIMIENTO": 4.5,
+          "PRO. ORIENTADA A OBJETO": 4.3,
+          "DISEÑO DE BBDD RELACIONADAS": 4.3,
+          "DISEÑO DE APLICACIONES WEB": 4.3,
+          "ADM. BBDD": 6.5
         }
       },
       {
@@ -30729,24 +31231,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             4.9,
-            4.9
+            4.9,
+            5
           ],
           "INGLÉS": [
             5,
-            6.5
+            6.5,
+            4.1,
+            4
           ],
           "MATEMÁTICA": [
             4,
             2.8,
             4,
-            2.9
+            2.9,
+            4.5,
+            2.4
           ],
           "CS. CIUDADANÍA": [
             1.5,
             5.6,
             6,
             4.5,
-            4.1
+            4.1,
+            5,
+            7
           ],
           "ED. CIUDADANA": [
             6.5,
@@ -30766,58 +31275,82 @@
           "ELECTIVO": [
             7,
             7,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             7,
             6.6,
             3.8,
-            6.4
+            6.4,
+            4,
+            5.5,
+            6.7,
+            6.7,
+            3.9
           ],
           "EMPRENDIMIENTO": [
             4.8,
             6,
             5.8,
-            6.2
+            6.2,
+            5.6,
+            2.2,
+            4
           ],
           "PRO. ORIENTADA A OBJETO": [
             6.1,
             7,
             4.4,
-            5.8
+            5.8,
+            4.5,
+            4.3,
+            4.1,
+            4.5
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             6.1,
             4.2,
             6,
-            5.6
+            5.6,
+            4.5,
+            4.4,
+            4.1,
+            4.5
           ],
           "DISEÑO DE APLICACIONES WEB": [
             6.1,
             7,
             7,
-            6.8
+            6.8,
+            4.5,
+            4.4,
+            4.1,
+            4.5
           ],
           "ADM. BBDD": [
             5.6,
             6,
-            6
+            6,
+            6,
+            7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.9,
-          "INGLÉS": 5.7,
-          "MATEMÁTICA": 2.9,
-          "CS. CIUDADANÍA": 4.3,
+          "LENGUAJE": 5,
+          "INGLÉS": 4,
+          "MATEMÁTICA": 3.2,
+          "CS. CIUDADANÍA": 5.1,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.9,
-          "EMPRENDIMIENTO": 6.2,
-          "PRO. ORIENTADA A OBJETO": 5.8,
-          "DISEÑO DE BBDD RELACIONADAS": 5.4,
-          "DISEÑO DE APLICACIONES WEB": 6.7,
-          "ADM. BBDD": 5.8
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.3,
+          "EMPRENDIMIENTO": 4.5,
+          "PRO. ORIENTADA A OBJETO": 4.3,
+          "DISEÑO DE BBDD RELACIONADAS": 4.3,
+          "DISEÑO DE APLICACIONES WEB": 4.3,
+          "ADM. BBDD": 6.5
         }
       },
       {
@@ -30826,23 +31359,31 @@
         "subjectGrades": {
           "LENGUAJE": [
             6,
-            5.5
+            5.5,
+            5.4
           ],
           "INGLÉS": [
             5,
-            7
+            7,
+            6.5,
+            6
           ],
           "MATEMÁTICA": [
             4.3,
             5.8,
             6,
-            4.6
+            4.6,
+            6.2,
+            7
           ],
           "CS. CIUDADANÍA": [
             5.5,
             7,
             6.2,
-            5.3
+            1.6,
+            5.3,
+            7,
+            6.5
           ],
           "ED. CIUDADANA": [
             6.7,
@@ -30868,52 +31409,74 @@
             6.4,
             5.9,
             5.8,
-            6
+            6,
+            6.5,
+            5.8,
+            7,
+            6.8,
+            6.9
           ],
           "EMPRENDIMIENTO": [
             5,
             7,
             7,
-            5.3
+            5.3,
+            7,
+            7,
+            6.7
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             5.1,
             7,
-            7
+            7,
+            7,
+            7,
+            6.5,
+            6.5
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             6.2,
             7,
-            7
+            7,
+            7,
+            7,
+            6.5,
+            6.5
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             5,
             3,
-            5.5
+            5.5,
+            7,
+            7,
+            6.5,
+            6.5
           ],
           "ADM. BBDD": [
             6.6,
             7,
-            7
+            7,
+            3,
+            6.5
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 5.7,
-          "INGLÉS": 6,
-          "MATEMÁTICA": 4.6,
-          "CS. CIUDADANÍA": 5.3,
+          "LENGUAJE": 5.4,
+          "INGLÉS": 6.2,
+          "MATEMÁTICA": 5.9,
+          "CS. CIUDADANÍA": 5.1,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6,
-          "EMPRENDIMIENTO": 5.3,
-          "PRO. ORIENTADA A OBJETO": 6.5,
-          "DISEÑO DE BBDD RELACIONADAS": 6.8,
-          "DISEÑO DE APLICACIONES WEB": 5.1,
-          "ADM. BBDD": 6.8
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.6,
+          "EMPRENDIMIENTO": 6.5,
+          "PRO. ORIENTADA A OBJETO": 6.7,
+          "DISEÑO DE BBDD RELACIONADAS": 6.7,
+          "DISEÑO DE APLICACIONES WEB": 6.7,
+          "ADM. BBDD": 4.7
         }
       },
       {
@@ -30922,13 +31485,18 @@
         "subjectGrades": {
           "LENGUAJE": [
             6.4,
-            7
+            7,
+            6.6
           ],
           "INGLÉS": [
             7,
-            7
+            7,
+            4.8,
+            5.8
           ],
           "MATEMÁTICA": [
+            7,
+            7,
             7,
             7,
             7,
@@ -30938,7 +31506,10 @@
             2.8,
             7,
             6.3,
-            2.8
+            2.8,
+            5.2,
+            6,
+            6.3
           ],
           "ED. CIUDADANA": [
             6.2,
@@ -30958,58 +31529,82 @@
           "ELECTIVO": [
             7,
             7,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6.4,
             4.9,
             5.4,
-            7
+            7,
+            4.3,
+            6.3,
+            7,
+            6.8,
+            3.9
           ],
           "EMPRENDIMIENTO": [
             4.9,
             5,
             5.8,
-            7
+            7,
+            5.6,
+            2.2,
+            4
           ],
           "PRO. ORIENTADA A OBJETO": [
             5.2,
             6.5,
             6.8,
-            6.2
+            6.2,
+            4.5,
+            4.3,
+            4.2,
+            4.7
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             5.2,
             5.7,
             6.3,
-            5.8
+            5.8,
+            4.5,
+            4.4,
+            4.8,
+            4.7
           ],
           "DISEÑO DE APLICACIONES WEB": [
             5.2,
             7,
             7,
-            6.6
+            6.6,
+            4.5,
+            4.4,
+            4.8,
+            4.7
           ],
           "ADM. BBDD": [
             7,
             7,
-            5.5
+            5.5,
+            5.7,
+            6
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 6.7,
-          "INGLÉS": 7,
+          "LENGUAJE": 6.6,
+          "INGLÉS": 5.3,
           "MATEMÁTICA": 7,
-          "CS. CIUDADANÍA": 2.8,
+          "CS. CIUDADANÍA": 5,
           "ED. CIUDADANA": 6.2,
           "FILOSOFÍA": 7,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.9,
-          "EMPRENDIMIENTO": 7,
-          "PRO. ORIENTADA A OBJETO": 6.1,
-          "DISEÑO DE BBDD RELACIONADAS": 5.7,
-          "DISEÑO DE APLICACIONES WEB": 6.4,
-          "ADM. BBDD": 6.5
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.6,
+          "EMPRENDIMIENTO": 4.7,
+          "PRO. ORIENTADA A OBJETO": 4.4,
+          "DISEÑO DE BBDD RELACIONADAS": 4.6,
+          "DISEÑO DE APLICACIONES WEB": 4.6,
+          "ADM. BBDD": 5.8
         }
       },
       {
@@ -31018,37 +31613,48 @@
         "subjectGrades": {
           "LENGUAJE": [
             5.9,
-            4
+            4,
+            5.6
           ],
           "INGLÉS": [
             2.7,
-            4
+            4,
+            4.2,
+            4.5
           ],
           "MATEMÁTICA": [
             4.7,
             1,
             4.6,
-            1.7
+            1.7,
+            3,
+            2.8
           ],
           "CS. CIUDADANÍA": [
             3.5,
             5,
             4,
-            5.2
+            4,
+            5.2,
+            4.3,
+            6.3
           ],
           "ED. CIUDADANA": [
             4,
             6,
             5.3,
             6,
-            6.2
+            6.2,
+            7
           ],
           "FILOSOFÍA": [
             6.5,
             5.1,
             4,
             7,
-            2
+            2,
+            7,
+            7
           ],
           "ELECTIVO": [
             7,
@@ -31060,53 +31666,73 @@
             4.9,
             3.4,
             7,
-            6.3
+            6.3,
+            5.8,
+            4.3,
+            4.4,
+            3.9
           ],
           "EMPRENDIMIENTO": [
             4,
             5,
             4,
+            4,
+            5.6,
+            2.2,
             4
           ],
           "PRO. ORIENTADA A OBJETO": [
             5.2,
             2.6,
             2,
+            4,
+            4.5,
+            4.3,
+            4.2,
             4
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             5.2,
             2.6,
             2,
+            4,
+            4.5,
+            4.4,
+            4.2,
             4
           ],
           "DISEÑO DE APLICACIONES WEB": [
             5.2,
             5.7,
             6,
-            5.8
+            5.8,
+            4.5,
+            4.4,
+            4.2,
+            4
           ],
           "ADM. BBDD": [
             6.5,
             6,
             5,
-            4
+            4,
+            7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.9,
-          "INGLÉS": 3.3,
-          "MATEMÁTICA": 1.7,
-          "CS. CIUDADANÍA": 5.2,
-          "ED. CIUDADANA": 6.2,
-          "FILOSOFÍA": 2,
+          "LENGUAJE": 5.6,
+          "INGLÉS": 4.3,
+          "MATEMÁTICA": 2.5,
+          "CS. CIUDADANÍA": 4.9,
+          "ED. CIUDADANA": 6.6,
+          "FILOSOFÍA": 5.3,
           "ELECTIVO": 6.6,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.3,
-          "EMPRENDIMIENTO": 4,
-          "PRO. ORIENTADA A OBJETO": 3.4,
-          "DISEÑO DE BBDD RELACIONADAS": 3.4,
-          "DISEÑO DE APLICACIONES WEB": 5.6,
-          "ADM. BBDD": 4
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 4.9,
+          "EMPRENDIMIENTO": 3.9,
+          "PRO. ORIENTADA A OBJETO": 4.2,
+          "DISEÑO DE BBDD RELACIONADAS": 4.2,
+          "DISEÑO DE APLICACIONES WEB": 4.2,
+          "ADM. BBDD": 5.5
         }
       },
       {
@@ -31115,23 +31741,30 @@
         "subjectGrades": {
           "LENGUAJE": [
             5.9,
-            5
+            5,
+            4.1
           ],
           "INGLÉS": [
             4.8,
+            4.5,
+            6,
             4.5
           ],
           "MATEMÁTICA": [
             5,
             6,
-            3.8
+            3.8,
+            4.5,
+            3.4
           ],
           "CS. CIUDADANÍA": [
             6.1,
             6,
             6.4,
             2.8,
-            5.3
+            5.3,
+            5,
+            6.5
           ],
           "ED. CIUDADANA": [
             7,
@@ -31151,58 +31784,82 @@
           "ELECTIVO": [
             7,
             6,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             6.1,
             5.2,
             5.5,
-            7
+            7,
+            4.3,
+            6.5,
+            7,
+            6.8,
+            6.9
           ],
           "EMPRENDIMIENTO": [
             5.1,
             6.4,
             6.5,
-            2
+            2,
+            7,
+            7,
+            6.7
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             3.3,
             7,
-            6
+            6,
+            7,
+            7,
+            6,
+            5.6
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             5.8,
             6.5,
-            6.5
+            6.5,
+            7,
+            7,
+            6,
+            5.6
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             4.5,
             6.1,
-            6.2
+            6.2,
+            7,
+            7,
+            6,
+            5.6
           ],
           "ADM. BBDD": [
             5.7,
             5.3,
-            7
+            7,
+            5,
+            6
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 5.4,
-          "INGLÉS": 4.6,
-          "MATEMÁTICA": 3.8,
-          "CS. CIUDADANÍA": 4,
+          "LENGUAJE": 4.1,
+          "INGLÉS": 5.2,
+          "MATEMÁTICA": 3.9,
+          "CS. CIUDADANÍA": 4.9,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 4.5,
-          "ELECTIVO": 6.6,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.9,
-          "EMPRENDIMIENTO": 2,
-          "PRO. ORIENTADA A OBJETO": 5.8,
+          "ELECTIVO": 7,
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.3,
+          "EMPRENDIMIENTO": 5.6,
+          "PRO. ORIENTADA A OBJETO": 6.4,
           "DISEÑO DE BBDD RELACIONADAS": 6.4,
-          "DISEÑO DE APLICACIONES WEB": 5.9,
-          "ADM. BBDD": 6
+          "DISEÑO DE APLICACIONES WEB": 6.4,
+          "ADM. BBDD": 5.5
         }
       },
       {
@@ -31211,24 +31868,30 @@
         "subjectGrades": {
           "LENGUAJE": [
             4,
-            4.2
+            4.2,
+            5.9
           ],
           "INGLÉS": [
             4,
-            5.5
+            5.5,
+            6.1,
+            4.8
           ],
           "MATEMÁTICA": [
             4.6,
             1.6,
             4.5,
-            3.4
+            3.4,
+            6.2,
+            3.6
           ],
           "CS. CIUDADANÍA": [
             6.3,
             6,
             6.5,
             2.8,
-            5.3
+            5.3,
+            6.3
           ],
           "ED. CIUDADANA": [
             6.3,
@@ -31242,9 +31905,12 @@
             5.7,
             4,
             7,
-            6.4
+            6.4,
+            6.6
           ],
           "ELECTIVO": [
+            7,
+            7,
             7,
             7,
             7
@@ -31253,52 +31919,74 @@
             5.7,
             4.9,
             3.2,
-            6.2
+            6.2,
+            3.9,
+            7,
+            6.7,
+            6.5,
+            6.9
           ],
           "EMPRENDIMIENTO": [
             4.4,
             7,
             7,
-            7
+            7,
+            7,
+            7,
+            6.7
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             5.4,
             7,
-            7
+            7,
+            7,
+            7,
+            6.1,
+            6.9
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             4.5,
             6.3,
-            6.2
+            6.2,
+            7,
+            7,
+            6.1,
+            6.9
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             6.2,
             4.2,
-            6
+            6,
+            7,
+            7,
+            6.1,
+            6.9
           ],
           "ADM. BBDD": [
             7,
             5,
+            7,
+            7,
             7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 4.1,
-          "INGLÉS": 4.7,
-          "MATEMÁTICA": 3.4,
-          "CS. CIUDADANÍA": 4,
+          "LENGUAJE": 5.9,
+          "INGLÉS": 5.4,
+          "MATEMÁTICA": 4.4,
+          "CS. CIUDADANÍA": 4.8,
           "ED. CIUDADANA": 7,
-          "FILOSOFÍA": 6.4,
+          "FILOSOFÍA": 6.5,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5,
-          "EMPRENDIMIENTO": 7,
-          "PRO. ORIENTADA A OBJETO": 6.6,
-          "DISEÑO DE BBDD RELACIONADAS": 6,
-          "DISEÑO DE APLICACIONES WEB": 5.8,
-          "ADM. BBDD": 6.3
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.2,
+          "EMPRENDIMIENTO": 6.9,
+          "PRO. ORIENTADA A OBJETO": 6.7,
+          "DISEÑO DE BBDD RELACIONADAS": 6.7,
+          "DISEÑO DE APLICACIONES WEB": 6.7,
+          "ADM. BBDD": 7
         }
       },
       {
@@ -31307,23 +31995,29 @@
         "subjectGrades": {
           "LENGUAJE": [
             3.6,
-            3
+            3,
+            5.4
           ],
           "INGLÉS": [
             4,
-            4.2
+            4.2,
+            5.7,
+            5.1
           ],
           "MATEMÁTICA": [
             4,
             5.2,
-            2
+            2,
+            2.3
           ],
           "CS. CIUDADANÍA": [
             4.8,
             5.3,
             6.5,
             2.8,
-            4.6
+            4.6,
+            4.3,
+            6
           ],
           "ED. CIUDADANA": [
             7,
@@ -31343,6 +32037,8 @@
           "ELECTIVO": [
             7,
             7,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
@@ -31350,53 +32046,73 @@
             5.2,
             5.2,
             4.7,
-            2.8
+            2.8,
+            6.8,
+            4,
+            6.2,
+            6.7
           ],
           "EMPRENDIMIENTO": [
             3.8,
             6.4,
             6,
-            6.2
+            6.2,
+            7,
+            6.7,
+            6.3
           ],
           "PRO. ORIENTADA A OBJETO": [
             6.7,
             4.1,
             6.5,
-            5.7
+            5.7,
+            6.2,
+            6.3,
+            5.7,
+            6.5
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             6.7,
             4,
             5.5,
-            5.5
+            5.5,
+            6.2,
+            6.3,
+            5.7,
+            6.5
           ],
           "DISEÑO DE APLICACIONES WEB": [
             6.7,
             5.7,
             3,
-            5.5
+            5.5,
+            6.2,
+            6.3,
+            5.7,
+            6.5
           ],
           "ADM. BBDD": [
             5.9,
             6.2,
             7,
-            6
+            6,
+            6.5
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 3.3,
-          "INGLÉS": 4.1,
-          "MATEMÁTICA": 2,
-          "CS. CIUDADANÍA": 3.7,
+          "LENGUAJE": 5.4,
+          "INGLÉS": 5.4,
+          "MATEMÁTICA": 2.1,
+          "CS. CIUDADANÍA": 4.4,
           "ED. CIUDADANA": 5,
           "FILOSOFÍA": 6.7,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 2.8,
-          "EMPRENDIMIENTO": 6.2,
-          "PRO. ORIENTADA A OBJETO": 5.7,
-          "DISEÑO DE BBDD RELACIONADAS": 5.4,
-          "DISEÑO DE APLICACIONES WEB": 5.2,
-          "ADM. BBDD": 6
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.3,
+          "EMPRENDIMIENTO": 6.5,
+          "PRO. ORIENTADA A OBJETO": 6.1,
+          "DISEÑO DE BBDD RELACIONADAS": 6.1,
+          "DISEÑO DE APLICACIONES WEB": 6.1,
+          "ADM. BBDD": 6.2
         }
       },
       {
@@ -31405,23 +32121,30 @@
         "subjectGrades": {
           "LENGUAJE": [
             5.4,
-            6.1
+            6.1,
+            4.1
           ],
           "INGLÉS": [
             5.8,
-            7
+            7,
+            3.5,
+            3.5
           ],
           "MATEMÁTICA": [
             4.5,
             4.6,
             4.5,
-            2.2
+            2.2,
+            2.5,
+            4.2
           ],
           "CS. CIUDADANÍA": [
             6.7,
             7,
             6.2,
-            5.3
+            1.5,
+            5.3,
+            6.5
           ],
           "ED. CIUDADANA": [
             6.5,
@@ -31441,57 +32164,82 @@
           "ELECTIVO": [
             7,
             6,
+            7,
+            7,
             7
           ],
           "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": [
             4.8,
             4.6,
             4.4,
-            6.1
+            6.1,
+            6.5,
+            5.8,
+            7,
+            7,
+            6.9
           ],
           "EMPRENDIMIENTO": [
             6.4,
             7,
-            7
+            7,
+            6.2,
+            7,
+            7,
+            6.7
           ],
           "PRO. ORIENTADA A OBJETO": [
             6.3,
             6,
             6.5,
-            6.5
+            6.5,
+            7,
+            7,
+            3.5,
+            6.7
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             6.3,
             6,
             6.3,
-            6.5
+            6.5,
+            7,
+            7,
+            4,
+            6.7
           ],
           "DISEÑO DE APLICACIONES WEB": [
             6.3,
             5,
             7,
-            6.5
+            6.5,
+            7,
+            7,
+            4,
+            6.7
           ],
           "ADM. BBDD": [
             6.1,
             6.5,
-            6
+            6,
+            4,
+            7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 5.7,
-          "INGLÉS": 6.4,
-          "MATEMÁTICA": 2.2,
-          "CS. CIUDADANÍA": 5.3,
+          "LENGUAJE": 4.1,
+          "INGLÉS": 3.5,
+          "MATEMÁTICA": 2.9,
+          "CS. CIUDADANÍA": 4.4,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 4.5,
-          "ELECTIVO": 6.6,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 4.9,
-          "EMPRENDIMIENTO": 6.8,
-          "PRO. ORIENTADA A OBJETO": 6.3,
-          "DISEÑO DE BBDD RELACIONADAS": 6.2,
-          "DISEÑO DE APLICACIONES WEB": 6.2,
-          "ADM. BBDD": 6.2
+          "ELECTIVO": 7,
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.6,
+          "EMPRENDIMIENTO": 6.7,
+          "PRO. ORIENTADA A OBJETO": 6,
+          "DISEÑO DE BBDD RELACIONADAS": 6.1,
+          "DISEÑO DE APLICACIONES WEB": 6.1,
+          "ADM. BBDD": 5.5
         }
       },
       {
@@ -31500,13 +32248,18 @@
         "subjectGrades": {
           "LENGUAJE": [
             6.2,
-            6.2
+            6.2,
+            6
           ],
           "INGLÉS": [
             6,
-            6
+            6,
+            7,
+            7
           ],
           "MATEMÁTICA": [
+            7,
+            7,
             7,
             7,
             7,
@@ -31516,7 +32269,10 @@
             6.7,
             7,
             6.3,
-            6.5
+            6.3,
+            6.5,
+            7,
+            7
           ],
           "ED. CIUDADANA": [
             6.2,
@@ -31542,52 +32298,74 @@
             6.1,
             5.9,
             5.1,
-            5.8
+            5.8,
+            5,
+            6.5,
+            7,
+            6.5,
+            5.6
           ],
           "EMPRENDIMIENTO": [
             5.5,
             6.5,
             7,
-            7
+            7,
+            5.6,
+            5.3,
+            6
           ],
           "PRO. ORIENTADA A OBJETO": [
             7,
             4.3,
             6.1,
-            6.2
+            6.2,
+            6.6,
+            7,
+            7,
+            5.9
           ],
           "DISEÑO DE BBDD RELACIONADAS": [
             7,
             7,
             5.8,
-            6.7
+            6.7,
+            6.6,
+            7,
+            7,
+            5.9
           ],
           "DISEÑO DE APLICACIONES WEB": [
             7,
             6.5,
             7,
-            7
+            7,
+            6.7,
+            7,
+            7,
+            5.9
           ],
           "ADM. BBDD": [
             6.7,
+            7,
+            7,
             7,
             7
           ]
         },
         "subjectAverages": {
-          "LENGUAJE": 6.2,
-          "INGLÉS": 6,
+          "LENGUAJE": 6,
+          "INGLÉS": 7,
           "MATEMÁTICA": 7,
-          "CS. CIUDADANÍA": 6.5,
+          "CS. CIUDADANÍA": 6.7,
           "ED. CIUDADANA": 7,
           "FILOSOFÍA": 7,
           "ELECTIVO": 7,
-          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 5.7,
-          "EMPRENDIMIENTO": 7,
-          "PRO. ORIENTADA A OBJETO": 5.9,
+          "MANTENIMIENTO Y ACT. DE HARD EN REDES DE ÁREA LOCAL": 6.1,
+          "EMPRENDIMIENTO": 5.9,
+          "PRO. ORIENTADA A OBJETO": 6.6,
           "DISEÑO DE BBDD RELACIONADAS": 6.6,
-          "DISEÑO DE APLICACIONES WEB": 6.8,
-          "ADM. BBDD": 6.9
+          "DISEÑO DE APLICACIONES WEB": 6.6,
+          "ADM. BBDD": 7
         }
       }
     ]
