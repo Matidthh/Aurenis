@@ -439821,12 +439821,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "Priscila.abarcaveliz@gmail.com": {
+  "priscila.abarca@lpmm.cl": {
     "num": 1,
     "fullName": "Abarca Véliz Priscila Noemí",
     "firstName": "Priscila Noemí",
     "lastName": "Abarca Véliz",
-    "email": "Priscila.abarcaveliz@gmail.com",
+    "email": "priscila.abarca@lpmm.cl",
     "rut": "22.469.001-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -440502,7 +440502,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Abarca Véliz Priscila Noemí",
     "firstName": "Priscila Noemí",
     "lastName": "Abarca Véliz",
-    "email": "Priscila.abarcaveliz@gmail.com",
+    "email": "priscila.abarca@lpmm.cl",
     "rut": "22.469.001-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -441173,12 +441173,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "kenyerlpmm@gmail.com": {
+  "kenyer.borges@lpmm.cl": {
     "num": 2,
     "fullName": "Borges Brieva Kenyer Enrique",
     "firstName": "Kenyer Enrique",
     "lastName": "Borges Brieva",
-    "email": "kenyerlpmm@gmail.com",
+    "email": "kenyer.borges@lpmm.cl",
     "rut": "22.469.002-2",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -441806,7 +441806,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Borges Brieva Kenyer Enrique",
     "firstName": "Kenyer Enrique",
     "lastName": "Borges Brieva",
-    "email": "kenyerlpmm@gmail.com",
+    "email": "kenyer.borges@lpmm.cl",
     "rut": "22.469.002-2",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -442429,12 +442429,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "emiliobrousset2008@gmail.com": {
+  "emilio.brousset@lpmm.cl": {
     "num": 3,
     "fullName": "Brousset Bernales Emilio Benjamín",
     "firstName": "Emilio Benjamín",
     "lastName": "Brousset Bernales",
-    "email": "emiliobrousset2008@gmail.com",
+    "email": "emilio.brousset@lpmm.cl",
     "rut": "22.469.003-3",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -443126,7 +443126,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Brousset Bernales Emilio Benjamín",
     "firstName": "Emilio Benjamín",
     "lastName": "Brousset Bernales",
-    "email": "emiliobrousset2008@gmail.com",
+    "email": "emilio.brousset@lpmm.cl",
     "rut": "22.469.003-3",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -446581,12 +446581,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "Floresevan65@gmail.com": {
+  "evan.flores@lpmm.cl": {
     "num": 6,
     "fullName": "Flores Astudillo Evan Mathias",
     "firstName": "Evan Mathias",
     "lastName": "Flores Astudillo",
-    "email": "Floresevan65@gmail.com",
+    "email": "evan.flores@lpmm.cl",
     "rut": "22.469.006-6",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -447286,7 +447286,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Flores Astudillo Evan Mathias",
     "firstName": "Evan Mathias",
     "lastName": "Flores Astudillo",
-    "email": "Floresevan65@gmail.com",
+    "email": "evan.flores@lpmm.cl",
     "rut": "22.469.006-6",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -453501,12 +453501,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "francho.mc14@gmail.com": {
+  "frank.mendez@lpmm.cl": {
     "num": 11,
     "fullName": "Mendez Cano Frank Sneijder",
     "firstName": "Frank Sneijder",
     "lastName": "Mendez Cano",
-    "email": "francho.mc14@gmail.com",
+    "email": "frank.mendez@lpmm.cl",
     "rut": "22.469.011-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -454198,7 +454198,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Mendez Cano Frank Sneijder",
     "firstName": "Frank Sneijder",
     "lastName": "Mendez Cano",
-    "email": "francho.mc14@gmail.com",
+    "email": "frank.mendez@lpmm.cl",
     "rut": "22.469.011-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -457653,12 +457653,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "Lucasportilla794@gmail.com": {
+  "lucas.portilla@lpmm.cl": {
     "num": 15,
     "fullName": "Portilla Muñoz Lucas Ian Joseph",
     "firstName": "Lucas Ian Joseph",
     "lastName": "Portilla Muñoz",
-    "email": "Lucasportilla794@gmail.com",
+    "email": "lucas.portilla@lpmm.cl",
     "rut": "22.469.015-5",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -458342,7 +458342,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Portilla Muñoz Lucas Ian Joseph",
     "firstName": "Lucas Ian Joseph",
     "lastName": "Portilla Muñoz",
-    "email": "Lucasportilla794@gmail.com",
+    "email": "lucas.portilla@lpmm.cl",
     "rut": "22.469.015-5",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -460389,12 +460389,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "segoviafelipe50@gmail.com": {
+  "felipe.segovia@lpmm.cl": {
     "num": 17,
     "fullName": "Segovia Rojas Felipe Andrés",
     "firstName": "Felipe Andrés",
     "lastName": "Segovia Rojas",
-    "email": "segoviafelipe50@gmail.com",
+    "email": "felipe.segovia@lpmm.cl",
     "rut": "22.469.017-7",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -461086,7 +461086,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Segovia Rojas Felipe Andrés",
     "firstName": "Felipe Andrés",
     "lastName": "Segovia Rojas",
-    "email": "segoviafelipe50@gmail.com",
+    "email": "felipe.segovia@lpmm.cl",
     "rut": "22.469.017-7",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -461773,12 +461773,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "malcom.marcelo00@gmail.com": {
+  "malcom.soto@lpmm.cl": {
     "num": 18,
     "fullName": "Soto Figueroa Malcom Marcelo",
     "firstName": "Malcom Marcelo",
     "lastName": "Soto Figueroa",
-    "email": "malcom.marcelo00@gmail.com",
+    "email": "malcom.soto@lpmm.cl",
     "rut": "22.469.018-8",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -462462,7 +462462,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Soto Figueroa Malcom Marcelo",
     "firstName": "Malcom Marcelo",
     "lastName": "Soto Figueroa",
-    "email": "malcom.marcelo00@gmail.com",
+    "email": "malcom.soto@lpmm.cl",
     "rut": "22.469.018-8",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -463141,12 +463141,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "Patriciovallejosbernales@gmail.com": {
+  "patricio.vallejos@lpmm.cl": {
     "num": 19,
     "fullName": "Vallejos Cardozo Patricio Alberto",
     "firstName": "Patricio Alberto",
     "lastName": "Vallejos Cardozo",
-    "email": "Patriciovallejosbernales@gmail.com",
+    "email": "patricio.vallejos@lpmm.cl",
     "rut": "22.469.019-9",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -463838,7 +463838,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Vallejos Cardozo Patricio Alberto",
     "firstName": "Patricio Alberto",
     "lastName": "Vallejos Cardozo",
-    "email": "Patriciovallejosbernales@gmail.com",
+    "email": "patricio.vallejos@lpmm.cl",
     "rut": "22.469.019-9",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -464545,10 +464545,10 @@ export const STUDENT_EMAIL_ALIASES: Record<string, string> = {
   "maicol.recabarren@gmail.com": "maicol.recabarren@lpmm.cl",
   "maicolcerda@gmail.com": "maicol.recabarren@lpmm.cl",
   "maicol@aurenis.app": "maicol.recabarren@lpmm.cl",
-  "malcom@aurenis.app": "malcom.marcelo00@gmail.com",
-  "malcom.soto@gmail.com": "malcom.marcelo00@gmail.com",
-  "lucas@aurenis.app": "Lucasportilla794@gmail.com",
-  "lucas.portilla@gmail.com": "Lucasportilla794@gmail.com",
+  "malcom@aurenis.app": "malcom.soto@lpmm.cl",
+  "malcom.soto@gmail.com": "malcom.soto@lpmm.cl",
+  "lucas@aurenis.app": "lucas.portilla@lpmm.cl",
+  "lucas.portilla@gmail.com": "lucas.portilla@lpmm.cl",
   "frank@aurenis.app": "joaquin.perez@lpmm.cl",
   "joaquin.perez@gmail.com": "joaquin.perez@lpmm.cl",
 };
@@ -464582,13 +464582,13 @@ export function getStudentAcademicRecord(identifier: string): StudentAcademicRec
     }
   }
   if (clean.includes("soto") && clean.includes("malcom")) {
-    if (LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.marcelo00@gmail.com"]) {
-      return LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.marcelo00@gmail.com"];
+    if (LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.soto@lpmm.cl"]) {
+      return LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.soto@lpmm.cl"];
     }
   }
   if (clean.includes("portilla") && clean.includes("lucas")) {
-    if (LPMM_STUDENTS_ACADEMIC_RECORDS["Lucasportilla794@gmail.com"]) {
-      return LPMM_STUDENTS_ACADEMIC_RECORDS["Lucasportilla794@gmail.com"];
+    if (LPMM_STUDENTS_ACADEMIC_RECORDS["lucas.portilla@lpmm.cl"]) {
+      return LPMM_STUDENTS_ACADEMIC_RECORDS["lucas.portilla@lpmm.cl"];
     }
   }
 
