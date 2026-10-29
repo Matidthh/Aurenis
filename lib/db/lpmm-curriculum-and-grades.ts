@@ -2251,7 +2251,7 @@ export const LPMM_COURSE_SUBJECTS: Record<string, any[]> = {
       "weeklyHours": 6,
       "room": "Laboratorio de Computación 2",
       "teacher": "Prof. Julio Molina",
-      "teacherEmail": "julio.molina@edumargamarga.gob.cl"
+      "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL"
     }
   ]
 };
@@ -335923,12 +335923,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "jessy.labrana@lpmm.cl": {
+  "jessylabraña5@gmail.com": {
     "num": 2,
     "fullName": "Labraña Olmos Jessy Ximena",
     "firstName": "Jessy Ximena",
     "lastName": "Labraña Olmos",
-    "email": "jessy.labrana@lpmm.cl",
+    "email": "jessylabraña5@gmail.com",
     "rut": "22.369.002-2",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -336573,7 +336573,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Labraña Olmos Jessy Ximena",
     "firstName": "Jessy Ximena",
     "lastName": "Labraña Olmos",
-    "email": "jessy.labrana@lpmm.cl",
+    "email": "jessylabraña5@gmail.com",
     "rut": "22.369.002-2",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -337213,12 +337213,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "alejandra.lopez@lpmm.cl": {
+  "lopezalecco@gmail.com": {
     "num": 3,
     "fullName": "López Añasco Alejandra Constanza",
     "firstName": "Alejandra Constanza",
     "lastName": "López Añasco",
-    "email": "alejandra.lopez@lpmm.cl",
+    "email": "lopezalecco@gmail.com",
     "rut": "22.369.003-3",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -337871,7 +337871,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "López Añasco Alejandra Constanza",
     "firstName": "Alejandra Constanza",
     "lastName": "López Añasco",
-    "email": "alejandra.lopez@lpmm.cl",
+    "email": "lopezalecco@gmail.com",
     "rut": "22.369.003-3",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -338519,12 +338519,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "jean.martinez@lpmm.cl": {
+  "jeancp7777m@gmail.com": {
     "num": 4,
     "fullName": "Martínez Valdebenito Jean Ignacio",
     "firstName": "Jean Ignacio",
     "lastName": "Martínez Valdebenito",
-    "email": "jean.martinez@lpmm.cl",
+    "email": "jeancp7777m@gmail.com",
     "rut": "22.369.004-4",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -339185,7 +339185,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Martínez Valdebenito Jean Ignacio",
     "firstName": "Jean Ignacio",
     "lastName": "Martínez Valdebenito",
-    "email": "jean.martinez@lpmm.cl",
+    "email": "jeancp7777m@gmail.com",
     "rut": "22.369.004-4",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -341131,12 +341131,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "diego.nunez@lpmm.cl": {
+  "diegoking288@gmail.com": {
     "num": 6,
     "fullName": "Núñez Mardones Diego Ignacio",
     "firstName": "Diego Ignacio",
     "lastName": "Núñez Mardones",
-    "email": "diego.nunez@lpmm.cl",
+    "email": "diegoking288@gmail.com",
     "rut": "22.369.006-6",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -341797,7 +341797,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Núñez Mardones Diego Ignacio",
     "firstName": "Diego Ignacio",
     "lastName": "Núñez Mardones",
-    "email": "diego.nunez@lpmm.cl",
+    "email": "diegoking288@gmail.com",
     "rut": "22.369.006-6",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -342453,12 +342453,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "vicente.ponce@lpmm.cl": {
+  "vixitoPoncefigueroa2009@gmail.com": {
     "num": 7,
     "fullName": "Ponce Figueroa Vicente Andrés",
     "firstName": "Vicente Andrés",
     "lastName": "Ponce Figueroa",
-    "email": "vicente.ponce@lpmm.cl",
+    "email": "vixitoPoncefigueroa2009@gmail.com",
     "rut": "22.369.007-7",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -343119,7 +343119,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Ponce Figueroa Vicente Andrés",
     "firstName": "Vicente Andrés",
     "lastName": "Ponce Figueroa",
-    "email": "vicente.ponce@lpmm.cl",
+    "email": "vixitoPoncefigueroa2009@gmail.com",
     "rut": "22.369.007-7",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -343775,12 +343775,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "benjamin.ramirez@lpmm.cl": {
+  "benjaminramirez821292@gmail.com": {
     "num": 8,
     "fullName": "Ramírez Ibarra Benjamín Antonio",
     "firstName": "Benjamín Antonio",
     "lastName": "Ramírez Ibarra",
-    "email": "benjamin.ramirez@lpmm.cl",
+    "email": "benjaminramirez821292@gmail.com",
     "rut": "22.369.008-8",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -344441,7 +344441,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Ramírez Ibarra Benjamín Antonio",
     "firstName": "Benjamín Antonio",
     "lastName": "Ramírez Ibarra",
-    "email": "benjamin.ramirez@lpmm.cl",
+    "email": "benjaminramirez821292@gmail.com",
     "rut": "22.369.008-8",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -345097,12 +345097,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "maitthe.rivero@lpmm.cl": {
+  "Xulimai.lobos@gmail.com": {
     "num": 9,
     "fullName": "Rivero Lobos Maitthe Belén",
     "firstName": "Maitthe Belén",
     "lastName": "Rivero Lobos",
-    "email": "maitthe.rivero@lpmm.cl",
+    "email": "Xulimai.lobos@gmail.com",
     "rut": "22.369.009-9",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -345763,7 +345763,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Rivero Lobos Maitthe Belén",
     "firstName": "Maitthe Belén",
     "lastName": "Rivero Lobos",
-    "email": "maitthe.rivero@lpmm.cl",
+    "email": "Xulimai.lobos@gmail.com",
     "rut": "22.369.009-9",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -346419,12 +346419,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "martin.ruiz@lpmm.cl": {
+  "marvizgasparcabrales@gmail.com": {
     "num": 10,
     "fullName": "Ruiz Espinoza Martín Adolfo",
     "firstName": "Martín Adolfo",
     "lastName": "Ruiz Espinoza",
-    "email": "martin.ruiz@lpmm.cl",
+    "email": "marvizgasparcabrales@gmail.com",
     "rut": "22.369.010-0",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -347085,7 +347085,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Ruiz Espinoza Martín Adolfo",
     "firstName": "Martín Adolfo",
     "lastName": "Ruiz Espinoza",
-    "email": "martin.ruiz@lpmm.cl",
+    "email": "marvizgasparcabrales@gmail.com",
     "rut": "22.369.010-0",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -347741,12 +347741,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "christopher.ruiz@lpmm.cl": {
+  "niamexdxd@gmail.com": {
     "num": 11,
     "fullName": "Ruiz Sáez Christopher Damián",
     "firstName": "Christopher Damián",
     "lastName": "Ruiz Sáez",
-    "email": "christopher.ruiz@lpmm.cl",
+    "email": "niamexdxd@gmail.com",
     "rut": "22.369.011-1",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -348407,7 +348407,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Ruiz Sáez Christopher Damián",
     "firstName": "Christopher Damián",
     "lastName": "Ruiz Sáez",
-    "email": "christopher.ruiz@lpmm.cl",
+    "email": "niamexdxd@gmail.com",
     "rut": "22.369.011-1",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -349063,12 +349063,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "miguel.sanhueza@lpmm.cl": {
+  "miguel2+sanhueza@gmail.com": {
     "num": 12,
     "fullName": "Sanhueza Cabello Miguel Jesus",
     "firstName": "Miguel Jesus",
     "lastName": "Sanhueza Cabello",
-    "email": "miguel.sanhueza@lpmm.cl",
+    "email": "miguel2+sanhueza@gmail.com",
     "rut": "22.369.012-2",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -349729,7 +349729,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Sanhueza Cabello Miguel Jesus",
     "firstName": "Miguel Jesus",
     "lastName": "Sanhueza Cabello",
-    "email": "miguel.sanhueza@lpmm.cl",
+    "email": "miguel2+sanhueza@gmail.com",
     "rut": "22.369.012-2",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -350385,12 +350385,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "elias.schiller@lpmm.cl": {
+  "treintiseisytreintiseisanny8@gmail.com": {
     "num": 13,
     "fullName": "Schiller Pérez Elías Joel",
     "firstName": "Elías Joel",
     "lastName": "Schiller Pérez",
-    "email": "elias.schiller@lpmm.cl",
+    "email": "treintiseisytreintiseisanny8@gmail.com",
     "rut": "22.369.013-3",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -351043,7 +351043,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Schiller Pérez Elías Joel",
     "firstName": "Elías Joel",
     "lastName": "Schiller Pérez",
-    "email": "elias.schiller@lpmm.cl",
+    "email": "treintiseisytreintiseisanny8@gmail.com",
     "rut": "22.369.013-3",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -351691,12 +351691,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "matias.vergara@lpmm.cl": {
+  "matiarelano602@gmail.com": {
     "num": 14,
     "fullName": "Vergara Olmos Matías Antonio",
     "firstName": "Matías Antonio",
     "lastName": "Vergara Olmos",
-    "email": "matias.vergara@lpmm.cl",
+    "email": "matiarelano602@gmail.com",
     "rut": "22.369.014-4",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -352349,7 +352349,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Vergara Olmos Matías Antonio",
     "firstName": "Matías Antonio",
     "lastName": "Vergara Olmos",
-    "email": "matias.vergara@lpmm.cl",
+    "email": "matiarelano602@gmail.com",
     "rut": "22.369.014-4",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -352997,12 +352997,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "sergio.vivanco@lpmm.cl": {
+  "sergiovivanco345@gmail.com": {
     "num": 15,
     "fullName": "Vivanco Palacios Sergio Sebastián",
     "firstName": "Sergio Sebastián",
     "lastName": "Vivanco Palacios",
-    "email": "sergio.vivanco@lpmm.cl",
+    "email": "sergiovivanco345@gmail.com",
     "rut": "22.369.015-5",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -353663,7 +353663,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Vivanco Palacios Sergio Sebastián",
     "firstName": "Sergio Sebastián",
     "lastName": "Vivanco Palacios",
-    "email": "sergio.vivanco@lpmm.cl",
+    "email": "sergiovivanco345@gmail.com",
     "rut": "22.369.015-5",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -354319,12 +354319,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "felipe.varas@lpmm.cl": {
+  "FELIPEVARALO12@GMAIL.COM": {
     "num": 16,
     "fullName": "Varas López Felipe Benjamín",
     "firstName": "Felipe Benjamín",
     "lastName": "Varas López",
-    "email": "felipe.varas@lpmm.cl",
+    "email": "FELIPEVARALO12@GMAIL.COM",
     "rut": "22.369.016-6",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -354977,7 +354977,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Varas López Felipe Benjamín",
     "firstName": "Felipe Benjamín",
     "lastName": "Varas López",
-    "email": "felipe.varas@lpmm.cl",
+    "email": "FELIPEVARALO12@GMAIL.COM",
     "rut": "22.369.016-6",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -356947,12 +356947,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "elias.nunez@lpmm.cl": {
+  "en4832775@gmail.com": {
     "num": 18,
     "fullName": "Núñez Santibáñez Elías Moisés",
     "firstName": "Elías Moisés",
     "lastName": "Núñez Santibáñez",
-    "email": "elias.nunez@lpmm.cl",
+    "email": "en4832775@gmail.com",
     "rut": "22.369.018-8",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -357493,7 +357493,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Núñez Santibáñez Elías Moisés",
     "firstName": "Elías Moisés",
     "lastName": "Núñez Santibáñez",
-    "email": "elias.nunez@lpmm.cl",
+    "email": "en4832775@gmail.com",
     "rut": "22.369.018-8",
     "courseName": "3° Medio E",
     "courseCode": "3E",
@@ -439821,12 +439821,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "priscila.abarca@lpmm.cl": {
+  "Priscila.abarcaveliz@gmail.com": {
     "num": 1,
     "fullName": "Abarca Véliz Priscila Noemí",
     "firstName": "Priscila Noemí",
     "lastName": "Abarca Véliz",
-    "email": "priscila.abarca@lpmm.cl",
+    "email": "Priscila.abarcaveliz@gmail.com",
     "rut": "22.469.001-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -440453,7 +440453,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -440502,7 +440502,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Abarca Véliz Priscila Noemí",
     "firstName": "Priscila Noemí",
     "lastName": "Abarca Véliz",
-    "email": "priscila.abarca@lpmm.cl",
+    "email": "Priscila.abarcaveliz@gmail.com",
     "rut": "22.469.001-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -441129,7 +441129,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -441173,12 +441173,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "kenyer.borges@lpmm.cl": {
+  "kenyerlpmm@gmail.com": {
     "num": 2,
     "fullName": "Borges Brieva Kenyer Enrique",
     "firstName": "Kenyer Enrique",
     "lastName": "Borges Brieva",
-    "email": "kenyer.borges@lpmm.cl",
+    "email": "kenyerlpmm@gmail.com",
     "rut": "22.469.002-2",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -441757,7 +441757,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -441806,7 +441806,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Borges Brieva Kenyer Enrique",
     "firstName": "Kenyer Enrique",
     "lastName": "Borges Brieva",
-    "email": "kenyer.borges@lpmm.cl",
+    "email": "kenyerlpmm@gmail.com",
     "rut": "22.469.002-2",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -442385,7 +442385,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -442429,12 +442429,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "emilio.brousset@lpmm.cl": {
+  "emiliobrousset2008@gmail.com": {
     "num": 3,
     "fullName": "Brousset Bernales Emilio Benjamín",
     "firstName": "Emilio Benjamín",
     "lastName": "Brousset Bernales",
-    "email": "emilio.brousset@lpmm.cl",
+    "email": "emiliobrousset2008@gmail.com",
     "rut": "22.469.003-3",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -443077,7 +443077,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -443126,7 +443126,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Brousset Bernales Emilio Benjamín",
     "firstName": "Emilio Benjamín",
     "lastName": "Brousset Bernales",
-    "email": "emilio.brousset@lpmm.cl",
+    "email": "emiliobrousset2008@gmail.com",
     "rut": "22.469.003-3",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -443769,7 +443769,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -444461,7 +444461,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -445153,7 +445153,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -445845,7 +445845,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -446537,7 +446537,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -446581,12 +446581,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "evan.flores@lpmm.cl": {
+  "Floresevan65@gmail.com": {
     "num": 6,
     "fullName": "Flores Astudillo Evan Mathias",
     "firstName": "Evan Mathias",
     "lastName": "Flores Astudillo",
-    "email": "evan.flores@lpmm.cl",
+    "email": "Floresevan65@gmail.com",
     "rut": "22.469.006-6",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -447229,7 +447229,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -447286,7 +447286,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Flores Astudillo Evan Mathias",
     "firstName": "Evan Mathias",
     "lastName": "Flores Astudillo",
-    "email": "evan.flores@lpmm.cl",
+    "email": "Floresevan65@gmail.com",
     "rut": "22.469.006-6",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -447929,7 +447929,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -448621,7 +448621,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -449305,7 +449305,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -449997,7 +449997,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -450689,7 +450689,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -451381,7 +451381,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -452073,7 +452073,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -452765,7 +452765,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -453457,7 +453457,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -453501,12 +453501,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "frank.mendez@lpmm.cl": {
+  "francho.mc14@gmail.com": {
     "num": 11,
     "fullName": "Mendez Cano Frank Sneijder",
     "firstName": "Frank Sneijder",
     "lastName": "Mendez Cano",
-    "email": "frank.mendez@lpmm.cl",
+    "email": "francho.mc14@gmail.com",
     "rut": "22.469.011-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -454149,7 +454149,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -454198,7 +454198,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Mendez Cano Frank Sneijder",
     "firstName": "Frank Sneijder",
     "lastName": "Mendez Cano",
-    "email": "frank.mendez@lpmm.cl",
+    "email": "francho.mc14@gmail.com",
     "rut": "22.469.011-1",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -454841,7 +454841,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -455533,7 +455533,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -456225,7 +456225,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -456909,7 +456909,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -457601,7 +457601,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -457653,12 +457653,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "lucas.portilla@lpmm.cl": {
+  "Lucasportilla794@gmail.com": {
     "num": 15,
     "fullName": "Portilla Muñoz Lucas Ian Joseph",
     "firstName": "Lucas Ian Joseph",
     "lastName": "Portilla Muñoz",
-    "email": "lucas.portilla@lpmm.cl",
+    "email": "Lucasportilla794@gmail.com",
     "rut": "22.469.015-5",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -458293,7 +458293,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -458342,7 +458342,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Portilla Muñoz Lucas Ian Joseph",
     "firstName": "Lucas Ian Joseph",
     "lastName": "Portilla Muñoz",
-    "email": "lucas.portilla@lpmm.cl",
+    "email": "Lucasportilla794@gmail.com",
     "rut": "22.469.015-5",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -458977,7 +458977,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -459661,7 +459661,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -460345,7 +460345,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -460389,12 +460389,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "felipe.segovia@lpmm.cl": {
+  "segoviafelipe50@gmail.com": {
     "num": 17,
     "fullName": "Segovia Rojas Felipe Andrés",
     "firstName": "Felipe Andrés",
     "lastName": "Segovia Rojas",
-    "email": "felipe.segovia@lpmm.cl",
+    "email": "segoviafelipe50@gmail.com",
     "rut": "22.469.017-7",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -461029,7 +461029,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -461086,7 +461086,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Segovia Rojas Felipe Andrés",
     "firstName": "Felipe Andrés",
     "lastName": "Segovia Rojas",
-    "email": "felipe.segovia@lpmm.cl",
+    "email": "segoviafelipe50@gmail.com",
     "rut": "22.469.017-7",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -461721,7 +461721,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -461773,12 +461773,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "malcom.soto@lpmm.cl": {
+  "malcom.marcelo00@gmail.com": {
     "num": 18,
     "fullName": "Soto Figueroa Malcom Marcelo",
     "firstName": "Malcom Marcelo",
     "lastName": "Soto Figueroa",
-    "email": "malcom.soto@lpmm.cl",
+    "email": "malcom.marcelo00@gmail.com",
     "rut": "22.469.018-8",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -462413,7 +462413,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -462462,7 +462462,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Soto Figueroa Malcom Marcelo",
     "firstName": "Malcom Marcelo",
     "lastName": "Soto Figueroa",
-    "email": "malcom.soto@lpmm.cl",
+    "email": "malcom.marcelo00@gmail.com",
     "rut": "22.469.018-8",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -463097,7 +463097,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -463141,12 +463141,12 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
       }
     ]
   },
-  "patricio.vallejos@lpmm.cl": {
+  "Patriciovallejosbernales@gmail.com": {
     "num": 19,
     "fullName": "Vallejos Cardozo Patricio Alberto",
     "firstName": "Patricio Alberto",
     "lastName": "Vallejos Cardozo",
-    "email": "patricio.vallejos@lpmm.cl",
+    "email": "Patriciovallejosbernales@gmail.com",
     "rut": "22.469.019-9",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -463789,7 +463789,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -463838,7 +463838,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
     "fullName": "Vallejos Cardozo Patricio Alberto",
     "firstName": "Patricio Alberto",
     "lastName": "Vallejos Cardozo",
-    "email": "patricio.vallejos@lpmm.cl",
+    "email": "Patriciovallejosbernales@gmail.com",
     "rut": "22.469.019-9",
     "courseName": "4° Medio E",
     "courseCode": "4E",
@@ -464481,7 +464481,7 @@ export const LPMM_STUDENTS_ACADEMIC_RECORDS: Record<string, StudentAcademicRecor
         "code": "ADMB-4E",
         "name": "Administración y Seguridad de Bases de Datos",
         "teacher": "Prof. Julio Molina",
-        "teacherEmail": "julio.molina@edumargamarga.gob.cl",
+        "teacherEmail": "JULIO.MOLINA@EDCMARGAMARGA.GOB.CL",
         "weeklyHours": 6,
         "category": "Especialidad TP",
         "room": "Laboratorio de Computación 2",
@@ -464545,10 +464545,10 @@ export const STUDENT_EMAIL_ALIASES: Record<string, string> = {
   "maicol.recabarren@gmail.com": "maicol.recabarren@lpmm.cl",
   "maicolcerda@gmail.com": "maicol.recabarren@lpmm.cl",
   "maicol@aurenis.app": "maicol.recabarren@lpmm.cl",
-  "malcom@aurenis.app": "malcom.soto@lpmm.cl",
-  "malcom.soto@gmail.com": "malcom.soto@lpmm.cl",
-  "lucas@aurenis.app": "lucas.portilla@lpmm.cl",
-  "lucas.portilla@gmail.com": "lucas.portilla@lpmm.cl",
+  "malcom@aurenis.app": "malcom.marcelo00@gmail.com",
+  "malcom.soto@gmail.com": "malcom.marcelo00@gmail.com",
+  "lucas@aurenis.app": "Lucasportilla794@gmail.com",
+  "lucas.portilla@gmail.com": "Lucasportilla794@gmail.com",
   "frank@aurenis.app": "joaquin.perez@lpmm.cl",
   "joaquin.perez@gmail.com": "joaquin.perez@lpmm.cl",
 };
@@ -464582,13 +464582,13 @@ export function getStudentAcademicRecord(identifier: string): StudentAcademicRec
     }
   }
   if (clean.includes("soto") && clean.includes("malcom")) {
-    if (LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.soto@lpmm.cl"]) {
-      return LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.soto@lpmm.cl"];
+    if (LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.marcelo00@gmail.com"]) {
+      return LPMM_STUDENTS_ACADEMIC_RECORDS["malcom.marcelo00@gmail.com"];
     }
   }
   if (clean.includes("portilla") && clean.includes("lucas")) {
-    if (LPMM_STUDENTS_ACADEMIC_RECORDS["lucas.portilla@lpmm.cl"]) {
-      return LPMM_STUDENTS_ACADEMIC_RECORDS["lucas.portilla@lpmm.cl"];
+    if (LPMM_STUDENTS_ACADEMIC_RECORDS["Lucasportilla794@gmail.com"]) {
+      return LPMM_STUDENTS_ACADEMIC_RECORDS["Lucasportilla794@gmail.com"];
     }
   }
 

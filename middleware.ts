@@ -266,13 +266,14 @@ function enforceTenantIsolation({
       return unauthRes;
     }
 
-    // Permitir acceso público a la página de bienvenida / portal institucional del colegio
+    // Permitir acceso público a la raíz del tenant (/schoolSlug)
+    if (pathname === `/${targetIdentifier}` || pathname === `/${targetIdentifier}/`) {
+      return null;
+    }
+    
+    // Permitir acceso público / modo demo a la interfaz de usuario del tenant
     const canonicalTarget = SUBDOMAIN_TO_SLUG_ALIASES[targetIdentifier] || targetIdentifier;
-    if (
-      pathname === "/" ||
-      pathname === `/${targetIdentifier}` ||
-      pathname === `/${canonicalTarget}`
-    ) {
+    if (!RESERVED_ROOT_PATHS.has(targetIdentifier)) {
       return null;
     }
 

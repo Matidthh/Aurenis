@@ -1,1 +1,5 @@
-{"name":"Aurenis","description":"Multi-tenant academic management platform for schools, teachers, students, and administrators.","requestFramePermissions":[],"majorCapabilities":["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]}
+{
+  "name": "AURENIS — Gestión Escolar Multi-Tenant & LPMM",
+  "description": "Plataforma Integral de Gestión Escolar y Académica Multi-Tenant con Libro de Clases Digital, Asistencia QR, Matriz Decreto 67 y Centro de Notificaciones con HashRouter.",
+  "requestCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
